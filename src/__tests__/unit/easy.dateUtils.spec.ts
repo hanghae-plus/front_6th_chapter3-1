@@ -232,17 +232,57 @@ describe('formatMonth', () => {
 });
 
 describe('isDateInRange', () => {
-  it('범위 내의 날짜 2025-07-10에 대해 true를 반환한다', () => {});
+  const expectDateInRange = (
+    targetDate: Date,
+    rangeStart: Date,
+    rangeEnd: Date,
+    expected: boolean
+  ) => {
+    const isInRange = isDateInRange(targetDate, rangeStart, rangeEnd);
+    expect(isInRange).toBe(expected);
+  };
 
-  it('범위의 시작일 2025-07-01에 대해 true를 반환한다', () => {});
+  it('범위 내의 날짜 2025-07-10에 대해 true를 반환한다', () => {
+    const targetDate = new Date(2025, 6, 10);
+    const rangeStart = new Date(2025, 6, 1);
+    const rangeEnd = new Date(2025, 6, 31);
+    expectDateInRange(targetDate, rangeStart, rangeEnd, true);
+  });
 
-  it('범위의 종료일 2025-07-31에 대해 true를 반환한다', () => {});
+  it('범위의 시작일 2025-07-01에 대해 true를 반환한다', () => {
+    const targetDate = new Date(2025, 6, 1);
+    const rangeStart = new Date(2025, 6, 1);
+    const rangeEnd = new Date(2025, 6, 31);
+    expectDateInRange(targetDate, rangeStart, rangeEnd, true);
+  });
 
-  it('범위 이전의 날짜 2025-06-30에 대해 false를 반환한다', () => {});
+  it('범위의 종료일 2025-07-31에 대해 true를 반환한다', () => {
+    const targetDate = new Date(2025, 6, 31);
+    const rangeStart = new Date(2025, 6, 1);
+    const rangeEnd = new Date(2025, 6, 31);
+    expectDateInRange(targetDate, rangeStart, rangeEnd, true);
+  });
 
-  it('범위 이후의 날짜 2025-08-01에 대해 false를 반환한다', () => {});
+  it('범위 이전의 날짜 2025-06-30에 대해 false를 반환한다', () => {
+    const targetDate = new Date(2025, 5, 30);
+    const rangeStart = new Date(2025, 6, 1);
+    const rangeEnd = new Date(2025, 6, 31);
+    expectDateInRange(targetDate, rangeStart, rangeEnd, false);
+  });
 
-  it('시작일이 종료일보다 늦은 경우 모든 날짜에 대해 false를 반환한다', () => {});
+  it('범위 이후의 날짜 2025-08-01에 대해 false를 반환한다', () => {
+    const targetDate = new Date(2025, 7, 1);
+    const rangeStart = new Date(2025, 6, 1);
+    const rangeEnd = new Date(2025, 6, 31);
+    expectDateInRange(targetDate, rangeStart, rangeEnd, false);
+  });
+
+  it('시작일이 종료일보다 늦은 경우 모든 날짜에 대해 false를 반환한다', () => {
+    const targetDate = new Date(2025, 6, 15);
+    const rangeStart = new Date(2025, 6, 31);
+    const rangeEnd = new Date(2025, 6, 1);
+    expectDateInRange(targetDate, rangeStart, rangeEnd, false);
+  });
 });
 
 describe('fillZero', () => {
