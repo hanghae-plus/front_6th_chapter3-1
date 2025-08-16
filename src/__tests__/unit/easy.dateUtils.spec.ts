@@ -39,19 +39,55 @@ describe('getDaysInMonth', () => {
 });
 
 describe('getWeekDates', () => {
-  it('주중의 날짜(수요일)에 대해 올바른 주의 날짜들을 반환한다', () => {});
+  const expectValidWeekDates = (dates: Date[]) => {
+    expect(dates).toHaveLength(7);
+    // 일요일(0)부터 토요일(6)까지 순서대로 검증
+    dates.forEach((date, index) => {
+      expect(date.getDay()).toBe(index);
+    });
+  };
 
-  it('주의 시작(월요일)에 대해 올바른 주의 날짜들을 반환한다', () => {});
+  it('수요일에 해당하는 날짜를 입력했을때 그 주의 일~토까지의 날짜를 반환한다', () => {
+    const wednesday = new Date(2024, 0, 3); // 2024년 1월 3일 (수)
+    const weekDates = getWeekDates(wednesday);
+    expectValidWeekDates(weekDates);
+  });
 
-  it('주의 끝(일요일)에 대해 올바른 주의 날짜들을 반환한다', () => {});
+  it('월요일에 해당하는 날짜를 입력했을때 그 주의 일~토까지의 날짜를 반환한다', () => {
+    const monday = new Date(2024, 0, 1); // 2024년 1월 1일 (월)
+    const weekDates = getWeekDates(monday);
+    expectValidWeekDates(weekDates);
+  });
 
-  it('연도를 넘어가는 주의 날짜를 정확히 처리한다 (연말)', () => {});
+  it('일요일에 해당하는 날짜를 입력했을때 그 주의 일~토까지의 날짜를 반환한다', () => {
+    const sunday = new Date(2024, 0, 7); // 2024년 1월 7일 (일)
+    const weekDates = getWeekDates(sunday);
+    expectValidWeekDates(weekDates);
+  });
 
-  it('연도를 넘어가는 주의 날짜를 정확히 처리한다 (연초)', () => {});
+  it('연도가 끝나는 날짜를 입력 했을 때 다음해 1월이 포함된 그 주의 일~토 날짜를 반환한다', () => {
+    const yearEnd = new Date(2024, 11, 31); // 2024년 12월 31일 (화)
+    const weekDates = getWeekDates(yearEnd);
+    expectValidWeekDates(weekDates);
+  });
 
-  it('윤년의 2월 29일을 포함한 주를 올바르게 처리한다', () => {});
+  it('연도가 시작되는 날짜를 입력 했을 때 이전해 12월이 포함된 그 주의 일~토 날짜를 반환한다', () => {
+    const yearStart = new Date(2025, 0, 1); // 2025년 1월 1일 (수)
+    const weekDates = getWeekDates(yearStart);
+    expectValidWeekDates(weekDates);
+  });
 
-  it('월의 마지막 날짜를 포함한 주를 올바르게 처리한다', () => {});
+  it('윤년의 마지막 날짜(2월 29일)를 입력했을때 그 주의 일~토까지의 날짜를 반환한다', () => {
+    const leapDay = new Date(2024, 1, 29); // 2024년 2월 29일 (목)
+    const weekDates = getWeekDates(leapDay);
+    expectValidWeekDates(weekDates);
+  });
+
+  it('월의 마지막 날짜를 입력했을때 그 주의 일~토까지의 날짜를 반환한다', () => {
+    const monthEnd = new Date(2024, 0, 31); // 2024년 1월 31일 (수)
+    const weekDates = getWeekDates(monthEnd);
+    expectValidWeekDates(weekDates);
+  });
 });
 
 describe('getWeeksAtMonth', () => {
