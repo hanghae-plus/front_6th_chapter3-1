@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react';
 
 import { fetchHolidays } from '../apis/fetchHolidays';
 
-export const useCalendarView = () => {
-  const [view, setView] = useState<'week' | 'month'>('month');
+export const useCalendarView = (initialView: 'week' | 'month' = 'month') => {
+  const [view, setView] = useState<'week' | 'month'>(initialView);
   const [currentDate, setCurrentDate] = useState(new Date());
   const [holidays, setHolidays] = useState<{ [key: string]: string }>({});
 
