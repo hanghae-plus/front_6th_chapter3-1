@@ -116,13 +116,71 @@ describe('getWeeksAtMonth', () => {
 });
 
 describe('getEventsForDay', () => {
-  it('특정 날짜(1일)에 해당하는 이벤트만 정확히 반환한다', () => {});
+  // 1월에 해당하는 Events
+  const eventsOfMonth: Event[] = [
+    {
+      id: '1',
+      title: '회의',
+      date: '2024-01-01',
+      startTime: '09:00',
+      endTime: '10:00',
+      description: '',
+      location: '',
+      category: '업무',
+      repeat: { type: 'none', interval: 1 },
+      notificationTime: 10,
+    },
+    {
+      id: '2',
+      title: '점심',
+      date: '2024-01-01',
+      startTime: '12:00',
+      endTime: '13:00',
+      description: '',
+      location: '',
+      category: '개인',
+      repeat: { type: 'none', interval: 1 },
+      notificationTime: 10,
+    },
+    {
+      id: '3',
+      title: '운동',
+      date: '2024-01-15',
+      startTime: '18:00',
+      endTime: '19:00',
+      description: '',
+      location: '',
+      category: '개인',
+      repeat: { type: 'none', interval: 1 },
+      notificationTime: 10,
+    },
+  ];
 
-  it('해당 날짜에 이벤트가 없을 경우 빈 배열을 반환한다', () => {});
+  const expectEmptyEvents = (day: number) => {
+    const eventsForDay = getEventsForDay(eventsOfMonth, day);
+    expect(eventsForDay).toHaveLength(0);
+    expect(eventsForDay).toEqual([]);
+  };
 
-  it('날짜가 0일 경우 빈 배열을 반환한다', () => {});
+  it('해당 월의 특정 날짜에 이벤트가 있을때 해당 이벤트 배열을 반환한다', () => {
+    const eventsForDay = getEventsForDay(eventsOfMonth, 1);
 
-  it('날짜가 32일 이상인 경우 빈 배열을 반환한다', () => {});
+    expect(eventsForDay).toHaveLength(2);
+    expect(eventsForDay[0].title).toBe('회의');
+    expect(eventsForDay[1].title).toBe('점심');
+  });
+
+  it('해당 월의 특정 날짜에 이벤트가 없을때 빈 배열을 반환한다', () => {
+    expectEmptyEvents(10);
+  });
+
+  it('날짜가 0일일때 빈 배열을 반환한다', () => {
+    expectEmptyEvents(0);
+  });
+
+  it('날짜가 32일 이상일때 빈 배열을 반환한다', () => {
+    expectEmptyEvents(32);
+  });
 });
 
 describe('formatWeek', () => {
