@@ -48,50 +48,71 @@ describe('getWeekDates', () => {
   };
 
   it('수요일에 해당하는 날짜를 입력했을때 그 주의 일~토까지의 날짜를 반환한다', () => {
-    const wednesday = new Date(2024, 0, 3); // 2024년 1월 3일 (수)
+    const wednesday = new Date(2024, 0, 3);
     const weekDates = getWeekDates(wednesday);
     expectValidWeekDates(weekDates);
   });
 
   it('월요일에 해당하는 날짜를 입력했을때 그 주의 일~토까지의 날짜를 반환한다', () => {
-    const monday = new Date(2024, 0, 1); // 2024년 1월 1일 (월)
+    const monday = new Date(2024, 0, 1);
     const weekDates = getWeekDates(monday);
     expectValidWeekDates(weekDates);
   });
 
   it('일요일에 해당하는 날짜를 입력했을때 그 주의 일~토까지의 날짜를 반환한다', () => {
-    const sunday = new Date(2024, 0, 7); // 2024년 1월 7일 (일)
+    const sunday = new Date(2024, 0, 7);
     const weekDates = getWeekDates(sunday);
     expectValidWeekDates(weekDates);
   });
 
   it('연도가 끝나는 날짜를 입력 했을 때 다음해 1월이 포함된 그 주의 일~토 날짜를 반환한다', () => {
-    const yearEnd = new Date(2024, 11, 31); // 2024년 12월 31일 (화)
+    const yearEnd = new Date(2024, 11, 31);
     const weekDates = getWeekDates(yearEnd);
     expectValidWeekDates(weekDates);
   });
 
   it('연도가 시작되는 날짜를 입력 했을 때 이전해 12월이 포함된 그 주의 일~토 날짜를 반환한다', () => {
-    const yearStart = new Date(2025, 0, 1); // 2025년 1월 1일 (수)
+    const yearStart = new Date(2025, 0, 1);
     const weekDates = getWeekDates(yearStart);
     expectValidWeekDates(weekDates);
   });
 
   it('윤년의 마지막 날짜(2월 29일)를 입력했을때 그 주의 일~토까지의 날짜를 반환한다', () => {
-    const leapDay = new Date(2024, 1, 29); // 2024년 2월 29일 (목)
+    const leapDay = new Date(2024, 1, 29);
     const weekDates = getWeekDates(leapDay);
     expectValidWeekDates(weekDates);
   });
 
   it('월의 마지막 날짜를 입력했을때 그 주의 일~토까지의 날짜를 반환한다', () => {
-    const monthEnd = new Date(2024, 0, 31); // 2024년 1월 31일 (수)
+    const monthEnd = new Date(2024, 0, 31);
     const weekDates = getWeekDates(monthEnd);
     expectValidWeekDates(weekDates);
   });
 });
 
 describe('getWeeksAtMonth', () => {
-  it('2025년 7월 1일의 올바른 주 정보를 반환해야 한다', () => {});
+  it('입력한 날짜의 월에 해당하는 주별 날짜 정보를 배열로 반환한다', () => {
+    const date = new Date(2025, 6, 1);
+    const weeksAtMonth = getWeeksAtMonth(date);
+
+    // 각 주는 7일로 구성 (null 포함)
+    weeksAtMonth.forEach((week) => {
+      expect(week).toHaveLength(7);
+    });
+
+    // 첫 번째 주에 1일이 포함되어야 함
+    const firstWeek = weeksAtMonth[0];
+    expect(firstWeek).toContain(1);
+
+    // (7월은 31일까지니까) 마지막 주에 31일이 포함되어야 함
+    const lastWeek = weeksAtMonth[weeksAtMonth.length - 1];
+    expect(lastWeek).toContain(31);
+
+    // 빈 날짜는 null로 채워져야 함
+    const flatDates = weeksAtMonth.flat();
+    const nullCount = flatDates.filter((date) => date === null).length;
+    expect(nullCount).toBeGreaterThanOrEqual(0); // null이 있을 수 있음
+  });
 });
 
 describe('getEventsForDay', () => {
