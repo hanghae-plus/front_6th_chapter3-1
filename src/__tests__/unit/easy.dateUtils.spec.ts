@@ -286,23 +286,50 @@ describe('isDateInRange', () => {
 });
 
 describe('fillZero', () => {
-  it("5를 2자리로 변환하면 '05'를 반환한다", () => {});
+  it("5를 2자리로 변환하면 '05'를 반환한다", () => {
+    const formattedNumber = fillZero(5);
+    expect(formattedNumber).toBe('05');
+  });
 
-  it("10을 2자리로 변환하면 '10'을 반환한다", () => {});
+  it("10을 2자리로 변환하면 '10'을 반환한다", () => {
+    const formattedNumber = fillZero(10);
+    expect(formattedNumber).toBe('10');
+  });
 
-  it("3을 3자리로 변환하면 '003'을 반환한다", () => {});
+  it("3을 3자리로 변환하면 '003'을 반환한다", () => {
+    const formattedNumber = fillZero(3, 3);
+    expect(formattedNumber).toBe('003');
+  });
 
-  it("100을 2자리로 변환하면 '100'을 반환한다", () => {});
+  it("100을 2자리로 변환하면 '100'을 반환한다", () => {
+    const formattedNumber = fillZero(100);
+    expect(formattedNumber).toBe('100');
+  });
 
-  it("0을 2자리로 변환하면 '00'을 반환한다", () => {});
+  it("0을 2자리로 변환하면 '00'을 반환한다", () => {
+    const formattedNumber = fillZero(0);
+    expect(formattedNumber).toBe('00');
+  });
 
-  it("1을 5자리로 변환하면 '00001'을 반환한다", () => {});
+  it("1을 5자리로 변환하면 '00001'을 반환한다", () => {
+    const formattedNumber = fillZero(1, 5);
+    expect(formattedNumber).toBe('00001');
+  });
 
-  it("소수점이 있는 3.14를 5자리로 변환하면 '03.14'를 반환한다", () => {});
+  it("소수점이 있는 3.14를 5자리로 변환하면 '03.14'를 반환한다", () => {
+    const formattedNumber = fillZero(3.14, 5);
+    expect(formattedNumber).toBe('03.14');
+  });
 
-  it('size 파라미터를 생략하면 기본값 2를 사용한다', () => {});
+  it('size 파라미터를 생략하면 기본값 2를 사용한다', () => {
+    const formattedNumber = fillZero(1);
+    expect(formattedNumber).toBe('01');
+  });
 
-  it('value가 지정된 size보다 큰 자릿수를 가지면 원래 값을 그대로 반환한다', () => {});
+  it('value가 지정된 size보다 큰 자릿수를 가지면 원래 값을 그대로 반환한다', () => {
+    const formattedNumber = fillZero(1000);
+    expect(formattedNumber).toBe('1000');
+  });
 });
 
 describe('formatDate', () => {
