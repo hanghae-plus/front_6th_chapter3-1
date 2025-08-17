@@ -113,6 +113,10 @@ export function fillZero(value: number, size = 2) {
   return String(value).padStart(size, '0');
 }
 
+/**
+ * 첫번째 인자로 받은 값을 기준으로 'YYYY-MM-DD' 형태로 포매팅하여 반환합니다.
+ * 두번째 인자를 입력받은 경우, 그 날짜를 date로 취급합니다.
+ */
 export function formatDate(currentDate: Date, day?: number) {
   return [
     currentDate.getFullYear(),
