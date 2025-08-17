@@ -2,6 +2,7 @@ import { http, HttpResponse } from 'msw';
 
 import { events } from '../__mocks__/response/events.json' assert { type: 'json' };
 import { Event } from '../types';
+import { randomUUID } from 'crypto';
 
 // ! HARD
 // ! 각 응답에 대한 MSW 핸들러를 작성해주세요. GET 요청은 이미 작성되어 있는 events json을 활용해주세요.
@@ -13,8 +14,8 @@ export const handlers = [
 
   http.post('/api/events', async ({ request }) => {
     console.log('handlers post', request);
-    const newEvent = await request.json() as Event;
-    newEvent.id = `${events.length + 1}`;
+    const req = request.json();
+    const newEvent = await {id: randomUUID(), ...req} as Event;
     return HttpResponse.json(newEvent);
   }),
 
