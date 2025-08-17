@@ -1,12 +1,28 @@
-import { act, renderHook } from '@testing-library/react';
+import { act, render, renderHook } from '@testing-library/react';
 
 import { useCalendarView } from '../../hooks/useCalendarView.ts';
 import { assertDate } from '../utils.ts';
 
 describe('초기 상태', () => {
-  it('view는 "month"이어야 한다', () => {});
+  beforeEach(() => {
+    const mockDate = new Date('2025-10-01');
 
-  it('currentDate는 오늘 날짜인 "2025-10-01"이어야 한다', () => {});
+    vi.spyOn(global, 'Date').mockImplementation(() => mockDate);
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  it('view는 "month"이어야 한다', () => {
+    const { result } = renderHook(() => useCalendarView());
+    expect(result.current.view).toBe('month');
+  });
+
+  it('currentDate는 오늘 날짜인 "2025-10-01"이어야 한다', () => {
+    const { result } = renderHook(() => useCalendarView());
+    assertDate(result.current.currentDate, new Date('2025-10-01'));
+  });
 
   it('holidays는 10월 휴일인 개천절, 한글날, 추석이 지정되어 있어야 한다', () => {});
 });
