@@ -11,9 +11,10 @@ import {
   isDateInRange,
 } from '../../utils/dateUtils';
 
+const COMMON_YEAR = 2025; //평년 테스트용
+const LEAP_YEAR = 2024; //윤년 테스트용
+
 describe('getDaysInMonth', () => {
-  const COMMON_YEAR = 2025; //평년 테스트용
-  const LEAP_YEAR = 2024; //윤년 테스트용
   it('1월은 31일 수를 반환한다', () => {
     expect(getDaysInMonth(COMMON_YEAR, 1)).toBe(31);
     expect(getDaysInMonth(LEAP_YEAR, 1)).toBe(31);
@@ -48,19 +49,74 @@ describe('getDaysInMonth', () => {
 });
 
 describe('getWeekDates', () => {
-  it('주중의 날짜(수요일)에 대해 올바른 주의 날짜들을 반환한다', () => {});
+  // 참조값 비교가 아닌 값 비교를 위해 matcher로 toEqual를 사용
 
-  it('주의 시작(월요일)에 대해 올바른 주의 날짜들을 반환한다', () => {});
+  const WEEK_AUG_17_TO_23_2025 = [
+    new Date(2025, 7, 17),
+    new Date(2025, 7, 18),
+    new Date(2025, 7, 19),
+    new Date(2025, 7, 20),
+    new Date(2025, 7, 21),
+    new Date(2025, 7, 22),
+    new Date(2025, 7, 23),
+  ];
 
-  it('주의 끝(일요일)에 대해 올바른 주의 날짜들을 반환한다', () => {});
+  it('주중의 날짜(수요일)에 대해 올바른 주의 날짜들을 반환한다', () => {
+    expect(getWeekDates(new Date(2025, 7, 20))).toEqual(WEEK_AUG_17_TO_23_2025);
+  });
 
-  it('연도를 넘어가는 주의 날짜를 정확히 처리한다 (연말)', () => {});
+  it('주의 시작(월요일)에 대해 올바른 주의 날짜들을 반환한다', () => {
+    expect(getWeekDates(new Date(2025, 7, 18))).toEqual(WEEK_AUG_17_TO_23_2025);
+  });
 
-  it('연도를 넘어가는 주의 날짜를 정확히 처리한다 (연초)', () => {});
+  it('주의 끝(일요일)에 대해 올바른 주의 날짜들을 반환한다', () => {
+    expect(getWeekDates(new Date(2025, 7, 17))).toEqual(WEEK_AUG_17_TO_23_2025);
+  });
 
-  it('윤년의 2월 29일을 포함한 주를 올바르게 처리한다', () => {});
+  const WEEK_DEC_28_2025_TO_JAN_3_2026 = [
+    new Date(2025, 11, 28),
+    new Date(2025, 11, 29),
+    new Date(2025, 11, 30),
+    new Date(2025, 11, 31),
+    new Date(2026, 0, 1),
+    new Date(2026, 0, 2),
+    new Date(2026, 0, 3),
+  ];
+  it('연도를 넘어가는 주의 날짜를 정확히 처리한다 (연말)', () => {
+    expect(getWeekDates(new Date(2025, 11, 31))).toEqual(WEEK_DEC_28_2025_TO_JAN_3_2026);
+  });
 
-  it('월의 마지막 날짜를 포함한 주를 올바르게 처리한다', () => {});
+  it('연도를 넘어가는 주의 날짜를 정확히 처리한다 (연초)', () => {
+    expect(getWeekDates(new Date(2026, 0, 1))).toEqual(WEEK_DEC_28_2025_TO_JAN_3_2026);
+  });
+
+  const WEEK_FEB_25_TO_MAR_2_2024 = [
+    new Date(2024, 1, 25),
+    new Date(2024, 1, 26),
+    new Date(2024, 1, 27),
+    new Date(2024, 1, 28),
+    new Date(2024, 1, 29),
+    new Date(2024, 2, 1),
+    new Date(2024, 2, 2),
+  ];
+
+  it('윤년의 2월 29일을 포함한 주를 올바르게 처리한다', () => {
+    expect(getWeekDates(new Date(LEAP_YEAR, 1, 29))).toEqual(WEEK_FEB_25_TO_MAR_2_2024);
+  });
+
+  const WEEK_JAN_25_TO_31_2026 = [
+    new Date(2026, 0, 25),
+    new Date(2026, 0, 26),
+    new Date(2026, 0, 27),
+    new Date(2026, 0, 28),
+    new Date(2026, 0, 29),
+    new Date(2026, 0, 30),
+    new Date(2026, 0, 31),
+  ];
+
+  it('월의 마지막 날짜를 포함한 주를 올바르게 처리한다', () => {
+    expect(getWeekDates(new Date(2026, 0, 31))).toEqual(WEEK_JAN_25_TO_31_2026);
+  });
 });
 
 describe('getWeeksAtMonth', () => {
