@@ -51,7 +51,7 @@ describe('getWeekDates', () => {
     ]);
   });
 
-  it('주의 시작(월요일)에 대해 올바른 주의 날짜들을 반환한다', () => {
+  it('월요일에 대해 올바른 주의 날짜들을 반환한다', () => {
     expect(getWeekDates(new Date('2025-08-18'))).toEqual([
       new Date('2025-08-17'),
       new Date('2025-08-18'),
@@ -63,7 +63,7 @@ describe('getWeekDates', () => {
     ]);
   });
 
-  it('주의 끝(일요일)에 대해 올바른 주의 날짜들을 반환한다', () => {
+  it('일요일에 대해 올바른 주의 날짜들을 반환한다', () => {
     expect(getWeekDates(new Date('2025-08-17'))).toEqual([
       new Date('2025-08-17'),
       new Date('2025-08-18'),
@@ -179,17 +179,35 @@ describe('getEventsForDay', () => {
 });
 
 describe('formatWeek', () => {
-  it('월의 중간 날짜에 대해 올바른 주 정보를 반환한다', () => {});
+  it('월의 중간 날짜에 대해 올바른 주 정보를 반환한다', () => {
+    expect(formatWeek(new Date('2025-08-15'))).toBe('2025년 8월 2주');
+    expect(formatWeek(new Date('2025-09-15'))).toBe('2025년 9월 3주');
+  });
 
-  it('월의 첫 주에 대해 올바른 주 정보를 반환한다', () => {});
+  it('월의 첫 주에 대해 올바른 주 정보를 반환한다', () => {
+    expect(formatWeek(new Date('2025-08-07'))).toBe('2025년 8월 1주');
+    expect(formatWeek(new Date('2025-09-04'))).toBe('2025년 9월 1주');
+  });
 
-  it('월의 마지막 주에 대해 올바른 주 정보를 반환한다', () => {});
+  it('월의 마지막 주에 대해 올바른 주 정보를 반환한다', () => {
+    expect(formatWeek(new Date('2025-08-28'))).toBe('2025년 8월 4주');
+    expect(formatWeek(new Date('2025-09-25'))).toBe('2025년 9월 4주');
+  });
 
-  it('연도가 바뀌는 주에 대해 올바른 주 정보를 반환한다', () => {});
+  it('연도가 바뀌는 주에 대해 올바른 주 정보를 반환한다', () => {
+    expect(formatWeek(new Date('2024-12-31'))).toBe('2025년 1월 1주');
+    expect(formatWeek(new Date('2025-12-31'))).toBe('2026년 1월 1주');
+  });
 
-  it('윤년 2월의 마지막 주에 대해 올바른 주 정보를 반환한다', () => {});
+  it('윤년 2월의 마지막 주에 대해 올바른 주 정보를 반환한다', () => {
+    expect(formatWeek(new Date('2020-02-29'))).toBe('2020년 2월 4주');
+    expect(formatWeek(new Date('2024-02-29'))).toBe('2024년 2월 5주');
+  });
 
-  it('평년 2월의 마지막 주에 대해 올바른 주 정보를 반환한다', () => {});
+  it('평년 2월의 마지막 주에 대해 올바른 주 정보를 반환한다', () => {
+    expect(formatWeek(new Date('2026-02-28'))).toBe('2026년 2월 4주');
+    expect(formatWeek(new Date('2025-02-28'))).toBe('2025년 2월 4주');
+  });
 });
 
 describe('formatMonth', () => {
