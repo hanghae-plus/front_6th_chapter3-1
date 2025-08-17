@@ -1,6 +1,6 @@
 import CssBaseline from '@mui/material/CssBaseline';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import { render, screen, within, act } from '@testing-library/react';
+import { render, screen, within, act, fireEvent, RenderResult, waitFor } from '@testing-library/react';
 import { UserEvent, userEvent } from '@testing-library/user-event';
 import { http, HttpResponse } from 'msw';
 import { SnackbarProvider } from 'notistack';
@@ -10,8 +10,41 @@ import App from '../App';
 import { server } from '../setupTests';
 import { Event } from '../types';
 
+const renderApp = () => {
+  const theme = createTheme();
+  return render(
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <SnackbarProvider>
+        <App />
+      </SnackbarProvider>
+    </ThemeProvider>
+  );
+};
+
 describe('일정 CRUD 및 기본 기능', () => {
-  it('입력한 새로운 일정 정보에 맞춰 모든 필드가 이벤트 리스트에 정확히 저장된다.', async () => {
+  it.only('입력한 새로운 일정 정보에 맞춰 모든 필드가 이벤트 리스트에 정확히 저장된다.', async () => {
+    renderApp();
+
+    fireEvent.change(screen.getByLabelText('제목'), { target: { value : '테스트 - 새 회의'}});
+    fireEvent.change(screen.getByLabelText('날짜'), { target: { value : '2025-08-01'}});
+    fireEvent.change(screen.getByLabelText('설명'), { target: { value : '테스트 - 설명'}});
+    fireEvent.change(screen.getByLabelText('시작 시간'), { target: { value : '17:00'}});
+    fireEvent.change(screen.getByLabelText('종료 시간'), { target: { value : '18:00'}});
+
+    await fireEvent.click(
+      screen.getByTestId('event-submit-button')
+    );
+
+    await waitFor(() => {
+      screen.getByTestId('event-list');
+    })
+
+    const eventList = within(screen.getByTestId('event-list'));
+    expect(eventList.getByText('테스트 - 새 회의')).toBeInTheDocument();
+    expect(eventList.getByText('2025-08-01')).toBeInTheDocument();
+    expect(eventList.getByText('테스트 - 설명')).toBeInTheDocument();
+
     // ! HINT. event를 추가 제거하고 저장하는 로직을 잘 살펴보고, 만약 그대로 구현한다면 어떤 문제가 있을 지 고민해보세요.
   });
 

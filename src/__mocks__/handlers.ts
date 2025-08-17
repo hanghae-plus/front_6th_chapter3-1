@@ -10,7 +10,7 @@ const serverState = { events };
 
 export const handlers = [
   http.get('/api/events', () => {
-    return HttpResponse.json(serverState.events);
+    return HttpResponse.json({ events: serverState.events });
   }),
 
   http.post('/api/events', async ({ request }) => {
