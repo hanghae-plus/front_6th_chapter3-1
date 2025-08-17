@@ -24,7 +24,7 @@ export function getWeekDates(date: Date): Date[] {
 }
 
 /**
- * 주어진 날짜의 월 정보를 주 단위로 반환합니다.
+ * 주어진 날짜의 월 정보를 주 단위 배열로 반환합니다.
  */
 export function getWeeksAtMonth(currentDate: Date) {
   const year = currentDate.getFullYear();
@@ -54,6 +54,9 @@ export function getWeeksAtMonth(currentDate: Date) {
   return weeks;
 }
 
+/**
+ * 주어진 날짜에 해당하는 이벤트를 반환합니다.
+ */
 export function getEventsForDay(events: Event[], date: number): Event[] {
   return events.filter((event) => new Date(event.date).getDate() === date);
 }
