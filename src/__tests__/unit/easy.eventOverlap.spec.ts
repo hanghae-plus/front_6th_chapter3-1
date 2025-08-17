@@ -93,9 +93,69 @@ describe('convertEventToDateRange', () => {
 });
 
 describe('isOverlapping', () => {
-  it('두 이벤트가 겹치는 경우 true를 반환한다', () => {});
+  it('두 이벤트가 겹치는 경우 true를 반환한다', () => {
+    const MOCK_EVENTS: Event[] = [
+      {
+        id: 'new-1',
+        title: '오전 회의',
+        date: '2025-08-01',
+        startTime: '09:00',
+        endTime: '10:00',
+        description: '월초 팀 회의',
+        location: '회의실 A',
+        category: '업무',
+        repeat: { type: 'none', interval: 0 },
+        notificationTime: 1,
+      },
+      {
+        id: '80d85368-b4a4-47b3-b959-25171d49371f',
+        title: '운동',
+        date: '2025-08-01',
+        startTime: '09:59',
+        endTime: '19:00',
+        description: '주간 운동',
+        location: '헬스장',
+        category: '개인',
+        repeat: { type: 'none', interval: 0 },
+        notificationTime: 1,
+      },
+    ];
+    expect(isOverlapping(MOCK_EVENTS[0], MOCK_EVENTS[1])).toBe(true);
+  });
 
-  it('두 이벤트가 겹치지 않는 경우 false를 반환한다', () => {});
+  it('두 이벤트가 겹치지 않는 경우 false를 반환한다', () => {
+    const MOCK_EVENTS: Event[] = [
+      {
+        id: '80d85368-b4a4-47b3-b959-25171d49371f',
+        title: '운동',
+        date: '2025-08-01',
+        startTime: '10:00',
+        endTime: '19:00',
+        description: '주간 운동',
+        location: '헬스장',
+        category: '개인',
+        repeat: { type: 'none', interval: 0 },
+        notificationTime: 1,
+      },
+      {
+        id: 'new-1',
+        title: '오전 회의',
+        date: '2025-08-01',
+        startTime: '09:00',
+        endTime: '10:00',
+        description: '월초 팀 회의',
+        location: '회의실 A',
+        category: '업무',
+        repeat: { type: 'none', interval: 0 },
+        notificationTime: 1,
+      },
+    ];
+
+    expect(isOverlapping(MOCK_EVENTS[0], MOCK_EVENTS[1])).toBe(false);
+
+    MOCK_EVENTS[0].startTime = '12:00';
+    expect(isOverlapping(MOCK_EVENTS[0], MOCK_EVENTS[1])).toBe(false);
+  });
 });
 
 describe('findOverlappingEvents', () => {
