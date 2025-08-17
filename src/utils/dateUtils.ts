@@ -105,6 +105,10 @@ export function isDateInRange(date: Date, rangeStart: Date, rangeEnd: Date): boo
   return normalizedDate >= normalizedStart && normalizedDate <= normalizedEnd;
 }
 
+/**
+ * 자릿수를 size로 맞춘 string형태로 반환합니다.
+ * 자릿수가 size보다 작은 경우 앞의 자리수는 0으로 채웁니다.
+ */
 export function fillZero(value: number, size = 2) {
   return String(value).padStart(size, '0');
 }
