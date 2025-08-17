@@ -163,22 +163,48 @@ describe('getEventsForDay', () => {
   });
 });
 
-describe('formatWeek', () => {
-  it('월의 중간 날짜에 대해 올바른 주 정보를 반환한다', () => {});
+describe('formatWeek (목요일 기준으로 월/주차를 계산)', () => {
+  it('월 중간 날짜 입력 시 해당 월과 주차를 반환한다', () => {
+    const week = formatWeek(new Date('2025-08-15'));
+    expect(week).toBe('2025년 8월 2주');
+  });
 
-  it('월의 첫 주에 대해 올바른 주 정보를 반환한다', () => {});
+  it('월 초 날짜가 속한 주가 이전 달에 포함되면 이전 달과 주차를 반환한다', () => {
+    const week = formatWeek(new Date('2025-08-01'));
+    expect(week).toBe('2025년 7월 5주');
+  });
 
-  it('월의 마지막 주에 대해 올바른 주 정보를 반환한다', () => {});
+  it('월 말 날짜가 속한 주가 다음 달에 포함되면 다음 달과 주차를 반환한다', () => {
+    const week = formatWeek(new Date('2025-08-31'));
+    expect(week).toBe('2025년 9월 1주');
+  });
 
-  it('연도가 바뀌는 주에 대해 올바른 주 정보를 반환한다', () => {});
+  it('해당 주가 연도를 넘어가면, 다음 해의 연도와 주차를 반환한다', () => {
+    const week = formatWeek(new Date('2025-12-28'));
+    expect(week).toBe('2026년 1월 1주');
+  });
 
-  it('윤년 2월의 마지막 주에 대해 올바른 주 정보를 반환한다', () => {});
+  it('윤년(2024년) 2월의 마지막 날짜 입력 시 해당 월과 주차를 올바르게 반환한다', () => {
+    const week = formatWeek(new Date('2024-02-29'));
+    expect(week).toBe('2024년 2월 5주');
+  });
 
-  it('평년 2월의 마지막 주에 대해 올바른 주 정보를 반환한다', () => {});
+  it('평년(2025년) 2월의 마지막 날짜 입력 시 해당 월과 주차를 올바르게 반환한다', () => {
+    const week = formatWeek(new Date('2025-02-28'));
+    expect(week).toBe('2025년 2월 4주');
+  });
 });
 
 describe('formatMonth', () => {
-  it("2025년 7월 10일을 '2025년 7월'로 반환한다", () => {});
+  it('주어진 날짜의 연도와 월을 "YYYY년 M월" 형식으로 반환한다', () => {
+    const month = formatMonth(new Date('2025-07-10'));
+    expect(month).toBe('2025년 7월');
+  });
+
+  it('연도가 바뀌는 날짜도 올바르게 처리한다', () => {
+    const month = formatMonth(new Date('2026-01-01'));
+    expect(month).toBe('2026년 1월');
+  });
 });
 
 describe('isDateInRange', () => {

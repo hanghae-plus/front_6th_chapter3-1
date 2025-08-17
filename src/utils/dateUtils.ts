@@ -61,6 +61,9 @@ export function getEventsForDay(events: Event[], date: number): Event[] {
   return events.filter((event) => new Date(event.date).getDate() === date);
 }
 
+/**
+ * 주어진 날짜에 해당하는 주차를 목요일 기준으로 년, 월, 주차 형식으로 반환합니다.
+ */
 export function formatWeek(targetDate: Date) {
   const dayOfWeek = targetDate.getDay();
   const diffToThursday = 4 - dayOfWeek;
