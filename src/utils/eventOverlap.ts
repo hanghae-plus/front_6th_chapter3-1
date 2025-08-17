@@ -1,5 +1,10 @@
 import { Event, EventForm } from '../types';
 
+/**
+ * 주어진 날짜 문자열과 시간 문자열을 결합하여 ISO형식의 문자열로 만든 뒤 Date객체로 만들어 반환
+ * 무조건 UTC기준으로 시간 해석되므로 timezone 고려 필요
+ *
+ */
 export function parseDateTime(date: string, time: string) {
   return new Date(`${date}T${time}`);
 }
