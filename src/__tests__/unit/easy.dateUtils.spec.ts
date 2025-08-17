@@ -28,7 +28,7 @@ describe('getDaysInMonth', () => {
     expect(getDaysInMonth(2025, 2)).toBe(28);
   });
 
-  describe('경계값 및 특수 케이스', () => {
+  describe('잘못된 월 입력 처리', () => {
     it('13월 입력 시 이전 달(12월)의 일수인 31일을 반환한다', () => {
       expect(getDaysInMonth(2025, 13)).toBe(31);
     });
