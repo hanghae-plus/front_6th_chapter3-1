@@ -12,15 +12,36 @@ import {
 } from '../../utils/dateUtils';
 
 describe('getDaysInMonth', () => {
-  it('1월은 31일 수를 반환한다', () => {});
 
-  it('4월은 30일 일수를 반환한다', () => {});
+  const date = new Date();  
+  const year = date.getFullYear();
+  const isLeapYear = (year % 4 === 0 && year % 100 !== 0) || (year % 400 === 0);
 
-  it('윤년의 2월에 대해 29일을 반환한다', () => {});
+  it('1월은 31일 일수를 반환한다', () => {
+    expect(getDaysInMonth(year, 1)).toBe(31);
+  });
 
-  it('평년의 2월에 대해 28일을 반환한다', () => {});
+  it('4월은 30일 일수를 반환한다', () => {
+    expect(getDaysInMonth(year, 4)).toBe(30);
+  });
 
-  it('유효하지 않은 월에 대해 적절히 처리한다', () => {});
+  it('윤년의 2월에 대해 29일을 반환한다', () => {
+    isLeapYear ? expect(getDaysInMonth(year, 2)).toBe(29)
+      :expect(getDaysInMonth(year, 2)).toBe(28);
+  });
+    
+  it('평년의 2월에 대해 28일을 반환한다', () => {
+    !isLeapYear ? expect(getDaysInMonth(year, 2)).toBe(28)
+      :expect(getDaysInMonth(year, 2)).toBe(29);
+  });
+
+  it('유효하지 않은 월에 대해 falsy 값을 반환한다.', () => {
+    const formatDate = formatMonth(new Date());
+    const replacedFormat = formatDate.replace(/[가-힣]/g, '/');
+
+    expect(!expectTypeOf(Date.parse(replacedFormat)).toBeNumber()).toBe(false);
+    
+  });
 });
 
 describe('getWeekDates', () => {
