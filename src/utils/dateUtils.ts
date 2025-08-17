@@ -59,6 +59,10 @@ export function getEventsForDay(events: Event[], date: number): Event[] {
   return events.filter((event) => new Date(event.date).getDate() === date);
 }
 
+/**
+ * 주 번호는 '목요일'을 기준으로 한다.(ISO 8601 주 번호 규칙)
+ * 입력한 날짜에 해당하는 주를 'N년 M월 D주'형태로 반환한다.
+ */
 export function formatWeek(targetDate: Date) {
   const dayOfWeek = targetDate.getDay();
   const diffToThursday = 4 - dayOfWeek;

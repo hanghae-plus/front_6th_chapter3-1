@@ -225,18 +225,37 @@ describe('getEventsForDay', () => {
   });
 });
 
+// 주의 기준은 '목요일'로 한다.
 describe('formatWeek', () => {
-  it('월의 중간 날짜에 대해 올바른 주 정보를 반환한다', () => {});
+  it('월의 중간 날짜에 대해 올바른 주 정보를 반환한다', () => {
+    expect(formatWeek(new Date(2025, 7, 18))).toBe('2025년 8월 3주');
+  });
 
-  it('월의 첫 주에 대해 올바른 주 정보를 반환한다', () => {});
+  it('월의 첫 주에 대해 올바른 주 정보를 반환한다', () => {
+    expect(formatWeek(new Date(2025, 7, 4))).toBe('2025년 8월 1주');
+    expect(formatWeek(new Date(2025, 7, 7))).toBe('2025년 8월 1주');
+    expect(formatWeek(new Date(2025, 7, 9))).toBe('2025년 8월 1주');
+  });
 
-  it('월의 마지막 주에 대해 올바른 주 정보를 반환한다', () => {});
+  it('월의 마지막 주에 대해 올바른 주 정보를 반환한다', () => {
+    expect(formatWeek(new Date(2025, 7, 24))).toBe('2025년 8월 4주');
+    expect(formatWeek(new Date(2025, 7, 28))).toBe('2025년 8월 4주');
+    expect(formatWeek(new Date(2025, 7, 30))).toBe('2025년 8월 4주');
+  });
 
-  it('연도가 바뀌는 주에 대해 올바른 주 정보를 반환한다', () => {});
+  it('연도가 바뀌는 주에 대해 올바른 주 정보를 반환한다', () => {
+    expect(formatWeek(new Date(2025, 11, 29))).toBe('2026년 1월 1주');
+  });
 
-  it('윤년 2월의 마지막 주에 대해 올바른 주 정보를 반환한다', () => {});
+  it('윤년 2월의 마지막 주에 대해 올바른 주 정보를 반환한다', () => {
+    expect(formatWeek(new Date(2024, 1, 26))).toBe('2024년 2월 5주');
+    expect(formatWeek(new Date(2028, 1, 27))).toBe('2028년 3월 1주');
+  });
 
-  it('평년 2월의 마지막 주에 대해 올바른 주 정보를 반환한다', () => {});
+  it('평년 2월의 마지막 주에 대해 올바른 주 정보를 반환한다', () => {
+    expect(formatWeek(new Date(2025, 1, 26))).toBe('2025년 2월 4주');
+    expect(formatWeek(new Date(2026, 1, 26))).toBe('2026년 2월 4주');
+  });
 });
 
 describe('formatMonth', () => {
