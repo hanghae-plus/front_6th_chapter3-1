@@ -51,6 +51,7 @@ describe('convertEventToDateRange', () => {
 
   it('잘못된 날짜의 이벤트는 start와 end 모두 Invalid Date가 된다', () => {
     const dateRange = convertEventToDateRange(wrongDateEvent);
+
     expect(dateRange).toEqual({
       start: new Date('Invalid Date'),
       end: new Date('Invalid Date'),
@@ -59,6 +60,7 @@ describe('convertEventToDateRange', () => {
 
   it('잘못된 시간 형식의 이벤트에 대해서는 해당 시간대를 Invalid Date를 반환한다', () => {
     const dateRange = convertEventToDateRange(wrongTimeEvent);
+
     expect(dateRange).toEqual({
       start: new Date('Invalid Date'),
       end: new Date('2025-08-28T12:00:00'),
@@ -70,24 +72,59 @@ describe('isOverlapping', () => {
   it('두 이벤트 시간이 겹치는 경우 true를 반환한다', () => {
     const event1 = createMockEvent(1, { date: '2025-08-01', startTime: '09:00', endTime: '10:00' });
     const event2 = createMockEvent(2, { date: '2025-08-01', startTime: '09:30', endTime: '10:30' });
+
     expect(isOverlapping(event1, event2)).toBe(true);
   });
 
   it('두 이벤트 시간이 겹치지 않는 경우 false를 반환한다', () => {
     const event1 = createMockEvent(1, { date: '2025-08-01', startTime: '09:00', endTime: '10:00' });
     const event2 = createMockEvent(2, { date: '2025-08-01', startTime: '10:30', endTime: '11:30' });
+
     expect(isOverlapping(event1, event2)).toBe(false);
   });
 
   it('두 이벤트의 시작과 끝이 맞닿는 경우에도 false를 반환한다', () => {
     const event1 = createMockEvent(1, { date: '2025-08-01', startTime: '09:00', endTime: '10:00' });
     const event2 = createMockEvent(2, { date: '2025-08-01', startTime: '10:00', endTime: '11:00' });
+
     expect(isOverlapping(event1, event2)).toBe(false);
   });
 });
 
 describe('findOverlappingEvents', () => {
-  it('새 이벤트와 겹치는 모든 이벤트를 반환한다', () => {});
+  it('새 이벤트와 겹치는 모든 이벤트를 반환한다', () => {
+    const events = [
+      createMockEvent(1, { date: '2025-08-01', startTime: '09:00', endTime: '10:00' }),
+      createMockEvent(2, { date: '2025-08-01', startTime: '09:30', endTime: '10:30' }),
+      createMockEvent(3, { date: '2025-08-01', startTime: '12:00', endTime: '13:00' }), // 겹치지 않음
+    ];
 
-  it('겹치는 이벤트가 없으면 빈 배열을 반환한다', () => {});
+    const newEvent = createMockEvent(5, {
+      date: '2025-08-01',
+      startTime: '09:45',
+      endTime: '10:15',
+    });
+
+    const result = findOverlappingEvents(newEvent, events);
+
+    expect(result.map((e) => e.id)).toEqual(['1', '2']);
+  });
+
+  it('겹치는 이벤트가 없으면 빈 배열을 반환한다', () => {
+    //겹치지 않는 이벤트들
+    const events = [
+      createMockEvent(1, { date: '2025-08-02', startTime: '07:00', endTime: '08:00' }),
+      createMockEvent(2, { date: '2025-08-02', startTime: '12:00', endTime: '13:00' }),
+      createMockEvent(3, { date: '2025-08-02', startTime: '09:00', endTime: '10:00' }),
+    ];
+
+    const newEvent = createMockEvent(4, {
+      date: '2025-08-01',
+      startTime: '13:00',
+      endTime: '14:00',
+    });
+
+    const result = findOverlappingEvents(newEvent, events);
+    expect(result).toEqual([]);
+  });
 });
