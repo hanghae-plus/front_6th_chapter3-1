@@ -47,43 +47,43 @@ describe('getWeekDates', () => {
     });
   };
 
-  it('수요일에 해당하는 날짜를 입력했을때 그 주의 일~토까지의 날짜를 반환한다', () => {
+  it('수요일에 해당하는 날짜가 포함된 주의 일~토까지의 날짜를 반환한다', () => {
     const wednesday = new Date(2025, 0, 3);
     const weekDates = getWeekDates(wednesday);
     expectValidWeekDates(weekDates);
   });
 
-  it('월요일에 해당하는 날짜를 입력했을때 그 주의 일~토까지의 날짜를 반환한다', () => {
+  it('월요일에 해당하는 날짜가 포함된 주의 일~토까지의 날짜를 반환한다', () => {
     const monday = new Date(2025, 0, 1);
     const weekDates = getWeekDates(monday);
     expectValidWeekDates(weekDates);
   });
 
-  it('일요일에 해당하는 날짜를 입력했을때 그 주의 일~토까지의 날짜를 반환한다', () => {
+  it('일요일에 해당하는 날짜가 포함된 주의 일~토까지의 날짜를 반환한다', () => {
     const sunday = new Date(2025, 0, 7);
     const weekDates = getWeekDates(sunday);
     expectValidWeekDates(weekDates);
   });
 
-  it('연도가 끝나는 날짜를 입력 했을 때 다음해 1월이 포함된 그 주의 일~토 날짜를 반환한다', () => {
+  it('연도가 끝나서 다음해 1월이 포함된 날짜가 포함된 주의 일~토 날짜를 반환한다', () => {
     const yearEnd = new Date(2025, 11, 31);
     const weekDates = getWeekDates(yearEnd);
     expectValidWeekDates(weekDates);
   });
 
-  it('연도가 시작되는 날짜를 입력 했을 때 이전해 12월이 포함된 그 주의 일~토 날짜를 반환한다', () => {
+  it('연도가 시작되서 이전해 12월이 포함된 날짜가 포함된 주의 일~토 날짜를 반환한다', () => {
     const yearStart = new Date(2025, 0, 1);
     const weekDates = getWeekDates(yearStart);
     expectValidWeekDates(weekDates);
   });
 
-  it('윤년의 마지막 날짜(2월 29일)를 입력했을때 그 주의 일~토까지의 날짜를 반환한다', () => {
+  it('윤년의 마지막 날짜(2월 29일)가 포함된 주의 일~토 날짜를 반환한다', () => {
     const leapDay = new Date(2025, 1, 29);
     const weekDates = getWeekDates(leapDay);
     expectValidWeekDates(weekDates);
   });
 
-  it('월의 마지막 날짜를 입력했을때 그 주의 일~토까지의 날짜를 반환한다', () => {
+  it('월의 마지막 날짜가 포함된 주의 일~토 날짜를 반환한다', () => {
     const monthEnd = new Date(2025, 0, 31);
     const weekDates = getWeekDates(monthEnd);
     expectValidWeekDates(weekDates);
@@ -184,25 +184,25 @@ describe('getEventsForDay', () => {
 });
 
 describe('formatWeek', () => {
-  it('월의 중간 날짜(15일)을 입력했을 때 그 주의 포맷된 문자열을 반환한다', () => {
+  it('월의 중간 날짜(15일)가 포함된 주의 포맷된 문자열을 반환한다', () => {
     const dateAtMonthOfMiddle = new Date(2025, 0, 15);
     const fomratedWeek = formatWeek(dateAtMonthOfMiddle);
     expect(fomratedWeek).toBe('2025년 1월 3주');
   });
 
-  it('월의 첫 주에 해당하는 날짜를 입력했을 때 그 주의 포맷된 문자열을 반환한다', () => {
+  it('월의 첫 주에 해당하는 날짜가 포함된 주의 포맷된 문자열을 반환한다', () => {
     const dateAtMonthOfFirstWeek = new Date(2025, 0, 1);
     const fomratedWeek = formatWeek(dateAtMonthOfFirstWeek);
     expect(fomratedWeek).toBe('2025년 1월 1주');
   });
 
-  it('월의 마지막 주에 해당하는 날짜를 입력했을 때 그 주의 포맷된 문자열을 반환한다', () => {
+  it('월의 마지막 주에 해당하는 날짜가 포함된 주의 포맷된 문자열을 반환한다', () => {
     const dateAtMonthOfLastWeek = new Date(2025, 0, 31);
     const fomratedWeek = formatWeek(dateAtMonthOfLastWeek);
     expect(fomratedWeek).toBe('2025년 1월 5주');
   });
 
-  it('연도가 바뀌는 주에 해당하는 날짜를 입력했을 때 그 주의 포맷된 문자열을 반환한다', () => {
+  it('연도가 바뀌는 주에 해당하는 날짜가 포함된 주의 포맷된 문자열을 반환한다', () => {
     const dateAtYearChange = new Date(2025, 11, 31);
     const fomratedWeek = formatWeek(dateAtYearChange);
     // 목요일이 기준되는 ISO표준 특성상 특정 케이스에서 주차가 다음 달로 넘어가는 주차가 있어서 로직에 문제가 있으나,
@@ -210,13 +210,13 @@ describe('formatWeek', () => {
     expect(fomratedWeek).toBe('2026년 1월 1주');
   });
 
-  it('윤년 2월의 마지막 주에 해당하는 날짜를 입력했을 때 그 주의 포맷된 문자열을 반환한다', () => {
+  it('윤년 2월의 마지막 주에 해당하는 날짜가 포함된 주의 포맷된 문자열을 반환한다', () => {
     const dateAtLeapYear = new Date(2024, 1, 29);
     const fomratedWeek = formatWeek(dateAtLeapYear);
     expect(fomratedWeek).toBe('2024년 2월 5주');
   });
 
-  it('평년 2월의 마지막 주에 해당하는 날짜를 입력했을 때 그 주의 포맷된 문자열을 반환한다', () => {
+  it('평년 2월의 마지막 주에 해당하는 날짜가 포함된 주의 포맷된 문자열을 반환한다', () => {
     const dateAtCommonYear = new Date(2025, 1, 28);
     const fomratedWeek = formatWeek(dateAtCommonYear);
     expect(fomratedWeek).toBe('2025년 2월 4주');
@@ -224,7 +224,7 @@ describe('formatWeek', () => {
 });
 
 describe('formatMonth', () => {
-  it('특정 날짜를 입력했을 때 그 월의 포맷된 문자열을 반환한다', () => {
+  it('특정 날짜의 월 정보를 포맷된 문자열로 반환한다', () => {
     const date = new Date(2025, 6, 10);
     const fomratedMonth = formatMonth(date);
     expect(fomratedMonth).toBe('2025년 7월');
@@ -242,42 +242,42 @@ describe('isDateInRange', () => {
     expect(isInRange).toBe(expected);
   };
 
-  it('범위 내의 날짜 2025-07-10에 대해 true를 반환한다', () => {
+  it('범위 내에 2025-07-10가 포함되어 있으면 true를 반환한다', () => {
     const targetDate = new Date(2025, 6, 10);
     const rangeStart = new Date(2025, 6, 1);
     const rangeEnd = new Date(2025, 6, 31);
     expectDateInRange(targetDate, rangeStart, rangeEnd, true);
   });
 
-  it('범위의 시작일 2025-07-01에 대해 true를 반환한다', () => {
+  it('범위 시작일과 타겟 날짜가 같으면 true를 반환한다', () => {
     const targetDate = new Date(2025, 6, 1);
     const rangeStart = new Date(2025, 6, 1);
     const rangeEnd = new Date(2025, 6, 31);
     expectDateInRange(targetDate, rangeStart, rangeEnd, true);
   });
 
-  it('범위의 종료일 2025-07-31에 대해 true를 반환한다', () => {
+  it('범위 종료일과 타겟 날짜가 같으면 true를 반환한다', () => {
     const targetDate = new Date(2025, 6, 31);
     const rangeStart = new Date(2025, 6, 1);
     const rangeEnd = new Date(2025, 6, 31);
     expectDateInRange(targetDate, rangeStart, rangeEnd, true);
   });
 
-  it('범위 이전의 날짜 2025-06-30에 대해 false를 반환한다', () => {
+  it('범위 시작일보다 타겟 날짜가 이전이면 false를 반환한다', () => {
     const targetDate = new Date(2025, 5, 30);
     const rangeStart = new Date(2025, 6, 1);
     const rangeEnd = new Date(2025, 6, 31);
     expectDateInRange(targetDate, rangeStart, rangeEnd, false);
   });
 
-  it('범위 이후의 날짜 2025-08-01에 대해 false를 반환한다', () => {
+  it('범위 종료일보다 타겟 날짜가 이후이면 false를 반환한다', () => {
     const targetDate = new Date(2025, 7, 1);
     const rangeStart = new Date(2025, 6, 1);
     const rangeEnd = new Date(2025, 6, 31);
     expectDateInRange(targetDate, rangeStart, rangeEnd, false);
   });
 
-  it('시작일이 종료일보다 늦은 경우 모든 날짜에 대해 false를 반환한다', () => {
+  it('범위 시작일이 종료일보다 늦으면 모든 날짜에 대해 false를 반환한다', () => {
     const targetDate = new Date(2025, 6, 15);
     const rangeStart = new Date(2025, 6, 31);
     const rangeEnd = new Date(2025, 6, 1);
