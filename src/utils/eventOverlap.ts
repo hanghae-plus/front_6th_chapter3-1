@@ -9,6 +9,9 @@ export function parseDateTime(date: string, time: string) {
   return new Date(`${date}T${time}`);
 }
 
+/**
+ * Event의 날짜와 시작시간, 종료시간을 인자로 받아 {start:Date, end:Date}형태로 변환해 반환
+ */
 export function convertEventToDateRange({ date, startTime, endTime }: Event | EventForm) {
   return {
     start: parseDateTime(date, startTime),

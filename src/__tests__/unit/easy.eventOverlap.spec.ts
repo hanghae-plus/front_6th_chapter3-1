@@ -30,11 +30,66 @@ describe('parseDateTime', () => {
 });
 
 describe('convertEventToDateRange', () => {
-  it('일반적인 이벤트를 올바른 시작 및 종료 시간을 가진 객체로 변환한다', () => {});
+  it('일반적인 이벤트를 올바른 시작 및 종료 시간을 가진 객체로 변환한다', () => {
+    const MOCK_EVENT: Event = {
+      id: 'new-1',
+      title: '오전 회의',
+      date: '2025-08-01',
+      startTime: '09:00',
+      endTime: '10:00',
+      description: '월초 팀 회의',
+      location: '회의실 A',
+      category: '업무',
+      repeat: { type: 'none', interval: 0 },
+      notificationTime: 1,
+    };
 
-  it('잘못된 날짜 형식의 이벤트에 대해 Invalid Date를 반환한다', () => {});
+    expect(convertEventToDateRange(MOCK_EVENT)).toEqual({
+      start: new Date('2025-08-01T09:00'),
+      end: new Date('2025-08-01T10:00'),
+    });
+  });
 
-  it('잘못된 시간 형식의 이벤트에 대해 Invalid Date를 반환한다', () => {});
+  it('잘못된 날짜 형식의 이벤트에 대해 Invalid Date를 반환한다', () => {
+    const MOCK_EVENT: Event = {
+      id: 'new-1',
+      title: '오전 회의',
+      date: '2025_08_01',
+      startTime: '09:00',
+      endTime: '10:00',
+      description: '월초 팀 회의',
+      location: '회의실 A',
+      category: '업무',
+      repeat: { type: 'none', interval: 0 },
+      notificationTime: 1,
+    };
+
+    expect(convertEventToDateRange(MOCK_EVENT).start.getTime()).toBeNaN();
+
+    MOCK_EVENT.date = '2025/08/01';
+    expect(convertEventToDateRange(MOCK_EVENT).start.getTime()).toBeNaN();
+  });
+
+  it('잘못된 시간 형식의 이벤트에 대해 Invalid Date를 반환한다', () => {
+    const MOCK_EVENT: Event = {
+      id: 'new-1',
+      title: '오전 회의',
+      date: '2025-08-01',
+      startTime: '0900',
+      endTime: '1000',
+      description: '월초 팀 회의',
+      location: '회의실 A',
+      category: '업무',
+      repeat: { type: 'none', interval: 0 },
+      notificationTime: 1,
+    };
+
+    expect(convertEventToDateRange(MOCK_EVENT).start.getTime()).toBeNaN();
+
+    MOCK_EVENT.startTime = '09/00';
+    MOCK_EVENT.endTime = '10/00';
+    expect(convertEventToDateRange(MOCK_EVENT).start.getTime()).toBeNaN();
+  });
 });
 
 describe('isOverlapping', () => {
