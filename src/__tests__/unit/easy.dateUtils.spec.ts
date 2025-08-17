@@ -61,7 +61,27 @@ describe('getWeekDates', () => {
 });
 
 describe('getWeeksAtMonth', () => {
-  it('2025년 7월 1일의 올바른 주 정보를 반환해야 한다', () => {});
+  it('2025년 7월 1일의 올바른 주 정보를 반환해야 한다', () => {
+    const firstDay = new Date('2025-07-01');
+    const lastDay = new Date('2025-07-31');
+
+    const monthWeeks = getWeeksAtMonth(firstDay);
+
+    const firstWeekDays = getWeekDates(firstDay)
+      .filter(date => date.getMonth() === 6)
+      .map(date => date.getDate());
+
+    const lastWeekDays = getWeekDates(lastDay)
+      .filter(date => date.getMonth() === 6)
+      .map(date => date.getDate());
+
+    const firstWeekDates = monthWeeks[0].filter(date => date !== null);
+    const lastWeekDates = monthWeeks[monthWeeks.length - 1].filter(date => date !== null);
+
+    expect(firstWeekDays).toStrictEqual(firstWeekDates);
+    expect(lastWeekDays).toStrictEqual(lastWeekDates);
+
+  });
 });
 
 describe('getEventsForDay', () => {
