@@ -109,7 +109,7 @@ describe('getWeeksAtMonth', () => {
     ]);
   });
 
-  it('평년의 2월 28일로 끝나는 월의 주 단의 배열을 올바르게 처리한다', () => {
+  it('평년(2025년)의 2월 28일로 끝나는 월의 주 단의 배열을 올바르게 처리한다', () => {
     const weeksAtMonth = getWeeksAtMonth(new Date('2025-02-28'));
 
     expect(weeksAtMonth).toEqual([
@@ -121,7 +121,7 @@ describe('getWeeksAtMonth', () => {
     ]);
   });
 
-  it('윤년의 2월 29일로 끝나는 월의 주 단의 배열을 올바르게 처리한다', () => {
+  it('윤년(2024년)의 2월 29일로 끝나는 월의 주 단의 배열을 올바르게 처리한다', () => {
     const weeksAtMonth = getWeeksAtMonth(new Date('2024-02-29'));
 
     expect(weeksAtMonth).toEqual([
@@ -163,7 +163,7 @@ describe('getEventsForDay', () => {
   });
 });
 
-describe('formatWeek (목요일 기준으로 월/주차를 계산)', () => {
+describe('formatWeek', () => {
   it('월 중간 날짜 입력 시 해당 월과 주차를 반환한다', () => {
     const week = formatWeek(new Date('2025-08-15'));
     expect(week).toBe('2025년 8월 2주');
@@ -211,27 +211,27 @@ describe('isDateInRange', () => {
   const startDate = new Date('2025-07-01');
   const endDate = new Date('2025-07-31');
 
-  it('주어진 날짜가 범위 내에 있으면 true를 반환한다', () => {
+  it('범위 내의 날짜 2025-07-10에 대해 true를 반환한다', () => {
     const isInRange = isDateInRange(new Date('2025-07-10'), startDate, endDate);
     expect(isInRange).toBe(true);
   });
 
-  it('주어진 날짜가 범위의 시작일을 포함하는 경우 true를 반환한다', () => {
+  it('범위의 시작일 2025-07-01에 대해 true를 반환한다', () => {
     const isInRange = isDateInRange(new Date('2025-07-01'), startDate, endDate);
     expect(isInRange).toBe(true);
   });
 
-  it('주어진 날짜가 범위의 종료일을 포함하는 경우 true를 반환한다', () => {
+  it('범위의 종료일 2025-07-31에 대해 true를 반환한다', () => {
     const isInRange = isDateInRange(new Date('2025-07-31'), startDate, endDate);
     expect(isInRange).toBe(true);
   });
 
-  it('주어진 날짜가 범위 이전일 경우 false를 반환한다', () => {
+  it('범위 이전의 날짜 2025-06-30에 대해 false를 반환한다', () => {
     const isInRange = isDateInRange(new Date('2025-06-30'), startDate, endDate);
     expect(isInRange).toBe(false);
   });
 
-  it('주어진 날짜가 범위 이후일 경우 false를 반환한다', () => {
+  it('범위 이후의 날짜 2025-08-01에 대해 false를 반환한다', () => {
     const isInRange = isDateInRange(new Date('2025-08-01'), startDate, endDate);
     expect(isInRange).toBe(false);
   });
@@ -243,23 +243,50 @@ describe('isDateInRange', () => {
 });
 
 describe('fillZero', () => {
-  it("5를 2자리로 변환하면 '05'를 반환한다", () => {});
+  it("5를 2자리로 변환하면 '05'를 반환한다", () => {
+    const result = fillZero(5, 2);
+    expect(result).toBe('05');
+  });
 
-  it("10을 2자리로 변환하면 '10'을 반환한다", () => {});
+  it("10을 2자리로 변환하면 '10'을 반환한다", () => {
+    const result = fillZero(10, 2);
+    expect(result).toBe('10');
+  });
 
-  it("3을 3자리로 변환하면 '003'을 반환한다", () => {});
+  it("3을 3자리로 변환하면 '003'을 반환한다", () => {
+    const result = fillZero(3, 3);
+    expect(result).toBe('003');
+  });
 
-  it("100을 2자리로 변환하면 '100'을 반환한다", () => {});
+  it("100을 2자리로 변환하면 '100'을 반환한다", () => {
+    const result = fillZero(100, 2);
+    expect(result).toBe('100');
+  });
 
-  it("0을 2자리로 변환하면 '00'을 반환한다", () => {});
+  it("0을 2자리로 변환하면 '00'을 반환한다", () => {
+    const result = fillZero(0, 2);
+    expect(result).toBe('00');
+  });
 
-  it("1을 5자리로 변환하면 '00001'을 반환한다", () => {});
+  it("1을 5자리로 변환하면 '00001'을 반환한다", () => {
+    const result = fillZero(1, 5);
+    expect(result).toBe('00001');
+  });
 
-  it("소수점이 있는 3.14를 5자리로 변환하면 '03.14'를 반환한다", () => {});
+  it("소수점이 있는 3.14를 5자리로 변환하면 '03.14'를 반환한다", () => {
+    const result = fillZero(3.14, 5);
+    expect(result).toBe('03.14');
+  });
 
-  it('size 파라미터를 생략하면 기본값 2를 사용한다', () => {});
+  it('size 파라미터를 생략하면 기본값 2를 사용한다', () => {
+    const result = fillZero(1);
+    expect(result).toBe('01');
+  });
 
-  it('value가 지정된 size보다 큰 자릿수를 가지면 원래 값을 그대로 반환한다', () => {});
+  it('value가 지정된 size보다 큰 자릿수를 가지면 원래 값을 그대로 반환한다', () => {
+    const result = fillZero(12345, 2);
+    expect(result).toBe('12345');
+  });
 });
 
 describe('formatDate', () => {
