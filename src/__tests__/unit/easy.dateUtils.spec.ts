@@ -12,15 +12,35 @@ import {
 } from '../../utils/dateUtils';
 
 describe('getDaysInMonth', () => {
-  it('1월은 31일 수를 반환한다', () => {});
+  it('1월은 31일 수를 반환한다', () => {
+    expect(getDaysInMonth(2025, 1)).toBe(31);
+  });
 
-  it('4월은 30일 일수를 반환한다', () => {});
+  it('4월은 30일 일수를 반환한다', () => {
+    expect(getDaysInMonth(2025, 4)).toBe(30);
+  });
 
-  it('윤년의 2월에 대해 29일을 반환한다', () => {});
+  it('윤년의 2월에 대해 29일을 반환한다', () => {
+    expect(getDaysInMonth(2024, 2)).toBe(29);
+  });
 
-  it('평년의 2월에 대해 28일을 반환한다', () => {});
+  it('평년의 2월에 대해 28일을 반환한다', () => {
+    expect(getDaysInMonth(2025, 2)).toBe(28);
+  });
 
-  it('유효하지 않은 월에 대해 적절히 처리한다', () => {});
+  describe('경계값 및 특수 케이스', () => {
+    it('13월 입력 시 이전 달(12월)의 일수인 31일을 반환한다', () => {
+      expect(getDaysInMonth(2025, 13)).toBe(31);
+    });
+
+    it('0월 입력 시 이전 달(12월)의 일수인 31일을 반환한다', () => {
+      expect(getDaysInMonth(2025, 0)).toBe(31);
+    });
+
+    it('-1월 입력 시 이전 달(11월)의 일수인 30일을 반환한다', () => {
+      expect(getDaysInMonth(2025, -1)).toBe(30);
+    });
+  });
 });
 
 describe('getWeekDates', () => {
