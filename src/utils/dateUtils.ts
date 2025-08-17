@@ -23,10 +23,13 @@ export function getWeekDates(date: Date): Date[] {
   return weekDates;
 }
 
+/**
+ * 1일부터 ~ 마지막날까지 2차배열 형태로 담아 반환함
+ */
 export function getWeeksAtMonth(currentDate: Date) {
   const year = currentDate.getFullYear();
   const month = currentDate.getMonth();
-  const daysInMonth = getDaysInMonth(year, month + 1);
+  const daysInMonth = getDaysInMonth(year, month + 1); //해당 달의 일수
   const firstDayOfMonth = new Date(year, month, 1).getDay();
   const days = Array.from({ length: daysInMonth }, (_, i) => i + 1);
   const weeks = [];
