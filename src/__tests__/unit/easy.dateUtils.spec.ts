@@ -12,23 +12,85 @@ import {
 } from '../../utils/dateUtils';
 
 describe('getDaysInMonth', () => {
-  it('1월은 31일 수를 반환한다', () => {});
+  it('1월은 31일 수를 반환한다', () => {
+    expect(getDaysInMonth(2025, 1)).toBe(31);
+  });
 
-  it('4월은 30일 일수를 반환한다', () => {});
+  it('4월은 30일 일수를 반환한다', () => {
+    expect(getDaysInMonth(2025, 4)).toBe(30);
+  });
 
-  it('윤년의 2월에 대해 29일을 반환한다', () => {});
+  it('윤년의 2월에 대해 29일을 반환한다', () => {
+    expect(getDaysInMonth(2024, 2)).toBe(29);
+    expect(getDaysInMonth(2020, 2)).toBe(29);
+  });
 
-  it('평년의 2월에 대해 28일을 반환한다', () => {});
+  it('평년의 2월에 대해 28일을 반환한다', () => {
+    expect(getDaysInMonth(2025, 2)).toBe(28);
+    expect(getDaysInMonth(2026, 2)).toBe(28);
+    expect(getDaysInMonth(2027, 2)).toBe(28);
+  });
 
-  it('유효하지 않은 월에 대해 적절히 처리한다', () => {});
+  it('유효하지 않은 월에 대해 적절히 처리한다', () => {
+    expect(getDaysInMonth(2025, 0)).toBe(31);
+    expect(getDaysInMonth(2025, 13)).toBe(31);
+  });
 });
 
-describe('getWeekDates', () => {
-  it('주중의 날짜(수요일)에 대해 올바른 주의 날짜들을 반환한다', () => {});
+describe.only('getWeekDates', () => {
+  it('주중의 날짜(수요일)에 대해 올바른 주의 날짜들을 반환한다', () => {
+    const date = new Date('2025-08-20');
+    const result = getWeekDates(date);
+    expect(result).toEqual([
+      new Date('2025-08-18'),
+      new Date('2025-08-19'),
+      new Date('2025-08-20'),
+      new Date('2025-08-21'),
+      new Date('2025-08-22'),
+      new Date('2025-08-23'),
+      new Date('2025-08-24'),
+    ]);
+  });
 
-  it('주의 시작(월요일)에 대해 올바른 주의 날짜들을 반환한다', () => {});
+  it('주의 시작(월요일)에 대해 올바른 주의 날짜들을 반환한다', () => {
+    const date = new Date('2025-08-18');
+    const result = getWeekDates(date);
+    expect(result).toEqual([
+      new Date('2025-08-18'),
+      new Date('2025-08-19'),
+      new Date('2025-08-20'),
+      new Date('2025-08-21'),
+      new Date('2025-08-22'),
+      new Date('2025-08-23'),
+      new Date('2025-08-24'),
+    ]);
+  });
 
-  it('주의 끝(일요일)에 대해 올바른 주의 날짜들을 반환한다', () => {});
+  it('주의 끝(일요일)에 대해 올바른 주의 날짜들을 반환한다', () => {
+    const date = new Date('2025-08-24');
+    const result = getWeekDates(date);
+    expect(result).toEqual([
+      new Date('2025-08-18'),
+      new Date('2025-08-19'),
+      new Date('2025-08-20'),
+      new Date('2025-08-21'),
+      new Date('2025-08-22'),
+      new Date('2025-08-23'),
+      new Date('2025-08-24'),
+    ]);
+
+    const date2 = new Date('2025-10-05');
+    const result2 = getWeekDates(date2);
+    expect(result2).toEqual([
+      new Date('2025-09-29'),
+      new Date('2025-09-30'),
+      new Date('2025-10-01'),
+      new Date('2025-10-02'),
+      new Date('2025-10-03'),
+      new Date('2025-10-04'),
+      new Date('2025-10-05'),
+    ]);
+  });
 
   it('연도를 넘어가는 주의 날짜를 정확히 처리한다 (연말)', () => {});
 
