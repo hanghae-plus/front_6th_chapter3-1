@@ -12,15 +12,39 @@ import {
 } from '../../utils/dateUtils';
 
 describe('getDaysInMonth', () => {
-  it('1월은 31일 수를 반환한다', () => {});
+  const COMMON_YEAR = 2025; //평년 테스트용
+  const LEAP_YEAR = 2024; //윤년 테스트용
+  it('1월은 31일 수를 반환한다', () => {
+    expect(getDaysInMonth(COMMON_YEAR, 1)).toBe(31);
+    expect(getDaysInMonth(LEAP_YEAR, 1)).toBe(31);
+  });
 
-  it('4월은 30일 일수를 반환한다', () => {});
+  it('4월은 30일 일수를 반환한다', () => {
+    expect(getDaysInMonth(COMMON_YEAR, 4)).toBe(30);
+    expect(getDaysInMonth(LEAP_YEAR, 4)).toBe(30);
+  });
 
-  it('윤년의 2월에 대해 29일을 반환한다', () => {});
+  it('윤년의 2월에 대해 29일을 반환한다', () => {
+    expect(getDaysInMonth(LEAP_YEAR, 2)).toBe(29);
+  });
 
-  it('평년의 2월에 대해 28일을 반환한다', () => {});
+  it('평년의 2월에 대해 28일을 반환한다', () => {
+    expect(getDaysInMonth(COMMON_YEAR, 2)).toBe(28);
+  });
 
-  it('유효하지 않은 월에 대해 적절히 처리한다', () => {});
+  // 여기서 말하는 적절히란?? NaN을 반환?
+  it('유효하지 않은 월에 대해 적절히 처리한다', () => {
+    /**
+     * JS Date는 month가 숫자이면 node/browser에서 자동으로 보정함
+     * 따라서 "유효하지 않은 월" 테스트는 TS가 걸러주지 못한 값을 테스트
+     * number타입이지만 유효하지 않은 NaN, Infinity 테스트
+     * any로 형변환한 경우도 테스트
+     */
+
+    expect(getDaysInMonth(COMMON_YEAR, NaN)).toBeNaN();
+    expect(getDaysInMonth(COMMON_YEAR, Infinity)).toBeNaN();
+    expect(getDaysInMonth(COMMON_YEAR, 'abc' as unknown as number)).toBeNaN();
+  });
 });
 
 describe('getWeekDates', () => {
