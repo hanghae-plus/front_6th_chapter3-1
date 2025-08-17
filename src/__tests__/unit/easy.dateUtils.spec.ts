@@ -97,7 +97,7 @@ describe('getWeekDates', () => {
 });
 
 describe('getWeeksAtMonth', () => {
-  it('입력된 날짜가 속한 월을 주 단위 배열로 반환한다 (빈 요일은 null 처리)', () => {
+  it('2025-07-01이 속한 월을 주 단위 배열로 반환한다 (빈 요일은 null 처리)', () => {
     const weeksAtMonth = getWeeksAtMonth(new Date('2025-07-01'));
 
     expect(weeksAtMonth).toEqual([
@@ -163,7 +163,7 @@ describe('getEventsForDay', () => {
   });
 });
 
-describe('formatWeek', () => {
+describe('formatWeek (주차는 목요일 기준으로 계산)', () => {
   it('월 중간 날짜 입력 시 해당 월과 주차를 반환한다', () => {
     const week = formatWeek(new Date('2025-08-15'));
     expect(week).toBe('2025년 8월 2주');
@@ -195,13 +195,18 @@ describe('formatWeek', () => {
   });
 });
 
-describe('formatMonth', () => {
-  it('주어진 날짜의 연도와 월을 "YYYY년 M월" 형식으로 반환한다', () => {
+describe('formatMonth (YYYY년 M월)', () => {
+  it('2025-07-10은 "2025년 7월" 형식으로 반환한다', () => {
     const month = formatMonth(new Date('2025-07-10'));
     expect(month).toBe('2025년 7월');
   });
 
-  it('연도가 바뀌는 날짜도 올바르게 처리한다', () => {
+  it('연말 날짜 2025-12-31을 "2025년 12월" 형식으로 반환한다', () => {
+    const month = formatMonth(new Date('2025-12-31'));
+    expect(month).toBe('2025년 12월');
+  });
+
+  it('연초 날짜 2026-01-01을 "2026년 1월" 형식으로 반환한다', () => {
     const month = formatMonth(new Date('2026-01-01'));
     expect(month).toBe('2026년 1월');
   });
@@ -289,12 +294,24 @@ describe('fillZero', () => {
   });
 });
 
-describe('formatDate', () => {
-  it('날짜를 YYYY-MM-DD 형식으로 포맷팅한다', () => {});
+describe('formatDate (YYYY-MM-DD)', () => {
+  it('2025-07-10은 "2025-07-10" 형식으로 반환한다', () => {
+    const date = formatDate(new Date('2025-07-10'));
+    expect(date).toBe('2025-07-10');
+  });
 
-  it('day 파라미터가 제공되면 해당 일자로 포맷팅한다', () => {});
+  it('day 파라미터가 제공되면 해당 일자로 포맷팅한다', () => {
+    const date = formatDate(new Date('2025-07-10'), 15);
+    expect(date).toBe('2025-07-15');
+  });
 
-  it('월이 한 자리 수일 때 앞에 0을 붙여 포맷팅한다', () => {});
+  it('월이 한 자리 수일 때 앞에 0을 붙여 포맷팅한다', () => {
+    const date = formatDate(new Date('2025-1-10'));
+    expect(date).toBe('2025-01-10');
+  });
 
-  it('일이 한 자리 수일 때 앞에 0을 붙여 포맷팅한다', () => {});
+  it('일이 한 자리 수일 때 앞에 0을 붙여 포맷팅한다', () => {
+    const date = formatDate(new Date('2025-07-1'));
+    expect(date).toBe('2025-07-01');
+  });
 });
