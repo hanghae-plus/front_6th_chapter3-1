@@ -146,7 +146,41 @@ describe('getWeekDates', () => {
 });
 
 describe('getWeeksAtMonth', () => {
-  it('2025년 7월 1일의 올바른 주 정보를 반환해야 한다', () => {});
+  it('입력된 날짜가 속한 월을 주 단위 배열로 반환한다 (빈 요일은 null 처리)', () => {
+    const result = getWeeksAtMonth(new Date('2025-07-01'));
+
+    expect(result).toEqual([
+      [null, null, 1, 2, 3, 4, 5],
+      [6, 7, 8, 9, 10, 11, 12],
+      [13, 14, 15, 16, 17, 18, 19],
+      [20, 21, 22, 23, 24, 25, 26],
+      [27, 28, 29, 30, 31, null, null],
+    ]);
+  });
+
+  it('평년의 2월 28일로 끝나는 월의 주 단의 배열을 올바르게 처리한다', () => {
+    const result = getWeeksAtMonth(new Date('2025-02-28'));
+
+    expect(result).toEqual([
+      [null, null, null, null, null, null, 1],
+      [2, 3, 4, 5, 6, 7, 8],
+      [9, 10, 11, 12, 13, 14, 15],
+      [16, 17, 18, 19, 20, 21, 22],
+      [23, 24, 25, 26, 27, 28, null],
+    ]);
+  });
+
+  it('윤년의 2월 29일로 끝나는 월의 주 단의 배열을 올바르게 처리한다', () => {
+    const result = getWeeksAtMonth(new Date('2024-02-29'));
+
+    expect(result).toEqual([
+      [null, null, null, null, 1, 2, 3],
+      [4, 5, 6, 7, 8, 9, 10],
+      [11, 12, 13, 14, 15, 16, 17],
+      [18, 19, 20, 21, 22, 23, 24],
+      [25, 26, 27, 28, 29, null, null],
+    ]);
+  });
 });
 
 describe('getEventsForDay', () => {
