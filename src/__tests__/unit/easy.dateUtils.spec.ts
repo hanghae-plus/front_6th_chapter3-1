@@ -10,6 +10,7 @@ import {
   getWeeksAtMonth,
   isDateInRange,
 } from '../../utils/dateUtils';
+import { createMockEvent } from '../utils';
 
 describe('getDaysInMonth', () => {
   it('1월은 31일 수를 반환한다', () => {
@@ -136,13 +137,45 @@ describe('getWeeksAtMonth', () => {
 });
 
 describe('getEventsForDay', () => {
-  it('특정 날짜(1일)에 해당하는 이벤트만 정확히 반환한다', () => {});
+  it('특정 날짜(1일)에 해당하는 이벤트만 정확히 반환한다', () => {
+    const events = [
+      createMockEvent(1, { date: '2025-08-01' }),
+      createMockEvent(2, { date: '2025-08-02' }),
+      createMockEvent(3, { date: '2025-08-03' }),
+    ];
 
-  it('해당 날짜에 이벤트가 없을 경우 빈 배열을 반환한다', () => {});
+    expect(getEventsForDay(events, 1)).toEqual([events[0]]);
+  });
 
-  it('날짜가 0일 경우 빈 배열을 반환한다', () => {});
+  it('특정 날짜(1일)에 해당하는 이벤트가 없을 경우 빈 배열을 반환한다', () => {
+    const events = [
+      createMockEvent(1, { date: '2025-08-02' }),
+      createMockEvent(2, { date: '2025-08-03' }),
+      createMockEvent(3, { date: '2025-08-04' }),
+    ];
 
-  it('날짜가 32일 이상인 경우 빈 배열을 반환한다', () => {});
+    expect(getEventsForDay(events, 1)).toEqual([]);
+  });
+
+  it('날짜가 0일 경우 빈 배열을 반환한다', () => {
+    const events = [
+      createMockEvent(1, { date: '2025-08-02' }),
+      createMockEvent(2, { date: '2025-08-03' }),
+      createMockEvent(3, { date: '2025-08-04' }),
+    ];
+
+    expect(getEventsForDay(events, 0)).toEqual([]);
+  });
+
+  it('날짜가 32일 이상인 경우 빈 배열을 반환한다', () => {
+    const events = [
+      createMockEvent(1, { date: '2025-08-02' }),
+      createMockEvent(2, { date: '2025-08-03' }),
+      createMockEvent(3, { date: '2025-08-04' }),
+    ];
+
+    expect(getEventsForDay(events, 32)).toEqual([]);
+  });
 });
 
 describe('formatWeek', () => {
