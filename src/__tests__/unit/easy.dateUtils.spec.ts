@@ -329,11 +329,27 @@ describe('fillZero', () => {
 });
 
 describe('formatDate', () => {
-  it('날짜를 YYYY-MM-DD 형식으로 포맷팅한다', () => {});
+  it('날짜를 YYYY-MM-DD 형식으로 포맷팅한다', () => {
+    const date = new Date(2025, 7, 18);
 
-  it('day 파라미터가 제공되면 해당 일자로 포맷팅한다', () => {});
+    expect(formatDate(date)).toBe('2025-08-18');
+  });
 
-  it('월이 한 자리 수일 때 앞에 0을 붙여 포맷팅한다', () => {});
+  it('day 파라미터가 제공되면 해당 일자로 포맷팅한다', () => {
+    const date = new Date(2025, 7, 18);
 
-  it('일이 한 자리 수일 때 앞에 0을 붙여 포맷팅한다', () => {});
+    expect(formatDate(date, 5)).toBe('2025-08-05');
+  });
+
+  it('월이 한 자리 수일 때 앞에 0을 붙여 포맷팅한다', () => {
+    const date = new Date(2025, 7, 18);
+
+    expect(formatDate(date)).toBe('2025-08-18');
+  });
+
+  it('일이 한 자리 수일 때 앞에 0을 붙여 포맷팅한다', () => {
+    const date = new Date(2025, 7, 5);
+
+    expect(formatDate(date)).toBe('2025-08-05');
+  });
 });
