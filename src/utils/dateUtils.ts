@@ -55,20 +55,25 @@ export function getEventsForDay(events: Event[], date: number): Event[] {
   return events.filter((event) => new Date(event.date).getDate() === date);
 }
 
+// 이 함수는 목요일을 기준으로 주를 계산하고 있다.
 export function formatWeek(targetDate: Date) {
+  // 목요일을 기준으로 주를 계산하고 있다.
   const dayOfWeek = targetDate.getDay();
   const diffToThursday = 4 - dayOfWeek;
   const thursday = new Date(targetDate);
   thursday.setDate(targetDate.getDate() + diffToThursday);
 
+  // 년 월 변수 설정하고
   const year = thursday.getFullYear();
   const month = thursday.getMonth() + 1;
 
+  // 해당 월의 첫 번째 목요일을 찾는다.
   const firstDayOfMonth = new Date(thursday.getFullYear(), thursday.getMonth(), 1);
 
   const firstThursday = new Date(firstDayOfMonth);
   firstThursday.setDate(1 + ((4 - firstDayOfMonth.getDay() + 7) % 7));
 
+  // 목요일 날짜와 월의 첫 번째 목요일 날짜의 차이를 계산하고 주를 계산한다.
   const weekNumber: number =
     Math.floor((thursday.getTime() - firstThursday.getTime()) / (7 * 24 * 60 * 60 * 1000)) + 1;
 
