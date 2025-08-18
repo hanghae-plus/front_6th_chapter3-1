@@ -58,6 +58,10 @@ it('새로운 이벤트 데이터를 전달하면 저장되고 성공 토스트�
     notificationTime: 10,
   };
 
+  await waitFor(() => {
+    expect(result.current.events).toHaveLength(1);
+  });
+
   await act(async () => {
     await result.current.saveEvent(newEventData);
   });
@@ -75,7 +79,41 @@ it('새로운 이벤트 데이터를 전달하면 저장되고 성공 토스트�
   });
 });
 
-it("새로 정의된 'title', 'endTime' 기준으로 적절하게 일정이 업데이트 된다", async () => {});
+// 디테일에 따라 코드 길이가 매우 길어지므로 title과 endTime 변경만 검증하고 나머지 필드는 생략하기로 결정.
+it('존재하는 이벤트 데이터를 수정하면 변경사항이 업데이트되고 수정 토스트가 표시되어야 한다', async () => {
+  const { result } = renderHook(() => useEventOperations(true));
+
+  await waitFor(() => {
+    expect(result.current.events).toHaveLength(1);
+  });
+
+  const existingEvent = result.current.events[0];
+  expect(existingEvent.id).toBe('1');
+
+  const updatedEventData = {
+    ...existingEvent,
+    title: '수정된 회의',
+    endTime: '11:00',
+  };
+
+  await act(async () => {
+    await result.current.saveEvent(updatedEventData);
+  });
+
+  await waitFor(() => {
+    const updatedEvent = result.current.events.find((event) => event.id === '1');
+    // 수정된 값
+    expect(updatedEvent?.title).toBe('수정된 회의');
+    expect(updatedEvent?.endTime).toBe('11:00');
+    // 유지된 값
+    expect(updatedEvent?.startTime).toBe('09:00');
+    expect(updatedEvent?.description).toBe('기존 팀 미팅');
+  });
+
+  expect(enqueueSnackbarFn).toHaveBeenCalledWith('일정이 수정되었습니다.', {
+    variant: 'success',
+  });
+});
 
 it('존재하는 이벤트 삭제 시 에러없이 아이템이 삭제된다.', async () => {});
 
