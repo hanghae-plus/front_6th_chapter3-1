@@ -14,28 +14,41 @@ const mockEvents: Event[] = [
     repeat: { type: 'none', interval: 0 },
     notificationTime: 10,
   },
-  {
-    id: '2',
-    title: '점심 약속',
-    date: '2025-07-15',
-    startTime: '12:00',
-    endTime: '13:00',
-    description: '고객과 점심',
-    location: '레스토랑',
-    category: '업무',
-    repeat: { type: 'none', interval: 0 },
-    notificationTime: 30,
-  },
 ];
 
 describe('getUpcomingEvents', () => {
-  it('알림 시간이 정확히 도래한 이벤트를 반환한다', () => {});
+  describe('알림 시간이 도래한 이벤트', () => {
+    test('오전 회의(09:00 시작, 10분 전 알림)가 08:50에 알림 대상으로 반환된다', () => {
+      const now = new Date('2025-07-15T08:50:00');
+      const upcomingEvents = getUpcomingEvents(mockEvents, now, []);
+      expect(upcomingEvents).toEqual([mockEvents[0]]);
+    });
+  });
 
-  it('이미 알림이 간 이벤트는 제외한다', () => {});
+  describe('이미 알림이 간 이벤트 제외', () => {
+    test('이미 알림이 간 오전 회의는 알림 대상에서 제외된다', () => {
+      const now = new Date('2025-07-15T08:50:00');
+      const notifiedEvents = ['1'];
+      const upcomingEvents = getUpcomingEvents(mockEvents, now, notifiedEvents);
+      expect(upcomingEvents).toEqual([]);
+    });
+  });
 
-  it('알림 시간이 아직 도래하지 않은 이벤트는 반환하지 않는다', () => {});
+  describe('알림 시간이 아직 도래하지 않은 이벤트', () => {
+    test('오전 회의 알림 시간(08:50) 이전인 08:40에는 알림 대상이 없다', () => {
+      const now = new Date('2025-07-15T08:40:00');
+      const upcomingEvents = getUpcomingEvents(mockEvents, now, []);
+      expect(upcomingEvents).toEqual([]);
+    });
+  });
 
-  it('알림 시간이 지난 이벤트는 반환하지 않는다', () => {});
+  describe('알림 시간이 지난 이벤트', () => {
+    test('오전 회의 알림 시간(08:50) 이후인 09:00에는 알림 대상이 없다', () => {
+      const now = new Date('2025-07-15T09:00:00');
+      const upcomingEvents = getUpcomingEvents(mockEvents, now, []);
+      expect(upcomingEvents).toEqual([]);
+    });
+  });
 });
 
 describe('createNotificationMessage', () => {
