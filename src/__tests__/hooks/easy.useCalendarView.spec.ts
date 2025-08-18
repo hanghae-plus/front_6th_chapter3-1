@@ -4,11 +4,39 @@ import { useCalendarView } from '../../hooks/useCalendarView.ts';
 import { assertDate } from '../utils.ts';
 
 describe('초기 상태', () => {
-  it('view는 "month"이어야 한다', () => {});
+  // 유닛테스트에서 특정 날짜를 테스트하는 것을 의도하고있기 때문에 Date Mocking
+  beforeEach(() => {
+    vi.setSystemTime(new Date('2025-10-01'));
+  });
 
-  it('currentDate는 오늘 날짜인 "2025-10-01"이어야 한다', () => {});
+  // Mocking된 타이머 원상복구
+  afterEach(() => {
+    vi.useRealTimers();
+  });
 
-  it('holidays는 10월 휴일인 개천절, 한글날, 추석이 지정되어 있어야 한다', () => {});
+  it('view는 "month"이어야 한다', () => {
+    const { result } = renderHook(() => useCalendarView());
+
+    expect(result.current.view).toBe('month');
+  });
+
+  it('currentDate는 오늘 날짜인 "2025-10-01"이어야 한다', () => {
+    const { result } = renderHook(() => useCalendarView());
+
+    assertDate(result.current.currentDate, new Date('2025-10-01'));
+  });
+
+  it('holidays는 10월 휴일인 개천절, 한글날, 추석이 지정되어 있어야 한다', () => {
+    const { result } = renderHook(() => useCalendarView());
+
+    expect(result.current.holidays).toEqual({
+      '2025-10-03': '개천절',
+      '2025-10-05': '추석',
+      '2025-10-06': '추석',
+      '2025-10-07': '추석',
+      '2025-10-09': '한글날',
+    });
+  });
 });
 
 it("view를 'week'으로 변경 시 적절하게 반영된다", () => {});
