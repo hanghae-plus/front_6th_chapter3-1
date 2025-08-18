@@ -136,13 +136,131 @@ describe('getWeeksAtMonth', () => {
 });
 
 describe('getEventsForDay', () => {
-  it('특정 날짜(1일)에 해당하는 이벤트만 정확히 반환한다', () => {});
+  it('특정 날짜(1일)에 해당하는 이벤트만 정확히 반환한다', () => {
+    const event0801: Event = {
+      date: '2025-08-01',
+      title: '',
+      category: '',
+      description: '',
+      endTime: '',
+      startTime: '',
+      id: '',
+      location: '',
+      notificationTime: 0,
+      repeat: { interval: 0, type: 'daily', endDate: '' },
+    };
 
-  it('해당 날짜에 이벤트가 없을 경우 빈 배열을 반환한다', () => {});
+    const event0802: Event = {
+      date: '2025-08-02',
+      title: '',
+      category: '',
+      description: '',
+      endTime: '',
+      startTime: '',
+      id: '',
+      location: '',
+      notificationTime: 0,
+      repeat: { interval: 0, type: 'daily', endDate: '' },
+    };
 
-  it('날짜가 0일 경우 빈 배열을 반환한다', () => {});
+    const event: Event[] = [event0801, event0802];
+    const expected: Event[] = [event0801];
 
-  it('날짜가 32일 이상인 경우 빈 배열을 반환한다', () => {});
+    expect(getEventsForDay(event, 1)).toEqual(expected);
+  });
+
+  it('해당 날짜에 이벤트가 없을 경우 빈 배열을 반환한다', () => {
+    const event: Event[] = [
+      {
+        date: '2025-08-01',
+        title: '',
+        category: '',
+        description: '',
+        endTime: '',
+        startTime: '',
+        id: '',
+        location: '',
+        notificationTime: 0,
+        repeat: { interval: 0, type: 'daily', endDate: '' },
+      },
+      {
+        date: '2025-08-02',
+        title: '',
+        category: '',
+        description: '',
+        endTime: '',
+        startTime: '',
+        id: '',
+        location: '',
+        notificationTime: 0,
+        repeat: { interval: 0, type: 'daily', endDate: '' },
+      },
+    ];
+
+    expect(getEventsForDay(event, 3)).toEqual([]);
+  });
+
+  it('날짜가 0일 경우 빈 배열을 반환한다', () => {
+    const event: Event[] = [
+      {
+        date: '2025-08-00',
+        title: '',
+        category: '',
+        description: '',
+        endTime: '',
+        startTime: '',
+        id: '',
+        location: '',
+        notificationTime: 0,
+        repeat: { interval: 0, type: 'daily', endDate: '' },
+      },
+      {
+        date: '2025-08-00',
+        title: '',
+        category: '',
+        description: '',
+        endTime: '',
+        startTime: '',
+        id: '',
+        location: '',
+        notificationTime: 0,
+        repeat: { interval: 0, type: 'daily', endDate: '' },
+      },
+    ];
+
+    expect(getEventsForDay(event, 0)).toEqual([]);
+  });
+
+  it('날짜가 32일 이상인 경우 빈 배열을 반환한다', () => {
+    const event: Event[] = [
+      {
+        date: '2025-08-32',
+        title: '',
+        category: '',
+        description: '',
+        endTime: '',
+        startTime: '',
+        id: '',
+        location: '',
+        notificationTime: 0,
+        repeat: { interval: 0, type: 'daily', endDate: '' },
+      },
+      {
+        date: '2025-08-33',
+        title: '',
+        category: '',
+        description: '',
+        endTime: '',
+        startTime: '',
+        id: '',
+        location: '',
+        notificationTime: 0,
+        repeat: { interval: 0, type: 'daily', endDate: '' },
+      },
+    ];
+
+    expect(getEventsForDay(event, 32)).toEqual([]);
+  });
 });
 
 describe('formatWeek', () => {
