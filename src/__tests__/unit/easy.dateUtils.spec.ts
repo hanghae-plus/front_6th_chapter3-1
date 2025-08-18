@@ -9,13 +9,15 @@ import {
   getWeekDates,
   getWeeksAtMonth,
   isDateInRange,
+  findNextLeapYear,
 } from '../../utils/dateUtils';
+import { events } from '../../__mocks__/response/events.json' assert { type: 'json' };
 
 describe('getDaysInMonth', () => {
-
-  const date = new Date();  
+  const date = new Date();
   const year = date.getFullYear();
-  const isLeapYear = (year % 4 === 0 && year % 100 !== 0) || (year % 400 === 0);
+  const leapYear = findNextLeapYear(year);
+  const feb = 2;
 
   it('1월은 31일 일수를 반환한다', () => {
     expect(getDaysInMonth(year, 1)).toBe(31);
@@ -26,21 +28,26 @@ describe('getDaysInMonth', () => {
   });
 
   it('윤년의 2월에 대해 29일을 반환한다', () => {
-    isLeapYear ? expect(getDaysInMonth(year, 2)).toBe(29)
-      :expect(getDaysInMonth(year, 2)).toBe(28);
-  });
-    
-  it('평년의 2월에 대해 28일을 반환한다', () => {
-    !isLeapYear ? expect(getDaysInMonth(year, 2)).toBe(28)
-      :expect(getDaysInMonth(year, 2)).toBe(29);
+    const days = getDaysInMonth(leapYear, feb);
+
+    expect(days).toBe(29);
   });
 
-  it('유효하지 않은 월에 대해 falsy 값을 반환한다.', () => {
+  it('평년의 2월에 대해 28일을 반환한다', () => {
+    const days = getDaysInMonth(year, feb);
+
+    expect(days).toBe(28);
+  });
+
+  it('유효한 월을 검증한다.', () => {
     const formatDate = formatMonth(new Date());
     const replacedFormat = formatDate.replace(/[가-힣]/g, '/');
 
-    expect(!expectTypeOf(Date.parse(replacedFormat)).toBeNumber()).toBe(false);
-    
+    const [_, monthStr] = replacedFormat.split('/');
+    const month = parseInt(monthStr, 10);
+
+    expect(month).toBeGreaterThanOrEqual(1);
+    expect(month).toBeLessThanOrEqual(12);
   });
 });
 
@@ -67,31 +74,42 @@ describe('getWeeksAtMonth', () => {
 
     const monthWeeks = getWeeksAtMonth(firstDay);
 
-    const firstWeekDays = getWeekDates(firstDay)
-      .filter(date => date.getMonth() === 6)
-      .map(date => date.getDate());
+    const originFirstWeekDays = getWeekDates(firstDay)
+      .filter((date) => date.getMonth() === 6)
+      .map((date) => date.getDate());
 
-    const lastWeekDays = getWeekDates(lastDay)
-      .filter(date => date.getMonth() === 6)
-      .map(date => date.getDate());
+    const originLastWeekDays = getWeekDates(lastDay)
+      .filter((date) => date.getMonth() === 6)
+      .map((date) => date.getDate());
 
-    const firstWeekDates = monthWeeks[0].filter(date => date !== null);
-    const lastWeekDates = monthWeeks[monthWeeks.length - 1].filter(date => date !== null);
+    const compareFirstWeekDays = monthWeeks[0].filter((date) => date !== null);
+    const compareLastWeekDays = monthWeeks[monthWeeks.length - 1].filter((date) => date !== null);
 
-    expect(firstWeekDays).toStrictEqual(firstWeekDates);
-    expect(lastWeekDays).toStrictEqual(lastWeekDates);
-
+    expect(originFirstWeekDays).toStrictEqual(compareFirstWeekDays);
+    expect(originLastWeekDays).toStrictEqual(compareLastWeekDays);
   });
 });
 
 describe('getEventsForDay', () => {
   it('특정 날짜(1일)에 해당하는 이벤트만 정확히 반환한다', () => {});
 
-  it('해당 날짜에 이벤트가 없을 경우 빈 배열을 반환한다', () => {});
+  it('해당 날짜에 이벤트가 없을 경우 빈 배열을 반환한다', () => {
+    // getEventsForDay(events as Event[], )
+  });
 
-  it('날짜가 0일 경우 빈 배열을 반환한다', () => {});
+  it('날짜가 0일 경우 빈 배열을 반환한다', () => {
+    const result = getEventsForDay(events as Event[], 0);
 
-  it('날짜가 32일 이상인 경우 빈 배열을 반환한다', () => {});
+    expect(result).toStrictEqual([]);
+  });
+
+  it('날짜가 32일 이상인 경우 빈 배열을 반환한다', () => {
+    const invalidDay = Math.floor(Math.random() * (100 - 32 + 1)) + 32;
+
+    const result = getEventsForDay(events as Event[], invalidDay);
+
+    expect(result).toStrictEqual([]);
+  });
 });
 
 describe('formatWeek', () => {
