@@ -1,16 +1,15 @@
 import { act, renderHook, waitFor } from '@testing-library/react';
-import { http, HttpResponse } from 'msw';
 
 import { events } from '../../__mocks__/response/events.json' assert { type: 'json' };
 import { resetMockEvents } from '../../__mocks__/handlers.ts';
 import {
   setupMockHandlerCreation,
   setupMockHandlerDeletion,
+  setupMockHandlerLoading,
   setupMockHandlerUpdating,
 } from '../../__mocks__/handlersUtils.ts';
 import { useEventOperations } from '../../hooks/useEventOperations.ts';
 import { server } from '../../setupTests.ts';
-import { Event } from '../../types.ts';
 
 const enqueueSnackbarFn = vi.fn();
 
@@ -27,6 +26,7 @@ vi.mock('notistack', async () => {
 beforeEach(() => {
   resetMockEvents();
   enqueueSnackbarFn.mockClear();
+  server.resetHandlers();
 });
 
 it('저장되어있는 초기 이벤트 데이터를 불러오고 로딩완료 토스트가 표시되어야 한다', async () => {
@@ -138,12 +138,48 @@ it('존재하는 이벤트 삭제 시 해당 이벤트가 제거되고 삭제 �
   });
 });
 
+it("새로운 이벤트 생성 실패 시 '일정 저장 실패'라는 토스트가 노출되며 에러 처리가 되어야 한다", async () => {
+  // MSW 핸들러를 생성 실패로 설정
+  setupMockHandlerCreation();
+
+  const { result } = renderHook(() => useEventOperations(false));
+
+  // 초기 데이터 로딩 대기
+  await waitFor(() => {
+    expect(result.current.events).toHaveLength(1);
+  });
+
+  const newEventData = {
+    title: '새로운 회의',
+    date: '2025-08-25',
+    startTime: '14:00',
+    endTime: '15:00',
+    description: '생성 실패 테스트',
+    location: '회의실 C',
+    category: '업무',
+    repeat: { type: 'none' as const, interval: 0 },
+    notificationTime: 10,
+  };
+
+  // 네트워크 오류 상황에서 이벤트 생성 시도
+  await act(async () => {
+    await result.current.saveEvent(newEventData);
+  });
+
+  // 에러 토스트 메시지 확인
+  await waitFor(() => {
+    expect(enqueueSnackbarFn).toHaveBeenCalledWith('일정 저장 실패', {
+      variant: 'error',
+    });
+  });
+
+  // 생성 실패로 인해 events 상태가 변경되지 않았는지 확인
+  expect(result.current.events).toHaveLength(1);
+});
+
 it("이벤트 로딩 실패 시 '이벤트 로딩 실패'라는 텍스트와 함께 에러 토스트가 표시되어야 한다", async () => {
-  server.use(
-    http.get('/api/events', () => {
-      return new HttpResponse(null, { status: 500 });
-    })
-  );
+  // MSW 핸들러를 로딩 실패로 설정
+  setupMockHandlerLoading();
 
   const { result } = renderHook(() => useEventOperations(false));
 
@@ -158,11 +194,8 @@ it("이벤트 로딩 실패 시 '이벤트 로딩 실패'라는 텍스트와 함
 });
 
 it("존재하지 않는 이벤트 수정 시 '일정 저장 실패'라는 토스트가 노출되며 에러 처리가 되어야 한다", async () => {
-  server.use(
-    http.put('/api/events/:id', () => {
-      return new HttpResponse(null, { status: 404 });
-    })
-  );
+  // MSW 핸들러를 404 에러로 설정
+  setupMockHandlerUpdating();
 
   const { result } = renderHook(() => useEventOperations(true));
 
@@ -198,11 +231,8 @@ it("존재하지 않는 이벤트 수정 시 '일정 저장 실패'라는 토스
 });
 
 it("네트워크 오류 시 '일정 삭제 실패'라는 텍스트가 노출되며 이벤트 삭제가 실패해야 한다", async () => {
-  server.use(
-    http.delete('/api/events/:id', () => {
-      return new HttpResponse(null, { status: 500 });
-    })
-  );
+  // MSW 핸들러를 네트워크 에러로 설정
+  setupMockHandlerDeletion();
 
   const { result } = renderHook(() => useEventOperations(false));
 
