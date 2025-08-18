@@ -92,7 +92,28 @@ describe('isOverlapping', () => {
 });
 
 describe('findOverlappingEvents', () => {
-  it('새 이벤트와 겹치는 모든 이벤트를 반환한다', () => {});
+  it('새 이벤트와 겹치는 모든 이벤트를 반환한다', () => {
+    const events = [
+      createTestEvent({ id: '1', startTime: '09:00', endTime: '10:00' }), // 겹침
+      createTestEvent({ id: '2', startTime: '11:00', endTime: '12:00' }), // 안겹침
+      createTestEvent({ id: '3', startTime: '09:30', endTime: '10:30' }), // 겹침
+    ];
+    const newEvent = createTestEvent({ id: '4', startTime: '09:30', endTime: '10:30' });
 
-  it('겹치는 이벤트가 없으면 빈 배열을 반환한다', () => {});
+    const overlappingEvents = findOverlappingEvents(newEvent, events);
+    expect(overlappingEvents).toHaveLength(2);
+    expect(overlappingEvents.map((e) => e.id)).toEqual(['1', '3']);
+  });
+
+  it('겹치는 이벤트가 없으면 빈 배열을 반환한다', () => {
+    const events = [
+      createTestEvent({ id: '1', startTime: '09:00', endTime: '10:00' }),
+      createTestEvent({ id: '2', startTime: '11:00', endTime: '12:00' }),
+      createTestEvent({ id: '3', startTime: '13:00', endTime: '14:00' }),
+    ];
+    const newEvent = createTestEvent({ id: '4', startTime: '15:00', endTime: '16:00' });
+
+    const overlappingEvents = findOverlappingEvents(newEvent, events);
+    expect(overlappingEvents).toHaveLength(0);
+  });
 });
