@@ -214,17 +214,44 @@ describe('getEventsForDay', () => {
 });
 
 describe('formatWeek', () => {
-  it('월의 중간 날짜에 대해 올바른 주 정보를 반환한다', () => {});
+  describe('기본 동작', () => {
+    it('월 중간의 날짜는 해당 월의 주차를 반환한다', () => {
+      const date = new Date('2025-07-15');
+      expect(formatWeek(date)).toBe('2025년 7월 3주');
+    });
+  });
 
-  it('월의 첫 주에 대해 올바른 주 정보를 반환한다', () => {});
+  describe('월 경계값 테스트', () => {
+    it('월의 첫날은 1주차로 분류된다', () => {
+      const date = new Date('2025-07-01');
+      expect(formatWeek(date)).toBe('2025년 7월 1주');
+    });
 
-  it('월의 마지막 주에 대해 올바른 주 정보를 반환한다', () => {});
+    it('월의 마지막날은 해당 월의 마지막 주차로 분류된다', () => {
+      const date = new Date('2025-07-31');
+      expect(formatWeek(date)).toBe('2025년 7월 5주');
+    });
+  });
 
-  it('연도가 바뀌는 주에 대해 올바른 주 정보를 반환한다', () => {});
+  describe('연도/월 경계값 테스트', () => {
+    it('12월 말일이 목요일 기준으로 다음해 1월에 속하면 다음해로 분류된다', () => {
+      const date = new Date('2024-12-30');
+      expect(formatWeek(date)).toBe('2025년 1월 1주');
+    });
+  });
 
-  it('윤년 2월의 마지막 주에 대해 올바른 주 정보를 반환한다', () => {});
+  describe('주 단위 일관성', () => {
+    it('같은 주의 모든 요일은 동일한 주차로 분류된다', () => {
+      const sunday = new Date('2025-07-13');
+      const wednesday = new Date('2025-07-16');
+      const saturday = new Date('2025-07-19');
 
-  it('평년 2월의 마지막 주에 대해 올바른 주 정보를 반환한다', () => {});
+      const expectedWeek = '2025년 7월 3주';
+      expect(formatWeek(sunday)).toBe(expectedWeek);
+      expect(formatWeek(wednesday)).toBe(expectedWeek);
+      expect(formatWeek(saturday)).toBe(expectedWeek);
+    });
+  });
 });
 
 describe('formatMonth', () => {
