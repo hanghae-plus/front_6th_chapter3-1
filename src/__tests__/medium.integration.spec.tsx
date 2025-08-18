@@ -60,7 +60,7 @@ async function updateEvent({
   category,
   location,
   notificationTime,
-}: EventForm) {
+}: Partial<EventForm>) {
   await userEvent.click(screen.getByLabelText('Edit event'));
 
   if (title != null) {
@@ -99,7 +99,7 @@ async function updateEvent({
   }
 
   if (notificationTime != null) {
-    await userEvent.click(getByRole(screen.getByLabelText('알림 설정'), 'combobox'));
+    await userEvent.click(screen.getByLabelText('알림 설정'));
     await userEvent.click(screen.getByLabelText(`${notificationTime}-option`));
   }
 
@@ -107,7 +107,7 @@ async function updateEvent({
 }
 
 describe('일정 CRUD 및 기본 기능', () => {
-  it.only('입력한 새로운 일정 정보에 맞춰 모든 필드가 이벤트 리스트에 정확히 저장된다.', async () => {
+  it('입력한 새로운 일정 정보에 맞춰 모든 필드가 이벤트 리스트에 정확히 저장된다.', async () => {
     // ! HINT. event를 추가 제거하고 저장하는 로직을 잘 살펴보고, 만약 그대로 구현한다면 어떤 문제가 있을 지 고민해보세요.
     renderApp();
 
@@ -140,7 +140,43 @@ describe('일정 CRUD 및 기본 기능', () => {
     expect(list).toHaveTextContent(notificationLabel);
   });
 
-  it('기존 일정의 세부 정보를 수정하고 변경사항이 정확히 반영된다', async () => {});
+  it.only('기존 일정의 세부 정보를 수정하고 변경사항이 정확히 반영된다', async () => {
+    renderApp();
+
+    const testData = {
+      title: '제목 변경 테스트',
+      date: '2025-08-30',
+      description: '변경 테스트 입니다.',
+      startTime: '18:30',
+      endTime: '21:30',
+      category: '가족',
+      location: '서울 강남구',
+      notificationTime: 1440,
+    };
+
+    await userEvent.click(screen.getByLabelText('Next'));
+    await userEvent.click(screen.getByLabelText('Next'));
+
+    await updateEvent(testData);
+
+    await userEvent.click(screen.getByLabelText('Previous'));
+    await userEvent.click(screen.getByLabelText('Previous'));
+
+    const list = await screen.findByTestId('event-list');
+    const withinList = within(list);
+
+    expect(withinList.getByText(testData.title)).toBeInTheDocument();
+    expect(withinList.getByText(testData.date)).toBeInTheDocument();
+    expect(withinList.getByText(testData.description)).toBeInTheDocument();
+    expect(list).toHaveTextContent(testData.startTime);
+    expect(list).toHaveTextContent(testData.endTime);
+    expect(list).toHaveTextContent(testData.category);
+    expect(withinList.getByText(testData.location)).toBeInTheDocument();
+    const notificationLabel = notificationOptions.find(
+      (x) => x.value === testData.notificationTime
+    )!.label;
+    expect(list).toHaveTextContent(notificationLabel);
+  });
 
   it('일정을 삭제하고 더 이상 조회되지 않는지 확인한다', async () => {});
 });
