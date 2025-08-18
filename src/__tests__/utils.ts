@@ -19,7 +19,7 @@ export const createEvent = ({
   title,
   startTime,
   endTime,
-  repeat,
+  notificationTime,
 }: Partial<Event>): Event => {
   return {
     id: id || '1',
@@ -31,9 +31,9 @@ export const createEvent = ({
     location: 'location',
     category: 'category',
     repeat: {
-      type: repeat?.type || 'none',
+      type: 'none',
       interval: 0,
     },
-    notificationTime: 0,
+    notificationTime: notificationTime || 0,
   };
 };

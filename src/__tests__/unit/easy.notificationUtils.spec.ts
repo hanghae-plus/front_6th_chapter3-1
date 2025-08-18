@@ -55,5 +55,12 @@ describe('getUpcomingEvents', () => {
 });
 
 describe('createNotificationMessage', () => {
-  it('올바른 알림 메시지를 생성해야 한다', () => {});
+  it('올바른 알림 메시지를 생성해야 한다', () => {
+    const event = createEvent({
+      notificationTime: 10,
+      title: '이벤트',
+    });
+
+    expect(createNotificationMessage(event)).toEqual('10분 후 이벤트 일정이 시작됩니다.');
+  });
 });
