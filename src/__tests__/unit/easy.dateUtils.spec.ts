@@ -94,7 +94,13 @@ describe('getEventsForDay', () => {
   it('특정 날짜(1일)에 해당하는 이벤트만 정확히 반환한다', () => {});
 
   it('해당 날짜에 이벤트가 없을 경우 빈 배열을 반환한다', () => {
-    // getEventsForDay(events as Event[], )
+    const dates = events.map((events) => new Date(events.date).getDate());
+    // TODO: 수정
+    const array: number[] = [...Array(31)].map((_, i) => i + 1);
+
+    const result = getEventsForDay(events as Event[], 3);
+
+    expect(result).toStrictEqual([]);
   });
 
   it('날짜가 0일 경우 빈 배열을 반환한다', () => {
@@ -104,9 +110,9 @@ describe('getEventsForDay', () => {
   });
 
   it('날짜가 32일 이상인 경우 빈 배열을 반환한다', () => {
-    const invalidDay = Math.floor(Math.random() * (100 - 32 + 1)) + 32;
+    const invalidDate = Math.floor(Math.random() * (100 - 32 + 1)) + 32;
 
-    const result = getEventsForDay(events as Event[], invalidDay);
+    const result = getEventsForDay(events as Event[], invalidDate);
 
     expect(result).toStrictEqual([]);
   });
@@ -127,7 +133,11 @@ describe('formatWeek', () => {
 });
 
 describe('formatMonth', () => {
-  it("2025년 7월 10일을 '2025년 7월'로 반환한다", () => {});
+  it("2025년 7월 10일을 '2025년 7월'로 반환한다", () => {
+    const param = new Date('2025년 7월 10일'.replace(/[가-힣]/g, '/'));
+    const result = formatMonth(param);
+    expect(result).toEqual('2025년 7월');
+  });
 });
 
 describe('isDateInRange', () => {
