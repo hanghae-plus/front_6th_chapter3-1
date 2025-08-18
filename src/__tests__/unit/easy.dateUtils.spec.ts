@@ -37,7 +37,7 @@ describe('getDaysInMonth', () => {
     expect(daysInMonth).to.equal(28);
   });
 
-  it('유효하지 않은 월에 대해 적절히 처리한다', () => {
+  it('유효하지 않은 월에 대해 0을 반환한다.', () => {
     const daysInMonth = getDaysInMonth(2025, 0);
 
     expect(daysInMonth).to.equal(0);
@@ -45,19 +45,117 @@ describe('getDaysInMonth', () => {
 });
 
 describe('getWeekDates', () => {
-  it('주중의 날짜(수요일)에 대해 올바른 주의 날짜들을 반환한다', () => {});
+  it('주중의 날짜(수요일)에 대해 올바른 주의 날짜들을 반환한다', () => {
+    const weekDates = getWeekDates(new Date('2025-08-20'));
 
-  it('주의 시작(월요일)에 대해 올바른 주의 날짜들을 반환한다', () => {});
+    const expected = [
+      new Date('2025-08-17').toDateString(),
+      new Date('2025-08-18').toDateString(),
+      new Date('2025-08-19').toDateString(),
+      new Date('2025-08-20').toDateString(),
+      new Date('2025-08-21').toDateString(),
+      new Date('2025-08-22').toDateString(),
+      new Date('2025-08-23').toDateString(),
+    ];
 
-  it('주의 끝(일요일)에 대해 올바른 주의 날짜들을 반환한다', () => {});
+    expect(weekDates.map((date) => date.toDateString())).to.deep.equal(expected);
+  });
 
-  it('연도를 넘어가는 주의 날짜를 정확히 처리한다 (연말)', () => {});
+  it('주의 시작(월요일)에 대해 올바른 주의 날짜들을 반환한다', () => {
+    const weekDates = getWeekDates(new Date('2025-08-18'));
 
-  it('연도를 넘어가는 주의 날짜를 정확히 처리한다 (연초)', () => {});
+    const expected = [
+      new Date('2025-08-17').toDateString(),
+      new Date('2025-08-18').toDateString(),
+      new Date('2025-08-19').toDateString(),
+      new Date('2025-08-20').toDateString(),
+      new Date('2025-08-21').toDateString(),
+      new Date('2025-08-22').toDateString(),
+      new Date('2025-08-23').toDateString(),
+    ];
 
-  it('윤년의 2월 29일을 포함한 주를 올바르게 처리한다', () => {});
+    expect(weekDates.map((date) => date.toDateString())).to.deep.equal(expected);
+  });
 
-  it('월의 마지막 날짜를 포함한 주를 올바르게 처리한다', () => {});
+  it('주의 끝(일요일)에 대해 올바른 주의 날짜들을 반환한다', () => {
+    const weekDates = getWeekDates(new Date('2025-08-17'));
+
+    const expected = [
+      new Date('2025-08-17').toDateString(),
+      new Date('2025-08-18').toDateString(),
+      new Date('2025-08-19').toDateString(),
+      new Date('2025-08-20').toDateString(),
+      new Date('2025-08-21').toDateString(),
+      new Date('2025-08-22').toDateString(),
+      new Date('2025-08-23').toDateString(),
+    ];
+
+    expect(weekDates.map((date) => date.toDateString())).to.deep.equal(expected);
+  });
+
+  it('연도를 넘어가는 주의 날짜를 정확히 처리한다 (연말)', () => {
+    const weekDates = getWeekDates(new Date('2025-12-31'));
+
+    const expected = [
+      new Date('2025-12-28').toDateString(),
+      new Date('2025-12-29').toDateString(),
+      new Date('2025-12-30').toDateString(),
+      new Date('2025-12-31').toDateString(),
+      new Date('2026-01-01').toDateString(),
+      new Date('2026-01-02').toDateString(),
+      new Date('2026-01-03').toDateString(),
+    ];
+
+    expect(weekDates.map((date) => date.toDateString())).to.deep.equal(expected);
+  });
+
+  it('연도를 넘어가는 주의 날짜를 정확히 처리한다 (연초)', () => {
+    const weekDates = getWeekDates(new Date('2025-01-01'));
+
+    const expected = [
+      new Date('2024-12-29').toDateString(),
+      new Date('2024-12-30').toDateString(),
+      new Date('2024-12-31').toDateString(),
+      new Date('2025-01-01').toDateString(),
+      new Date('2025-01-02').toDateString(),
+      new Date('2025-01-03').toDateString(),
+      new Date('2025-01-04').toDateString(),
+    ];
+
+    expect(weekDates.map((date) => date.toDateString())).to.deep.equal(expected);
+  });
+
+  it('윤년의 2월 29일을 포함한 주를 올바르게 처리한다', () => {
+    const weekDates = getWeekDates(new Date('2024-02-29'));
+
+    const expected = [
+      new Date('2024-02-25').toDateString(),
+      new Date('2024-02-26').toDateString(),
+      new Date('2024-02-27').toDateString(),
+      new Date('2024-02-28').toDateString(),
+      new Date('2024-02-29').toDateString(),
+      new Date('2024-03-01').toDateString(),
+      new Date('2024-03-02').toDateString(),
+    ];
+
+    expect(weekDates.map((date) => date.toDateString())).to.deep.equal(expected);
+  });
+
+  it('월의 마지막 날짜를 포함한 주를 올바르게 처리한다', () => {
+    const weekDates = getWeekDates(new Date('2025-08-31'));
+
+    const expected = [
+      new Date('2025-08-31').toDateString(),
+      new Date('2025-09-01').toDateString(),
+      new Date('2025-09-02').toDateString(),
+      new Date('2025-09-03').toDateString(),
+      new Date('2025-09-04').toDateString(),
+      new Date('2025-09-05').toDateString(),
+      new Date('2025-09-06').toDateString(),
+    ];
+
+    expect(weekDates.map((date) => date.toDateString())).to.deep.equal(expected);
+  });
 });
 
 describe('getWeeksAtMonth', () => {
