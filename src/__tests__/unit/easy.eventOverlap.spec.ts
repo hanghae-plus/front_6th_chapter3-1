@@ -60,7 +60,7 @@ describe('convertEventToDateRange', () => {
 describe('isOverlapping', () => {
   it('두 이벤트가 겹치는 경우 true를 반환한다', () => {
     const event1 = createEvent('1', '2025-08-18');
-    const event2 = createEvent('1', '2025-08-18');
+    const event2 = createEvent('2', '2025-08-18');
 
     expect(isOverlapping(event1, event2)).toBe(true);
   });
@@ -74,7 +74,22 @@ describe('isOverlapping', () => {
 });
 
 describe('findOverlappingEvents', () => {
-  it('새 이벤트와 겹치는 모든 이벤트를 반환한다', () => {});
+  const events = [
+    createEvent('1', '2025-08-08'),
+    createEvent('2', '2025-08-18'),
+    createEvent('3', '2025-08-28'),
+    createEvent('4', '2025-08-18'),
+  ];
 
-  it('겹치는 이벤트가 없으면 빈 배열을 반환한다', () => {});
+  it('새 이벤트와 겹치는 모든 이벤트를 반환한다', () => {
+    const newEvent = createEvent('5', '2025-08-18');
+
+    expect(findOverlappingEvents(newEvent, events)).toEqual([events[1], events[3]]);
+  });
+
+  it('겹치는 이벤트가 없으면 빈 배열을 반환한다', () => {
+    const newEvent = createEvent('5', '2025-09-08');
+
+    expect(findOverlappingEvents(newEvent, events)).toEqual([]);
+  });
 });
