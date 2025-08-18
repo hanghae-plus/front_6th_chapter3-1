@@ -115,7 +115,28 @@ it('존재하는 이벤트 데이터를 수정하면 변경사항이 업데이�
   });
 });
 
-it('존재하는 이벤트 삭제 시 에러없이 아이템이 삭제된다.', async () => {});
+it('존재하는 이벤트 삭제 시 해당 이벤트가 제거되고 삭제 토스트가 표시되어야 한다.', async () => {
+  const { result } = renderHook(() => useEventOperations(false));
+
+  await waitFor(() => {
+    expect(result.current.events).toHaveLength(1);
+  });
+
+  const existingEvent = result.current.events[0];
+  expect(existingEvent.id).toBe('1');
+
+  await act(async () => {
+    await result.current.deleteEvent(existingEvent.id);
+  });
+
+  await waitFor(() => {
+    expect(result.current.events).toHaveLength(0);
+  });
+
+  expect(enqueueSnackbarFn).toHaveBeenCalledWith('일정이 삭제되었습니다.', {
+    variant: 'info',
+  });
+});
 
 it("이벤트 로딩 실패 시 '이벤트 로딩 실패'라는 텍스트와 함께 에러 토스트가 표시되어야 한다", async () => {});
 
