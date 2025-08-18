@@ -5,7 +5,15 @@ import { Event } from '../../types.ts';
 import { formatDate } from '../../utils/dateUtils.ts';
 import { parseHM } from '../utils.ts';
 
-it('초기 상태에서는 알림이 없어야 한다', () => {});
+// 기존 '초기 상태'는 모호함. msw는 기본적으로 이벤트가 존재하므로,
+// Events 빈배열인 상태를 초기 상태로 가정
+it('초기 상태에서는 알림이 없어야 한다', () => {
+  const events: Event[] = [];
+  const { result } = renderHook(() => useNotifications(events));
+
+  expect(result.current.notifications).toEqual([]);
+  expect(result.current.notifiedEvents).toEqual([]);
+});
 
 it('지정된 시간이 된 경우 알림이 새롭게 생성되어 추가된다', () => {});
 
