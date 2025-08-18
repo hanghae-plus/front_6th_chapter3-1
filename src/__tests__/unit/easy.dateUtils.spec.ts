@@ -135,7 +135,19 @@ describe('getWeekDates', () => {
 });
 
 describe('getWeeksAtMonth', () => {
-  it('2025년 7월 1일의 올바른 주 정보를 반환해야 한다', () => {});
+  it('2025년 7월 1일의 올바른 주 정보를 반환해야 한다', () => {
+    const firstDayOfJuly = new Date('2025-07-01');
+
+    expect(getWeekDates(firstDayOfJuly)).toEqual([
+      new Date('2025-06-29'),
+      new Date('2025-06-30'),
+      new Date('2025-07-01'),
+      new Date('2025-07-02'),
+      new Date('2025-07-03'),
+      new Date('2025-07-04'),
+      new Date('2025-07-05'),
+    ]);
+  });
 });
 
 describe('getEventsForDay', () => {
