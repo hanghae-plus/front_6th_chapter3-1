@@ -32,11 +32,59 @@ describe('parseDateTime 함수', () => {
   });
 });
 describe('convertEventToDateRange', () => {
-  it('일반적인 이벤트를 올바른 시작 및 종료 시간을 가진 객체로 변환한다', () => {});
+  it('일반적인 이벤트를 올바른 시작 및 종료 시간을 가진 객체로 변환한다', () => {
+    const event: Event = {
+      id: '1',
+      date: '2025-08-19',
+      startTime: '14:30',
+      endTime: '15:30',
+      title: '테스트',
+      description: '',
+      location: '',
+      category: '',
+      repeat: { type: 'none', interval: 0 },
+      notificationTime: 0,
+    };
+    const result = convertEventToDateRange(event);
+    expect(result.start).toEqual(new Date('2025-08-19T14:30:00'));
+    expect(result.end).toEqual(new Date('2025-08-19T15:30:00'));
+  });
 
-  it('잘못된 날짜 형식의 이벤트에 대해 Invalid Date를 반환한다', () => {});
+  it('잘못된 날짜 형식의 이벤트에 대해 Invalid Date를 반환한다', () => {
+    const event: Event = {
+      id: '1',
+      date: '2025/08/231',
+      startTime: '04:30',
+      endTime: '05:30',
+      title: '잘못된 날짜',
+      description: '',
+      location: '',
+      category: '',
+      repeat: { type: 'none', interval: 0 },
+      notificationTime: 0,
+    };
+    const result = convertEventToDateRange(event);
+    expect(result.start.toString()).toBe('Invalid Date');
+    expect(result.end.toString()).toBe('Invalid Date');
+  });
 
-  it('잘못된 시간 형식의 이벤트에 대해 Invalid Date를 반환한다', () => {});
+  it('잘못된 시간 형식의 이벤트에 대해 Invalid Date를 반환한다', () => {
+    const event: Event = {
+      id: '1',
+      date: '2025-08-19',
+      startTime: '25:643',
+      endTime: '26:34234',
+      title: '잘못된 시간',
+      description: '',
+      location: '',
+      category: '',
+      repeat: { type: 'none', interval: 0 },
+      notificationTime: 0,
+    };
+    const result = convertEventToDateRange(event);
+    expect(result.start.toString()).toBe('Invalid Date');
+    expect(result.end.toString()).toBe('Invalid Date');
+  });
 });
 
 describe('isOverlapping', () => {
