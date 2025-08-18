@@ -54,6 +54,29 @@ it('지정된 시간이 된 경우 알림이 새롭게 생성되어 추가된다
   vi.useRealTimers();
 });
 
-it('index를 기준으로 알림을 적절하게 제거할 수 있다', () => {});
+it('index를 기준으로 알림을 적절하게 제거할 수 있다', () => {
+  const { result } = renderHook(() => useNotifications([]));
+
+  // 이벤트 없이 알림 3개 수동으로 추가
+  act(() => {
+    result.current.setNotifications([
+      { id: '1', message: '첫 번째 알림' },
+      { id: '2', message: '두 번째 알림' },
+      { id: '3', message: '세 번째 알림' },
+    ]);
+  });
+
+  expect(result.current.notifications).toHaveLength(3);
+
+  // index 1 (두 번째 알림) 제거
+  act(() => {
+    result.current.removeNotification(1);
+  });
+
+  // 두 번째 알림이 제거되고 2개 남음
+  expect(result.current.notifications).toHaveLength(2);
+  expect(result.current.notifications[0]).toEqual({ id: '1', message: '첫 번째 알림' });
+  expect(result.current.notifications[1]).toEqual({ id: '3', message: '세 번째 알림' });
+});
 
 it('이미 알림이 발생한 이벤트에 대해서는 중복 알림이 발생하지 않아야 한다', () => {});
