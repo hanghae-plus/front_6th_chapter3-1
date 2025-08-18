@@ -13,13 +13,13 @@ export const parseHM = (timestamp: number) => {
 };
 
 // 이벤트 생성
-export const createEvent = (date: Date, id: string, title: string) => {
+export const createEvent = (id: string, date: string, startTime?: string, endTime?: string) => {
   return {
     id: id,
-    title: title,
-    date: date.toISOString().split('T')[0],
-    startTime: '09:00',
-    endTime: '10:00',
+    title: `event ${id}`,
+    date: date,
+    startTime: startTime || '09:00',
+    endTime: endTime || '10:00',
     description: 'description',
     location: 'location',
     category: 'category',

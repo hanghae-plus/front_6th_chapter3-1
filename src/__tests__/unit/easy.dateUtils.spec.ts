@@ -149,10 +149,7 @@ describe('getWeeksAtMonth', () => {
 });
 
 describe('getEventsForDay', () => {
-  const events = [
-    createEvent(new Date('2025-08-01'), '1', 'event1'),
-    createEvent(new Date('2025-08-02'), '2', 'event2'),
-  ];
+  const events = [createEvent('1', '2025-08-01'), createEvent('2', '2025-08-02')];
 
   it('특정 날짜(1일)에 해당하는 이벤트만 정확히 반환한다', () => {
     expect(getEventsForDay(events, 1)).toEqual([events[0]]);
