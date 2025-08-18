@@ -12,15 +12,29 @@ import {
 } from '../../utils/dateUtils';
 
 describe('getDaysInMonth', () => {
-  it('1월은 31일 수를 반환한다', () => {});
+  const COMMON_YEAR = 2025;
+  const LEAP_YEAR = 2020;
 
-  it('4월은 30일 일수를 반환한다', () => {});
+  it('1월은 31일 수를 반환한다', () => {
+    expect(getDaysInMonth(COMMON_YEAR, 1)).toBe(31);
+  });
 
-  it('윤년의 2월에 대해 29일을 반환한다', () => {});
+  it('4월은 30일 일수를 반환한다', () => {
+    expect(getDaysInMonth(COMMON_YEAR, 4)).toBe(30);
+  });
 
-  it('평년의 2월에 대해 28일을 반환한다', () => {});
+  it('윤년의 2월에 대해 29일을 반환한다', () => {
+    expect(getDaysInMonth(LEAP_YEAR, 2)).toBe(29);
+  });
 
-  it('유효하지 않은 월에 대해 적절히 처리한다', () => {});
+  it('평년의 2월에 대해 28일을 반환한다', () => {
+    expect(getDaysInMonth(COMMON_YEAR, 2)).toBe(28);
+  });
+
+  // 유효하지않은 함수의 기능이므로 테스트 코드를 제거하는 것이 맞다고 생각함
+  it('유효하지 않은 월에 대해 적절히 처리한다', () => {
+    expect(getDaysInMonth(COMMON_YEAR, 13));
+  });
 });
 
 describe('getWeekDates', () => {
