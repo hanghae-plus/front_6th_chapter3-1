@@ -38,6 +38,7 @@ function filterEventsByDateRangeAtMonth(events: Event[], currentDate: Date) {
   return filterEventsByDateRange(events, monthStart, monthEnd);
 }
 
+/**검색된 이벤트를 주간 뷰 또는 월간 뷰에 맞게 필터링한다 */
 export function getFilteredEvents(
   events: Event[],
   searchTerm: string,
