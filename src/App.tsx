@@ -316,6 +316,7 @@ function App() {
   return (
     <Box sx={{ width: '100%', height: '100vh', margin: 'auto', p: 5 }}>
       <Stack direction="row" spacing={6} sx={{ height: '100%' }}>
+        {/* 일정 추가 / 일정 수정 영역 */}
         <Stack spacing={2} sx={{ width: '20%' }}>
           <Typography variant="h4">{editingEvent ? '일정 수정' : '일정 추가'}</Typography>
 
@@ -487,6 +488,7 @@ function App() {
           </Button>
         </Stack>
 
+        {/* 일정 보기 (달력 캘린더 영역) */}
         <Stack flex={1} spacing={5}>
           <Typography variant="h4">일정 보기</Typography>
 
@@ -516,6 +518,7 @@ function App() {
           {view === 'month' && renderMonthView()}
         </Stack>
 
+        {/* 일정 검색 및 일정 리스트 영역 */}
         <Stack
           data-testid="event-list"
           spacing={2}
