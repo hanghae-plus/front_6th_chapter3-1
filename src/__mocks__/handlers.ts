@@ -11,12 +11,13 @@ const serverState = { events };
 
 export const handlers = [
   http.get('/api/events', () => {
-    return HttpResponse.json(serverState.events);
+    return HttpResponse.json({ events: serverState.events });
   }),
 
   http.post('/api/events', async ({ request }) => {
     const events = serverState.events;
-    const newEvent = { id: randomUUID(), ...request.body } as Event;
+    const newEventBody = await request.clone().json();
+    const newEvent = { id: randomUUID(), ...newEventBody } as Event;
     serverState.events = [...events, newEvent];
 
     return HttpResponse.json(newEvent, { status: 201 });
@@ -24,11 +25,12 @@ export const handlers = [
 
   http.put('/api/events/:id', async ({ params, request }) => {
     const events = serverState.events;
+    const newEventBody = await request.clone().json();
     const { id } = params;
     const eventIndex = events.findIndex((e) => e.id === id);
     if (eventIndex > -1) {
       const newEvents = [...events];
-      newEvents[eventIndex] = { ...events[eventIndex], ...request.body };
+      newEvents[eventIndex] = { ...events[eventIndex], ...newEventBody };
 
       serverState.events = newEvents;
       return HttpResponse.json(events[eventIndex]);
