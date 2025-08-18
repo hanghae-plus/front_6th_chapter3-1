@@ -219,7 +219,7 @@ describe('일정 뷰', () => {
     expect(screen.queryAllByText('기존 회의').length >= 2).toBe(true);
   });
 
-  it.only('월별 뷰에 일정이 없으면, 일정이 표시되지 않아야 한다.', async () => {
+  it('월별 뷰에 일정이 없으면, 일정이 표시되지 않아야 한다.', async () => {
     renderApp();
     await userEvent.click(getByRole(screen.getByLabelText('뷰 타입 선택'), 'combobox'));
     await userEvent.click(screen.getByLabelText('month-option'));
@@ -230,7 +230,17 @@ describe('일정 뷰', () => {
     expect(list).toHaveTextContent('검색 결과가 없습니다.');
   });
 
-  it('월별 뷰에 일정이 정확히 표시되는지 확인한다', async () => {});
+  it.only('월별 뷰에 일정이 정확히 표시되는지 확인한다', async () => {
+    renderApp();
+    await userEvent.click(screen.getByLabelText('Next'));
+    await userEvent.click(screen.getByLabelText('Next'));
+
+    await userEvent.click(getByRole(screen.getByLabelText('뷰 타입 선택'), 'combobox'));
+    await userEvent.click(screen.getByLabelText('month-option'));
+
+    expect(screen.queryAllByTestId('event-tag').length > 0).toBe(true);
+    expect(screen.queryAllByText('기존 회의').length >= 2).toBe(true);
+  });
 
   it('달력에 1월 1일(신정)이 공휴일로 표시되는지 확인한다', async () => {});
 });
