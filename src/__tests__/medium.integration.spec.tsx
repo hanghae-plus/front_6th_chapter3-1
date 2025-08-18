@@ -203,7 +203,7 @@ describe('일정 뷰', () => {
     expect(list).toHaveTextContent('검색 결과가 없습니다.');
   });
 
-  it.only('주별 뷰 선택 후 해당 일자에 일정이 존재한다면 해당 일정이 정확히 표시된다', async () => {
+  it('주별 뷰 선택 후 해당 일자에 일정이 존재한다면 해당 일정이 정확히 표시된다', async () => {
     renderApp();
     await userEvent.click(screen.getByLabelText('Next'));
     await userEvent.click(screen.getByLabelText('Next'));
@@ -219,7 +219,16 @@ describe('일정 뷰', () => {
     expect(screen.queryAllByText('기존 회의').length >= 2).toBe(true);
   });
 
-  it('월별 뷰에 일정이 없으면, 일정이 표시되지 않아야 한다.', async () => {});
+  it.only('월별 뷰에 일정이 없으면, 일정이 표시되지 않아야 한다.', async () => {
+    renderApp();
+    await userEvent.click(getByRole(screen.getByLabelText('뷰 타입 선택'), 'combobox'));
+    await userEvent.click(screen.getByLabelText('month-option'));
+
+    expect(screen.queryAllByTestId('event-tag')).toHaveLength(0);
+
+    const list = await screen.findByTestId('event-list');
+    expect(list).toHaveTextContent('검색 결과가 없습니다.');
+  });
 
   it('월별 뷰에 일정이 정확히 표시되는지 확인한다', async () => {});
 
