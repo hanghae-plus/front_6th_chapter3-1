@@ -23,7 +23,7 @@ describe('useCalendarView', () => {
       const { result } = renderHook(() => useCalendarView());
 
       // Then: currentDate가 시스템 날짜와 일치해야 함
-      expect(assertDate(result.current.currentDate, new Date('2025-10-01')));
+      assertDate(result.current.currentDate, new Date('2025-10-01'));
     });
 
     it('초기화 시 현재 월(10월)의 공휴일이 자동으로 로드되어야 한다', () => {
@@ -67,7 +67,7 @@ describe('useCalendarView', () => {
       });
 
       // Then: 7일 후인 2025-10-08로 이동해야 함
-      expect(assertDate(result.current.currentDate, new Date('2025-10-08')));
+      assertDate(result.current.currentDate, new Date('2025-10-08'));
     });
 
     it('이전으로 이동 시 현재 날짜에서 7일 전으로 이동해야 한다', () => {
@@ -80,7 +80,7 @@ describe('useCalendarView', () => {
       });
 
       // Then: 7일 전인 2025-09-24로 이동해야 함
-      expect(assertDate(result.current.currentDate, new Date('2025-09-24')));
+      assertDate(result.current.currentDate, new Date('2025-09-24'));
     });
   });
 
@@ -95,7 +95,7 @@ describe('useCalendarView', () => {
       });
 
       // Then: 다음 달인 2025-11-01로 이동해야 함
-      expect(assertDate(result.current.currentDate, new Date('2025-11-01')));
+      assertDate(result.current.currentDate, new Date('2025-11-01'));
     });
 
     it('이전으로 이동 시 이전 달 같은 일로 이동해야 한다', () => {
@@ -108,7 +108,7 @@ describe('useCalendarView', () => {
       });
 
       // Then: 이전 달인 2025-09-01로 이동해야 함
-      expect(assertDate(result.current.currentDate, new Date('2025-09-01')));
+      assertDate(result.current.currentDate, new Date('2025-09-01'));
     });
   });
 
