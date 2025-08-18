@@ -77,9 +77,18 @@ describe('convertEventToDateRange', () => {
 });
 
 describe('isOverlapping', () => {
-  it('두 이벤트가 겹치는 경우 true를 반환한다', () => {});
+  it('두 이벤트가 겹치는 경우 true를 반환한다', () => {
+    // 시간대가 완전히 동일한 두 이벤트
+    const event1 = createTestEvent();
+    const event2 = createTestEvent({ id: '2' });
+    expect(isOverlapping(event1, event2)).toBe(true);
+  });
 
-  it('두 이벤트가 겹치지 않는 경우 false를 반환한다', () => {});
+  it('두 이벤트가 겹치지 않는 경우 false를 반환한다', () => {
+    const event1 = createTestEvent();
+    const event2 = createTestEvent({ id: '2', date: '2025-07-02' });
+    expect(isOverlapping(event1, event2)).toBe(false);
+  });
 });
 
 describe('findOverlappingEvents', () => {
