@@ -67,6 +67,7 @@ describe('getFilteredEvents', () => {
         createMockEvent(1, { date: '2025-06-29' }),
         createMockEvent(2, { date: '2025-07-05' }),
       ];
+
       const result = getFilteredEvents(boundaryEvents, '', new Date('2025-07-01'), 'week');
       expect(result).toHaveLength(2);
     });
@@ -83,11 +84,12 @@ describe('getFilteredEvents', () => {
       expect(result.map((e) => e.id)).toEqual(['1', '2']);
     });
 
-    it('월의 초와 말일에 있는 이벤트를 올바르게 필터링한다', () => {
+    it('월의 초와 말일의 경계에 있는 이벤트를 올바르게 필터링한다', () => {
       const boundaryEvents = [
         createMockEvent(1, { date: '2025-07-01' }),
         createMockEvent(2, { date: '2025-07-31' }),
       ];
+
       const result = getFilteredEvents(boundaryEvents, '', new Date('2025-07-15'), 'month');
       expect(result).toHaveLength(2);
     });
