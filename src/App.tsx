@@ -428,9 +428,10 @@ function App() {
               size="small"
               value={notificationTime}
               onChange={(e) => setNotificationTime(Number(e.target.value))}
+              aria-label="알림 설정"
             >
               {notificationOptions.map((option) => (
-                <MenuItem key={option.value} value={option.value}>
+                <MenuItem key={option.value} value={option.value} aria-label={`${option.value}-option`}>
                   {option.label}
                 </MenuItem>
               ))}

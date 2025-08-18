@@ -6,18 +6,13 @@ import {
   within,
   act,
   fireEvent,
-  RenderResult,
-  waitFor,
   getByRole,
 } from '@testing-library/react';
-import { UserEvent, userEvent } from '@testing-library/user-event';
-import { http, HttpResponse } from 'msw';
+import userEvent from '@testing-library/user-event';
 import { SnackbarProvider } from 'notistack';
-import { ReactElement } from 'react';
-
+// import { debug } from 'vitest-preview';
 import App from '../App';
-import { server } from '../setupTests';
-import { Event, EventForm } from '../types';
+import { EventForm } from '../types';
 
 const renderApp = () => {
   const theme = createTheme();
@@ -51,8 +46,11 @@ async function createEvent({
   await userEvent.click(screen.getByTestId('event-submit-button'));
 }
 
-async function updateEvent({ title, date, description, startTime, endTime }: Partial<EventForm>) {
-  await userEvent.click(screen.getByLabelText('Edit event'));
+async function updateFirstEvent(
+  { title, date, description, startTime, endTime, notificationTime }: Partial<EventForm>,
+) {
+  const [button] = screen.queryAllByLabelText('Edit event');
+  await userEvent.click(button);
 
   await userEvent.clear(screen.getByLabelText('제목'));
   await userEvent.type(screen.getByLabelText('제목'), title!);
@@ -76,10 +74,15 @@ async function updateEvent({ title, date, description, startTime, endTime }: Par
     await userEvent.type(screen.getByLabelText('종료 시간'), endTime);
   }
 
+  if (notificationTime != null) {
+    await userEvent.click(getByRole(screen.getByLabelText('알림 설정'), 'combobox'));
+    await userEvent.click(screen.getByLabelText(`${notificationTime}-option`));
+  }
+
   await userEvent.click(screen.getByTestId('event-submit-button'));
 }
 
-describe.only('일정 CRUD 및 기본 기능', () => {
+describe('일정 CRUD 및 기본 기능', () => {
   it('입력한 새로운 일정 정보에 맞춰 모든 필드가 이벤트 리스트에 정확히 저장된다.', async () => {
     renderApp();
 
@@ -115,7 +118,7 @@ describe.only('일정 CRUD 및 기본 기능', () => {
     const eventList = within(await screen.findByTestId('event-list'));
     expect(eventList.getByText('기존 회의')).toBeInTheDocument();
 
-    await updateEvent({ title: '바뀐 회의', startTime: '12:00', endTime: '13:00' });
+    await updateFirstEvent({ title: '바뀐 회의', startTime: '12:00', endTime: '13:00' });
 
     const eventListAfterUpdate = within(await screen.findByTestId('event-list'));
     expect(eventListAfterUpdate.getByText('바뀐 회의')).toBeInTheDocument();
@@ -125,8 +128,8 @@ describe.only('일정 CRUD 및 기본 기능', () => {
     renderApp();
 
     // 기존 회의 날짜로 이동
-    fireEvent.click(screen.getByLabelText('Next'));
-    fireEvent.click(screen.getByLabelText('Next'));
+    await userEvent.click(screen.getByLabelText('Next'));
+    await userEvent.click(screen.getByLabelText('Next'));
 
     const eventList = within(await screen.findByTestId('event-list'));
     expect(eventList.getByText('기존 회의')).toBeInTheDocument();
@@ -140,29 +143,207 @@ describe.only('일정 CRUD 및 기본 기능', () => {
 });
 
 describe('일정 뷰', () => {
-  it('주별 뷰를 선택 후 해당 주에 일정이 없으면, 일정이 표시되지 않는다.', async () => {});
+  it('주별 뷰를 선택 후 해당 주에 일정이 없으면, 일정이 표시되지 않는다.', async () => {
+    renderApp();
 
-  it('주별 뷰 선택 후 해당 일자에 일정이 존재한다면 해당 일정이 정확히 표시된다', async () => {});
+    // 일정 없는 주차
+    await userEvent.click(getByRole(screen.getByLabelText('뷰 타입 선택'), 'combobox'));
+    await userEvent.click(await screen.findByLabelText('week-option'));
+    const eventListAfterDelete = within(await screen.findByTestId('event-list'));
 
-  it('월별 뷰에 일정이 없으면, 일정이 표시되지 않아야 한다.', async () => {});
+    expect(eventListAfterDelete.getByText('검색 결과가 없습니다.')).toBeInTheDocument();
+  });
 
-  it('월별 뷰에 일정이 정확히 표시되는지 확인한다', async () => {});
+  it('주별 뷰 선택 후 해당 일자에 일정이 존재한다면 해당 일정이 정확히 표시된다', async () => {
+    renderApp();
 
-  it('달력에 1월 1일(신정)이 공휴일로 표시되는지 확인한다', async () => {});
+    // 일정 있는 주차
+    await userEvent.click(getByRole(screen.getByLabelText('뷰 타입 선택'), 'combobox'));
+    await userEvent.click(await screen.findByLabelText('week-option'));
+    for (let i = 0; i < 7; i++) {
+      await userEvent.click(screen.getByLabelText('Next'));
+    }
+
+    const eventListAfterDelete = within(await screen.findByTestId('event-list'));
+    expect(await eventListAfterDelete.getByText('검색 결과가 없습니다.')).toBeInTheDocument();
+  });
+
+  it('월별 뷰에 일정이 없으면, 일정이 표시되지 않아야 한다.', async () => {
+    renderApp();
+    // 일정 없는 월
+
+    const eventList = within(await screen.findByTestId('event-list'));
+
+    expect(eventList.getByText('검색 결과가 없습니다.')).toBeInTheDocument();
+  });
+
+  it('월별 뷰에 일정이 정확히 표시되는지 확인한다', async () => {
+    renderApp();
+
+    // 일정 있는 10월
+    await userEvent.click(screen.getByLabelText('Next'));
+    await userEvent.click(screen.getByLabelText('Next'));
+
+    const eventList = within(await screen.findByTestId('event-list'));
+
+    expect(eventList.getByText('기존 회의')).toBeInTheDocument();
+  });
+
+  it('달력에 1월 1일(신정)이 공휴일로 표시되는지 확인한다', async () => {
+    renderApp();
+
+    // 25년 1월 1일
+    await userEvent.click(screen.getByLabelText('Previous'));
+    await userEvent.click(screen.getByLabelText('Previous'));
+    await userEvent.click(screen.getByLabelText('Previous'));
+    await userEvent.click(screen.getByLabelText('Previous'));
+    await userEvent.click(screen.getByLabelText('Previous'));
+    await userEvent.click(screen.getByLabelText('Previous'));
+    await userEvent.click(screen.getByLabelText('Previous'));
+
+    const monthView = within(await screen.findByTestId('month-view'));
+
+    expect(monthView.getByText('신정')).toBeInTheDocument();
+  });
 });
 
 describe('검색 기능', () => {
-  it('검색 결과가 없으면, "검색 결과가 없습니다."가 표시되어야 한다.', async () => {});
+  it('검색 결과가 없으면, "검색 결과가 없습니다."가 표시되어야 한다.', async () => {
+    renderApp();
 
-  it("'팀 회의'를 검색하면 해당 제목을 가진 일정이 리스트에 노출된다", async () => {});
+    // 일정 있는 10월
+    await userEvent.click(screen.getByLabelText('Next'));
+    await userEvent.click(screen.getByLabelText('Next'));
 
-  it('검색어를 지우면 모든 일정이 다시 표시되어야 한다', async () => {});
+    await userEvent.type(screen.getByLabelText('일정 검색'), '없는 문자열');
+
+    const eventList = within(await screen.findByTestId('event-list'));
+
+    expect(eventList.getByText('검색 결과가 없습니다.')).toBeInTheDocument();
+  });
+
+  it("'팀 회의'를 검색하면 해당 제목을 가진 일정이 리스트에 노출된다", async () => {
+    renderApp();
+
+    await createEvent({
+      title: '테스트 - 팀 회의',
+      date: '2025-10-16',
+      description: '테스트 - 설명',
+      startTime: '17:00',
+      endTime: '18:00',
+      category: '개인',
+    });
+
+    // 일정 있는 10월
+    await userEvent.click(screen.getByLabelText('Next'));
+    await userEvent.click(screen.getByLabelText('Next'));
+
+    await userEvent.type(screen.getByLabelText('일정 검색'), '팀 회의');
+
+    const eventList = within(await screen.findByTestId('event-list'));
+
+    expect(eventList.getByText('테스트 - 팀 회의')).toBeInTheDocument();
+  });
+
+  it('검색어를 지우면 모든 일정이 다시 표시되어야 한다', async () => {
+    renderApp();
+
+    await createEvent({
+      title: '테스트 - 팀 회의',
+      date: '2025-10-16',
+      description: '테스트 - 설명',
+      startTime: '17:00',
+      endTime: '18:00',
+      category: '개인',
+    });
+
+    // 일정 있는 10월
+    await userEvent.click(screen.getByLabelText('Next'));
+    await userEvent.click(screen.getByLabelText('Next'));
+
+    // 검색 결과 1개만 뜸
+    await userEvent.type(screen.getByLabelText('일정 검색'), '팀 회의');
+    const eventList = within(await screen.findByTestId('event-list'));
+    expect(eventList.getByText('테스트 - 팀 회의')).toBeInTheDocument();
+    expect(eventList.queryByText('기존 회의')).toBe(null);
+
+    // 검색 초기화시 2개 다 뜸
+    await userEvent.clear(screen.getByLabelText('일정 검색'));
+    const newEventList = within(await screen.findByTestId('event-list'));
+    expect(newEventList.getByText('테스트 - 팀 회의')).toBeInTheDocument();
+    expect(newEventList.getByText('기존 회의')).toBeInTheDocument();
+  });
 });
 
 describe('일정 충돌', () => {
-  it('겹치는 시간에 새 일정을 추가할 때 경고가 표시된다', async () => {});
+  it('겹치는 시간에 새 일정을 추가할 때 경고가 표시된다', async () => {
+    renderApp();
 
-  it('기존 일정의 시간을 수정하여 충돌이 발생하면 경고가 노출된다', async () => {});
+    // 일정 있는 10월
+    await userEvent.click(screen.getByLabelText('Next'));
+    await userEvent.click(screen.getByLabelText('Next'));
+
+    await createEvent({
+      title: '테스트 - 팀 회의',
+      date: '2025-10-15',
+      description: '테스트 - 설명',
+      startTime: '09:00',
+      endTime: '11:00',
+      category: '개인',
+    });
+
+    const dialog = await screen.findByRole('dialog');
+    expect(within(dialog).getByText('일정 겹침 경고')).toBeInTheDocument();
+  });
+
+  it('기존 일정의 시간을 수정하여 충돌이 발생하면 경고가 노출된다', async () => {
+    renderApp();
+
+    // 일정 있는 10월
+    await userEvent.click(screen.getByLabelText('Next'));
+    await userEvent.click(screen.getByLabelText('Next'));
+
+    await createEvent({
+      title: '테스트 - 팀 회의',
+      date: '2025-10-16',
+      description: '테스트 - 설명',
+      startTime: '09:00',
+      endTime: '11:00',
+      category: '개인',
+    });
+
+    // 충돌이 나지 않으므로 dialog 가 뜨지 않음
+    expect(screen.queryByRole('dialog')).toBe(null);
+
+    await updateFirstEvent({
+      title: '기존 회의 - 업데이트',
+      date: '2025-10-16',
+    });
+
+    // 추가한 이벤트와 충돌이 남
+    const dialog = await screen.findByRole('dialog');
+    expect(dialog).toHaveTextContent('일정 겹침 경고');
+    expect(dialog).toHaveTextContent('다음 일정과 겹칩니다:');
+    expect(dialog).toHaveTextContent('테스트 - 팀 회의');
+  });
 });
 
-it('notificationTime을 10으로 하면 지정 시간 10분 전 알람 텍스트가 노출된다', async () => {});
+it('notificationTime을 10으로 하면 지정 시간 10분 전 알람 텍스트가 노출된다', async () => {
+  vi.setSystemTime(new Date('2025-10-14T23:49:59Z'));
+
+  renderApp();
+
+  await act(() => vi.advanceTimersByTime(500));
+
+  await updateFirstEvent(
+    {
+      title: '기존 회의 - 업데이트',
+      notificationTime: 10,
+    },
+  );
+
+  await act(() => vi.advanceTimersByTime(1_000));
+
+  const [alert] = screen.queryAllByRole('alert');
+  expect(within(alert).getByText('10분 후 기존 회의 - 업데이트 일정이 시작됩니다.')).toBeInTheDocument();
+});
