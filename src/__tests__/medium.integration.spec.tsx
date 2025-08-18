@@ -8,6 +8,7 @@ import {
   fireEvent,
   RenderResult,
   waitFor,
+  getByRole,
 } from '@testing-library/react';
 import { UserEvent, userEvent } from '@testing-library/user-event';
 import { http, HttpResponse } from 'msw';
@@ -30,38 +31,52 @@ const renderApp = () => {
   );
 };
 
-async function clearEvent() {
-  fireEvent.change(screen.getByLabelText('제목'), { target: { value: '' } });
-  fireEvent.change(screen.getByLabelText('날짜'), { target: { value: '' } });
-  fireEvent.change(screen.getByLabelText('설명'), { target: { value: '' } });
-  fireEvent.change(screen.getByLabelText('시작 시간'), { target: { value: '' } });
-  fireEvent.change(screen.getByLabelText('종료 시간'), { target: { value: '' } });
-}
+async function createEvent({
+  title,
+  date,
+  description,
+  startTime,
+  endTime,
+  category,
+}: Pick<EventForm, 'title' | 'date' | 'description' | 'startTime' | 'endTime' | 'category'>) {
+  await userEvent.type(screen.getByLabelText('제목'), title!);
+  await userEvent.type(screen.getByLabelText('날짜'), date!);
+  await userEvent.type(screen.getByLabelText('설명'), description!);
+  await userEvent.type(screen.getByLabelText('시작 시간'), startTime!);
+  await userEvent.type(screen.getByLabelText('종료 시간'), endTime!);
 
-async function createEvent({ title, date, description, startTime, endTime }: Partial<EventForm>) {
-  fireEvent.change(screen.getByLabelText('제목'), { target: { value: title } });
-  fireEvent.change(screen.getByLabelText('날짜'), { target: { value: date } });
-  fireEvent.change(screen.getByLabelText('설명'), { target: { value: description } });
-  fireEvent.change(screen.getByLabelText('시작 시간'), { target: { value: startTime } });
-  fireEvent.change(screen.getByLabelText('종료 시간'), { target: { value: endTime } });
+  await userEvent.click(getByRole(screen.getByLabelText('카테고리'), 'combobox'));
+  await userEvent.click(screen.getByLabelText(`${category}-option`));
 
-  await fireEvent.click(screen.getByTestId('event-submit-button'));
-
-  clearEvent();
+  await userEvent.click(screen.getByTestId('event-submit-button'));
 }
 
 async function updateEvent({ title, date, description, startTime, endTime }: Partial<EventForm>) {
-  fireEvent.click(screen.getByLabelText('Edit event'));
+  await userEvent.click(screen.getByLabelText('Edit event'));
 
-  fireEvent.change(screen.getByLabelText('제목'), { target: { value: title } });
-  date && fireEvent.change(screen.getByLabelText('날짜'), { target: { value: date } });
-  description && fireEvent.change(screen.getByLabelText('설명'), { target: { value: description } });
-  startTime && fireEvent.change(screen.getByLabelText('시작 시간'), { target: { value: startTime } });
-  endTime && fireEvent.change(screen.getByLabelText('종료 시간'), { target: { value: endTime } });
+  await userEvent.clear(screen.getByLabelText('제목'));
+  await userEvent.type(screen.getByLabelText('제목'), title!);
+  if (date != null) {
+    await userEvent.clear(screen.getByLabelText('날짜'));
+    await userEvent.type(screen.getByLabelText('날짜'), date);
+  }
 
-  await fireEvent.click(screen.getByTestId('event-submit-button'));
+  if (description != null) {
+    await userEvent.clear(screen.getByLabelText('설명'));
+    await userEvent.type(screen.getByLabelText('설명'), description);
+  }
 
-  clearEvent();
+  if (startTime != null) {
+    await userEvent.clear(screen.getByLabelText('시작 시간'));
+    await userEvent.type(screen.getByLabelText('시작 시간'), startTime);
+  }
+
+  if (endTime != null) {
+    await userEvent.clear(screen.getByLabelText('종료 시간'));
+    await userEvent.type(screen.getByLabelText('종료 시간'), endTime);
+  }
+
+  await userEvent.click(screen.getByTestId('event-submit-button'));
 }
 
 describe.only('일정 CRUD 및 기본 기능', () => {
@@ -78,10 +93,11 @@ describe.only('일정 CRUD 및 기본 기능', () => {
       description: '테스트 - 설명',
       startTime: '17:00',
       endTime: '18:00',
+      category: '개인',
     });
 
     const eventList = within(await screen.findByTestId('event-list'));
-    expect(eventList.getByText('테스트 - 새 회의')).toBeInTheDocument();
+    expect(eventList.queryAllByText('테스트 - 새 회의').length).not.toBe(0);
     expect(eventList.getByText('2025-10-16')).toBeInTheDocument();
     expect(eventList.getByText('테스트 - 설명')).toBeInTheDocument();
 
@@ -99,7 +115,7 @@ describe.only('일정 CRUD 및 기본 기능', () => {
     const eventList = within(await screen.findByTestId('event-list'));
     expect(eventList.getByText('기존 회의')).toBeInTheDocument();
 
-    await updateEvent({ title: '바뀐 회의' });
+    await updateEvent({ title: '바뀐 회의', startTime: '12:00', endTime: '13:00' });
 
     const eventListAfterUpdate = within(await screen.findByTestId('event-list'));
     expect(eventListAfterUpdate.getByText('바뀐 회의')).toBeInTheDocument();
