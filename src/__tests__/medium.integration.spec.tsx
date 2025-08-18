@@ -192,7 +192,7 @@ describe('일정 CRUD 및 기본 기능', () => {
 });
 
 describe('일정 뷰', () => {
-  it.only('주별 뷰를 선택 후 해당 주에 일정이 없으면, 일정이 표시되지 않는다.', async () => {
+  it('주별 뷰를 선택 후 해당 주에 일정이 없으면, 일정이 표시되지 않는다.', async () => {
     renderApp();
     await userEvent.click(getByRole(screen.getByLabelText('뷰 타입 선택'), 'combobox'));
     await userEvent.click(screen.getByLabelText('week-option'));
@@ -203,7 +203,21 @@ describe('일정 뷰', () => {
     expect(list).toHaveTextContent('검색 결과가 없습니다.');
   });
 
-  it('주별 뷰 선택 후 해당 일자에 일정이 존재한다면 해당 일정이 정확히 표시된다', async () => {});
+  it.only('주별 뷰 선택 후 해당 일자에 일정이 존재한다면 해당 일정이 정확히 표시된다', async () => {
+    renderApp();
+    await userEvent.click(screen.getByLabelText('Next'));
+    await userEvent.click(screen.getByLabelText('Next'));
+
+    await userEvent.click(getByRole(screen.getByLabelText('뷰 타입 선택'), 'combobox'));
+    await userEvent.click(screen.getByLabelText('week-option'));
+
+    await userEvent.click(screen.getByLabelText('Next'));
+    await userEvent.click(screen.getByLabelText('Next'));
+    debug();
+
+    expect(screen.queryAllByTestId('event-tag').length > 0).toBe(true);
+    expect(screen.queryAllByText('기존 회의').length >= 2).toBe(true);
+  });
 
   it('월별 뷰에 일정이 없으면, 일정이 표시되지 않아야 한다.', async () => {});
 
