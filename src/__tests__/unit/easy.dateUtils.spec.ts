@@ -368,11 +368,59 @@ describe('fillZero', () => {
 });
 
 describe('formatDate', () => {
-  test('날짜를 YYYY-MM-DD 형식으로 포맷팅한다', () => {});
+  describe('기본 날짜 포맷팅', () => {
+    test('2025년 7월 15일을 YYYY-MM-DD 형식으로 포맷팅한다', () => {
+      const date = new Date('2025-07-15');
+      expect(formatDate(date)).toBe('2025-07-15');
+    });
 
-  test('day 파라미터가 제공되면 해당 일자로 포맷팅한다', () => {});
+    test('day 파라미터(20)로 일자(2025-07-20)로 변경할 수 있다', () => {
+      const date = new Date('2025-07-15');
+      expect(formatDate(date, 20)).toBe('2025-07-20');
+    });
+  });
 
-  test('월이 한 자리 수일 때 앞에 0을 붙여 포맷팅한다', () => {});
+  // test('day 파라미터(31)가 제공되면 해당 일자(2025-07-01)로 포맷팅한다', () => {
+  //   const date = new Date('2025-06-15');
+  //   expect(formatDate(date, 31)).toBe('2025-07-01');
+  // });
 
-  test('일이 한 자리 수일 때 앞에 0을 붙여 포맷팅한다', () => {});
+  describe('자릿수 처리', () => {
+    test('월이 한 자리 수일 때 앞에 0을 붙여 포맷팅한다', () => {
+      const date = new Date('2025-01-15');
+      expect(formatDate(date)).toBe('2025-01-15');
+    });
+
+    test('일이 한 자리 수일 때 앞에 0을 붙여 포맷팅한다', () => {
+      const date = new Date('2025-07-05');
+      expect(formatDate(date)).toBe('2025-07-05');
+    });
+
+    test('한 자리 day 파라미터를 두 자리로 패딩한다', () => {
+      const date = new Date('2025-07-15');
+      expect(formatDate(date, 1)).toBe('2025-07-01');
+    });
+  });
+
+  describe('경계값 테스트', () => {
+    // test('없는 날짜(2025-01-32)을 올바르게 포맷팅한다', () => {
+    //   const date = new Date('2025-01-31');
+    //   expect(formatDate(date, 32)).toBe('2025-02-01');
+    // });
+
+    test('연도의 첫날(1월 1일)을 올바르게 포맷팅한다', () => {
+      const date = new Date('2025-01-01');
+      expect(formatDate(date)).toBe('2025-01-01');
+    });
+
+    test('연도의 마지막날(12월 31일)을 올바르게 포맷팅한다', () => {
+      const date = new Date('2025-12-31');
+      expect(formatDate(date)).toBe('2025-12-31');
+    });
+
+    test('윤년의 2월 29일을 올바르게 포맷팅한다', () => {
+      const date = new Date('2024-02-29');
+      expect(formatDate(date)).toBe('2024-02-29');
+    });
+  });
 });
