@@ -1,7 +1,7 @@
 import { http, HttpResponse } from 'msw';
 
 import { events } from '../__mocks__/response/events.json' assert { type: 'json' };
-import { Event } from '../types';
+import { Event, EventForm } from '../types';
 import { randomUUID } from 'crypto';
 
 // ! HARD
@@ -14,18 +14,18 @@ export const handlers = [
 
   http.post('/api/events', async ({ request }) => {
     console.log('handlers post', request);
-    const req = request.json();
-    const newEvent = await {id: randomUUID(), ...req} as Event;
+    const form = await request.json() as EventForm;
+    const newEvent: Event = {id: randomUUID(), ...form};
     return HttpResponse.json(newEvent);
   }),
 
   http.put('/api/events/:id', async ({ params, request }) => {
     console.log('handlers put', params, request);
-    const reqs = await request.json() as Event[];
-    const selctedIndex = reqs.findIndex((item) => item.id === params.id);
+    const updateData = await request.json() as Partial<Event>;
+    const selctedIndex = events.findIndex((item) => item.id === params.id);
     if (selctedIndex > -1) {
-      const newEvents = [...reqs];
-      newEvents[selctedIndex] = { ...newEvents[selctedIndex], ...reqs[selctedIndex] };
+      const newEvents = [...events];
+      newEvents[selctedIndex] = { ...newEvents[selctedIndex], ...updateData };
       return HttpResponse.json(newEvents[selctedIndex]);
     }
     return HttpResponse.json(null, { status: 404 });
