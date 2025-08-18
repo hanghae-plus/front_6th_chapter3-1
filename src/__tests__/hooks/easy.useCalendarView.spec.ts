@@ -41,15 +41,14 @@ describe('초기 상태', () => {
 
 it("상태 값 view를 'week'으로 변경 시 반영된다", () => {
   const { result } = renderHook(() => useCalendarView());
-  const { view, setView } = result.current;
 
-  expect(view).toBe('month');
+  expect(result.current.view).toBe('month');
 
   act(() => {
-    setView('week');
+    result.current.setView('week');
   });
 
-  expect(view).toBe('week');
+  expect(result.current.view).toBe('week');
 });
 
 describe('네비게이션', () => {
