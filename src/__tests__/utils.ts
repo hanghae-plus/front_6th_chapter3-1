@@ -1,4 +1,4 @@
-import { RepeatType } from '../types';
+import { Event, RepeatType } from '../types';
 import { fillZero } from '../utils/dateUtils';
 
 export const assertDate = (date1: Date, date2: Date) => {
@@ -13,18 +13,25 @@ export const parseHM = (timestamp: number) => {
 };
 
 // 이벤트 생성
-export const createEvent = (id: string, date: string, startTime?: string, endTime?: string) => {
+export const createEvent = ({
+  id,
+  date,
+  title,
+  startTime,
+  endTime,
+  repeat,
+}: Partial<Event>): Event => {
   return {
-    id: id,
-    title: `event ${id}`,
-    date: date,
+    id: id || '1',
+    date: date || '2025-08-01',
+    title: title || `event ${id}`,
     startTime: startTime || '09:00',
     endTime: endTime || '10:00',
     description: 'description',
     location: 'location',
     category: 'category',
     repeat: {
-      type: 'none' as RepeatType,
+      type: repeat?.type || 'none',
       interval: 0,
     },
     notificationTime: 0,
