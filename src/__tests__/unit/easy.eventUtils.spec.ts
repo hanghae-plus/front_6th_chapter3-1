@@ -53,15 +53,15 @@ const events: Event[] = [
 ];
 
 describe('getFilteredEvents', () => {
-  it("검색어 '이벤트 2'에 맞는 이벤트만 반환한다", () => {
-    const searchTerm = '이벤트 2';
+  it("검색어 '이벤트 b'에 맞는 이벤트만 반환한다", () => {
+    const searchTerm = '이벤트 b';
     const currentDate = new Date('2025-07-01');
     const view: 'week' | 'month' = 'month';
 
     const result = getFilteredEvents(events, searchTerm, currentDate, view);
 
     expect(result).toHaveLength(1);
-    expect(result[0].title).toBe('이벤트 2');
+    expect(result[0].title).toBe('이벤트 b');
   });
 
   it('주간 뷰에서 2025-07-01 주의 이벤트만 반환한다', () => {
