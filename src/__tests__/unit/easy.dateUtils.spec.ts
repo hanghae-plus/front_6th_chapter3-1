@@ -12,15 +12,29 @@ import {
 } from '../../utils/dateUtils';
 
 describe('getDaysInMonth', () => {
-  it('1월은 31일 수를 반환한다', () => {});
+  it('1월은 31일 수를 반환한다', () => {
+    expect(getDaysInMonth(new Date().getFullYear(), 1)).toBe(31);
+  });
 
-  it('4월은 30일 일수를 반환한다', () => {});
+  it('4월은 30일 일수를 반환한다', () => {
+    expect(getDaysInMonth(new Date().getFullYear(), 4)).toBe(30);
+  });
 
-  it('윤년의 2월에 대해 29일을 반환한다', () => {});
+  it('윤년의 2월에 대해 29일을 반환한다', () => {
+    expect(getDaysInMonth(2024, 2)).toBe(29);
+  });
 
-  it('평년의 2월에 대해 28일을 반환한다', () => {});
+  it('평년의 2월에 대해 28일을 반환한다', () => {
+    expect(getDaysInMonth(2025, 2)).toBe(28);
+  });
 
-  it('유효하지 않은 월에 대해 적절히 처리한다', () => {});
+  it('유효하지 않은 월에 대해 적절히 처리한다', () => {
+    // NOTE
+    // 1~12 범위 외의 숫자를 전달하면 다음 해로 넘어가서 계산됨
+    // 1. 함수 getDaysInMonth 내부에 13 이상의 숫자를 전달했을 때 처리하는 코드가 있어야 함
+    // 2. 1의 코드가 없더라도 UI에서 13 이상의 숫자를 선택하는 경우는 없으므로 의미 없는 테스트 코드일지도?
+    expect(getDaysInMonth(2025, 20)).toBe(null);
+  });
 });
 
 describe('getWeekDates', () => {
