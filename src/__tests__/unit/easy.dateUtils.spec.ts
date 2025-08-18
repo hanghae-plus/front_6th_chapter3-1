@@ -12,31 +12,151 @@ import {
 } from '../../utils/dateUtils';
 
 describe('getDaysInMonth', () => {
-  it('1월은 31일 수를 반환한다', () => {});
+  it('1월은 31일 수를 반환한다', () => {
+    expect(getDaysInMonth(2025, 1)).toBe(31);
+  });
 
-  it('4월은 30일 일수를 반환한다', () => {});
+  it('4월은 30일 일수를 반환한다', () => {
+    expect(getDaysInMonth(2025, 4)).toBe(30);
+  });
 
-  it('윤년의 2월에 대해 29일을 반환한다', () => {});
+  it('윤년의 2월에 대해 29일을 반환한다', () => {
+    expect(getDaysInMonth(2024, 2)).toBe(29);
+  });
 
-  it('평년의 2월에 대해 28일을 반환한다', () => {});
+  it('평년의 2월에 대해 28일을 반환한다', () => {
+    expect(getDaysInMonth(2025, 2)).toBe(28);
+  });
 
-  it('유효하지 않은 월에 대해 적절히 처리한다', () => {});
+  // 유효하지 않은 월에 대해 적절히 처리한다
+  it('0월과 13월 이상의 값에 대해 적절히 처리한다', () => {
+    const input = [0, 13, 14, 25];
+    const output = [31, 31, 28, 31];
+
+    input.forEach((month, index) => {
+      expect(getDaysInMonth(2024, month)).toBe(output[index]);
+    });
+  });
+
+  it('음수 월 값에 대해 적절히 처리한다', () => {
+    const input = [-1, -12, -13];
+    const output = [30, 31, 30];
+
+    input.forEach((month, index) => {
+      expect(getDaysInMonth(2024, month)).toBe(output[index]);
+    });
+  });
 });
 
 describe('getWeekDates', () => {
-  it('주중의 날짜(수요일)에 대해 올바른 주의 날짜들을 반환한다', () => {});
+  it.each([
+    {
+      input: new Date(2025, 7, 17),
+      description: '주의 시작(일요일)',
+    },
+    {
+      input: new Date(2025, 7, 23),
+      description: '주의 끝(토요일)',
+    },
+    {
+      input: new Date(2025, 7, 20),
+      description: '주중의 날짜(수요일)',
+    },
+  ])('$description에 대해 올바른 주의 날짜들을 반환한다', ({ input }) => {
+    const results = getWeekDates(input);
 
-  it('주의 시작(월요일)에 대해 올바른 주의 날짜들을 반환한다', () => {});
+    expect(results[0].getDay()).toBe(0);
+    expect(results[6].getDay()).toBe(6);
 
-  it('주의 끝(일요일)에 대해 올바른 주의 날짜들을 반환한다', () => {});
+    // 입력 날짜를 포함하고 있는지
+    const inputDateToString = input.toDateString();
+    const resultDatesToString = results.map((date) => date.toDateString());
+    expect(resultDatesToString).toContain(inputDateToString);
 
-  it('연도를 넘어가는 주의 날짜를 정확히 처리한다 (연말)', () => {});
+    // 연속된 날짜인지
+    for (let i = 1; i < results.length; i++) {
+      const prevDate = new Date(results[i - 1]);
+      const currDate = new Date(results[i]);
+      prevDate.setDate(prevDate.getDate() + 1);
+      expect(currDate.getTime()).toBe(prevDate.getTime());
+    }
+  });
 
-  it('연도를 넘어가는 주의 날짜를 정확히 처리한다 (연초)', () => {});
+  it('연도를 넘어가는 주의 날짜를 정확히 처리한다 (연말)', () => {
+    const input = new Date(2025, 12, 31);
+    const results = getWeekDates(input);
 
-  it('윤년의 2월 29일을 포함한 주를 올바르게 처리한다', () => {});
+    expect(results[0].getDay()).toBe(0);
+    expect(results[6].getDay()).toBe(6);
 
-  it('월의 마지막 날짜를 포함한 주를 올바르게 처리한다', () => {});
+    const inputDateToString = input.toDateString();
+    const resultDatesToString = results.map((date) => date.toDateString());
+    expect(resultDatesToString).toContain(inputDateToString);
+
+    for (let i = 1; i < results.length; i++) {
+      const prevDate = new Date(results[i - 1]);
+      const currDate = new Date(results[i]);
+      prevDate.setDate(prevDate.getDate() + 1);
+      expect(currDate.getTime()).toBe(prevDate.getTime());
+    }
+  });
+
+  it('연도를 넘어가는 주의 날짜를 정확히 처리한다 (연초)', () => {
+    const input = new Date(2025, 0, 1);
+    const results = getWeekDates(input);
+
+    expect(results[0].getDay()).toBe(0);
+    expect(results[6].getDay()).toBe(6);
+
+    const inputDateToString = input.toDateString();
+    const resultDatesToString = results.map((date) => date.toDateString());
+    expect(resultDatesToString).toContain(inputDateToString);
+
+    for (let i = 1; i < results.length; i++) {
+      const prevDate = new Date(results[i - 1]);
+      const currDate = new Date(results[i]);
+      prevDate.setDate(prevDate.getDate() + 1);
+      expect(currDate.getTime()).toBe(prevDate.getTime());
+    }
+  });
+
+  it('윤년의 2월 29일을 포함한 주를 올바르게 처리한다', () => {
+    const input = new Date(2024, 1, 29);
+    const results = getWeekDates(input);
+
+    expect(results[0].getDay()).toBe(0);
+    expect(results[6].getDay()).toBe(6);
+
+    const inputDateToString = input.toDateString();
+    const resultDatesToString = results.map((date) => date.toDateString());
+    expect(resultDatesToString).toContain(inputDateToString);
+
+    for (let i = 1; i < results.length; i++) {
+      const prevDate = new Date(results[i - 1]);
+      const currDate = new Date(results[i]);
+      prevDate.setDate(prevDate.getDate() + 1);
+      expect(currDate.getTime()).toBe(prevDate.getTime());
+    }
+  });
+
+  it('월의 마지막 날짜를 포함한 주를 올바르게 처리한다', () => {
+    const input = new Date(2025, 7, 31);
+    const results = getWeekDates(input);
+
+    expect(results[0].getDay()).toBe(0);
+    expect(results[6].getDay()).toBe(6);
+
+    const inputDateToString = input.toDateString();
+    const resultDatesToString = results.map((date) => date.toDateString());
+    expect(resultDatesToString).toContain(inputDateToString);
+
+    for (let i = 1; i < results.length; i++) {
+      const prevDate = new Date(results[i - 1]);
+      const currDate = new Date(results[i]);
+      prevDate.setDate(prevDate.getDate() + 1);
+      expect(currDate.getTime()).toBe(prevDate.getTime());
+    }
+  });
 });
 
 describe('getWeeksAtMonth', () => {
