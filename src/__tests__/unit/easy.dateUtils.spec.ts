@@ -1,4 +1,3 @@
-import { Event, RepeatType } from '../../types';
 import {
   fillZero,
   formatDate,
@@ -10,6 +9,7 @@ import {
   getWeeksAtMonth,
   isDateInRange,
 } from '../../utils/dateUtils';
+import { createEvent } from '../utils';
 
 describe('getDaysInMonth', () => {
   it('1월은 31일 수를 반환한다', () => {
@@ -150,36 +150,8 @@ describe('getWeeksAtMonth', () => {
 
 describe('getEventsForDay', () => {
   const events = [
-    {
-      id: '1',
-      title: 'event1',
-      date: '2025-08-01',
-      startTime: '09:00',
-      endTime: '10:00',
-      description: 'event1 description',
-      location: 'event1 location',
-      category: 'event1 category',
-      repeat: {
-        type: 'none' as RepeatType,
-        interval: 0,
-      },
-      notificationTime: 0,
-    },
-    {
-      id: '2',
-      title: 'event2',
-      date: '2025-08-02',
-      startTime: '09:00',
-      endTime: '10:00',
-      description: 'event2 description',
-      location: 'event2 location',
-      category: 'event2 category',
-      repeat: {
-        type: 'daily' as RepeatType,
-        interval: 0,
-      },
-      notificationTime: 0,
-    },
+    createEvent(new Date('2025-08-01'), '1', 'event1'),
+    createEvent(new Date('2025-08-02'), '2', 'event2'),
   ];
 
   it('특정 날짜(1일)에 해당하는 이벤트만 정확히 반환한다', () => {
