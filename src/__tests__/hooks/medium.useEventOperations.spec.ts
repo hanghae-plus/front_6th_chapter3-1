@@ -1,6 +1,7 @@
-import { act, renderHook } from '@testing-library/react';
+import { act, renderHook, waitFor } from '@testing-library/react';
 import { http, HttpResponse } from 'msw';
 
+import { events } from '../../__mocks__/response/events.json' assert { type: 'json' };
 import {
   setupMockHandlerCreation,
   setupMockHandlerDeletion,
@@ -22,7 +23,18 @@ vi.mock('notistack', async () => {
   };
 });
 
-it('저장되어있는 초기 이벤트 데이터를 적절하게 불러온다', async () => {});
+it('저장되어있는 초기 이벤트 데이터를 적절하게 불러오고 로딩완료 토스트가 표시되어야 한다', async () => {
+  const { result } = renderHook(() => useEventOperations(false));
+
+  await waitFor(() => {
+    expect(result.current.events).not.toBeNull();
+    expect(result.current.events).toHaveLength(1);
+  });
+
+  expect(result.current.events[0]).toEqual(events[0]);
+
+  expect(enqueueSnackbarFn).toHaveBeenCalledWith('일정 로딩 완료!', { variant: 'info' });
+});
 
 it('정의된 이벤트 정보를 기준으로 적절하게 저장이 된다', async () => {});
 
