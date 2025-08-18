@@ -40,19 +40,111 @@ describe('getDaysInMonth', () => {
 });
 
 describe('getWeekDates', () => {
-  it('주중의 날짜(수요일)에 대해 올바른 주의 날짜들을 반환한다', () => {});
+  it('주중의 날짜(수요일)에 대해 올바른 주의 날짜들을 반환한다', () => {
+    const getWednesDay = new Date('2025-08-20');
+    const weekDatesOfGetWednesDay = [
+      new Date('2025-08-17'),
+      new Date('2025-08-18'),
+      new Date('2025-08-19'),
+      new Date('2025-08-20'),
+      new Date('2025-08-21'),
+      new Date('2025-08-22'),
+      new Date('2025-08-23'),
+    ]
 
-  it('주의 시작(월요일)에 대해 올바른 주의 날짜들을 반환한다', () => {});
+     expect(getWeekDates(getWednesDay)).toEqual(weekDatesOfGetWednesDay)
 
-  it('주의 끝(일요일)에 대해 올바른 주의 날짜들을 반환한다', () => {});
+  });
 
-  it('연도를 넘어가는 주의 날짜를 정확히 처리한다 (연말)', () => {});
+  it('주의 시작(월요일)에 대해 올바른 주의 날짜들을 반환한다', () => {
+    const getMonday = new Date('2025-08-18');
+    const weekDatesOfGetMonday = [
+      new Date('2025-08-17'),
+      new Date('2025-08-18'),
+      new Date('2025-08-19'),
+      new Date('2025-08-20'),
+      new Date('2025-08-21'),
+      new Date('2025-08-22'),
+      new Date('2025-08-23'),
+    ]
 
-  it('연도를 넘어가는 주의 날짜를 정확히 처리한다 (연초)', () => {});
+    expect(getWeekDates(getMonday)).toEqual(weekDatesOfGetMonday);
+  });
 
-  it('윤년의 2월 29일을 포함한 주를 올바르게 처리한다', () => {});
+  it('주의 끝(일요일)에 대해 올바른 주의 날짜들을 반환한다', () => {
+    const getSunday = new Date('2025-08-24');
+    const weekDatesOfGetSunday = [
+      new Date('2025-08-24'),
+      new Date('2025-08-25'),
+      new Date('2025-08-26'),
+      new Date('2025-08-27'),
+      new Date('2025-08-28'),
+      new Date('2025-08-29'),
+      new Date('2025-08-30'),
+    ]
 
-  it('월의 마지막 날짜를 포함한 주를 올바르게 처리한다', () => {});
+    expect(getWeekDates(getSunday)).toEqual(weekDatesOfGetSunday);
+  });
+
+  it('연도를 넘어가는 주의 날짜를 정확히 처리한다 (연말)', () => {
+    const yearEndDate = new Date('2025-12-28');
+    const weekDatesOfYearEnd = [
+      new Date('2025-12-28'),
+      new Date('2025-12-29'),
+      new Date('2025-12-30'),
+      new Date('2025-12-31'),
+      new Date('2026-01-01'),
+      new Date('2026-01-02'),
+      new Date('2026-01-03'),
+    ]
+
+    expect(getWeekDates(yearEndDate)).toEqual(weekDatesOfYearEnd);
+  });
+
+  it('연도를 넘어가는 주의 날짜를 정확히 처리한다 (연초)', () => {
+    const yearStartDate = new Date('2026-01-02');
+    const weekDatesOfYearStart = [
+      new Date('2025-12-28'),
+      new Date('2025-12-29'),
+      new Date('2025-12-30'),
+      new Date('2025-12-31'),
+      new Date('2026-01-01'),
+      new Date('2026-01-02'),
+      new Date('2026-01-03'),
+    ]
+
+    expect(getWeekDates(yearStartDate)).toEqual(weekDatesOfYearStart);
+  });
+
+  it('윤년의 2월 29일을 포함한 주를 올바르게 처리한다', () => {
+    const leapYearDate = new Date('2024-02-29');
+    const weekDatesOfLeapYear = [
+      new Date('2024-02-25'),
+      new Date('2024-02-26'),
+      new Date('2024-02-27'),
+      new Date('2024-02-28'),
+      new Date('2024-02-29'),
+      new Date('2024-03-01'),
+      new Date('2024-03-02'),
+    ]
+
+    expect(getWeekDates(leapYearDate)).toEqual(weekDatesOfLeapYear);
+  });
+
+  it('월의 마지막 날짜를 포함한 주를 올바르게 처리한다', () => {
+    const monthEndDate = new Date('2025-08-31');
+    const weekDatesOfMonthEnd = [
+      new Date('2025-08-31'),
+      new Date('2025-09-01'),
+      new Date('2025-09-02'),
+      new Date('2025-09-03'),
+      new Date('2025-09-04'),
+      new Date('2025-09-05'),
+      new Date('2025-09-06'),
+    ]
+
+    expect(getWeekDates(monthEndDate)).toEqual(weekDatesOfMonthEnd);
+  });
 });
 
 describe('getWeeksAtMonth', () => {
