@@ -47,18 +47,7 @@ import {
 } from './utils/dateUtils';
 import { findOverlappingEvents } from './utils/eventOverlap';
 import { getTimeErrorMessage } from './utils/timeValidation';
-
-const categories = ['업무', '개인', '가족', '기타'];
-
-const weekDays = ['일', '월', '화', '수', '목', '금', '토'];
-
-const notificationOptions = [
-  { value: 1, label: '1분 전' },
-  { value: 10, label: '10분 전' },
-  { value: 60, label: '1시간 전' },
-  { value: 120, label: '2시간 전' },
-  { value: 1440, label: '1일 전' },
-];
+import { categories, weekDays, notificationOptions } from './constant.ts';
 
 function App() {
   const {
@@ -422,7 +411,7 @@ function App() {
           </FormControl>
 
           <FormControl fullWidth>
-            <FormLabel htmlFor="notification">알림 설정</FormLabel>
+            <FormLabel id="notification">알림 설정</FormLabel>
             <Select
               id="notification"
               size="small"
@@ -430,7 +419,11 @@ function App() {
               onChange={(e) => setNotificationTime(Number(e.target.value))}
             >
               {notificationOptions.map((option) => (
-                <MenuItem key={option.value} value={option.value}>
+                <MenuItem
+                  key={option.value}
+                  value={option.value}
+                  aria-label={`${option.value}-option`}
+                >
                   {option.label}
                 </MenuItem>
               ))}

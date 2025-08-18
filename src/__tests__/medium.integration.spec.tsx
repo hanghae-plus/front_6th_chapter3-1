@@ -1,18 +1,143 @@
 import CssBaseline from '@mui/material/CssBaseline';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import { render, screen, within, act } from '@testing-library/react';
+import { render, screen, within, act, fireEvent, getByRole } from '@testing-library/react';
 import { UserEvent, userEvent } from '@testing-library/user-event';
 import { http, HttpResponse } from 'msw';
 import { SnackbarProvider } from 'notistack';
 import { ReactElement } from 'react';
+import { categories, weekDays, notificationOptions } from '../constant';
 
 import App from '../App';
 import { server } from '../setupTests';
-import { Event } from '../types';
+import { Event, EventForm } from '../types';
+
+const renderApp = () => {
+  const theme = createTheme();
+  return render(
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <SnackbarProvider>
+        <App />
+      </SnackbarProvider>
+    </ThemeProvider>
+  );
+};
+
+async function createEvent({
+  title,
+  date,
+  description,
+  startTime,
+  endTime,
+  category,
+  location,
+  notificationTime,
+}: Partial<EventForm>) {
+  await userEvent.type(screen.getByLabelText('제목'), title!);
+  await userEvent.type(screen.getByLabelText('날짜'), date!);
+  await userEvent.type(screen.getByLabelText('시작 시간'), startTime!);
+  await userEvent.type(screen.getByLabelText('종료 시간'), endTime!);
+  await userEvent.type(screen.getByLabelText('설명'), description!);
+  await userEvent.type(screen.getByLabelText('위치'), location!);
+  // await userEvent.type(screen.getByLabelText('반복 일정'), repeat);
+
+  console.log('카테고리', screen.getByLabelText('카테고리').outerHTML);
+  await userEvent.click(getByRole(screen.getByLabelText('카테고리'), 'combobox'));
+  await userEvent.click(screen.getByLabelText(`${category}-option`));
+
+  await userEvent.click(screen.getByLabelText('알림 설정'));
+  await userEvent.click(screen.getByLabelText(`${notificationTime}-option`));
+
+  await userEvent.click(screen.getByTestId('event-submit-button'));
+}
+
+async function updateEvent({
+  title,
+  date,
+  description,
+  startTime,
+  endTime,
+  category,
+  location,
+  notificationTime,
+}: EventForm) {
+  await userEvent.click(screen.getByLabelText('Edit event'));
+
+  if (title != null) {
+    await userEvent.clear(screen.getByLabelText('제목'));
+    await userEvent.type(screen.getByLabelText('제목'), title!);
+  }
+
+  if (date != null) {
+    await userEvent.clear(screen.getByLabelText('날짜'));
+    await userEvent.type(screen.getByLabelText('날짜'), date);
+  }
+
+  if (description != null) {
+    await userEvent.clear(screen.getByLabelText('설명'));
+    await userEvent.type(screen.getByLabelText('설명'), description);
+  }
+
+  if (startTime != null) {
+    await userEvent.clear(screen.getByLabelText('시작 시간'));
+    await userEvent.type(screen.getByLabelText('시작 시간'), startTime);
+  }
+
+  if (endTime != null) {
+    await userEvent.clear(screen.getByLabelText('종료 시간'));
+    await userEvent.type(screen.getByLabelText('종료 시간'), endTime);
+  }
+
+  if (location != null) {
+    await userEvent.clear(screen.getByLabelText('위치'));
+    await userEvent.type(screen.getByLabelText('위치'), location);
+  }
+
+  if (category !== null) {
+    await userEvent.click(getByRole(screen.getByLabelText('카테고리'), 'combobox'));
+    await userEvent.click(screen.getByLabelText(`${category}-option`));
+  }
+
+  if (notificationTime != null) {
+    await userEvent.click(getByRole(screen.getByLabelText('알림 설정'), 'combobox'));
+    await userEvent.click(screen.getByLabelText(`${notificationTime}-option`));
+  }
+
+  await userEvent.click(screen.getByTestId('event-submit-button'));
+}
 
 describe('일정 CRUD 및 기본 기능', () => {
-  it('입력한 새로운 일정 정보에 맞춰 모든 필드가 이벤트 리스트에 정확히 저장된다.', async () => {
+  it.only('입력한 새로운 일정 정보에 맞춰 모든 필드가 이벤트 리스트에 정확히 저장된다.', async () => {
     // ! HINT. event를 추가 제거하고 저장하는 로직을 잘 살펴보고, 만약 그대로 구현한다면 어떤 문제가 있을 지 고민해보세요.
+    renderApp();
+
+    const testData = {
+      title: '제목 테스트',
+      date: '2025-08-15',
+      description: '설명 테스트 입니다.',
+      startTime: '12:30',
+      endTime: '15:30',
+      category: '개인',
+      location: '서울 은평구',
+      notificationTime: 120,
+    };
+
+    await createEvent(testData);
+
+    const list = await screen.findByTestId('event-list');
+    const withinList = within(list);
+
+    expect(withinList.getByText(testData.title)).toBeInTheDocument();
+    expect(withinList.getByText(testData.date)).toBeInTheDocument();
+    expect(withinList.getByText(testData.description)).toBeInTheDocument();
+    expect(list).toHaveTextContent(testData.startTime);
+    expect(list).toHaveTextContent(testData.endTime);
+    expect(list).toHaveTextContent(testData.category);
+    expect(withinList.getByText(testData.location)).toBeInTheDocument();
+    const notificationLabel = notificationOptions.find(
+      (x) => x.value === testData.notificationTime
+    )!.label;
+    expect(list).toHaveTextContent(notificationLabel);
   });
 
   it('기존 일정의 세부 정보를 수정하고 변경사항이 정확히 반영된다', async () => {});
