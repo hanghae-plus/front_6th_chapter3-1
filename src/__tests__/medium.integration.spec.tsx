@@ -6,6 +6,7 @@ import { http, HttpResponse } from 'msw';
 import { SnackbarProvider } from 'notistack';
 import { ReactElement } from 'react';
 import { categories, weekDays, notificationOptions } from '../constant';
+import { debug } from 'vitest-preview';
 
 import App from '../App';
 import { server } from '../setupTests';
@@ -41,7 +42,6 @@ async function createEvent({
   await userEvent.type(screen.getByLabelText('위치'), location!);
   // await userEvent.type(screen.getByLabelText('반복 일정'), repeat);
 
-  console.log('카테고리', screen.getByLabelText('카테고리').outerHTML);
   await userEvent.click(getByRole(screen.getByLabelText('카테고리'), 'combobox'));
   await userEvent.click(screen.getByLabelText(`${category}-option`));
 
@@ -140,7 +140,7 @@ describe('일정 CRUD 및 기본 기능', () => {
     expect(list).toHaveTextContent(notificationLabel);
   });
 
-  it.only('기존 일정의 세부 정보를 수정하고 변경사항이 정확히 반영된다', async () => {
+  it('기존 일정의 세부 정보를 수정하고 변경사항이 정확히 반영된다', async () => {
     renderApp();
 
     const testData = {
@@ -178,7 +178,17 @@ describe('일정 CRUD 및 기본 기능', () => {
     expect(list).toHaveTextContent(notificationLabel);
   });
 
-  it('일정을 삭제하고 더 이상 조회되지 않는지 확인한다', async () => {});
+  it.only('일정을 삭제하고 더 이상 조회되지 않는지 확인한다', async () => {
+    renderApp();
+
+    await userEvent.click(screen.getByLabelText('Next'));
+    await userEvent.click(screen.getByLabelText('Next'));
+
+    await userEvent.click(screen.getByLabelText('Delete event'));
+
+    const list = await screen.findByTestId('event-list');
+    expect(list).toHaveTextContent('검색 결과가 없습니다.');
+  });
 });
 
 describe('일정 뷰', () => {
