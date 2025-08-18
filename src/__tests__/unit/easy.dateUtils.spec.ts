@@ -161,13 +161,78 @@ describe('getWeeksAtMonth', () => {
 });
 
 describe('getEventsForDay', () => {
-  it('특정 날짜(1일)에 해당하는 이벤트만 정확히 반환한다', () => {});
+  const mockEvents: Event[] = [
+      {
+        id: '1',
+        title: '1일 회의',
+        date: '2025-07-01',
+        startTime: '09:00',
+        endTime: '10:00',
+        description: '첫 번째 회의',
+        location: '회의실 A',
+        category: '업무',
+        repeat: { type: 'none', interval: 0 },
+        notificationTime: 10
+      },
+      {
+        id: '2',
+        title: '15일 점심약속',
+        date: '2025-07-15',
+        startTime: '12:00',
+        endTime: '13:00',
+        description: '점심 미팅',
+        location: '레스토랑',
+        category: '개인',
+        repeat: { type: 'none', interval: 0 },
+        notificationTime: 15
+      },
+      {
+        id: '3',
+        title: '1일 저녁약속',
+        date: '2025-07-01',
+        startTime: '18:00',
+        endTime: '19:00',
+        description: '저녁 모임',
+        location: '카페',
+        category: '개인',
+        repeat: { type: 'none', interval: 0 },
+        notificationTime: 30
+      }
+    ];
+  it('특정 날짜(1일)에 해당하는 이벤트만 정확히 반환한다', () => {
+    
 
-  it('해당 날짜에 이벤트가 없을 경우 빈 배열을 반환한다', () => {});
+    const eventsForDay1 = getEventsForDay(mockEvents, 1);
+    
+    expect(eventsForDay1).toHaveLength(2);
+    expect(eventsForDay1[0].title).toBe('1일 회의');
+    expect(eventsForDay1[1].title).toBe('1일 저녁약속');
+    expect(eventsForDay1.every(event => new Date(event.date).getDate() === 1)).toBe(true);
+  });
 
-  it('날짜가 0일 경우 빈 배열을 반환한다', () => {});
+  it('해당 날짜에 이벤트가 없을 경우 빈 배열을 반환한다', () => {
+    const eventsForDay10 = getEventsForDay(mockEvents, 10);
+    
+    expect(eventsForDay10).toEqual([]);
+    expect(eventsForDay10).toHaveLength(0);
+  });
 
-  it('날짜가 32일 이상인 경우 빈 배열을 반환한다', () => {});
+  it('날짜가 0일 경우 빈 배열을 반환한다', () => {
+    const eventsForDay0 = getEventsForDay(mockEvents, 0);
+    
+    expect(eventsForDay0).toEqual([]);
+    expect(eventsForDay0).toHaveLength(0);
+  });
+
+  it('날짜가 32일 이상인 경우 빈 배열을 반환한다', () => {
+    const eventsForDay32 = getEventsForDay(mockEvents, 32);
+    const eventsForDay50 = getEventsForDay(mockEvents, 100);
+    
+    expect(eventsForDay32).toEqual([]);
+    expect(eventsForDay32).toHaveLength(0);
+    expect(eventsForDay50).toEqual([]);
+    expect(eventsForDay50).toHaveLength(0);
+  });
 });
 
 describe('formatWeek', () => {
