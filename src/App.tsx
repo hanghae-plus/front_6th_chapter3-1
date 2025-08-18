@@ -175,6 +175,7 @@ function App() {
                         const isNotified = notifiedEvents.includes(event.id);
                         return (
                           <Box
+                            data-testid="event-tag"
                             key={event.id}
                             sx={{
                               p: 0.5,
@@ -262,6 +263,7 @@ function App() {
                               const isNotified = notifiedEvents.includes(event.id);
                               return (
                                 <Box
+                                  data-testid="event-tag"
                                   key={event.id}
                                   sx={{
                                     p: 0.5,
