@@ -157,6 +157,44 @@ it("이벤트 로딩 실패 시 '이벤트 로딩 실패'라는 텍스트와 함
   expect(result.current.events).toHaveLength(0);
 });
 
-it("존재하지 않는 이벤트 수정 시 '일정 저장 실패'라는 토스트가 노출되며 에러 처리가 되어야 한다", async () => {});
+it("존재하지 않는 이벤트 수정 시 '일정 저장 실패'라는 토스트가 노출되며 에러 처리가 되어야 한다", async () => {
+  server.use(
+    http.put('/api/events/:id', () => {
+      return new HttpResponse(null, { status: 404 });
+    })
+  );
+
+  const { result } = renderHook(() => useEventOperations(true));
+
+  await waitFor(() => {
+    expect(result.current.events).toHaveLength(1);
+  });
+
+  const notExistentEvent = {
+    id: '존재하지 않는 ID',
+    title: '존재하지 않는 이벤트',
+    date: '2025-08-30',
+    startTime: '10:00',
+    endTime: '11:00',
+    description: '존재하지 않는 설명',
+    location: '존재하지 않는 장소',
+    category: '존재하지 않는 카테고리',
+    repeat: { type: 'none' as const, interval: 0 },
+    notificationTime: 0,
+  };
+
+  await act(async () => {
+    await result.current.saveEvent(notExistentEvent);
+  });
+
+  await waitFor(() => {
+    expect(enqueueSnackbarFn).toHaveBeenCalledWith('일정 저장 실패', {
+      variant: 'error',
+    });
+  });
+
+  // 아무 일도 일어나지 않았으므로 초기 데이터 그대로 유지
+  expect(result.current.events).toHaveLength(1);
+});
 
 it("네트워크 오류 시 '일정 삭제 실패'라는 텍스트가 노출되며 이벤트 삭제가 실패해야 한다", async () => {});
