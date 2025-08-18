@@ -58,9 +58,19 @@ describe('convertEventToDateRange', () => {
 });
 
 describe('isOverlapping', () => {
-  it('두 이벤트가 겹치는 경우 true를 반환한다', () => {});
+  it('두 이벤트가 겹치는 경우 true를 반환한다', () => {
+    const event1 = createEvent('1', '2025-08-18');
+    const event2 = createEvent('1', '2025-08-18');
 
-  it('두 이벤트가 겹치지 않는 경우 false를 반환한다', () => {});
+    expect(isOverlapping(event1, event2)).toBe(true);
+  });
+
+  it('두 이벤트가 겹치지 않는 경우 false를 반환한다', () => {
+    const event1 = createEvent('1', '2025-08-18');
+    const event2 = createEvent('2', '2025-08-28');
+
+    expect(isOverlapping(event1, event2)).toBe(false);
+  });
 });
 
 describe('findOverlappingEvents', () => {
