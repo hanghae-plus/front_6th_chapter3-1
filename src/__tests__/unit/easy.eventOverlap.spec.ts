@@ -80,9 +80,61 @@ describe('convertEventToDateRange', () => {
 });
 
 describe('isOverlapping', () => {
-  it('두 이벤트가 겹치는 경우 true를 반환한다', () => {});
+  it('두 이벤트가 겹치는 경우 true를 반환한다', () => {
+    const startAtNine1: Event = {
+      id: '1',
+      title: '기존 회의1',
+      date: '2025-08-15',
+      startTime: '09:00',
+      endTime: '10:00',
+      description: '기존 팀 미팅',
+      location: '회의실 A',
+      category: '업무',
+      repeat: { type: 'none', interval: 0 },
+      notificationTime: 10,
+    };
+    const startAtNine2: Event = {
+      id: '2',
+      title: '기존 회의2',
+      date: '2025-08-15',
+      startTime: '09:00',
+      endTime: '10:00',
+      description: '기존 팀 미팅',
+      location: '회의실 B',
+      category: '업무',
+      repeat: { type: 'none', interval: 0 },
+      notificationTime: 10,
+    };
+    expect(isOverlapping(startAtNine1, startAtNine2)).toBe(true);
+  });
 
-  it('두 이벤트가 겹치지 않는 경우 false를 반환한다', () => {});
+  it('두 이벤트가 겹치지 않는 경우 false를 반환한다', () => {
+    const startAtNine: Event = {
+      id: '1',
+      title: '기존 회의1',
+      date: '2025-08-15',
+      startTime: '09:00',
+      endTime: '10:00',
+      description: '기존 팀 미팅',
+      location: '회의실 A',
+      category: '업무',
+      repeat: { type: 'none', interval: 0 },
+      notificationTime: 10,
+    };
+    const startAtThirteen: Event = {
+      id: '2',
+      title: '기존 회의2',
+      date: '2025-08-15',
+      startTime: '13:00',
+      endTime: '15:00',
+      description: '기존 팀 미팅',
+      location: '회의실 B',
+      category: '업무',
+      repeat: { type: 'none', interval: 0 },
+      notificationTime: 10,
+    };
+    expect(isOverlapping(startAtNine, startAtThirteen)).toBe(false);
+  });
 });
 
 describe('findOverlappingEvents', () => {
