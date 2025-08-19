@@ -93,7 +93,7 @@ async function updateEvent({
     await userEvent.type(screen.getByLabelText('위치'), location);
   }
 
-  if (category !== null) {
+  if (category != null) {
     await userEvent.click(getByRole(screen.getByLabelText('카테고리'), 'combobox'));
     await userEvent.click(screen.getByLabelText(`${category}-option`));
   }
@@ -258,7 +258,7 @@ describe('일정 뷰', () => {
 });
 
 describe('검색 기능', () => {
-  it.only('검색 결과가 없으면, "검색 결과가 없습니다."가 표시되어야 한다.', async () => {
+  it('검색 결과가 없으면, "검색 결과가 없습니다."가 표시되어야 한다.', async () => {
     renderApp();
     await userEvent.click(screen.getByLabelText('Next'));
     await userEvent.click(screen.getByLabelText('Next'));
@@ -269,7 +269,31 @@ describe('검색 기능', () => {
     expect(list).toHaveTextContent('검색 결과가 없습니다.');
   });
 
-  it("'팀 회의'를 검색하면 해당 제목을 가진 일정이 리스트에 노출된다", async () => {});
+  it.only("'팀 회의'를 검색하면 해당 제목을 가진 일정이 리스트에 노출된다", async () => {
+    renderApp();
+
+    const testData = {
+      title: '팀 회의',
+      date: '2025-08-15',
+      description: '설명 테스트 입니다.',
+      startTime: '12:30',
+      endTime: '15:30',
+      category: '개인',
+      location: '서울 은평구',
+      notificationTime: 120,
+    };
+
+    const list = await screen.findByTestId('event-list');
+    await createEvent(testData);
+
+    await userEvent.type(screen.getByLabelText('일정 검색'), testData.title);
+
+    const searchResultTitles = within(list)
+      .queryAllByTestId('event-card-title')
+      .map((x) => x.innerHTML);
+
+    expect(searchResultTitles.find((x) => x === testData.title)).toBe(testData.title);
+  });
 
   it('검색어를 지우면 모든 일정이 다시 표시되어야 한다', async () => {});
 });
