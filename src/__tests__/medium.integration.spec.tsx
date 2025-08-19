@@ -148,7 +148,39 @@ describe('일정 CRUD 및 기본 기능', () => {
     vi.useRealTimers();
   });
 
-  it('일정을 삭제하고 더 이상 조회되지 않는지 확인한다', async () => {});
+  it('일정을 삭제하고 더 이상 조회되지 않는지 확인한다', async () => {
+    const mockDate = new Date('2025-10-01');
+    vi.setSystemTime(mockDate);
+
+    const TestWrapper = ({ children }: { children: ReactNode }) => (
+      <ThemeProvider theme={createTheme()}>
+        <CssBaseline />
+        <SnackbarProvider>{children}</SnackbarProvider>
+      </ThemeProvider>
+    );
+
+    const user = userEvent.setup();
+
+    render(<App />, { wrapper: TestWrapper });
+
+    await screen.findByText('일정 로딩 완료!');
+
+    const eventList = screen.getByTestId('event-list');
+    expect(within(eventList).getByText('기존 회의')).toBeInTheDocument();
+
+    const deleteButton = within(eventList).getByLabelText('Delete event');
+    await user.click(deleteButton);
+
+    // 삭제 성공 메시지 확인 (DELETE 성공 후 토스트 확인)
+    await screen.findByText('일정이 삭제되었습니다.');
+
+    // 삭제된 이벤트가 리스트에서 사라졌는지 확인
+    expect(within(eventList).queryByText('기존 회의')).not.toBeInTheDocument();
+
+    expect(within(eventList).getByText('검색 결과가 없습니다.')).toBeInTheDocument();
+
+    vi.useRealTimers();
+  });
 });
 
 describe('일정 뷰', () => {
