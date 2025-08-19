@@ -9,7 +9,11 @@ import { ReactElement } from 'react';
 import App from '../App';
 import { server } from '../setupTests';
 import { Event, EventForm } from '../types';
-import { setupMockHandlerCreation, setupMockHandlerUpdating } from '../__mocks__/handlersUtils';
+import {
+  setupMockHandlerCreation,
+  setupMockHandlerDeletion,
+  setupMockHandlerUpdating,
+} from '../__mocks__/handlersUtils';
 
 const AppWrapper = () => {
   const theme = createTheme();
@@ -84,7 +88,20 @@ describe('일정 CRUD 및 기본 기능', () => {
     expect(screen.getByText('회의실 C')).toBeInTheDocument();
   });
 
-  it('일정을 삭제하고 더 이상 조회되지 않는지 확인한다', async () => {});
+  it('일정을 삭제하고 더 이상 조회되지 않는지 확인한다', async () => {
+    setupMockHandlerDeletion();
+
+    render(<AppWrapper />);
+
+    await within(screen.getByTestId('event-list')).findByText('기존 회의');
+
+    const user = userEvent.setup();
+    const deleteButton = await screen.findByRole('button', { name: 'Delete event' });
+
+    await user.click(deleteButton);
+
+    expect(await screen.findByText('검색 결과가 없습니다.')).toBeInTheDocument();
+  });
 });
 
 describe('일정 뷰', () => {
