@@ -102,7 +102,49 @@ describe('isOverlapping', () => {
 });
 
 describe('findOverlappingEvents', () => {
-  it('새 이벤트와 겹치는 모든 이벤트를 반환한다', () => {});
+  it('새 이벤트와 겹치는 모든 이벤트를 반환한다', () => {
+    const event1 = createEventData({
+      id: '1',
+      date: '2025-08-01',
+      endTime: '11:00',
+      startTime: '09:00',
+    });
+    const event2 = createEventData({
+      id: '2',
+      date: '2025-08-01',
+      endTime: '11:00',
+      startTime: '10:00',
+    });
+    const event3 = createEventData({
+      id: '3',
+      date: '2025-08-01',
+      endTime: '11:00',
+      startTime: '10:00',
+    });
 
-  it('겹치는 이벤트가 없으면 빈 배열을 반환한다', () => {});
+    expect(findOverlappingEvents(event1, [event1, event2, event3])).toEqual([event2, event3]);
+  });
+
+  it('겹치는 이벤트가 없으면 빈 배열을 반환한다', () => {
+    const event1 = createEventData({
+      id: '1',
+      date: '2025-08-02',
+      endTime: '11:00',
+      startTime: '09:00',
+    });
+    const event2 = createEventData({
+      id: '2',
+      date: '2025-08-01',
+      endTime: '11:00',
+      startTime: '10:00',
+    });
+    const event3 = createEventData({
+      id: '3',
+      date: '2025-08-01',
+      endTime: '11:00',
+      startTime: '10:00',
+    });
+
+    expect(findOverlappingEvents(event1, [event2, event3])).toEqual([]);
+  });
 });
