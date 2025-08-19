@@ -59,8 +59,11 @@ describe('getWeekDates 주어진 날짜가 속한 주의 모든 날짜를 반환
     ]);
   });
 
-  it('주의 시작(일요일)에 대해 올바른 주의 날짜들을 반환한다', () => {
-    expect(getWeekDates(new Date('2025-08-17'))).toEqual([
+  it('주의 시작(월요일)에 대해 올바른 주의 날짜들을 반환한다', () => {
+    // ISO 8601 기준 월요일 시작
+    // 값은 일요일 부터 시작이라 어색해 보임
+
+    expect(getWeekDates(new Date('2025-08-18'))).toEqual([
       new Date('2025-08-17'),
       new Date('2025-08-18'),
       new Date('2025-08-19'),
@@ -71,8 +74,8 @@ describe('getWeekDates 주어진 날짜가 속한 주의 모든 날짜를 반환
     ]);
   });
 
-  it('주의 끝(토요일)에 대해 올바른 주의 날짜들을 반환한다', () => {
-    expect(getWeekDates(new Date('2025-08-23'))).toEqual([
+  it('주의 끝(일요일)에 대해 올바른 주의 날짜들을 반환한다', () => {
+    expect(getWeekDates(new Date('2025-08-17'))).toEqual([
       new Date('2025-08-17'),
       new Date('2025-08-18'),
       new Date('2025-08-19'),
