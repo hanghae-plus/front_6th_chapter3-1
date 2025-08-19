@@ -125,7 +125,59 @@ describe('isOverlapping', () => {
 });
 
 describe('findOverlappingEvents', () => {
-  it('새 이벤트와 겹치는 모든 이벤트를 반환한다', () => {});
+  it('새 이벤트와 겹치는 모든 이벤트를 반환한다', () => {
+    const newEvent: Event = {
+      id: '3',
+      date: '2025-08-01',
+      startTime: '14:30',
+      endTime: '15:30',
+    } as Event;
 
-  it('겹치는 이벤트가 없으면 빈 배열을 반환한다', () => {});
+    const events: Event[] = [
+      {
+        id: '1',
+        date: '2025-08-01',
+        startTime: '14:30',
+        endTime: '15:30',
+      },
+      {
+        id: '2',
+        date: '2025-08-05',
+        startTime: '08:30',
+        endTime: '20:30',
+      },
+    ] as Event[];
+
+    const overlappingEvents = findOverlappingEvents(newEvent, events);
+
+    expect(overlappingEvents).toEqual([events[0]]);
+  });
+
+  it('겹치는 이벤트가 없으면 빈 배열을 반환한다', () => {
+    const newEvent: Event = {
+      id: '3',
+      date: '2025-08-03',
+      startTime: '02:00',
+      endTime: '05:00',
+    } as Event;
+
+    const events: Event[] = [
+      {
+        id: '1',
+        date: '2025-08-01',
+        startTime: '14:30',
+        endTime: '15:30',
+      },
+      {
+        id: '2',
+        date: '2025-08-05',
+        startTime: '08:30',
+        endTime: '20:30',
+      },
+    ] as Event[];
+
+    const overlappingEvents = findOverlappingEvents(newEvent, events);
+
+    expect(overlappingEvents).toEqual([]);
+  });
 });
