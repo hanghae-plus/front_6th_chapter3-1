@@ -219,9 +219,9 @@ describe('getEventsForDay', () => {
 describe('formatWeek', () => {
   it('월의 중간 날짜에 대해 올바른 주 정보를 반환한다', () => {
     const day = new Date('2025-08-15');
-    const weekNumber = 2; // 2025-08-10 ~ 2025-08-16은 8월의 2주차
+    const week = 2; // 2025-08-10 ~ 2025-08-16은 8월의 2주차
     const result = formatWeek(day);
-    expect(result).toEqual(`2025년 8월 ${weekNumber}주`);
+    expect(result).toEqual(`2025년 8월 ${week}주`);
   });
 
   it('월의 첫 주에 대해 올바른 주 정보를 반환한다', () => {
