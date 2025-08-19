@@ -1,19 +1,15 @@
 import CssBaseline from '@mui/material/CssBaseline';
-import { ThemeProvider, createTheme } from '@mui/material/styles';
-import { render, screen, within, act, waitFor, getByRole } from '@testing-library/react';
-import { UserEvent, userEvent } from '@testing-library/user-event';
-import { http, HttpResponse } from 'msw';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { render, screen, within } from '@testing-library/react';
+import { userEvent } from '@testing-library/user-event';
 import { SnackbarProvider } from 'notistack';
-import { ReactElement } from 'react';
 
-import App from '../App';
-import { server } from '../setupTests';
-import { Event, EventForm } from '../types';
 import {
   setupMockHandlerCreation,
   setupMockHandlerDeletion,
   setupMockHandlerUpdating,
 } from '../__mocks__/handlersUtils';
+import App from '../App';
 
 const AppWrapper = () => {
   const theme = createTheme();

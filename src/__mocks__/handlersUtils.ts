@@ -1,6 +1,7 @@
 import { http, HttpResponse, PathParams } from 'msw';
-import { server } from '../setupTests';
+
 import { events } from '../__mocks__/response/events.json' assert { type: 'json' };
+import { server } from '../setupTests';
 import { Event, EventForm } from '../types';
 
 // ! Hard
