@@ -19,6 +19,7 @@ export const handlers = [
 
   http.post('/api/events', async ({ request }) => {
     const newEvent = (await request.json()) as EventForm;
+    
     const eventWithId: Event = {
       id: crypto.randomUUID(),
       ...newEvent,
@@ -35,8 +36,6 @@ export const handlers = [
 
     const eventIndex = mockEvents.findIndex((event: Event) => event.id === id);
 
-    if (eventIndex === -1) return new HttpResponse('존재하지 않는 이벤트입니다', { status: 404 });
-
     const updatedEvent: Event = {
       ...mockEvents[eventIndex],
       ...updateData,
@@ -51,8 +50,6 @@ export const handlers = [
     const { id } = params;
 
     const eventIndex = mockEvents.findIndex((event: Event) => event.id === id);
-
-    if (eventIndex === -1) return new HttpResponse('존재하지 않는 이벤트입니다', { status: 404 });
 
     mockEvents.splice(eventIndex, 1);
 

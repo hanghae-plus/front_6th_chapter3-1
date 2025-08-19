@@ -8,7 +8,7 @@ import { server } from '../setupTests';
 export const setupMockHandlerCreation = () => {
   server.use(
     http.post('/api/events', () => {
-      return new HttpResponse(null, { status: 500 });
+      return new HttpResponse(null, { status: 404 });
     })
   );
 };
@@ -16,7 +16,7 @@ export const setupMockHandlerCreation = () => {
 export const setupMockHandlerLoading = () => {
   server.use(
     http.get('/api/events', () => {
-      return new HttpResponse(null, { status: 500 });
+      return new HttpResponse(null, { status: 404 });
     })
   );
 };
@@ -32,7 +32,7 @@ export const setupMockHandlerUpdating = () => {
 export const setupMockHandlerDeletion = () => {
   server.use(
     http.delete('/api/events/:id', () => {
-      return new HttpResponse(null, { status: 500 });
+      return new HttpResponse(null, { status: 404 });
     })
   );
 };
