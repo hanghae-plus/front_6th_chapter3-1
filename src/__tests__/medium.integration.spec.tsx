@@ -258,7 +258,16 @@ describe('일정 뷰', () => {
 });
 
 describe('검색 기능', () => {
-  it('검색 결과가 없으면, "검색 결과가 없습니다."가 표시되어야 한다.', async () => {});
+  it.only('검색 결과가 없으면, "검색 결과가 없습니다."가 표시되어야 한다.', async () => {
+    renderApp();
+    await userEvent.click(screen.getByLabelText('Next'));
+    await userEvent.click(screen.getByLabelText('Next'));
+
+    await userEvent.type(screen.getByLabelText('일정 검색'), '존재하지 않는 일정');
+
+    const list = await screen.findByTestId('event-list');
+    expect(list).toHaveTextContent('검색 결과가 없습니다.');
+  });
 
   it("'팀 회의'를 검색하면 해당 제목을 가진 일정이 리스트에 노출된다", async () => {});
 
