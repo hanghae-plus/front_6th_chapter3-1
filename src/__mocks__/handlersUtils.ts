@@ -1,6 +1,8 @@
-import { http, HttpResponse } from 'msw';
-import { Event } from '../types';
 import { randomUUID } from 'crypto';
+
+import { http, HttpResponse } from 'msw';
+
+import { Event } from '../types';
 
 // ! Hard
 // ! 이벤트는 생성, 수정 되면 fetch를 다시 해 상태를 업데이트 합니다. 이를 위한 제어가 필요할 것 같은데요. 어떻게 작성해야 테스트가 병렬로 돌아도 안정적이게 동작할까요?
@@ -39,13 +41,16 @@ export const setupMockHandlerUpdating = (initEvents: Event[] = []) => {
         }
       );
     }),
-    http.put('/api/events/:id', async ({ params: { id }, request }) => {
+    http.put('/api/events/:id', async ({ params, request }) => {
+      const id = params.id as string;
+
       const eventList = store.current as Event[];
       const updatedIndex = eventList.findIndex((event) => event.id === id);
       if (updatedIndex < 0) return HttpResponse.json({ message: 'Not Found' }, { status: 404 });
 
       const updatedEvent = (await request.json()) as Partial<Event>;
       const resultEvent = { ...eventList[updatedIndex], ...updatedEvent, id };
+      store.current[updatedIndex] = resultEvent;
       return HttpResponse.json(resultEvent, { status: 200 });
     }),
   ];
@@ -63,9 +68,16 @@ export const setupMockHandlerDeletion = (initEvents: Event[] = []) => {
         }
       );
     }),
-    http.delete('/api/events/:id', ({ params: { id } }) => {
-      const hasEvent = (store.current as Event[]).some((event) => event.id === id);
+    http.delete('/api/events/:id', ({ params }) => {
+      const id = params.id as string;
+
+      const eventList = store.current as Event[];
+      const deletedIndex = eventList.findIndex((event) => event.id === id);
+
+      const hasEvent = eventList.some((event) => event.id === id);
       if (!hasEvent) return HttpResponse.json({ message: 'Not Found' }, { status: 404 });
+
+      eventList.splice(deletedIndex, 1);
       return new HttpResponse(null, { status: 204 });
     }),
   ];
