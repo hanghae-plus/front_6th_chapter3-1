@@ -16,7 +16,12 @@ describe('getUpcomingEvents', () => {
     const result = getUpcomingEvents([dummyEvent], now, []);
     const eventIndex = result.findIndex((event) => event.id === dummyEvent.id);
 
-    expect(result[eventIndex]).toEqual(dummyEvent);
+    expect(result[eventIndex]).toEqual({
+      id: '1',
+      date: '2025-08-19',
+      startTime: '16:00',
+      notificationTime: 10,
+    });
   });
 
   it('이미 알림이 간 이벤트는 제외한다', () => {

@@ -5,10 +5,9 @@ import {
   setupMockHandlerDeletion,
   setupMockHandlerUpdating,
 } from '../../__mocks__/handlersUtils.ts';
-import { events } from '../../__mocks__/response/events.json';
 import { useEventOperations } from '../../hooks/useEventOperations.ts';
 import { server } from '../../setupTests.ts';
-import { Event } from '../../types.ts';
+import { makeEvent, makeEvents } from '../factories/eventFactory';
 
 const enqueueSnackbarFn = vi.fn();
 
@@ -23,7 +22,8 @@ vi.mock('notistack', async () => {
 });
 
 it('저장되어있는 초기 이벤트 데이터를 불러온다.', async () => {
-  server.use(...setupMockHandlerCreation(events as Event[]));
+  const initialEvents = makeEvents(1);
+  server.use(...setupMockHandlerCreation(initialEvents));
 
   const fetchSpy = vi.spyOn(global, 'fetch');
 
@@ -38,18 +38,20 @@ it('저장되어있는 초기 이벤트 데이터를 불러온다.', async () =>
 });
 
 it('정의된 이벤트 정보를 기준으로 적절하게 저장이 된다', async () => {
-  server.use(...setupMockHandlerCreation(events as Event[]));
+  const initialEvents = makeEvents(1, () => ({ title: '기존 회의' }));
+  server.use(...setupMockHandlerCreation(initialEvents));
 
   const { result } = renderHook(() => useEventOperations(false));
 
-  waitFor(() => {
+  await waitFor(() => {
     expect(result.current.events.length).toBeGreaterThan(0);
     expect(result.current.events[0].title).toEqual('기존 회의');
   });
 });
 
 it("새로 정의된 'title', 'endTime' 기준으로 적절하게 일정이 업데이트 된다", async () => {
-  server.use(...setupMockHandlerUpdating(events as Event[]));
+  const initialEvents = makeEvents(1, () => ({ id: '1', title: '기존 회의' }));
+  server.use(...setupMockHandlerUpdating(initialEvents));
   const { result } = renderHook(() => useEventOperations(true));
 
   await waitFor(() => {
@@ -57,21 +59,17 @@ it("새로 정의된 'title', 'endTime' 기준으로 적절하게 일정이 업�
     expect(result.current.events[0].title).toEqual('기존 회의');
   });
 
-  const updatedEvent = {
-    id: '1',
-    title: '기존이 아닌 회의',
-    endTime: '16:00',
-  };
+  const updatedEvent = makeEvent({ id: '1', title: '기존이 아닌 회의', endTime: '16:00' });
 
   await act(async () => {
-    await result.current.saveEvent(updatedEvent as Event);
+    await result.current.saveEvent(updatedEvent);
   });
 
   await waitFor(() =>
     expect(enqueueSnackbarFn).toHaveBeenCalledWith('일정이 수정되었습니다.', { variant: 'success' })
   );
 
-  waitFor(() => {
+  await waitFor(() => {
     const updated = result.current.events.find((event) => event.id === updatedEvent.id)!;
     expect(updated.title).toBe('기존이 아닌 회의');
     expect(updated.endTime).toBe('16:00');
@@ -79,7 +77,8 @@ it("새로 정의된 'title', 'endTime' 기준으로 적절하게 일정이 업�
 });
 
 it('존재하는 이벤트 삭제 시 에러없이 아이템이 삭제된다.', async () => {
-  server.use(...setupMockHandlerDeletion(events as Event[]));
+  const initialEvents = makeEvents(1, () => ({ id: '1', title: '기존 회의' }));
+  server.use(...setupMockHandlerDeletion(initialEvents));
 
   const { result } = renderHook(() => useEventOperations(false));
 
@@ -93,42 +92,42 @@ it('존재하는 이벤트 삭제 시 에러없이 아이템이 삭제된다.', 
   await waitFor(() =>
     expect(enqueueSnackbarFn).toHaveBeenCalledWith('일정이 삭제되었습니다.', { variant: 'info' })
   );
-  waitFor(() => {
+  await waitFor(() => {
     const currentEventList = result.current.events;
     expect(currentEventList.length).toBe(0);
   });
 });
 
 it("이벤트 로딩 실패 시 '이벤트 로딩 실패'라는 텍스트와 함께 에러 토스트가 표시되어야 한다", async () => {
-  server.use(...setupMockHandlerCreation(events as Event[], { getIsSuccess: false }));
+  const initialEvents = makeEvents(1);
+  server.use(...setupMockHandlerCreation(initialEvents, { getIsSuccess: false }));
 
   renderHook(() => useEventOperations(false));
 
-  waitFor(() => {
+  await waitFor(() => {
     expect(enqueueSnackbarFn).toHaveBeenCalledWith('이벤트 로딩 실패', { variant: 'error' });
   });
 });
 
 it("존재하지 않는 이벤트 수정 시 '일정 저장 실패'라는 토스트가 노출되며 에러 처리가 되어야 한다", async () => {
-  server.use(...setupMockHandlerUpdating(events as Event[]));
+  const initialEvents = makeEvents(1, () => ({ id: '1' }));
+  server.use(...setupMockHandlerUpdating(initialEvents));
 
   const { result } = renderHook(() => useEventOperations(true));
-  const updatedEvent = {
-    id: '2',
-    title: '기존이 아닌 회의',
-  };
+  const updatedEvent = makeEvent({ id: '2', title: '기존이 아닌 회의' });
 
   await act(async () => {
-    await result.current.saveEvent(updatedEvent as Event);
+    await result.current.saveEvent(updatedEvent);
   });
 
-  waitFor(() => {
+  await waitFor(() => {
     expect(enqueueSnackbarFn).toHaveBeenCalledWith('일정 저장 실패', { variant: 'error' });
   });
 });
 
 it("네트워크 오류 시 '일정 삭제 실패'라는 텍스트가 노출되며 이벤트 삭제가 실패해야 한다", async () => {
-  server.use(...setupMockHandlerDeletion(events as Event[], { deleteIsSuccess: false }));
+  const initialEvents = makeEvents(1, () => ({ id: '1' }));
+  server.use(...setupMockHandlerDeletion(initialEvents, { deleteIsSuccess: false }));
 
   const { result } = renderHook(() => useEventOperations(false));
 
@@ -139,7 +138,7 @@ it("네트워크 오류 시 '일정 삭제 실패'라는 텍스트가 노출되�
     await result.current.deleteEvent(deleteEventId);
   });
 
-  waitFor(() =>
+  await waitFor(() =>
     expect(enqueueSnackbarFn).toHaveBeenCalledWith('일정 삭제 실패', { variant: 'error' })
   );
 });
