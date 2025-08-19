@@ -247,17 +247,41 @@ describe('getEventsForDay', () => {
 });
 
 describe('formatWeek', () => {
-  it('월의 중간 날짜에 대해 올바른 주 정보를 반환한다', () => {});
+  it('월의 중간 날짜에 대해 올바른 주 정보를 반환한다', () => {
+    const week = formatWeek(new Date('2025-08-15'));
 
-  it('월의 첫 주에 대해 올바른 주 정보를 반환한다', () => {});
+    expect(week).toBe('2025년 8월 2주');
+  });
 
-  it('월의 마지막 주에 대해 올바른 주 정보를 반환한다', () => {});
+  it('월의 첫 주에 대해 올바른 주 정보를 반환한다', () => {
+    const week = formatWeek(new Date('2025-08-01'));
 
-  it('연도가 바뀌는 주에 대해 올바른 주 정보를 반환한다', () => {});
+    expect(week).toBe('2025년 7월 5주');
+  });
 
-  it('윤년 2월의 마지막 주에 대해 올바른 주 정보를 반환한다', () => {});
+  it('월의 마지막 주에 대해 올바른 주 정보를 반환한다', () => {
+    const week = formatWeek(new Date('2025-08-31'));
 
-  it('평년 2월의 마지막 주에 대해 올바른 주 정보를 반환한다', () => {});
+    expect(week).toBe('2025년 9월 1주');
+  });
+
+  it('연도가 바뀌는 주에 대해 올바른 주 정보를 반환한다', () => {
+    const week = formatWeek(new Date('2025-01-01'));
+
+    expect(week).toBe('2025년 1월 1주');
+  });
+
+  it('윤년 2월의 마지막 주에 대해 올바른 주 정보를 반환한다', () => {
+    const week = formatWeek(new Date('2024-02-29'));
+
+    expect(week).toBe('2024년 2월 5주');
+  });
+
+  it('평년 2월의 마지막 주에 대해 올바른 주 정보를 반환한다', () => {
+    const week = formatWeek(new Date('2025-02-29'));
+
+    expect(week).toBe('2025년 2월 4주');
+  });
 });
 
 describe('formatMonth', () => {
