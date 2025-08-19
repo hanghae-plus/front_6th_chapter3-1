@@ -29,9 +29,16 @@ describe('getDaysInMonth', () => {
     expect(getDaysInMonth(2025, 2)).toBe(28);
   });
 
-  it('유효하지 않은 월에 대해 적절히 처리한다', () => {
-    //TODO : 애매함
-  });
+  // 적절하지 않은 테스트 케이스라고 판단되어 주석 처리
+  // Why : JS의 date객체가 스스로 보정함, 즉 이 함수에 대한 테스트가 아니라 JS의 내부 동작에 대한 테스트이기 때문에 주석 처리
+  // it('유효하지 않은 월에 대해 적절히 처리한다', () => {
+  //   const unValidMonth = [0, 13, -1];
+  //   // 0월은 이전 해의 12월로 처리 (31일)
+  //   // 13월은 다음 해의 1월로 처리 (31일)
+  //   // -1월은 이전 해의 11월로 처리 (30일)
+  //   const result = unValidMonth.map((month) => getDaysInMonth(2025, month));
+  //   expect(result).toEqual([31, 31, 30]);
+  // });
 });
 
 describe('getWeekDates', () => {
@@ -367,11 +374,41 @@ describe('fillZero', () => {
 });
 
 describe('formatDate', () => {
-  it('날짜를 YYYY-MM-DD 형식으로 포맷팅한다', () => {});
+  it('날짜를 YYYY-MM-DD 형식으로 포맷팅한다', () => {
+    const day = new Date('2025-01-01');
+    const result = formatDate(day);
+    expect(result).toBe('2025-01-01');
+  });
 
-  it('day 파라미터가 제공되면 해당 일자로 포맷팅한다', () => {});
+  it('day 파라미터가 제공되면 해당 일자로 포맷팅한다', () => {
+    const day = new Date('2025-01-01');
+    const result = formatDate(day, 10);
+    expect(result).toBe('2025-01-10');
+  });
 
-  it('월이 한 자리 수일 때 앞에 0을 붙여 포맷팅한다', () => {});
+  it('월이 한 자리 수일 때 앞에 0을 붙여 포맷팅한다', () => {
+    const day = new Date('2025-01-01');
+    const result = formatDate(day);
+    expect(result).toBe('2025-01-01');
+  });
 
-  it('일이 한 자리 수일 때 앞에 0을 붙여 포맷팅한다', () => {});
+  it('일이 한 자리 수일 때 앞에 0을 붙여 포맷팅한다', () => {
+    const day = new Date('2025-01-01');
+    const result = formatDate(day, 1);
+    expect(result).toBe('2025-01-01');
+  });
+
+  // 테스트 케이스 추가
+  it('월이 두 자리 수일 때 그대로 반환한다.', () => {
+    const day = new Date('2025-12-01');
+    const result = formatDate(day);
+    expect(result).toBe('2025-12-01');
+  });
+
+  // 테스트 케이스 추가
+  it('일이 두 자리 수일 때 그대로 반환한다.', () => {
+    const day = new Date('2025-01-10');
+    const result = formatDate(day);
+    expect(result).toBe('2025-01-10');
+  });
 });
