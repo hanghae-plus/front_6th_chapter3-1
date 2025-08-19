@@ -61,7 +61,7 @@ describe('getWeekDates', () => {
     expect(weekDates.map((date) => date.toDateString())).toEqual(expected);
   });
 
-  it('주의 시작(월요일)에 대해 올바른 주의 날짜들을 반환한다', () => {
+  it('월요일 날짜에 대해 해당 주의 7일을 반환한다', () => {
     const weekDates = getWeekDates(new Date('2025-08-18'));
 
     const expected = [
@@ -77,7 +77,7 @@ describe('getWeekDates', () => {
     expect(weekDates.map((date) => date.toDateString())).toEqual(expected);
   });
 
-  it('주의 끝(일요일)에 대해 올바른 주의 날짜들을 반환한다', () => {
+  it('주 시작일(일요일)에 대해 해당 주의 모든 날짜를 \n' + '  반환한다', () => {
     const weekDates = getWeekDates(new Date('2025-08-17'));
 
     const expected = [
@@ -159,7 +159,7 @@ describe('getWeekDates', () => {
 });
 
 describe('getWeeksAtMonth', () => {
-  it('2025년 7월 1일의 올바른 주 정보를 반환해야 한다', () => {
+  it('2025년 7월의 주별 날짜 배열을 반환한다', () => {
     const weeksAtMonth = getWeeksAtMonth(new Date('2025-07-01'));
 
     const expected = [
@@ -253,31 +253,31 @@ describe('formatWeek', () => {
     expect(week).toBe('2025년 8월 2주');
   });
 
-  it('월의 첫 주에 대해 올바른 주 정보를 반환한다', () => {
+  it('월의 첫 주에 포함된 주의 소속 월과 주차를 반환한다', () => {
     const week = formatWeek(new Date('2025-08-01'));
 
     expect(week).toBe('2025년 7월 5주');
   });
 
-  it('월의 마지막 주에 대해 올바른 주 정보를 반환한다', () => {
+  it('월의 마지막 주에 포함된 주의 소속 월과 주차를 반환한다', () => {
     const week = formatWeek(new Date('2025-08-31'));
 
     expect(week).toBe('2025년 9월 1주');
   });
 
-  it('연도가 바뀌는 주에 대해 올바른 주 정보를 반환한다', () => {
+  it('연도가 바뀌는 주에 포함된 주의 소속 월과 주차를 반환한다', () => {
     const week = formatWeek(new Date('2025-01-01'));
 
     expect(week).toBe('2025년 1월 1주');
   });
 
-  it('윤년 2월의 마지막 주에 대해 올바른 주 정보를 반환한다', () => {
+  it('윤년 2월의 마지막 주에 포함된 주의 소속 월과 주차를 반환한다', () => {
     const week = formatWeek(new Date('2024-02-29'));
 
     expect(week).toBe('2024년 2월 5주');
   });
 
-  it('평년 2월의 마지막 주에 대해 올바른 주 정보를 반환한다', () => {
+  it('평년 2월의 마지막 주에 포함된 주의 소속 월과 주차를 반환한다', () => {
     const week = formatWeek(new Date('2025-02-29'));
 
     expect(week).toBe('2025년 2월 4주');
@@ -343,7 +343,7 @@ describe('isDateInRange', () => {
     expect(isInRange).toBe(false);
   });
 
-  it('시작일이 종료일보다 늦은 경우 모든 날짜에 대해 false를 반환한다', () => {
+  it('시작일이 종료일(시작일 > 종료일)보다 늦은 경우 모든 날짜에 대해 false를 반환한다', () => {
     const date = new Date('2025-07-01');
     const startDate = new Date('2025-07-31');
     const endDate = new Date('2025-07-01');
