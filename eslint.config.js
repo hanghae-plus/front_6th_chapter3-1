@@ -91,7 +91,12 @@ export default [
 
       // Prettier rules
       ...prettierConfig.rules,
-      'prettier/prettier': 'error',
+      'prettier/prettier': [
+        'error',
+        {
+          endOfLine: 'auto',
+        },
+      ],
 
       // Storybook rules
       ...storybookPlugin.configs.recommended.rules,
@@ -112,6 +117,8 @@ export default [
     rules: {
       ...vitestPlugin.configs.recommended.rules,
       'vitest/expect-expect': 'off',
+      'no-unused-vars': 'off',
+      '@typescript-eslint/no-unused-vars': 'off',
     },
     languageOptions: {
       globals: {
