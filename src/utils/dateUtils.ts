@@ -62,6 +62,9 @@ export function getEventsForDay(events: Event[], date: number): Event[] {
   return events.filter((event) => new Date(event.date).getDate() === date);
 }
 
+/**
+ * 주어진 날짜가 속한 월의 몇 번쨰 주인지를 "YYYY년 M월 N주" 형식으로 반환
+ */
 export function formatWeek(targetDate: Date) {
   const dayOfWeek = targetDate.getDay();
   const diffToThursday = 4 - dayOfWeek;
@@ -104,10 +107,16 @@ export function isDateInRange(date: Date, rangeStart: Date, rangeEnd: Date): boo
   return normalizedDate >= normalizedStart && normalizedDate <= normalizedEnd;
 }
 
+/**
+ * 숫자를 지정된 자릿수로 만들기 위해 앞에 0을 채워주는 함수
+ */
 export function fillZero(value: number, size = 2) {
   return String(value).padStart(size, '0');
 }
 
+/**
+ * Date 객체를 'YYYY-MM-DD" 형식의 문자열로 변환
+ */
 export function formatDate(currentDate: Date, day?: number) {
   return [
     currentDate.getFullYear(),
