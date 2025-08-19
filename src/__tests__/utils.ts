@@ -20,6 +20,8 @@ export const createEvent = ({
   title,
   startTime,
   endTime,
+  description,
+  location,
   notificationTime,
 }: Partial<Event>): Event => {
   return {
@@ -28,8 +30,8 @@ export const createEvent = ({
     title: title || `event ${id}`,
     startTime: startTime || '09:00',
     endTime: endTime || '10:00',
-    description: 'description',
-    location: 'location',
+    description: description || 'description',
+    location: location || 'location',
     category: 'category',
     repeat: {
       type: 'none',
