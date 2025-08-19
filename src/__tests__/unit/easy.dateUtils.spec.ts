@@ -1,3 +1,4 @@
+import { setupMockHandlerUpdating } from '../../__mocks__/handlersUtils';
 import { Event } from '../../types';
 import {
   fillZero,
@@ -152,27 +153,111 @@ describe('getWeeksAtMonth', () => {
 });
 
 describe('getEventsForDay', () => {
-  it('특정 날짜(1일)에 해당하는 이벤트만 정확히 반환한다', () => {});
+  const events: Event[] = [
+    {
+      id: '1',
+      title: '기존 회의',
+      date: '2025-08-01',
+      startTime: '09:00',
+      endTime: '10:00',
+      description: '기존 팀 미팅',
+      location: '회의실 B',
+      category: '업무',
+      repeat: { type: 'none', interval: 0 },
+      notificationTime: 10,
+    },
+    {
+      id: '2',
+      title: '기존 회의2',
+      date: '2025-08-01',
+      startTime: '11:00',
+      endTime: '12:00',
+      description: '기존 팀 미팅 2',
+      location: '회의실 C',
+      category: '업무',
+      repeat: { type: 'none', interval: 0 },
+      notificationTime: 10,
+    },
+    {
+      id: '3',
+      title: '기존 회의3',
+      date: '2025-08-02',
+      startTime: '11:00',
+      endTime: '12:00',
+      description: '기존 팀 미팅 3',
+      location: '회의실 D',
+      category: '업무',
+      repeat: { type: 'none', interval: 0 },
+      notificationTime: 10,
+    },
+  ];
 
-  it('해당 날짜에 이벤트가 없을 경우 빈 배열을 반환한다', () => {});
+  it('특정 날짜(1일)에 해당하는 이벤트만 정확히 반환한다', () => {
+    const result = getEventsForDay(events, 1);
+    const filteredEvents = events.filter((event) => event.date === '2025-08-01');
+    expect(result).toEqual(filteredEvents);
+  });
 
-  it('날짜가 0일 경우 빈 배열을 반환한다', () => {});
+  it('해당 날짜에 이벤트가 없을 경우 빈 배열을 반환한다', () => {
+    // 3일에 이벤트가 없음
+    const noEventDay = 3;
+    const result = getEventsForDay(events, noEventDay);
+    expect(result).toEqual([]);
+  });
 
-  it('날짜가 32일 이상인 경우 빈 배열을 반환한다', () => {});
+  it('날짜가 0일 경우 빈 배열을 반환한다', () => {
+    const result = getEventsForDay(events, 0);
+    expect(result).toEqual([]);
+  });
+
+  it('날짜가 32일 이상인 경우 빈 배열을 반환한다', () => {
+    const result = getEventsForDay(events, 32);
+    expect(result).toEqual([]);
+  });
 });
 
 describe('formatWeek', () => {
-  it('월의 중간 날짜에 대해 올바른 주 정보를 반환한다', () => {});
+  it('월의 중간 날짜에 대해 올바른 주 정보를 반환한다', () => {
+    const day = new Date('2025-08-15');
+    const weekNumber = 2; // 2025-08-10 ~ 2025-08-16은 8월의 2주차
+    const result = formatWeek(day);
+    expect(result).toEqual(`2025년 8월 ${weekNumber}주`);
+  });
 
-  it('월의 첫 주에 대해 올바른 주 정보를 반환한다', () => {});
+  it('월의 첫 주에 대해 올바른 주 정보를 반환한다', () => {
+    const day = new Date('2025-08-09');
+    const week = 1; // 2025-08-09는 8월의 1주차
+    const result = formatWeek(day);
+    expect(result).toEqual(`2025년 8월 ${week}주`);
+  });
 
-  it('월의 마지막 주에 대해 올바른 주 정보를 반환한다', () => {});
+  it('월의 마지막 주에 대해 올바른 주 정보를 반환한다', () => {
+    const day = new Date('2025-08-30');
+    const week = 4; // 2025-08-24~2025-08-30은 8월의 4주차 이자 마지막 주차
+    const result = formatWeek(day);
+    expect(result).toEqual(`2025년 8월 ${week}주`);
+  });
 
-  it('연도가 바뀌는 주에 대해 올바른 주 정보를 반환한다', () => {});
+  it('연도가 바뀌는 주에 대해 올바른 주 정보를 반환한다', () => {
+    const day = new Date('2026-01-01');
+    const week = 1; // 2026-01-01은 2026년 1월의 1주차 (목요일)
+    const result = formatWeek(day);
+    expect(result).toEqual(`2026년 1월 ${week}주`);
+  });
 
-  it('윤년 2월의 마지막 주에 대해 올바른 주 정보를 반환한다', () => {});
+  it('윤년 2월의 마지막 주에 대해 올바른 주 정보를 반환한다', () => {
+    const day = new Date('2024-02-29'); // 2024년은 윤년, 2/29 존재
+    const week = 5; // 2024-02-26~2024-03-03 주의 목요일은 2/29 → 2월 5주차
+    const result = formatWeek(day);
+    expect(result).toEqual(`2024년 2월 ${week}주`);
+  });
 
-  it('평년 2월의 마지막 주에 대해 올바른 주 정보를 반환한다', () => {});
+  it('평년 2월의 마지막 주에 대해 올바른 주 정보를 반환한다', () => {
+    const day = new Date('2025-02-28'); // 2025년은 평년
+    const week = 4; // 2025-02-24~2025-03-02 주의 목요일은 2/27 → 2월 4주차
+    const result = formatWeek(day);
+    expect(result).toEqual(`2025년 2월 ${week}주`);
+  });
 });
 
 describe('formatMonth', () => {
