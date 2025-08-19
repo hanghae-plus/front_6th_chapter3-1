@@ -105,15 +105,91 @@ describe('일정 CRUD 및 기본 기능', () => {
 });
 
 describe('일정 뷰', () => {
-  it('주별 뷰를 선택 후 해당 주에 일정이 없으면, 일정이 표시되지 않는다.', async () => {});
+  it("view를 'week'로 선택 후 해당 주에 일정이 없으면, 일정이 표시되지 않는다.", async () => {
+    render(<AppWrapper />);
 
-  it('주별 뷰 선택 후 해당 일자에 일정이 존재한다면 해당 일정이 정확히 표시된다', async () => {});
+    const user = userEvent.setup();
+    const viewSelect = screen.getByLabelText('뷰 타입 선택');
 
-  it('월별 뷰에 일정이 없으면, 일정이 표시되지 않아야 한다.', async () => {});
+    await user.click(within(viewSelect).getByRole('combobox'));
+    await user.click(screen.getByRole('option', { name: 'week-option' }));
 
-  it('월별 뷰에 일정이 정확히 표시되는지 확인한다', async () => {});
+    expect(screen.queryByText('기존 회의')).not.toBeInTheDocument();
+    expect(screen.getByText('검색 결과가 없습니다.')).toBeInTheDocument();
+  });
 
-  it('달력에 1월 1일(신정)이 공휴일로 표시되는지 확인한다', async () => {});
+  it("view를 'week'로 선택 후 해당 주에 일정이 있다면 리스트, 달력에 표시된다", async () => {
+    setupMockHandlerCreation([
+      {
+        id: '1',
+        title: '기존 회의',
+        date: '2025-10-01',
+        startTime: '09:00',
+        endTime: '10:00',
+        description: '기존 팀 미팅',
+        location: '회의실 B',
+        category: '업무',
+        repeat: { type: 'none', interval: 0 },
+        notificationTime: 10,
+      },
+    ]);
+    render(<AppWrapper />);
+
+    const user = userEvent.setup();
+    const viewSelect = screen.getByLabelText('뷰 타입 선택');
+
+    await user.click(within(viewSelect).getByRole('combobox'));
+    await user.click(screen.getByRole('option', { name: 'week-option' }));
+
+    expect(within(screen.getByTestId('week-view')).getByText('기존 회의')).toBeInTheDocument();
+    expect(within(screen.getByTestId('event-list')).getByText('기존 회의')).toBeInTheDocument();
+  });
+
+  it("view가 'month'일 때 해당 월에 일정이 없으면, 일정이 표시되지 않는다.", async () => {
+    // 불필요한 테스트 케이스 월별 뷰는 기본값이기에 문제가 있다면 Create, Edit, Delete 테스트 케이스에서 모두 확인이 가능함
+    setupMockHandlerCreation([
+      {
+        id: '1',
+        title: '기존 회의',
+        date: '2025-11-15',
+        startTime: '09:00',
+        endTime: '10:00',
+        description: '기존 팀 미팅',
+        location: '회의실 B',
+        category: '업무',
+        repeat: { type: 'none', interval: 0 },
+        notificationTime: 10,
+      },
+    ]);
+
+    render(<AppWrapper />);
+
+    expect(screen.queryByText('기존 회의')).not.toBeInTheDocument();
+    expect(screen.getByText('검색 결과가 없습니다.')).toBeInTheDocument();
+  });
+
+  it("view가 'month'일 때 해당 월에 일정이 있다면 리스트, 달력에 표시된다", async () => {
+    // 불필요한 테스트 케이스 월별 뷰는 기본값이기에 문제가 있다면 Create, Edit, Delete 테스트 케이스에서 모두 확인이 가능함
+    render(<AppWrapper />);
+
+    expect(
+      await within(screen.getByTestId('month-view')).findByText('기존 회의')
+    ).toBeInTheDocument();
+    expect(within(screen.getByTestId('event-list')).getByText('기존 회의')).toBeInTheDocument();
+  });
+
+  it('달력에 1월 1일(신정)이 공휴일로 표시되는지 확인한다', async () => {
+    render(<AppWrapper />);
+
+    const user = userEvent.setup();
+
+    for (let i = 0; i < 9; i++) {
+      await user.click(screen.getByLabelText('Previous'));
+    }
+
+    expect(screen.getByText('신정')).toBeInTheDocument();
+    expect(screen.getByText('신정')).toHaveStyle('color: rgb(211, 47, 47)');
+  });
 });
 
 describe('검색 기능', () => {
