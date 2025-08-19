@@ -4,6 +4,9 @@ export function parseDateTime(date: string, time: string) {
   return new Date(`${date}T${time}`);
 }
 
+/**
+ * 이벤트 객체의 날짜와 시작/종료 시간을 완전한 Date 객체 범위로 변환
+ */
 export function convertEventToDateRange({ date, startTime, endTime }: Event | EventForm) {
   return {
     start: parseDateTime(date, startTime),
