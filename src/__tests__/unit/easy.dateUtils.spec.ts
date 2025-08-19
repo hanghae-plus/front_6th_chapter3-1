@@ -43,7 +43,7 @@ describe('getDaysInMonth', () => {
     const formatDate = formatMonth(new Date());
     const replacedFormat = formatDate.replace(/[가-힣]/g, '/');
 
-    const [_, monthStr] = replacedFormat.split('/');
+    const [, monthStr] = replacedFormat.split('/');
     const month = parseInt(monthStr, 10);
 
     expect(month).toBeGreaterThanOrEqual(1);
