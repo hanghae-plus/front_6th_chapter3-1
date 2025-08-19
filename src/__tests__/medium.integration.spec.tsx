@@ -51,7 +51,7 @@ async function createEvent({
   await userEvent.click(screen.getByTestId('event-submit-button'));
 }
 
-async function updateEvent({
+async function updateFirstEvent({
   title,
   date,
   description,
@@ -61,11 +61,7 @@ async function updateEvent({
   location,
   notificationTime,
 }: Partial<EventForm>) {
-  if (screen.queryAllByTestId('event-card').length > 1) {
-    await userEvent.click(screen.queryAllByLabelText('Edit event')[0]);
-  } else {
-    await userEvent.click(screen.getByLabelText('Edit event'));
-  }
+  await userEvent.click(screen.queryAllByLabelText('Edit event')[0]);
 
   if (title != null) {
     await userEvent.clear(screen.getByLabelText('제목'));
@@ -161,7 +157,7 @@ describe('일정 CRUD 및 기본 기능', () => {
     await userEvent.click(screen.getByLabelText('Next'));
     await userEvent.click(screen.getByLabelText('Next'));
 
-    await updateEvent(testData);
+    await updateFirstEvent(testData);
 
     await userEvent.click(screen.getByLabelText('Previous'));
     await userEvent.click(screen.getByLabelText('Previous'));
@@ -385,7 +381,7 @@ describe('일정 충돌', () => {
     ).toBeInTheDocument();
   });
 
-  it.only('기존 일정의 시간을 수정하여 충돌이 발생하면 경고가 노출된다', async () => {
+  it('기존 일정의 시간을 수정하여 충돌이 발생하면 경고가 노출된다', async () => {
     renderApp();
 
     const testData1 = {
@@ -412,7 +408,12 @@ describe('일정 충돌', () => {
     await createEvent(testData1);
     await createEvent(testData2);
 
-    await updateEvent({ ...testData1, date: '2025-08-16', startTime: '13:30', endTime: '14:00' });
+    await updateFirstEvent({
+      ...testData1,
+      date: '2025-08-16',
+      startTime: '13:30',
+      endTime: '14:00',
+    });
     expect(screen.getByText('일정 겹침 경고')).toBeInTheDocument();
     expect(
       screen.getByText(
