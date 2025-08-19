@@ -4,15 +4,11 @@ import { http, HttpResponse, HttpHandler } from 'msw';
 import { events } from '../__mocks__/response/events.json' assert { type: 'json' };
 import { Event, EventForm } from '../types';
 
-const data = {
-  events: [...events],
-}
-
 // ! HARD
 // ! 각 응답에 대한 MSW 핸들러를 작성해주세요. GET 요청은 이미 작성되어 있는 events json을 활용해주세요.
 export const createHandler = (initialEvents: Event[] = []) => {
-  if (initialEvents.length > 0) {
-    data.events = initialEvents;
+  const data = {
+    events: initialEvents.length > 0 ? initialEvents : [...events],
   }
 
   return [
