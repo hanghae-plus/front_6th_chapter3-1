@@ -61,7 +61,11 @@ async function updateEvent({
   location,
   notificationTime,
 }: Partial<EventForm>) {
-  await userEvent.click(screen.getByLabelText('Edit event'));
+  if (screen.queryAllByTestId('event-card').length > 1) {
+    await userEvent.click(screen.queryAllByLabelText('Edit event')[0]);
+  } else {
+    await userEvent.click(screen.getByLabelText('Edit event'));
+  }
 
   if (title != null) {
     await userEvent.clear(screen.getByLabelText('제목'));
@@ -346,7 +350,7 @@ describe('검색 기능', () => {
 });
 
 describe('일정 충돌', () => {
-  it.only('겹치는 시간에 새 일정을 추가할 때 경고가 표시된다', async () => {
+  it('겹치는 시간에 새 일정을 추가할 때 경고가 표시된다', async () => {
     renderApp();
 
     const testData = {
@@ -381,7 +385,41 @@ describe('일정 충돌', () => {
     ).toBeInTheDocument();
   });
 
-  it('기존 일정의 시간을 수정하여 충돌이 발생하면 경고가 노출된다', async () => {});
+  it.only('기존 일정의 시간을 수정하여 충돌이 발생하면 경고가 노출된다', async () => {
+    renderApp();
+
+    const testData1 = {
+      title: '팀 회의',
+      date: '2025-08-15',
+      description: '설명 테스트 입니다.',
+      startTime: '12:30',
+      endTime: '15:30',
+      category: '개인',
+      location: '서울 은평구',
+      notificationTime: 120,
+    };
+    const testData2 = {
+      title: '스크럼',
+      date: '2025-08-16',
+      description: '데일리 스크럼 입니다.',
+      startTime: '13:30',
+      endTime: '14:00',
+      category: '업무',
+      location: '강남구',
+      notificationTime: 10,
+    };
+
+    await createEvent(testData1);
+    await createEvent(testData2);
+
+    await updateEvent({ ...testData1, date: '2025-08-16', startTime: '13:30', endTime: '14:00' });
+    expect(screen.getByText('일정 겹침 경고')).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        `${testData2.title} (${testData2.date} ${testData2.startTime}-${testData2.endTime})`
+      )
+    ).toBeInTheDocument();
+  });
 });
 
 it('notificationTime을 10으로 하면 지정 시간 10분 전 알람 텍스트가 노출된다', async () => {});
