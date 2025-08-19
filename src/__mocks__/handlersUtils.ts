@@ -45,7 +45,7 @@ export const setupMockHandlerUpdating = (
   initEvents: Event[] = [],
   successFlags: Partial<IsSuccess<'get' | 'put'>> = {}
 ) => {
-  const { getIsSuccess = true } = successFlags;
+  const { getIsSuccess = true, putIsSuccess = true } = successFlags;
 
   const store = { current: structuredClone(initEvents) as Event[] };
   return [
@@ -60,11 +60,14 @@ export const setupMockHandlerUpdating = (
       return HttpResponse.json({ message: 'fetch fail' }, { status: 500 });
     }),
     http.put('/api/events/:id', async ({ params, request }) => {
+      if (!putIsSuccess) return HttpResponse.json({ message: 'update fail' }, { status: 500 });
+
       const id = params.id as string;
 
       const eventList = store.current as Event[];
       const updatedIndex = eventList.findIndex((event) => event.id === id);
-      if (updatedIndex < 0) return HttpResponse.json({ message: 'Not Found' }, { status: 404 });
+
+      if (updatedIndex < 0) return HttpResponse.json({ message: 'not found' }, { status: 404 });
 
       const updatedEvent = (await request.json()) as Partial<Event>;
       const resultEvent = { ...eventList[updatedIndex], ...updatedEvent, id };
@@ -74,26 +77,35 @@ export const setupMockHandlerUpdating = (
   ];
 };
 
-export const setupMockHandlerDeletion = (initEvents: Event[] = []) => {
+export const setupMockHandlerDeletion = (
+  initEvents: Event[] = [],
+  successFlags: Partial<IsSuccess<'get' | 'delete'>> = {}
+) => {
+  const { getIsSuccess = true, deleteIsSuccess = true } = successFlags;
+
   const store = { current: structuredClone(initEvents) as Event[] };
 
   return [
     http.get('/api/events', () => {
-      return HttpResponse.json(
-        { events: store.current },
-        {
-          status: 200,
-        }
-      );
+      if (getIsSuccess)
+        return HttpResponse.json(
+          { events: store.current },
+          {
+            status: 200,
+          }
+        );
+      return HttpResponse.json({ message: 'fetch fail' }, { status: 500 });
     }),
     http.delete('/api/events/:id', ({ params }) => {
+      if (!deleteIsSuccess) return HttpResponse.json({ message: 'delete fail' }, { status: 500 });
+
       const id = params.id as string;
 
       const eventList = store.current as Event[];
       const deletedIndex = eventList.findIndex((event) => event.id === id);
 
       const hasEvent = eventList.some((event) => event.id === id);
-      if (!hasEvent) return HttpResponse.json({ message: 'Not Found' }, { status: 404 });
+      if (!hasEvent) return HttpResponse.json({ message: 'not found' }, { status: 404 });
 
       eventList.splice(deletedIndex, 1);
       return new HttpResponse(null, { status: 204 });
