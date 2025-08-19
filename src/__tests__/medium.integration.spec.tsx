@@ -1,16 +1,18 @@
 import CssBaseline from '@mui/material/CssBaseline';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import { render, screen, within, act, fireEvent, getByRole } from '@testing-library/react';
-import { UserEvent, userEvent } from '@testing-library/user-event';
-import { http, HttpResponse } from 'msw';
+import { render, screen, within, getByRole } from '@testing-library/react';
+import { userEvent } from '@testing-library/user-event';
 import { SnackbarProvider } from 'notistack';
-import { ReactElement } from 'react';
-import { categories, weekDays, notificationOptions } from '../constant';
-import { debug } from 'vitest-preview';
+import { notificationOptions } from '../constant';
 
 import App from '../App';
 import { server } from '../setupTests';
-import { Event, EventForm } from '../types';
+import { EventForm } from '../types';
+import {
+  setupMockHandlerCreation,
+  setupMockHandlerDeletion,
+  setupMockHandlerUpdating,
+} from '../__mocks__/handlersUtils';
 
 const renderApp = () => {
   const theme = createTheme();
@@ -61,7 +63,7 @@ async function updateFirstEvent({
   location,
   notificationTime,
 }: Partial<EventForm>) {
-  await userEvent.click(screen.queryAllByLabelText('Edit event')[0]);
+  await userEvent.click((await screen.findAllByLabelText('Edit event'))[0]);
 
   if (title != null) {
     await userEvent.clear(screen.getByLabelText('제목'));
@@ -108,6 +110,8 @@ async function updateFirstEvent({
 
 describe('일정 CRUD 및 기본 기능', () => {
   it('입력한 새로운 일정 정보에 맞춰 모든 필드가 이벤트 리스트에 정확히 저장된다.', async () => {
+    const handlers = setupMockHandlerCreation([]);
+    server.resetHandlers(...handlers);
     // ! HINT. event를 추가 제거하고 저장하는 로직을 잘 살펴보고, 만약 그대로 구현한다면 어떤 문제가 있을 지 고민해보세요.
     renderApp();
 
@@ -141,26 +145,24 @@ describe('일정 CRUD 및 기본 기능', () => {
   });
 
   it('기존 일정의 세부 정보를 수정하고 변경사항이 정확히 반영된다', async () => {
+    const handlers = setupMockHandlerUpdating();
+    server.resetHandlers(...handlers);
+
     renderApp();
 
     const testData = {
-      title: '제목 변경 테스트',
+      id: '1',
+      title: '변경 후 제목',
       date: '2025-08-30',
       description: '변경 테스트 입니다.',
-      startTime: '18:30',
-      endTime: '21:30',
+      startTime: '10:30',
+      endTime: '11:30',
       category: '가족',
       location: '서울 강남구',
       notificationTime: 1440,
     };
 
-    await userEvent.click(screen.getByLabelText('Next'));
-    await userEvent.click(screen.getByLabelText('Next'));
-
     await updateFirstEvent(testData);
-
-    await userEvent.click(screen.getByLabelText('Previous'));
-    await userEvent.click(screen.getByLabelText('Previous'));
 
     const list = await screen.findByTestId('event-list');
     const withinList = within(list);
@@ -179,6 +181,9 @@ describe('일정 CRUD 및 기본 기능', () => {
   });
 
   it('일정을 삭제하고 더 이상 조회되지 않는지 확인한다', async () => {
+    const handlers = setupMockHandlerDeletion();
+    server.resetHandlers(...handlers);
+
     renderApp();
 
     await userEvent.click(screen.getByLabelText('Next'));
@@ -296,6 +301,8 @@ describe('검색 기능', () => {
   });
 
   it('검색어를 지우면 모든 일정이 다시 표시되어야 한다', async () => {
+    const handlers = setupMockHandlerCreation([]);
+    server.resetHandlers(...handlers);
     renderApp();
 
     const testData1 = {
@@ -347,6 +354,9 @@ describe('검색 기능', () => {
 
 describe('일정 충돌', () => {
   it('겹치는 시간에 새 일정을 추가할 때 경고가 표시된다', async () => {
+    const handlers = setupMockHandlerCreation([]);
+    server.resetHandlers(...handlers);
+
     renderApp();
 
     const testData = {
@@ -382,6 +392,9 @@ describe('일정 충돌', () => {
   });
 
   it('기존 일정의 시간을 수정하여 충돌이 발생하면 경고가 노출된다', async () => {
+    const handlers = setupMockHandlerCreation([]);
+    server.resetHandlers(...handlers);
+
     renderApp();
 
     const testData1 = {
