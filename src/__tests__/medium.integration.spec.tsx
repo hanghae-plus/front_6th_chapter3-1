@@ -213,7 +213,6 @@ describe('일정 뷰', () => {
 
     await userEvent.click(screen.getByLabelText('Next'));
     await userEvent.click(screen.getByLabelText('Next'));
-    debug();
 
     expect(screen.queryAllByTestId('event-tag').length > 0).toBe(true);
     expect(screen.queryAllByText('기존 회의').length >= 2).toBe(true);
@@ -230,7 +229,7 @@ describe('일정 뷰', () => {
     expect(list).toHaveTextContent('검색 결과가 없습니다.');
   });
 
-  it.only('월별 뷰에 일정이 정확히 표시되는지 확인한다', async () => {
+  it('월별 뷰에 일정이 정확히 표시되는지 확인한다', async () => {
     renderApp();
     await userEvent.click(screen.getByLabelText('Next'));
     await userEvent.click(screen.getByLabelText('Next'));
@@ -242,7 +241,20 @@ describe('일정 뷰', () => {
     expect(screen.queryAllByText('기존 회의').length >= 2).toBe(true);
   });
 
-  it('달력에 1월 1일(신정)이 공휴일로 표시되는지 확인한다', async () => {});
+  it('달력에 1월 1일(신정)이 공휴일로 표시되는지 확인한다', async () => {
+    renderApp();
+
+    await userEvent.click(screen.getByLabelText('Previous'));
+    await userEvent.click(screen.getByLabelText('Previous'));
+    await userEvent.click(screen.getByLabelText('Previous'));
+    await userEvent.click(screen.getByLabelText('Previous'));
+    await userEvent.click(screen.getByLabelText('Previous'));
+    await userEvent.click(screen.getByLabelText('Previous'));
+    await userEvent.click(screen.getByLabelText('Previous'));
+
+    const january1stCell = await screen.findByTestId('1-day-cell');
+    expect(within(january1stCell).getByText('신정')).toBeInTheDocument();
+  });
 });
 
 describe('검색 기능', () => {

@@ -239,6 +239,7 @@ function App() {
                     return (
                       <TableCell
                         key={dayIndex}
+                        data-testid={`${day}-day-cell`}
                         sx={{
                           height: '120px',
                           verticalAlign: 'top',
