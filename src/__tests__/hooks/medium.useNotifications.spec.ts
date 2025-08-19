@@ -1,11 +1,15 @@
-import { act, renderHook } from '@testing-library/react';
+import { act, renderHook, waitFor } from '@testing-library/react';
 
+import { events } from '../../__mocks__/response/events.json';
 import { useNotifications } from '../../hooks/useNotifications.ts';
 import { Event } from '../../types.ts';
 import { formatDate } from '../../utils/dateUtils.ts';
 import { parseHM } from '../utils.ts';
 
-it('초기 상태에서는 알림이 없어야 한다', () => {});
+it('초기 상태에서는 알림이 없어야 한다', async () => {
+  const { result } = renderHook(() => useNotifications(events as Event[]));
+  await waitFor(() => expect(result.current.notifications.length).toBe(0));
+});
 
 it('지정된 시간이 된 경우 알림이 새롭게 생성되어 추가된다', () => {});
 
