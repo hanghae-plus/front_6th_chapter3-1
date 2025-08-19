@@ -34,6 +34,26 @@ it('지정된 시간이 된 경우 알림이 새롭게 생성되어 추가된다
   waitFor(() => expect(result.current.notifications.length).toBe(1));
 });
 
-it('index를 기준으로 알림을 적절하게 제거할 수 있다', () => {});
+it('index를 기준으로 알림을 적절하게 제거할 수 있다', async () => {
+  const { result } = renderHook(() => useNotifications(events as Event[]));
+
+  const start = new Date(`${events[0].date}T${events[0].startTime}`);
+  const beforeStart = start.getTime() - 10 * 60000;
+
+  await act(async () => {
+    vi.setSystemTime(new Date(beforeStart - 1000));
+    vi.advanceTimersByTime(1000);
+  });
+
+  waitFor(() => expect(result.current.notifications.length).toBe(1));
+
+  const removedIndex = 0;
+
+  await act(async () => {
+    result.current.removeNotification(removedIndex);
+  });
+
+  waitFor(() => expect(result.current.notifications.length).toBe(0));
+});
 
 it('이미 알림이 발생한 이벤트에 대해서는 중복 알림이 발생하지 않아야 한다', () => {});
