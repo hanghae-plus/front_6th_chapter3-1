@@ -1,8 +1,40 @@
 import { fetchHolidays } from '../../apis/fetchHolidays';
 describe('fetchHolidays', () => {
-  it('주어진 월의 공휴일만 반환한다', () => {});
+  it('주어진 월의 공휴일만 반환한다', () => {
+    const holidaysInJanuary = fetchHolidays(new Date('2025-01-15'));
+    expect(holidaysInJanuary).toEqual({
+      '2025-01-01': '신정',
+      '2025-01-29': '설날',
+      '2025-01-30': '설날',
+      '2025-01-31': '설날',
+    });
 
-  it('공휴일이 없는 월에 대해 빈 객체를 반환한다', () => {});
+    const holidaysInOctober = fetchHolidays(new Date('2025-10-20'));
+    expect(holidaysInOctober).toEqual({
+      '2025-10-03': '개천절',
+      '2025-10-05': '추석',
+      '2025-10-06': '추석',
+      '2025-10-07': '추석',
+      '2025-10-09': '한글날',
+    });
+  });
 
-  it('여러 공휴일이 있는 월에 대해 모든 공휴일을 반환한다', () => {});
+  it('공휴일이 없는 월에 대해 빈 객체를 반환한다', () => {
+    const holidays1 = fetchHolidays(new Date('2025-02-15'));
+    expect(holidays1).toEqual({});
+
+    const holidays2 = fetchHolidays(new Date('2025-04-15'));
+    expect(holidays2).toEqual({});
+  });
+
+  it('여러 공휴일이 있는 월에 대해 모든 공휴일을 반환한다', () => {
+    const holidays = fetchHolidays(new Date('2025-10-01'));
+    expect(holidays).toEqual({
+      '2025-10-03': '개천절',
+      '2025-10-05': '추석',
+      '2025-10-06': '추석',
+      '2025-10-07': '추석',
+      '2025-10-09': '한글날',
+    });
+  });
 });
