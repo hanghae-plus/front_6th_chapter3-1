@@ -15,15 +15,15 @@ export const parseHM = (timestamp: number) => {
 export const createMockEvent = (index: number = 1, overrides: Partial<Event> = {}): Event => {
   return {
     id: `${index}`,
-    title: `테스트 이벤트 ${index}`,
-    date: '2025-08-01',
+    title: '기존 회의',
+    date: '2025-10-15',
     startTime: '09:00',
     endTime: '10:00',
-    description: '테스트 설명',
-    location: '테스트 장소',
+    description: '기존 팀 미팅',
+    location: '회의실 B',
     category: '업무',
     repeat: { type: 'none', interval: 0 },
-    notificationTime: 1,
+    notificationTime: 10,
     ...overrides,
   };
 };
