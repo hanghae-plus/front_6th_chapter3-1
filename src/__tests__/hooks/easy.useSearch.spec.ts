@@ -86,9 +86,9 @@ it('현재 뷰가 월간일 때 월간 이벤트만 반환해야 한다', () => 
 
 it("검색어를 '회의'에서 '점심'으로 변경하면 필터링된 결과가 즉시 업데이트되어야 한다", () => {
   const events = [
-    createMockEvent(1, { title: '아침' }),
-    createMockEvent(2, { title: '회의' }),
-    createMockEvent(3, { title: '점심' }),
+    createMockEvent(1, { title: '아침', location: '집' }),
+    createMockEvent(2, { title: '회의', location: '회사' }),
+    createMockEvent(3, { title: '점심', location: '회사' }),
   ];
   const { result } = renderHook(() => useSearch(events, new Date(), 'month'));
 

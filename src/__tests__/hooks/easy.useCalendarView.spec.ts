@@ -4,15 +4,6 @@ import { useCalendarView } from '../../hooks/useCalendarView.ts';
 import { assertDate } from '../utils.ts';
 
 describe('초기 상태', () => {
-  beforeEach(() => {
-    vi.useFakeTimers();
-    vi.setSystemTime(new Date('2025-10-01T00:00:00.000Z'));
-  });
-
-  afterEach(() => {
-    vi.useRealTimers();
-  });
-
   it('view는 "month"이어야 한다', () => {
     const { result } = renderHook(() => useCalendarView());
 
@@ -39,15 +30,6 @@ describe('초기 상태', () => {
 });
 
 describe('상태 변경', () => {
-  beforeEach(() => {
-    vi.useFakeTimers();
-    vi.setSystemTime(new Date('2025-10-01T00:00:00.000Z'));
-  });
-
-  afterEach(() => {
-    vi.useRealTimers();
-  });
-
   it("view를 'week'으로 변경 시 적절하게 반영된다", () => {
     const { result } = renderHook(() => useCalendarView());
 
