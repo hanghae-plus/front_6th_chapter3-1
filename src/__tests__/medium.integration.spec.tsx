@@ -289,9 +289,51 @@ describe('검색 기능', () => {
 });
 
 describe('일정 충돌', () => {
-  it('겹치는 시간에 새 일정을 추가할 때 경고가 표시된다', async () => {});
+  it('겹치는 시간에 새 일정을 추가할 때 경고가 표시된다', async () => {
+    render(<AppWrapper />);
 
-  it('기존 일정의 시간을 수정하여 충돌이 발생하면 경고가 노출된다', async () => {});
+    const user = userEvent.setup();
+
+    await user.type(screen.getByLabelText('제목'), '새로운 회의');
+    await user.type(screen.getByLabelText('날짜'), '2025-10-15');
+    await user.type(screen.getByLabelText('시작 시간'), '09:30');
+    await user.type(screen.getByLabelText('종료 시간'), '10:30');
+    await user.type(screen.getByLabelText('설명'), '새로운 팀 미팅');
+    await user.type(screen.getByLabelText('위치'), '회의실 A');
+    await user.click(screen.getByRole('button', { name: '일정 추가' }));
+
+    expect(screen.getByText('일정 겹침 경고')).toBeInTheDocument();
+  });
+
+  it('기존 일정의 시간을 수정하여 충돌이 발생하면 경고가 노출된다', async () => {
+    setupMockHandlerUpdating();
+
+    render(<AppWrapper />);
+
+    const user = userEvent.setup();
+
+    const editButtons = await screen.findAllByRole('button', { name: 'Edit event' });
+
+    await user.click(editButtons[0]);
+
+    await user.clear(screen.getByLabelText('시작 시간'));
+    await user.type(screen.getByLabelText('시작 시간'), '11:30');
+    await user.clear(screen.getByLabelText('종료 시간'));
+    await user.type(screen.getByLabelText('종료 시간'), '12:30');
+    await user.click(screen.getByRole('button', { name: '일정 수정' }));
+
+    expect(screen.getByText('일정 겹침 경고')).toBeInTheDocument();
+  });
 });
 
-it('notificationTime을 10으로 하면 지정 시간 10분 전 알람 텍스트가 노출된다', async () => {});
+describe('알림 기능', () => {
+  it('notificationTime을 10으로 하면 지정 시간 10분 전 알람 텍스트가 노출된다', async () => {
+    vi.setSystemTime(new Date('2025-10-15T08:50:00'));
+
+    render(<AppWrapper />);
+
+    await screen.findByText('기존 팀 미팅');
+
+    expect(await screen.findByText('10분 후 기존 회의 일정이 시작됩니다.')).toBeInTheDocument();
+  });
+});
