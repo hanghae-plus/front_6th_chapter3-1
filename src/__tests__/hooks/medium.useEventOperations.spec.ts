@@ -1,4 +1,4 @@
-import { act, renderHook } from '@testing-library/react';
+import { act, renderHook, waitFor } from '@testing-library/react';
 import { http, HttpResponse } from 'msw';
 
 import {
@@ -6,6 +6,7 @@ import {
   setupMockHandlerDeletion,
   setupMockHandlerUpdating,
 } from '../../__mocks__/handlersUtils.ts';
+import { events } from '../../__mocks__/response/events.json';
 import { useEventOperations } from '../../hooks/useEventOperations.ts';
 import { server } from '../../setupTests.ts';
 import { Event } from '../../types.ts';
@@ -22,11 +23,59 @@ vi.mock('notistack', async () => {
   };
 });
 
-it('저장되어있는 초기 이벤트 데이터를 적절하게 불러온다', async () => {});
+it('저장되어있는 초기 이벤트 데이터를 불러온다.', async () => {
+  server.use(...setupMockHandlerCreation(events as Event[]));
 
-it('정의된 이벤트 정보를 기준으로 적절하게 저장이 된다', async () => {});
+  const fetchSpy = vi.spyOn(global, 'fetch');
 
-it("새로 정의된 'title', 'endTime' 기준으로 적절하게 일정이 업데이트 된다", async () => {});
+  renderHook(() => useEventOperations(false));
+
+  await waitFor(() => expect(fetchSpy).toHaveBeenCalledWith('/api/events'));
+  await waitFor(() =>
+    expect(enqueueSnackbarFn).toHaveBeenCalledWith('일정 로딩 완료!', { variant: 'info' })
+  );
+
+  fetchSpy.mockRestore();
+});
+
+it('정의된 이벤트 정보를 기준으로 적절하게 저장이 된다', async () => {
+  server.use(...setupMockHandlerCreation(events as Event[]));
+
+  const { result } = renderHook(() => useEventOperations(false));
+
+  await waitFor(() => {
+    expect(result.current.events.length).toBeGreaterThan(0);
+    expect(result.current.events[0].title).toEqual('기존 회의');
+  });
+});
+
+it("새로 정의된 'title', 'endTime' 기준으로 적절하게 일정이 업데이트 된다", async () => {
+  server.use(...setupMockHandlerUpdating(events as Event[]));
+  const { result } = renderHook(() => useEventOperations(true));
+
+  await waitFor(() => {
+    expect(result.current.events.length).toBeGreaterThan(0);
+    expect(result.current.events[0].title).toEqual('기존 회의');
+  });
+
+  const updatedEvent = {
+    id: '1',
+    title: '기존이 아닌 회의',
+    endTime: '16:00',
+  };
+
+  await result.current.saveEvent(updatedEvent as Event);
+
+  await waitFor(() =>
+    expect(enqueueSnackbarFn).toHaveBeenCalledWith('일정이 수정되었습니다.', { variant: 'success' })
+  );
+
+  await waitFor(() => {
+    const updated = result.current.events.find((event) => event.id === updatedEvent.id)!;
+    expect(updated.title).toBe('기존이 아닌 회의');
+    expect(updated.endTime).toBe('16:00');
+  });
+});
 
 it('존재하는 이벤트 삭제 시 에러없이 아이템이 삭제된다.', async () => {});
 
