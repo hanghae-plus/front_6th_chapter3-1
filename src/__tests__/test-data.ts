@@ -306,7 +306,7 @@ export const mockEvents: Event[] = [
 export const mock20250701WeekData: Event[] = [
   {
     id: 'da3ca408-836a-4d98-b67a-ca389d07555a',
-    title: '프로젝트 A 기획 회의',
+    title: '이벤트',
     date: '2025-07-01',
     startTime: '10:00',
     endTime: '12:00',
@@ -336,7 +336,7 @@ export const mock20250701WeekData: Event[] = [
   },
   {
     id: 'da3ca408-836a-4d98-b67a-ca389d07555c',
-    title: '자료 조사',
+    title: '이벤트',
     date: '2025-07-02',
     startTime: '09:00',
     endTime: '11:00',
@@ -468,5 +468,84 @@ export const mock20250701WeekData: Event[] = [
       interval: 0,
     },
     notificationTime: 1,
+  },
+];
+
+export const mockNotificationEvents: Event[] = [
+  {
+    id: '1',
+    title: '테스트',
+    date: '2025-08-20',
+    startTime: '09:50',
+    endTime: '11:00',
+    notificationTime: 10,
+    repeat: {
+      type: 'none',
+      interval: 0,
+    },
+    description: '테스트 설명',
+    location: '테스트 장소',
+    category: '테스트 카테고리',
+  },
+
+  {
+    id: '2',
+    title: '테스트 2',
+    date: '2025-08-20',
+    startTime: '11:00',
+    endTime: '12:00',
+    notificationTime: 10,
+    repeat: {
+      type: 'none',
+      interval: 0,
+    },
+    description: '테스트 설명',
+    location: '테스트 장소',
+    category: '테스트 카테고리',
+  },
+  {
+    id: '3',
+    title: '테스트 3',
+    date: '2025-09-20',
+    startTime: '11:00',
+    endTime: '12:00',
+    notificationTime: 10,
+    repeat: {
+      type: 'none',
+      interval: 0,
+    },
+    description: 'asdasd',
+    location: 'asdasd 장소',
+    category: 'sadasdasdasd 카테고리',
+  },
+  {
+    id: '4',
+    title: '회의',
+    date: '2025-10-20',
+    startTime: '11:00',
+    endTime: '12:00',
+    notificationTime: 10,
+    repeat: {
+      type: 'none',
+      interval: 0,
+    },
+    description: 'asdasd',
+    location: 'asdasd 장소',
+    category: 'sadasdasdasd 카테고리',
+  },
+  {
+    id: '5',
+    title: '점심',
+    date: '2025-10-21',
+    startTime: '11:00',
+    endTime: '12:00',
+    notificationTime: 10,
+    repeat: {
+      type: 'none',
+      interval: 0,
+    },
+    description: 'asdasd',
+    location: 'asdasd 장소',
+    category: 'sadasdasdasd 카테고리',
   },
 ];
