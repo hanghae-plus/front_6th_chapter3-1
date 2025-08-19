@@ -5,6 +5,7 @@ import {
   isOverlapping,
   parseDateTime,
 } from '../../utils/eventOverlap';
+import { createEventData } from './factories/eventFactory';
 
 describe('parseDateTime', () => {
   it('2025-07-01 14:30을 정확한 Date 객체로 변환한다', () => {
@@ -27,11 +28,45 @@ describe('parseDateTime', () => {
 });
 
 describe('convertEventToDateRange', () => {
-  it('일반적인 이벤트를 올바른 시작 및 종료 시간을 가진 객체로 변환한다', () => {});
+  it('일반적인 이벤트를 올바른 시작 및 종료 시간을 가진 객체로 변환한다', () => {
+    const date = '2025-08-01';
+    const startTime = '09:00';
+    const endTime = '10:00';
+    const event = createEventData({
+      date,
+      endTime,
+      startTime,
+    });
 
-  it('잘못된 날짜 형식의 이벤트에 대해 Invalid Date를 반환한다', () => {});
+    expect(convertEventToDateRange(event)).toEqual({
+      start: new Date(`${date}T${startTime}`),
+      end: new Date(`${date}T${endTime}`),
+    });
+  });
 
-  it('잘못된 시간 형식의 이벤트에 대해 Invalid Date를 반환한다', () => {});
+  it('잘못된 날짜 형식의 이벤트에 대해 Invalid Date를 반환한다', () => {
+    const event = createEventData({
+      date: '20250801',
+      endTime: '10:00',
+      startTime: '09:00',
+    });
+    const convertedDateRange = convertEventToDateRange(event);
+
+    expect(convertedDateRange.start.getTime()).toBeNaN();
+    expect(convertedDateRange.end.getTime()).toBeNaN();
+  });
+
+  it('잘못된 시간 형식의 이벤트에 대해 Invalid Date를 반환한다', () => {
+    const event = createEventData({
+      date: '2025-08-01',
+      endTime: '1000',
+      startTime: '0900',
+    });
+    const convertedDateRange = convertEventToDateRange(event);
+
+    expect(convertedDateRange.start.getTime()).toBeNaN();
+    expect(convertedDateRange.end.getTime()).toBeNaN();
+  });
 });
 
 describe('isOverlapping', () => {
