@@ -28,6 +28,8 @@ describe('getDaysInMonth', () => {
     expect(getDaysInMonth(2025, 2)).toBe(28);
   });
 
+  // NOTE: 이 테스트는 불필요한 테스트라고 판단하였으나 최대한 현재 기능에 유사하게 구현하였습니다.
+  // 테스트를 불필요하다고 판단한 이유는, getDaysInMonth 함수가 JavaScript 내장 기능 테스트에 지나치지 않는다고 판단했기 때문입니다.
   describe('잘못된 월 입력 처리', () => {
     test('13월 입력 시 이전 달(12월)의 일수인 31일을 반환한다', () => {
       expect(getDaysInMonth(2025, 13)).toBe(31);
