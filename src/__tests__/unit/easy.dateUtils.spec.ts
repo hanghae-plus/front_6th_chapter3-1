@@ -1,3 +1,4 @@
+import { events } from '../../__mocks__/response/events.json' assert { type: 'json' };
 import { Event } from '../../types';
 import {
   fillZero,
@@ -11,7 +12,6 @@ import {
   isDateInRange,
   findNextLeapYear,
 } from '../../utils/dateUtils';
-import { events } from '../../__mocks__/response/events.json' assert { type: 'json' };
 
 describe('getDaysInMonth', () => {
   const date = new Date();
@@ -52,19 +52,134 @@ describe('getDaysInMonth', () => {
 });
 
 describe('getWeekDates', () => {
-  it('주중의 날짜(수요일)에 대해 올바른 주의 날짜들을 반환한다', () => {});
+  const cases = [
+    {
+      input: new Date('2025-08-20'),
+      expected: [
+        new Date('2025-08-17'),
+        new Date('2025-08-18'),
+        new Date('2025-08-19'),
+        new Date('2025-08-20'),
+        new Date('2025-08-21'),
+        new Date('2025-08-22'),
+        new Date('2025-08-23'),
+      ],
+    },
+    {
+      input: new Date('2025-08-17'),
+      expected: [
+        new Date('2025-08-17'),
+        new Date('2025-08-18'),
+        new Date('2025-08-19'),
+        new Date('2025-08-20'),
+        new Date('2025-08-21'),
+        new Date('2025-08-22'),
+        new Date('2025-08-23'),
+      ],
+    },
+    {
+      input: new Date('2025-08-23'),
+      expected: [
+        new Date('2025-08-17'),
+        new Date('2025-08-18'),
+        new Date('2025-08-19'),
+        new Date('2025-08-20'),
+        new Date('2025-08-21'),
+        new Date('2025-08-22'),
+        new Date('2025-08-23'),
+      ],
+    },
+    {
+      input: new Date('2024-02-29'),
+      expected: [
+        new Date('2024-02-25'),
+        new Date('2024-02-26'),
+        new Date('2024-02-27'),
+        new Date('2024-02-28'),
+        new Date('2024-02-29'),
+        new Date('2024-03-01'),
+        new Date('2024-03-02'),
+      ],
+    },
+    {
+      input: new Date('2025-12-29'),
+      expected: [
+        new Date('2025-12-28'),
+        new Date('2025-12-29'),
+        new Date('2025-12-30'),
+        new Date('2025-12-31'),
+        new Date('2026-01-01'),
+        new Date('2026-01-02'),
+        new Date('2026-01-03'),
+      ],
+    },
+    {
+      input: new Date('2025-01-01'),
+      expected: [
+        new Date('2024-12-29'),
+        new Date('2024-12-30'),
+        new Date('2024-12-31'),
+        new Date('2025-01-01'),
+        new Date('2025-01-02'),
+        new Date('2025-01-03'),
+        new Date('2025-01-04'),
+      ],
+    },
+    {
+      input: new Date('2025-07-30'),
+      expected: [
+        new Date('2025-07-27'),
+        new Date('2025-07-28'),
+        new Date('2025-07-29'),
+        new Date('2025-07-30'),
+        new Date('2025-07-31'),
+        new Date('2025-08-01'),
+        new Date('2025-08-02'),
+      ],
+    },
+  ];
 
-  it('주의 시작(월요일)에 대해 올바른 주의 날짜들을 반환한다', () => {});
+  it('주중의 날짜(수요일)에 대해 올바른 주의 날짜들을 반환한다', () => {
+    const { input, expected } = cases[0];
+    const result = getWeekDates(input);
+    expect(result).toStrictEqual(expected);
+  });
 
-  it('주의 끝(일요일)에 대해 올바른 주의 날짜들을 반환한다', () => {});
+  it('주의 시작(월요일)에 대해 올바른 주의 날짜들을 반환한다', () => {
+    const { input, expected } = cases[1];
+    const result = getWeekDates(input);
+    expect(result).toStrictEqual(expected);
+  });
 
-  it('연도를 넘어가는 주의 날짜를 정확히 처리한다 (연말)', () => {});
+  it('주의 끝(일요일)에 대해 올바른 주의 날짜들을 반환한다', () => {
+    const { input, expected } = cases[2];
+    const result = getWeekDates(input);
+    expect(result).toStrictEqual(expected);
+  });
 
-  it('연도를 넘어가는 주의 날짜를 정확히 처리한다 (연초)', () => {});
+  it('연도를 넘어가는 주의 날짜를 정확히 처리한다 (연말)', () => {
+    const { input, expected } = cases[4];
+    const result = getWeekDates(input);
+    expect(result).toStrictEqual(expected);
+  });
 
-  it('윤년의 2월 29일을 포함한 주를 올바르게 처리한다', () => {});
+  it('연도를 넘어가는 주의 날짜를 정확히 처리한다 (연초)', () => {
+    const { input, expected } = cases[5];
+    const result = getWeekDates(input);
+    expect(result).toStrictEqual(expected);
+  });
 
-  it('월의 마지막 날짜를 포함한 주를 올바르게 처리한다', () => {});
+  it('윤년의 2월 29일을 포함한 주를 올바르게 처리한다', () => {
+    const { input, expected } = cases[3];
+    const result = getWeekDates(input);
+    expect(result).toStrictEqual(expected);
+  });
+
+  it('월의 마지막 날짜를 포함한 주를 올바르게 처리한다', () => {
+    const { input, expected } = cases[6];
+    const result = getWeekDates(input);
+    expect(result).toStrictEqual(expected);
+  });
 });
 
 describe('getWeeksAtMonth', () => {
@@ -91,13 +206,12 @@ describe('getWeeksAtMonth', () => {
 });
 
 describe('getEventsForDay', () => {
-  const eventCases: Partial<Event>[] = [ 
-    { id: '1', title: 'A', date: '2025-10-01'},
-    { id: '2', title: 'B', date: '2025-10-01'},
-    { id: '3', title: 'C', date: '2025-11-16'},
-    { id: '4', title: 'D', date: '2025-11-17'},
-  ]
-
+  const eventCases: Partial<Event>[] = [
+    { id: '1', title: 'A', date: '2025-10-01' },
+    { id: '2', title: 'B', date: '2025-10-01' },
+    { id: '3', title: 'C', date: '2025-11-16' },
+    { id: '4', title: 'D', date: '2025-11-17' },
+  ];
 
   it('특정 날짜(1일)에 해당하는 이벤트만 정확히 반환한다', () => {
     const result = getEventsForDay(eventCases as Event[], 1);
@@ -109,10 +223,9 @@ describe('getEventsForDay', () => {
     const array: number[] = [...Array(31)].map((_, i) => i + 1);
 
     const removeSet = new Set(dates);
-    const removedArray = array.filter(item => !removeSet.has(item));
+    const removedArray = array.filter((item) => !removeSet.has(item));
 
-    const param = Math.floor(Math.random() * removedArray.length)
-
+    const param = Math.floor(Math.random() * removedArray.length);
     const result = getEventsForDay(events as Event[], param);
 
     expect(result).toEqual([]);
@@ -134,17 +247,67 @@ describe('getEventsForDay', () => {
 });
 
 describe('formatWeek', () => {
-  it('월의 중간 날짜에 대해 올바른 주 정보를 반환한다', () => {});
+  const cases = [
+    {
+      input: new Date('2025-08-20'),
+      expected: '2025년 8월 3주',
+    },
+    {
+      input: new Date('2025-08-04'),
+      expected: '2025년 8월 1주',
+    },
+    {
+      input: new Date('2025-08-31'),
+      expected: '2025년 9월 1주',
+    },
+    {
+      input: new Date('2025-12-28'),
+      expected: '2026년 1월 1주',
+    },
+    {
+      input: new Date('2024-02-29'),
+      expected: '2024년 2월 5주',
+    },
+    {
+      input: new Date('2025-02-28'),
+      expected: '2025년 2월 4주',
+    },
+  ];
+  it('8월의 셋째 주에 대해 올바른 주 정보를 반환한다', () => {
+    const { input, expected } = cases[0];
+    const result = formatWeek(input);
+    expect(result).toEqual(expected);
+  });
 
-  it('월의 첫 주에 대해 올바른 주 정보를 반환한다', () => {});
+  it('8월의 첫 주에 대해 올바른 주 정보를 반환한다', () => {
+    const { input, expected } = cases[1];
+    const result = formatWeek(input);
+    expect(result).toEqual(expected);
+  });
 
-  it('월의 마지막 주에 대해 올바른 주 정보를 반환한다', () => {});
+  it('8월의 마지막 주에 대해 올바른 주 정보를 반환한다', () => {
+    const { input, expected } = cases[2];
+    const result = formatWeek(input);
+    expect(result).toEqual(expected);
+  });
 
-  it('연도가 바뀌는 주에 대해 올바른 주 정보를 반환한다', () => {});
+  it('연도가 바뀌는 주에 대해 올바른 주 정보를 반환한다', () => {
+    const { input, expected } = cases[3];
+    const result = formatWeek(input);
+    expect(result).toEqual(expected);
+  });
 
-  it('윤년 2월의 마지막 주에 대해 올바른 주 정보를 반환한다', () => {});
+  it('윤년 2월의 마지막 주에 대해 올바른 주 정보를 반환한다', () => {
+    const { input, expected } = cases[4];
+    const result = formatWeek(input);
+    expect(result).toEqual(expected);
+  });
 
-  it('평년 2월의 마지막 주에 대해 올바른 주 정보를 반환한다', () => {});
+  it('평년 2월의 마지막 주에 대해 올바른 주 정보를 반환한다', () => {
+    const { input, expected } = cases[5];
+    const result = formatWeek(input);
+    expect(result).toEqual(expected);
+  });
 });
 
 describe('formatMonth', () => {
@@ -156,7 +319,6 @@ describe('formatMonth', () => {
 });
 
 describe('isDateInRange', () => {
-
   const startDate = new Date('2025-07-01');
   const endDate = new Date('2025-07-31');
 
@@ -198,19 +360,17 @@ describe('isDateInRange', () => {
 });
 
 describe('fillZero', () => {
-  
   const cases = [
-    {input: 5, formatted: '05', size: 2},
-    {input: 10, formatted: '10', size: 2},
-    {input: 3, formatted: '003', size: 3},
-    {input: 100, formatted: '100', size: 2},
-    {input: 0, formatted: '00', size: 2},
-    {input: 1, formatted: '00001', size: 5},
-    {input: 3.14, formatted: '03.14', size: 5},
-    {input: 7, formatted: '07'},
-    {input: 10000, formatted: '10000', size: 3},
-
-  ]
+    { input: 5, formatted: '05', size: 2 },
+    { input: 10, formatted: '10', size: 2 },
+    { input: 3, formatted: '003', size: 3 },
+    { input: 100, formatted: '100', size: 2 },
+    { input: 0, formatted: '00', size: 2 },
+    { input: 1, formatted: '00001', size: 5 },
+    { input: 3.14, formatted: '03.14', size: 5 },
+    { input: 7, formatted: '07' },
+    { input: 10000, formatted: '10000', size: 3 },
+  ];
 
   it("5를 2자리로 변환하면 '05'를 반환한다", () => {
     const { input, formatted, size } = cases[0];
@@ -249,19 +409,19 @@ describe('fillZero', () => {
   });
 
   it("소수점이 있는 3.14를 5자리로 변환하면 '03.14'를 반환한다", () => {
-    const { input, formatted, size } = cases[6]
+    const { input, formatted, size } = cases[6];
     const result = fillZero(input, size);
     expect(result).toEqual(formatted);
   });
 
   it('size 파라미터를 생략하면 기본값 2를 사용한다', () => {
-    const { input, formatted, size } = cases[7]
+    const { input, formatted, size } = cases[7];
     const result = fillZero(input, size);
     expect(result).toEqual(formatted);
   });
 
   it('value가 지정된 size보다 큰 자릿수를 가지면 원래 값을 그대로 반환한다', () => {
-    const { input, formatted, size } = cases[8]
+    const { input, formatted, size } = cases[8];
     const result = fillZero(input, size);
     expect(result).toEqual(formatted);
   });
@@ -269,11 +429,11 @@ describe('fillZero', () => {
 
 describe('formatDate', () => {
   const cases = [
-      { input: new Date('2024-01-1'), formatted: '2024-01-01' },
-      { input: new Date('2024/12/31'), formatted: '2024-12-31' },
-      { input: new Date('2024/2/29'), formatted: '2024-02-29' },
-      { input: new Date('2023.06.15'), formatted: '2023-06-15' }
-    ];
+    { input: new Date('2024-01-1'), formatted: '2024-01-01' },
+    { input: new Date('2024/12/31'), formatted: '2024-12-31' },
+    { input: new Date('2024/2/29'), formatted: '2024-02-29' },
+    { input: new Date('2023.06.15'), formatted: '2023-06-15' },
+  ];
   it('날짜를 YYYY-MM-DD 형식으로 포맷팅한다', () => {
     cases.forEach(({ input, formatted }) => {
       expect(formatDate(input)).toBe(formatted);
@@ -289,12 +449,12 @@ describe('formatDate', () => {
   });
 
   it('월이 한 자리 수일 때 앞에 0을 붙여 포맷팅한다', () => {
-    const {input ,formatted} = cases[2];
+    const { input, formatted } = cases[2];
     expect(formatDate(input)).toBe(formatted);
   });
 
   it('일이 한 자리 수일 때 앞에 0을 붙여 포맷팅한다', () => {
-     const {input ,formatted} = cases[0];
-     expect(formatDate(input)).toBe(formatted);
+    const { input, formatted } = cases[3];
+    expect(formatDate(input)).toBe(formatted);
   });
 });
