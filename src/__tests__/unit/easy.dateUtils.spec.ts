@@ -328,7 +328,7 @@ describe('formatWeek', () => {
   });
 
   it('월의 첫 주에 대해 올바른 주 정보를 반환한다', () => {
-    expect(formatWeek(new Date('2025-08-01'))).toEqual('2025년 7월 5주');
+    expect(formatWeek(new Date('2025-05-01'))).toBe('2025년 5월 1주');
   });
 
   it('월의 마지막 주에 대해 올바른 주 정보를 반환한다', () => {
