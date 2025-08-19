@@ -269,7 +269,7 @@ describe('검색 기능', () => {
     expect(list).toHaveTextContent('검색 결과가 없습니다.');
   });
 
-  it.only("'팀 회의'를 검색하면 해당 제목을 가진 일정이 리스트에 노출된다", async () => {
+  it("'팀 회의'를 검색하면 해당 제목을 가진 일정이 리스트에 노출된다", async () => {
     renderApp();
 
     const testData = {
@@ -295,7 +295,54 @@ describe('검색 기능', () => {
     expect(searchResultTitles.find((x) => x === testData.title)).toBe(testData.title);
   });
 
-  it('검색어를 지우면 모든 일정이 다시 표시되어야 한다', async () => {});
+  it.only('검색어를 지우면 모든 일정이 다시 표시되어야 한다', async () => {
+    renderApp();
+
+    const testData1 = {
+      title: '팀 회의',
+      date: '2025-08-15',
+      description: '설명 테스트 입니다.',
+      startTime: '12:30',
+      endTime: '15:30',
+      category: '개인',
+      location: '서울 은평구',
+      notificationTime: 120,
+    };
+    const testData2 = {
+      title: '스크럼',
+      date: '2025-08-16',
+      description: '데일리 스크럼 입니다.',
+      startTime: '13:30',
+      endTime: '14:00',
+      category: '업무',
+      location: '강남구',
+      notificationTime: 10,
+    };
+    const testData3 = {
+      title: '가족 회의',
+      date: '2025-08-17',
+      description: '가족 회의 입니다.',
+      startTime: '11:00',
+      endTime: '13:00',
+      category: '가족',
+      location: '집',
+      notificationTime: 1440,
+    };
+
+    await createEvent(testData1);
+    await createEvent(testData2);
+    await createEvent(testData3);
+
+    const allEventCount = screen.queryAllByTestId('event-card').length;
+
+    await userEvent.type(screen.getByLabelText('일정 검색'), '회의');
+    const searchedEventCount = screen.queryAllByTestId('event-card').length;
+    expect(allEventCount !== searchedEventCount).toBe(true);
+
+    await userEvent.clear(screen.getByLabelText('일정 검색'));
+    const finalEventCount = screen.queryAllByTestId('event-card').length;
+    expect(allEventCount === finalEventCount).toBe(true);
+  });
 });
 
 describe('일정 충돌', () => {
