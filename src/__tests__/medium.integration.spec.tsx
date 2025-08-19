@@ -74,7 +74,79 @@ describe('일정 CRUD 및 기본 기능', () => {
     expect(within(eventList).queryByText(/반복:/)).not.toBeInTheDocument();
   });
 
-  it('기존 일정의 세부 정보를 수정하고 변경사항이 정확히 반영된다', async () => {});
+  it('기존 일정의 세부 정보를 수정하고 변경사항이 정확히 반영된다', async () => {
+    // 2025년 10월로 mocking: MSW가 바라보는 event가 10월에 있기때문.
+    // 클릭액션으로 월을 옮기지않는이유? 이번달이 지나면 테스트코드를 다시 수정해야하기 때문.
+    const mockDate = new Date('2025-10-01');
+    vi.setSystemTime(mockDate);
+
+    const TestWrapper = ({ children }: { children: ReactNode }) => (
+      <ThemeProvider theme={createTheme()}>
+        <CssBaseline />
+        <SnackbarProvider>{children}</SnackbarProvider>
+      </ThemeProvider>
+    );
+
+    const user = userEvent.setup();
+
+    render(<App />, { wrapper: TestWrapper });
+
+    await screen.findByText('일정 로딩 완료!');
+
+    const eventList = screen.getByTestId('event-list');
+    expect(within(eventList).getByText('기존 회의')).toBeInTheDocument();
+
+    const editButton = within(eventList).getByLabelText('Edit event');
+    await user.click(editButton);
+
+    const updatedEvent = {
+      title: '수정된 회의',
+      date: '2025-10-20',
+      startTime: '15:00',
+      endTime: '16:30',
+      description: '수정된 설명',
+      location: '회의실 A',
+      category: '업무',
+    };
+
+    const titleField = screen.getByLabelText('제목');
+    const dateField = screen.getByLabelText('날짜');
+    const startTimeField = screen.getByLabelText('시작 시간');
+    const endTimeField = screen.getByLabelText('종료 시간');
+    const descriptionField = screen.getByLabelText('설명');
+    const locationField = screen.getByLabelText('위치');
+
+    await user.clear(titleField);
+    await user.clear(dateField);
+    await user.clear(startTimeField);
+    await user.clear(endTimeField);
+    await user.clear(descriptionField);
+    await user.clear(locationField);
+
+    await user.type(titleField, updatedEvent.title);
+    await user.type(dateField, updatedEvent.date);
+    await user.type(startTimeField, updatedEvent.startTime);
+    await user.type(endTimeField, updatedEvent.endTime);
+    await user.type(descriptionField, updatedEvent.description);
+    await user.type(locationField, updatedEvent.location);
+
+    await user.click(screen.getByTestId('event-submit-button'));
+
+    // 수정 성공 메시지 확인 (PUT 성공 후 토스트 확인)
+    await screen.findByText('일정이 수정되었습니다.');
+
+    // 수정된 데이터가 이벤트 리스트에 반영되었는지 확인
+    await within(eventList).findByText(updatedEvent.title);
+    expect(within(eventList).getByText(updatedEvent.date)).toBeInTheDocument();
+    expect(
+      within(eventList).getByText(`${updatedEvent.startTime} - ${updatedEvent.endTime}`)
+    ).toBeInTheDocument();
+    expect(within(eventList).getByText(updatedEvent.description)).toBeInTheDocument();
+    expect(within(eventList).getByText(updatedEvent.location)).toBeInTheDocument();
+    expect(within(eventList).getByText(`카테고리: ${updatedEvent.category}`)).toBeInTheDocument();
+
+    vi.useRealTimers();
+  });
 
   it('일정을 삭제하고 더 이상 조회되지 않는지 확인한다', async () => {});
 });
