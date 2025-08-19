@@ -73,10 +73,10 @@ describe('일정 CRUD 및 기본 기능', () => {
     render(<AppWrapper />);
 
     const user = userEvent.setup();
-    const editButton = await screen.findByRole('button', { name: 'Edit event' });
+    const editButtons = await screen.findAllByRole('button', { name: 'Edit event' });
     const locationInput = screen.getByLabelText('위치');
 
-    await user.click(editButton);
+    await user.click(editButtons[0]);
 
     expect(screen.getByRole('button', { name: '일정 수정' })).toBeInTheDocument();
     expect(screen.getByDisplayValue('기존 회의')).toBeInTheDocument();
