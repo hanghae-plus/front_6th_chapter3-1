@@ -11,6 +11,14 @@ import { server } from '../setupTests';
 import { Event } from '../types';
 import { resetMockEvents } from '../__mocks__/handlers';
 
+// 공통 테스트 래퍼 컴포넌트
+const TestWrapper = ({ children }: { children: ReactNode }) => (
+  <ThemeProvider theme={createTheme()}>
+    <CssBaseline />
+    <SnackbarProvider>{children}</SnackbarProvider>
+  </ThemeProvider>
+);
+
 describe('일정 CRUD 및 기본 기능', () => {
   beforeEach(() => {
     resetMockEvents();
@@ -18,13 +26,6 @@ describe('일정 CRUD 및 기본 기능', () => {
 
   it('입력한 새로운 일정 정보에 맞춰 모든 필드가 이벤트 리스트에 정확히 저장된다.', async () => {
     // ! HINT. event를 추가 제거하고 저장하는 로직을 잘 살펴보고, 만약 그대로 구현한다면 어떤 문제가 있을 지 고민해보세요.
-    const TestWrapper = ({ children }: { children: ReactNode }) => (
-      <ThemeProvider theme={createTheme()}>
-        <CssBaseline />
-        <SnackbarProvider>{children}</SnackbarProvider>
-      </ThemeProvider>
-    );
-
     const user = userEvent.setup();
 
     render(<App />, { wrapper: TestWrapper });
@@ -38,7 +39,9 @@ describe('일정 CRUD 및 기본 기능', () => {
       endTime: '16:00',
       description: '테스트용 회의',
       location: '회의실 A',
-      category: '업무',
+      category: '개인',
+      repeat: false,
+      notificationTime: '1분 전',
     };
 
     await user.type(screen.getByLabelText('제목'), newEvent.title);
@@ -47,10 +50,24 @@ describe('일정 CRUD 및 기본 기능', () => {
     await user.type(screen.getByLabelText('종료 시간'), newEvent.endTime);
     await user.type(screen.getByLabelText('설명'), newEvent.description);
     await user.type(screen.getByLabelText('위치'), newEvent.location);
-    // UI 컴포넌트(셀렉트박스, 체크박스)의 동작은 포스트 입력값이 저장되었는지 검증과는 별개로 다루는 것이 좋으므로 생략
-    // - 카테고리 Select: 기본값 '업무' 그대로 사용
-    // - 알림 설정 Select: 기본값 '10분 전' 그대로 사용
-    // - 반복 일정 Checkbox: 기본값 체크 상태 그대로 사용
+
+    // 카테고리 Select: '개인' 선택
+    const categorySelect = screen.getAllByRole('combobox')[0];
+    await user.click(categorySelect);
+    const personalOption = await screen.findByRole('option', { name: /개인/ });
+    await user.click(personalOption);
+
+    // 알림 설정 Select: '1분 전' 선택
+    const notificationSelect = screen.getAllByRole('combobox')[1];
+    await user.click(notificationSelect);
+    const oneMinuteOption = await screen.findByRole('option', { name: /1분 전/ });
+    await user.click(oneMinuteOption);
+
+    // 반복 일정 Checkbox: 체크 해제
+    const repeatCheckbox = screen.getByRole('checkbox', { name: '반복 일정' });
+    expect(repeatCheckbox).toBeChecked();
+    await user.click(repeatCheckbox);
+    expect(repeatCheckbox).not.toBeChecked();
 
     await user.click(screen.getByTestId('event-submit-button'));
 
@@ -70,8 +87,7 @@ describe('일정 CRUD 및 기본 기능', () => {
     expect(within(eventList).getByText(newEvent.description)).toBeInTheDocument();
     expect(within(eventList).getByText(newEvent.location)).toBeInTheDocument();
     expect(within(eventList).getByText(`카테고리: ${newEvent.category}`)).toBeInTheDocument();
-    expect(within(eventList).getByText('알림: 10분 전')).toBeInTheDocument();
-    expect(within(eventList).queryByText(/반복:/)).not.toBeInTheDocument();
+    expect(within(eventList).getByText(`알림: ${newEvent.notificationTime}`)).toBeInTheDocument();
   });
 
   it('기존 일정의 세부 정보를 수정하고 변경사항이 정확히 반영된다', async () => {
@@ -79,13 +95,6 @@ describe('일정 CRUD 및 기본 기능', () => {
     // 클릭액션으로 월을 옮기지않는이유? 이번달이 지나면 테스트코드를 다시 수정해야하기 때문.
     const mockDate = new Date('2025-10-01');
     vi.setSystemTime(mockDate);
-
-    const TestWrapper = ({ children }: { children: ReactNode }) => (
-      <ThemeProvider theme={createTheme()}>
-        <CssBaseline />
-        <SnackbarProvider>{children}</SnackbarProvider>
-      </ThemeProvider>
-    );
 
     const user = userEvent.setup();
 
@@ -152,13 +161,6 @@ describe('일정 CRUD 및 기본 기능', () => {
     const mockDate = new Date('2025-10-01');
     vi.setSystemTime(mockDate);
 
-    const TestWrapper = ({ children }: { children: ReactNode }) => (
-      <ThemeProvider theme={createTheme()}>
-        <CssBaseline />
-        <SnackbarProvider>{children}</SnackbarProvider>
-      </ThemeProvider>
-    );
-
     const user = userEvent.setup();
 
     render(<App />, { wrapper: TestWrapper });
@@ -168,6 +170,7 @@ describe('일정 CRUD 및 기본 기능', () => {
     const eventList = screen.getByTestId('event-list');
     expect(within(eventList).getByText('기존 회의')).toBeInTheDocument();
 
+    // Delete 버튼 클릭
     const deleteButton = within(eventList).getByLabelText('Delete event');
     await user.click(deleteButton);
 
@@ -176,9 +179,13 @@ describe('일정 CRUD 및 기본 기능', () => {
 
     // 삭제된 이벤트가 리스트에서 사라졌는지 확인
     expect(within(eventList).queryByText('기존 회의')).not.toBeInTheDocument();
+    expect(within(eventList).queryByText('기존 팀 미팅')).not.toBeInTheDocument();
+    expect(within(eventList).queryByText('회의실 B')).not.toBeInTheDocument();
 
+    // 이벤트 리스트가 비어있음을 확인 ("검색 결과가 없습니다." 표시)
     expect(within(eventList).getByText('검색 결과가 없습니다.')).toBeInTheDocument();
 
+    // 시스템 시간 복원
     vi.useRealTimers();
   });
 });
