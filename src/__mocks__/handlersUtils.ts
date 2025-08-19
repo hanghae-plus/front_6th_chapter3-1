@@ -1,5 +1,7 @@
+import { http, HttpResponse, PathParams } from 'msw';
 import { server } from '../setupTests';
-import { Event } from '../types';
+import { events } from '../__mocks__/response/events.json' assert { type: 'json' };
+import { Event, EventForm } from '../types';
 
 // ! Hard
 // ! 이벤트는 생성, 수정 되면 fetch를 다시 해 상태를 업데이트 합니다. 이를 위한 제어가 필요할 것 같은데요. 어떻게 작성해야 테스트가 병렬로 돌아도 안정적이게 동작할까요?
@@ -7,9 +9,72 @@ import { Event } from '../types';
 // 문제 예상 점 1 : 테스트 간 데이터 오염 현상
 // 문제 예상 점 2 : 병렬 동작 시 같은 배열을 수정하므로 매번 같은 결과가 아닌 예측 불가능한 결과를 발생시킴
 export const setupMockHandlerCreation = (initEvents = [] as Event[]) => {
-  server.use();
+  const mockEvents = [...initEvents];
+
+  server.use(
+    http.get('/api/events', () => {
+      return HttpResponse.json({ events: mockEvents });
+    }),
+
+    http.post<PathParams, EventForm>('/api/events', async ({ request }) => {
+      const newEvent = await request.json();
+      const id = `${mockEvents.length + 1}`;
+
+      mockEvents.push({ ...newEvent, id });
+
+      return HttpResponse.json({ ...newEvent, id });
+    })
+  );
 };
 
-export const setupMockHandlerUpdating = () => {};
+export const setupMockHandlerUpdating = () => {
+  const mockEvents = [...events];
 
-export const setupMockHandlerDeletion = () => {};
+  server.use(
+    http.get('/api/events', () => {
+      return HttpResponse.json({ events: mockEvents });
+    }),
+
+    http.put<{ id: string }, EventForm>('/api/events/:id', async ({ params, request }) => {
+      const { id } = params;
+      const updatedEvent = await request.json();
+      const eventIndex = mockEvents.findIndex((event) => event.id === id);
+
+      if (eventIndex === -1) {
+        return HttpResponse.json({ error: 'Event not found' }, { status: 404 });
+      }
+
+      const result = {
+        ...mockEvents[eventIndex],
+        ...updatedEvent,
+      };
+
+      mockEvents[eventIndex] = result;
+
+      return HttpResponse.json(result);
+    })
+  );
+};
+
+export const setupMockHandlerDeletion = () => {
+  let mockEvents = [...events];
+
+  server.use(
+    http.get('/api/events', () => {
+      return HttpResponse.json({ events: mockEvents });
+    }),
+
+    http.delete<{ id: string }>('/api/events/:id', async ({ params }) => {
+      const { id } = params;
+      const eventIndex = mockEvents.findIndex((event) => event.id === id);
+
+      if (eventIndex === -1) {
+        return HttpResponse.json({ error: 'Event not found' }, { status: 404 });
+      }
+
+      mockEvents = mockEvents.filter((event) => event.id !== id);
+
+      return HttpResponse.json({ events: mockEvents });
+    })
+  );
+};
