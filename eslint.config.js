@@ -1,7 +1,6 @@
 import js from '@eslint/js';
 import typescriptPlugin from '@typescript-eslint/eslint-plugin';
 import typescriptParser from '@typescript-eslint/parser';
-import prettierConfig from 'eslint-config-prettier';
 import cypressPlugin from 'eslint-plugin-cypress';
 import importPlugin from 'eslint-plugin-import';
 import prettierPlugin from 'eslint-plugin-prettier';
@@ -88,13 +87,6 @@ export default [
           'newlines-between': 'always',
         },
       ],
-
-      // Prettier rules
-      ...prettierConfig.rules,
-      'prettier/prettier': 'error',
-
-      // Storybook rules
-      ...storybookPlugin.configs.recommended.rules,
     },
   },
 
