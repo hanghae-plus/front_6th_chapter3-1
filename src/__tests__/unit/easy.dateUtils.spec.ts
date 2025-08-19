@@ -12,35 +12,143 @@ import {
 } from '../../utils/dateUtils';
 
 describe('getDaysInMonth', () => {
-  it('1월은 31일 수를 반환한다', () => {});
+  it('1월은 31일 수를 반환한다', () => {
+    expect(getDaysInMonth(2025, 1)).toBe(31);
+  });
 
-  it('4월은 30일 일수를 반환한다', () => {});
+  it('4월은 30일 일수를 반환한다', () => {
+    expect(getDaysInMonth(2025, 4)).toBe(30);
+  });
 
-  it('윤년의 2월에 대해 29일을 반환한다', () => {});
+  it('윤년의 2월에 대해 29일을 반환한다', () => {
+    expect(getDaysInMonth(2024, 2)).toBe(29);
+  });
 
-  it('평년의 2월에 대해 28일을 반환한다', () => {});
+  it('평년의 2월에 대해 28일을 반환한다', () => {
+    expect(getDaysInMonth(2025, 2)).toBe(28);
+  });
 
-  it('유효하지 않은 월에 대해 적절히 처리한다', () => {});
+  it('유효하지 않은 월에 대해 적절히 처리한다', () => {
+    //TODO : 애매함
+  });
 });
 
 describe('getWeekDates', () => {
-  it('주중의 날짜(수요일)에 대해 올바른 주의 날짜들을 반환한다', () => {});
+  describe('주중 날짜에 대한 올바른 처리', () => {
+    // 수요일
+    const wed = new Date('2025-08-20');
 
-  it('주의 시작(월요일)에 대해 올바른 주의 날짜들을 반환한다', () => {});
+    // 월요일
+    const mon = new Date('2025-08-18');
 
-  it('주의 끝(일요일)에 대해 올바른 주의 날짜들을 반환한다', () => {});
+    // 일요일
+    const sun = new Date('2025-08-17');
 
-  it('연도를 넘어가는 주의 날짜를 정확히 처리한다 (연말)', () => {});
+    // 이번주
+    const baseWeeks = [
+      '2025-08-17', // 일
+      '2025-08-18', // 월
+      '2025-08-19', // 화
+      '2025-08-20', // 수
+      '2025-08-21', // 목
+      '2025-08-22', // 금
+      '2025-08-23', // 토
+    ];
 
-  it('연도를 넘어가는 주의 날짜를 정확히 처리한다 (연초)', () => {});
+    it('주중의 날짜(수요일)에 대해 올바른 주의 날짜들을 반환한다', () => {
+      const result = getWeekDates(wed);
+      expect(result.map((date) => date.toISOString().split('T')[0])).toEqual(baseWeeks);
+    });
 
-  it('윤년의 2월 29일을 포함한 주를 올바르게 처리한다', () => {});
+    it('주의 시작(월요일)에 대해 올바른 주의 날짜들을 반환한다', () => {
+      const result = getWeekDates(mon);
+      expect(result.map((date) => date.toISOString().split('T')[0])).toEqual(baseWeeks);
+    });
 
-  it('월의 마지막 날짜를 포함한 주를 올바르게 처리한다', () => {});
+    it('주의 끝(일요일)에 대해 올바른 주의 날짜들을 반환한다', () => {
+      const result = getWeekDates(sun);
+      expect(result.map((date) => date.toISOString().split('T')[0])).toEqual(baseWeeks);
+    });
+  });
+  describe('연도를 넘어가는 날짜 처리', () => {
+    //연말
+    const yearLastDay = new Date('2025-12-31');
+    //연초
+    const yearFirstDay = new Date('2026-01-01');
+    // 연말 마지막 주 이면서 연초 첫 번째 주
+    const yearLastWeek = [
+      '2025-12-28',
+      '2025-12-29',
+      '2025-12-30',
+      '2025-12-31',
+      '2026-01-01',
+      '2026-01-02',
+      '2026-01-03',
+    ];
+
+    it('연도를 넘어가는 주의 날짜를 정확히 처리한다 (연말)', () => {
+      const result = getWeekDates(yearLastDay);
+      expect(result.map((date) => date.toISOString().split('T')[0])).toEqual(yearLastWeek);
+    });
+
+    it('연도를 넘어가는 주의 날짜를 정확히 처리한다 (연초)', () => {
+      const result = getWeekDates(yearFirstDay);
+      expect(result.map((date) => date.toISOString().split('T')[0])).toEqual(yearLastWeek);
+    });
+  });
+
+  describe('특수한 달 처리', () => {
+    it('윤년의 2월 29일을 포함한 주를 올바르게 처리한다', () => {
+      // 윤년의 2월 29일
+      const leapDay = new Date('2024-02-29');
+      // 윤년의 2월 29일이 속한 주
+      const leapWeek = [
+        '2024-02-25',
+        '2024-02-26',
+        '2024-02-27',
+        '2024-02-28',
+        '2024-02-29',
+        '2024-03-01',
+        '2024-03-02',
+      ];
+
+      const result = getWeekDates(leapDay);
+      expect(result.map((date) => date.toISOString().split('T')[0])).toEqual(leapWeek);
+    });
+
+    it('월의 마지막 날짜를 포함한 주를 올바르게 처리한다', () => {
+      const monthLastDay = new Date('2025-08-31');
+      const monthLastWeek = [
+        '2025-08-31',
+        '2025-09-01',
+        '2025-09-02',
+        '2025-09-03',
+        '2025-09-04',
+        '2025-09-05',
+        '2025-09-06',
+      ];
+      const result = getWeekDates(monthLastDay);
+      expect(result.map((date) => date.toISOString().split('T')[0])).toEqual(monthLastWeek);
+    });
+  });
 });
 
 describe('getWeeksAtMonth', () => {
-  it('2025년 7월 1일의 올바른 주 정보를 반환해야 한다', () => {});
+  // AS IS : "2025년 7월 1일의 주 정보를 반환한다" (함수 스펙과 어긋남)
+  // TO BE : "2025년 7월 중 임의의 날짜를 입력하면, 7월 전체를 주 단위 배열로 반환한다"
+  it('2025년 7월 중 임의의 날짜를 입력하면, 7월 전체를 주 단위 배열로 반환한다', () => {
+    const day = new Date('2025-07-01');
+    const week = [
+      [null, null, 1, 2, 3, 4, 5],
+      [6, 7, 8, 9, 10, 11, 12],
+      [13, 14, 15, 16, 17, 18, 19],
+      [20, 21, 22, 23, 24, 25, 26],
+      [27, 28, 29, 30, 31, null, null],
+    ];
+    const result = getWeeksAtMonth(day);
+
+    expect(result).toEqual(week);
+  });
 });
 
 describe('getEventsForDay', () => {
