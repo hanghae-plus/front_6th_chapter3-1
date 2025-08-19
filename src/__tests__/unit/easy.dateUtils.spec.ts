@@ -105,7 +105,10 @@ describe('getWeekDates', () => {
 });
 
 describe('getWeeksAtMonth', () => {
-  it('2025년 7월 1일의 올바른 주 정보를 반환해야 한다', () => {});
+  it('2025년 7월 1일의 올바른 주 정보를 반환해야 한다', () => {
+    const weeks = getWeeksAtMonth(new Date('2025-07-01'));
+    expect(weeks[0]).toContainEqual(1);
+  });
 });
 
 describe('getEventsForDay', () => {
