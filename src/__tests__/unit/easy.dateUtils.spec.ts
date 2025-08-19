@@ -10,6 +10,7 @@ import {
   getWeeksAtMonth,
   isDateInRange,
 } from '../../utils/dateUtils';
+import { createEventData } from './factories/eventFactory';
 
 describe('getDaysInMonth 주어진 월의 일수를 반환한다.', () => {
   // 변경전: 1월은 31일 수를 반환한다
@@ -284,13 +285,53 @@ describe('getWeeksAtMonth', () => {
 });
 
 describe('getEventsForDay', () => {
-  it('특정 날짜(1일)에 해당하는 이벤트만 정확히 반환한다', () => {});
+  it('특정 날짜(1일)에 해당하는 이벤트만 정확히 반환한다', () => {
+    const specificEvents: Event[] = [
+      createEventData({
+        date: '2025-01-01',
+      }),
+      createEventData({
+        date: '2025-02-01',
+      }),
+      createEventData({
+        date: '2026-10-01',
+      }),
+    ];
+    const events: Event[] = [
+      ...specificEvents,
+      createEventData({ date: '2025-06-15' }),
+      createEventData({ date: '2025-12-31' }),
+    ];
 
-  it('해당 날짜에 이벤트가 없을 경우 빈 배열을 반환한다', () => {});
+    expect(getEventsForDay(events, 1)).toEqual(specificEvents);
+  });
 
-  it('날짜가 0일 경우 빈 배열을 반환한다', () => {});
+  it('해당 날짜에 이벤트가 없을 경우 빈 배열을 반환한다', () => {
+    const events: Event[] = [
+      createEventData({ date: '2025-06-15' }),
+      createEventData({ date: '2025-12-31' }),
+    ];
 
-  it('날짜가 32일 이상인 경우 빈 배열을 반환한다', () => {});
+    expect(getEventsForDay(events, 1)).toEqual([]);
+  });
+
+  it('날짜가 0일 경우 빈 배열을 반환한다', () => {
+    const events: Event[] = [
+      createEventData({ date: '2025-06-15' }),
+      createEventData({ date: '2025-12-31' }),
+    ];
+
+    expect(getEventsForDay(events, 0)).toEqual([]);
+  });
+
+  it('날짜가 32일 이상인 경우 빈 배열을 반환한다', () => {
+    const events: Event[] = [
+      createEventData({ date: '2025-06-15' }),
+      createEventData({ date: '2025-12-31' }),
+    ];
+
+    expect(getEventsForDay(events, 32)).toEqual([]);
+  });
 });
 
 describe('formatWeek', () => {
