@@ -12,15 +12,29 @@ import {
 } from '../../utils/dateUtils';
 
 describe('getDaysInMonth', () => {
-  it('1월은 31일 수를 반환한다', () => {});
+  it('1월은 31일 수를 반환한다', () => {
+    expect(getDaysInMonth(2025, 1)).toBe(31);
+  });
 
-  it('4월은 30일 일수를 반환한다', () => {});
+  it('4월은 30일 일수를 반환한다', () => {
+    expect(getDaysInMonth(2025, 4)).toBe(30);
+  });
 
-  it('윤년의 2월에 대해 29일을 반환한다', () => {});
+  it('윤년의 2월에 대해 29일을 반환한다', () => {
+    // 윤년 = 1년이 366일이 되는 해
+    // 윤년은 4년마다 한 번씩 온다.
+    expect(getDaysInMonth(2024, 2)).toBe(29);
+  });
 
-  it('평년의 2월에 대해 28일을 반환한다', () => {});
+  it('평년의 2월에 대해 28일을 반환한다', () => {
+    expect(getDaysInMonth(2025, 2)).toBe(28);
+  });
 
-  it('유효하지 않은 월에 대해 적절히 처리한다', () => {});
+  it('유효하지 않은 월을 입력할 경우 자동으로 이월하여 올바른 월의 일수를 반환한다', () => {
+    expect(getDaysInMonth(2025, 13)).toBe(31); // 2026년 1월의 일수
+    expect(getDaysInMonth(2025, 25)).toBe(31); // 2027년 1월의 일수
+    expect(getDaysInMonth(2025, -2)).toBe(31); // 2024년 10월의 일수
+  });
 });
 
 describe('getWeekDates', () => {
