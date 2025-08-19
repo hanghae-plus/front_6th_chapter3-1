@@ -40,7 +40,6 @@ describe('일정 CRUD 및 기본 기능', () => {
       description: '테스트용 회의',
       location: '회의실 A',
       category: '개인',
-      repeat: false,
       notificationTime: '1분 전',
     };
 
@@ -115,7 +114,8 @@ describe('일정 CRUD 및 기본 기능', () => {
       endTime: '16:30',
       description: '수정된 설명',
       location: '회의실 A',
-      category: '업무',
+      category: '개인',
+      notificationTime: '1분 전',
     };
 
     const titleField = screen.getByLabelText('제목');
@@ -139,6 +139,21 @@ describe('일정 CRUD 및 기본 기능', () => {
     await user.type(descriptionField, updatedEvent.description);
     await user.type(locationField, updatedEvent.location);
 
+    const categorySelect = screen.getAllByRole('combobox')[0];
+    await user.click(categorySelect);
+    const personalOption = await screen.findByRole('option', { name: /개인/ });
+    await user.click(personalOption);
+
+    const notificationSelect = screen.getAllByRole('combobox')[1];
+    await user.click(notificationSelect);
+    const oneMinuteOption = await screen.findByRole('option', { name: /1분 전/ });
+    await user.click(oneMinuteOption);
+
+    const repeatCheckbox = screen.getByRole('checkbox', { name: '반복 일정' });
+    expect(repeatCheckbox).not.toBeChecked();
+    await user.click(repeatCheckbox);
+    expect(repeatCheckbox).toBeChecked();
+
     await user.click(screen.getByTestId('event-submit-button'));
 
     // 수정 성공 메시지 확인 (PUT 성공 후 토스트 확인)
@@ -153,6 +168,9 @@ describe('일정 CRUD 및 기본 기능', () => {
     expect(within(eventList).getByText(updatedEvent.description)).toBeInTheDocument();
     expect(within(eventList).getByText(updatedEvent.location)).toBeInTheDocument();
     expect(within(eventList).getByText(`카테고리: ${updatedEvent.category}`)).toBeInTheDocument();
+    expect(
+      within(eventList).getByText(`알림: ${updatedEvent.notificationTime}`)
+    ).toBeInTheDocument();
 
     vi.useRealTimers();
   });
