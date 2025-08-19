@@ -295,7 +295,7 @@ describe('검색 기능', () => {
     expect(searchResultTitles.find((x) => x === testData.title)).toBe(testData.title);
   });
 
-  it.only('검색어를 지우면 모든 일정이 다시 표시되어야 한다', async () => {
+  it('검색어를 지우면 모든 일정이 다시 표시되어야 한다', async () => {
     renderApp();
 
     const testData1 = {
@@ -346,7 +346,40 @@ describe('검색 기능', () => {
 });
 
 describe('일정 충돌', () => {
-  it('겹치는 시간에 새 일정을 추가할 때 경고가 표시된다', async () => {});
+  it.only('겹치는 시간에 새 일정을 추가할 때 경고가 표시된다', async () => {
+    renderApp();
+
+    const testData = {
+      title: '팀 회의',
+      date: '2025-08-15',
+      description: '설명 테스트 입니다.',
+      startTime: '12:30',
+      endTime: '15:30',
+      category: '개인',
+      location: '서울 은평구',
+      notificationTime: 120,
+    };
+    const testDataCopy = {
+      title: '팀 회의 Copy',
+      date: '2025-08-15',
+      description: '설명 테스트 입니다.',
+      startTime: '12:30',
+      endTime: '15:30',
+      category: '개인',
+      location: '서울 은평구',
+      notificationTime: 120,
+    };
+
+    await createEvent(testData);
+    await createEvent(testDataCopy);
+
+    expect(screen.getByText('일정 겹침 경고')).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        `${testData.title} (${testData.date} ${testData.startTime}-${testData.endTime})`
+      )
+    ).toBeInTheDocument();
+  });
 
   it('기존 일정의 시간을 수정하여 충돌이 발생하면 경고가 노출된다', async () => {});
 });
