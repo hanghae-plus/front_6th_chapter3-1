@@ -12,31 +12,186 @@ import {
 } from '../../utils/dateUtils';
 
 describe('getDaysInMonth', () => {
-  it('1월은 31일 수를 반환한다', () => {});
+  it('1월은 31일 수를 반환한다', () => {
+    expect(getDaysInMonth(2025, 1)).toBe(31);
+  });
 
-  it('4월은 30일 일수를 반환한다', () => {});
+  it('4월은 30일 일수를 반환한다', () => {
+    expect(getDaysInMonth(2025, 4)).toBe(30);
+  });
 
-  it('윤년의 2월에 대해 29일을 반환한다', () => {});
+  it('윤년의 2월에 대해 29일을 반환한다', () => {
+    expect(getDaysInMonth(2024, 2)).toBe(29);
+  });
 
-  it('평년의 2월에 대해 28일을 반환한다', () => {});
+  it('평년의 2월에 대해 28일을 반환한다', () => {
+    expect(getDaysInMonth(2025, 2)).toBe(28);
+  });
 
-  it('유효하지 않은 월에 대해 적절히 처리한다', () => {});
+  it('유효하지 않은 월에 대해 적절히 처리한다', () => {
+    expect(getDaysInMonth(2025, 0)).toBe(31);
+    expect(getDaysInMonth(2025, 13)).toBe(31);
+  });
 });
 
 describe('getWeekDates', () => {
-  it('주중의 날짜(수요일)에 대해 올바른 주의 날짜들을 반환한다', () => {});
+  it('주중의 날짜(수요일)에 대해 올바른 주의 날짜들을 반환한다', () => {
+    // 2025년 8월 20일 (수요일)
+    const wednesday = new Date(2025, 7, 20);
+    const weekDates = getWeekDates(wednesday);
 
-  it('주의 시작(월요일)에 대해 올바른 주의 날짜들을 반환한다', () => {});
+    // 1. 총 7일
+    expect(weekDates).toHaveLength(7);
 
-  it('주의 끝(일요일)에 대해 올바른 주의 날짜들을 반환한다', () => {});
+    // 2. 일요일 (2025-08-17)
+    expect(weekDates[0].getDate()).toBe(17);
+    expect(weekDates[0].getDay()).toBe(0);
 
-  it('연도를 넘어가는 주의 날짜를 정확히 처리한다 (연말)', () => {});
+    // 3. 수요일 (2025-08-20)
+    expect(weekDates[3].getDate()).toBe(20);
+    expect(weekDates[3].getDay()).toBe(3);
 
-  it('연도를 넘어가는 주의 날짜를 정확히 처리한다 (연초)', () => {});
+    // 4. 토요일 (2025-08-23)
+    expect(weekDates[6].getDate()).toBe(23);
+    expect(weekDates[6].getDay()).toBe(6);
 
-  it('윤년의 2월 29일을 포함한 주를 올바르게 처리한다', () => {});
+    // 5. 각 날짜 사이는 하루
+    for (let i = 0; i < 6; i++) {
+      const currentDate = weekDates[i];
+      const nextDate = weekDates[i + 1];
+      const dayDifference = nextDate.getTime() - currentDate.getTime();
+      expect(dayDifference).toBe(24 * 60 * 60 * 1000);
+    }
+  });
 
-  it('월의 마지막 날짜를 포함한 주를 올바르게 처리한다', () => {});
+  it('주의 시작(월요일)에 대해 올바른 주의 날짜들을 반환한다', () => {
+    // 2025년 8월 18일 (월요일)
+    const monday = new Date(2025, 7, 18);
+    const weekDates = getWeekDates(monday);
+
+    // 1. 총 7일
+    expect(weekDates).toHaveLength(7);
+
+    // 2. 일요일 (2025-08-17) - 주의 시작
+    expect(weekDates[0].getDate()).toBe(17);
+    expect(weekDates[0].getDay()).toBe(0);
+
+    // 3. 월요일 (2025-08-18) - 입력한 날짜
+    expect(weekDates[1].getDate()).toBe(18);
+    expect(weekDates[1].getDay()).toBe(1);
+
+    // 4. 토요일 (2025-08-23) - 주의 끝
+    expect(weekDates[6].getDate()).toBe(23);
+    expect(weekDates[6].getDay()).toBe(6);
+  });
+
+  it('주의 끝(일요일)에 대해 올바른 주의 날짜들을 반환한다', () => {
+    // 2025년 8월 17일 (일요일)
+    const sunday = new Date(2025, 7, 17);
+    const weekDates = getWeekDates(sunday);
+
+    // 1. 총 7일
+    expect(weekDates).toHaveLength(7);
+
+    // 2. 일요일 (2025-08-17)
+    expect(weekDates[0].getDate()).toBe(17);
+    expect(weekDates[0].getDay()).toBe(0);
+
+    // 3. 토요일 (2025-08-23)
+    expect(weekDates[6].getDate()).toBe(23);
+    expect(weekDates[6].getDay()).toBe(6);
+  });
+
+  it('연도를 넘어가는 주의 날짜를 정확히 처리한다 (연말)', () => {
+    // 2024년 12월 30일 (월요일) - 주가 2025년으로 넘어감
+    const monday = new Date(2024, 11, 30);
+    const weekDates = getWeekDates(monday);
+
+    // 1. 총 7일
+    expect(weekDates).toHaveLength(7);
+
+    // 2. 일요일 (2024-12-29)
+    expect(weekDates[0].getDate()).toBe(29);
+    expect(weekDates[0].getFullYear()).toBe(2024);
+    expect(weekDates[0].getDay()).toBe(0);
+
+    // 3. 월요일 (2024-12-30)
+    expect(weekDates[1].getDate()).toBe(30);
+    expect(weekDates[1].getFullYear()).toBe(2024);
+    expect(weekDates[1].getDay()).toBe(1);
+
+    // 4. 토요일 (2025-01-04)
+    expect(weekDates[6].getDate()).toBe(4);
+    expect(weekDates[6].getFullYear()).toBe(2025);
+    expect(weekDates[6].getDay()).toBe(6);
+  });
+
+  it('연도를 넘어가는 주의 날짜를 정확히 처리한다 (연초)', () => {
+    // 2025년 1월 1일 (수요일) - 주가 2024년에서 시작
+    const wednesday = new Date(2025, 0, 1);
+    const weekDates = getWeekDates(wednesday);
+
+    // 1. 총 7일
+    expect(weekDates).toHaveLength(7);
+
+    // 2. 일요일 (2024-12-29)
+    expect(weekDates[0].getDate()).toBe(29);
+    expect(weekDates[0].getFullYear()).toBe(2024);
+    expect(weekDates[0].getDay()).toBe(0);
+
+    // 3. 수요일 (2025-01-01)
+    expect(weekDates[3].getDate()).toBe(1);
+    expect(weekDates[3].getFullYear()).toBe(2025);
+    expect(weekDates[3].getDay()).toBe(3);
+
+    // 4. 토요일 (2025-01-04)
+    expect(weekDates[6].getDate()).toBe(4);
+    expect(weekDates[6].getFullYear()).toBe(2025);
+    expect(weekDates[6].getDay()).toBe(6);
+  });
+
+  it('윤년의 2월 29일을 포함한 주를 올바르게 처리한다', () => {
+    // 2024년 2월 29일 (목요일) - 윤년
+    const thursday = new Date(2024, 1, 29);
+    const weekDates = getWeekDates(thursday);
+
+    // 1. 총 7일
+    expect(weekDates).toHaveLength(7);
+
+    // 2. 일요일 (2024-02-25)
+    expect(weekDates[0].getDate()).toBe(25);
+    expect(weekDates[0].getMonth()).toBe(1); // 2월
+    expect(weekDates[0].getDay()).toBe(0);
+
+    // 3. 목요일 (2024-02-29) - 윤년의 2월 29일
+    expect(weekDates[4].getDate()).toBe(29);
+    expect(weekDates[4].getMonth()).toBe(1); // 2월
+    expect(weekDates[4].getDay()).toBe(4);
+
+    // 4. 토요일 (2024-03-02)
+    expect(weekDates[6].getDate()).toBe(2);
+    expect(weekDates[6].getMonth()).toBe(2); // 3월
+    expect(weekDates[6].getDay()).toBe(6);
+  });
+
+  it('월의 마지막 날짜를 포함한 주를 올바르게 처리한다', () => {
+    // 2025년 8월 31일 (일요일) - 월의 마지막 날
+    const sunday = new Date(2025, 7, 31);
+    const weekDates = getWeekDates(sunday);
+
+    // 1. 총 7일
+    expect(weekDates).toHaveLength(7);
+
+    // 2. 일요일 (2025-08-31) - 8월의 마지막 날
+    expect(weekDates[0].getDate()).toBe(31);
+    expect(weekDates[0].getMonth()).toBe(7); // 8월
+    expect(weekDates[0].getDay()).toBe(0);
+
+    // 3. 토요일 (2025-09-06) - 다음 달로 넘어감
+    expect(weekDates[6].getDate()).toBe(6);
+    expect(weekDates[6].getMonth()).toBe(8); // 9월
+    expect(weekDates[6].getDay()).toBe(6);
+  });
 });
 
 describe('getWeeksAtMonth', () => {
