@@ -26,6 +26,10 @@ export function getWeekDates(date: Date): Date[] {
   return weekDates;
 }
 
+/**
+ * 주어진 날짜가 속한 월의 주별 달력 배열을 반환합니다.
+ * 각 주는 7개 요소로 구성되며, 해당 월에 속하지 않는 날짜는 null로 표시됩니다.
+ */
 export function getWeeksAtMonth(currentDate: Date) {
   const year = currentDate.getFullYear();
   const month = currentDate.getMonth();
@@ -54,10 +58,16 @@ export function getWeeksAtMonth(currentDate: Date) {
   return weeks;
 }
 
+/**
+ * 이벤트 배열에서 특정 일자에 해당하는 이벤트들을 필터링하여 반환합니다.
+ */
 export function getEventsForDay(events: Event[], date: number): Event[] {
   return events.filter((event) => new Date(event.date).getDate() === date);
 }
 
+/**
+ * 주어진 날짜가 속한 주차 정보를 "YYYY년 M월 N주" 형식으로 반환합니다.
+ */
 export function formatWeek(targetDate: Date) {
   const dayOfWeek = targetDate.getDay();
   const diffToThursday = 4 - dayOfWeek;
@@ -87,6 +97,9 @@ export function formatMonth(date: Date): string {
   return `${year}년 ${month}월`;
 }
 
+/**
+ * Date 객체에서 시간 정보를 제거하고 날짜만 남깁니다.
+ */
 const stripTime = (d: Date) => new Date(d.getFullYear(), d.getMonth(), d.getDate());
 
 /**
@@ -100,10 +113,17 @@ export function isDateInRange(date: Date, rangeStart: Date, rangeEnd: Date): boo
   return normalizedDate >= normalizedStart && normalizedDate <= normalizedEnd;
 }
 
+/**
+ * 숫자를 지정된 자릿수만큼 0으로 채워서 문자열로 반환합니다.
+ */
 export function fillZero(value: number, size = 2) {
   return String(value).padStart(size, '0');
 }
 
+/**
+ * 날짜를 YYYY-MM-DD 형식의 문자열로 포맷팅합니다.
+ * day 매개변수가 제공되면 해당 일자로 대체합니다.
+ */
 export function formatDate(currentDate: Date, day?: number) {
   return [
     currentDate.getFullYear(),
