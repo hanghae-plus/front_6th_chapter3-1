@@ -251,20 +251,20 @@ describe('getEventsForDay', () => {
     expect(Array.isArray(result)).toBe(true);
   });
 
-  it('날짜가 0일 경우 빈 배열을 반환한다', () => {
-    const result = getEventsForDay(mockEvents, 0);
+  it('정상적인 날짜가 아닐 경우 빈 배열을 반환한다', () => {
+    // 0일
+    const result1 = getEventsForDay(mockEvents, 0);
 
-    expect(result).toEqual([]);
-    expect(result).toHaveLength(0);
-    expect(Array.isArray(result)).toBe(true);
-  });
+    expect(result1).toEqual([]);
+    expect(result1).toHaveLength(0);
+    expect(Array.isArray(result1)).toBe(true);
 
-  it('날짜가 32일 이상인 경우 빈 배열을 반환한다', () => {
-    const result = getEventsForDay(mockEvents, 32);
+    // 40일
+    const result2 = getEventsForDay(mockEvents, 40);
 
-    expect(result).toEqual([]);
-    expect(result).toHaveLength(0);
-    expect(Array.isArray(result)).toBe(true);
+    expect(result2).toEqual([]);
+    expect(result2).toHaveLength(0);
+    expect(Array.isArray(result2)).toBe(true);
   });
 });
 

@@ -153,8 +153,22 @@ describe('getFilteredEvents', () => {
     expect(result[0].title).not.toContain('워크샵');
   });
 
-  // 상위의 주간 뷰, 월간 뷰 테스트와 동일
-  // it('검색어가 없을 때 모든 이벤트를 반환한다', () => {});
+  // 상위의 주간 뷰, 월간 뷰 테스트와 동일하여 삭제
+  // it('검색어가 없을 때 모든 이벤트를 반환한다', () => {
+  //   const currentDate = new Date('2025-07-01');
+
+  //   const result = getFilteredEvents(mockEvents, '', currentDate, 'week');
+
+  //   expect(result).toHaveLength(3);
+
+  //   const eventIds = result.map((event) => event.id);
+  //   expect(eventIds).toContain('1');
+  //   expect(eventIds).toContain('2');
+  //   expect(eventIds).toContain('6');
+  //   expect(eventIds).not.toContain('3');
+  //   expect(eventIds).not.toContain('4');
+  //   expect(eventIds).not.toContain('5');
+  // });
 
   it('검색어가 대소문자를 구분하지 않고 작동한다', () => {
     const testCase = ['a', 'A'];
