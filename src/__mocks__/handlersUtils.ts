@@ -28,6 +28,34 @@ export const setupMockHandlerCreation = (initEvents = [] as Event[]) => {
   };
 };
 
-export const setupMockHandlerUpdating = () => {};
+export const setupMockHandlerUpdating = (initEvents = [] as Event[]) => {
+  let currentEvents = [...initEvents];
 
-export const setupMockHandlerDeletion = () => {};
+  return {
+    getHandler: http.get('/api/events', () => {
+      return HttpResponse.json({ events: currentEvents });
+    }),
+
+    putHandler: http.put('/api/events/:id', async ({ params, request }) => {
+      const { id } = params;
+      const updatedEvent = (await request.json()) as Event;
+      const index = currentEvents.findIndex((event) => event.id === id);
+
+      if (index === -1) {
+        return HttpResponse.json({ error: 'Event not found' }, { status: 404 });
+      }
+
+      currentEvents[index] = { ...currentEvents[index], ...updatedEvent };
+      return HttpResponse.json(currentEvents[index]);
+    }),
+
+    getCurrentEvents: () => [...currentEvents],
+    setCurrentEvents: (events: Event[]) => {
+      currentEvents = [...events];
+    },
+  };
+};
+
+export const setupMockHandlerDeletion = () => {
+  
+};
