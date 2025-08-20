@@ -1,6 +1,6 @@
 import CssBaseline from '@mui/material/CssBaseline';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import { render, screen, within } from '@testing-library/react';
+import { render, screen, within, cleanup } from '@testing-library/react';
 import {
   // UserEvent,
   userEvent,
@@ -28,11 +28,16 @@ const TestWrapper = ({ children }: { children: ReactNode }) => (
   </ThemeProvider>
 );
 
-describe('일정 CRUD 및 기본 기능', () => {
-  beforeEach(() => {
-    resetMockEvents();
-  });
+beforeEach(() => {
+  resetMockEvents();
+});
 
+afterEach(() => {
+  vi.useRealTimers();
+  cleanup();
+});
+
+describe('일정 CRUD 및 기본 기능', () => {
   it('입력한 새로운 일정 정보에 맞춰 모든 필드가 이벤트 리스트에 정확히 저장된다.', async () => {
     // ! HINT. event를 추가 제거하고 저장하는 로직을 잘 살펴보고, 만약 그대로 구현한다면 어떤 문제가 있을 지 고민해보세요.
     const user = userEvent.setup();
@@ -112,8 +117,6 @@ describe('일정 CRUD 및 기본 기능', () => {
 
     // 수정된 데이터가 이벤트 리스트에 반영되었는지 확인
     await verifyEventInList(eventList, updatedEvent);
-
-    vi.useRealTimers();
   });
 
   it('일정을 삭제하고 더 이상 조회되지 않는지 확인한다', async () => {
@@ -143,9 +146,6 @@ describe('일정 CRUD 및 기본 기능', () => {
 
     // 이벤트 리스트가 비어있음을 확인 ("검색 결과가 없습니다." 표시)
     expect(within(eventList).getByText('검색 결과가 없습니다.')).toBeInTheDocument();
-
-    // 시스템 시간 복원
-    vi.useRealTimers();
   });
 });
 
@@ -188,8 +188,6 @@ describe('일정 뷰', () => {
 
     // 기존 일정들이 표시되어야 함
     expect(within(calendarView).getByText('기존 회의')).toBeInTheDocument();
-
-    vi.useRealTimers();
   });
 
   it('월별 뷰에 일정이 없으면, 일정이 표시되지 않아야 한다.', async () => {
@@ -203,8 +201,6 @@ describe('일정 뷰', () => {
     const calendarView = screen.getByTestId('month-view');
 
     expect(within(calendarView).queryByText('기존 회의')).not.toBeInTheDocument();
-
-    vi.useRealTimers();
   });
 
   it('월별 뷰에 일정이 정확히 표시되는지 확인한다', async () => {
@@ -220,8 +216,6 @@ describe('일정 뷰', () => {
 
     // 기존 일정들이 표시되어야 함
     expect(within(calendarView).getByText('기존 회의')).toBeInTheDocument();
-
-    vi.useRealTimers();
   });
 
   it('달력에 1월 1일(신정)이 공휴일로 표시되는지 확인한다', async () => {
@@ -234,8 +228,6 @@ describe('일정 뷰', () => {
 
     const calendarView = screen.getByTestId('month-view');
     expect(within(calendarView).getByText('신정')).toBeInTheDocument();
-
-    vi.useRealTimers();
   });
 });
 
@@ -255,8 +247,6 @@ describe('검색 기능', () => {
 
     const eventList = screen.getByTestId('event-list');
     expect(within(eventList).getByText('검색 결과가 없습니다.')).toBeInTheDocument();
-
-    vi.useRealTimers();
   });
 
   it("'기존 회의'를 검색하면 해당 제목을 가진 일정이 리스트에 노출된다", async () => {
@@ -274,8 +264,6 @@ describe('검색 기능', () => {
 
     const eventList = screen.getByTestId('event-list');
     expect(within(eventList).getByText('기존 회의')).toBeInTheDocument();
-
-    vi.useRealTimers();
   });
 
   it('검색어를 지우면 모든 일정이 다시 표시되어야 한다', async () => {
@@ -297,8 +285,6 @@ describe('검색 기능', () => {
     await user.clear(searchInput);
 
     expect(within(eventList).getByText('기존 회의')).toBeInTheDocument();
-
-    vi.useRealTimers();
   });
 });
 
@@ -335,8 +321,6 @@ describe('일정 충돌', () => {
 
     // 충돌 경고 다이얼로그가 표시되는지 확인
     expect(screen.getByText('일정 겹침 경고')).toBeInTheDocument();
-
-    vi.useRealTimers();
   });
 
   it('기존 일정의 시간을 수정하여 충돌이 발생하면 경고가 노출된다', async () => {
@@ -385,13 +369,10 @@ describe('일정 충돌', () => {
     await user.click(screen.getByTestId('event-submit-button'));
 
     expect(screen.getByText('일정 겹침 경고')).toBeInTheDocument();
-
-    vi.useRealTimers();
   });
 });
 
 it('notificationTime을 10으로 하면 지정 시간 10분 전 알람 텍스트가 노출된다', async () => {
-  // 일정과 같은 날짜로 시간 설정
   const mockDate = new Date('2025-10-15');
   vi.setSystemTime(mockDate);
 
@@ -425,6 +406,4 @@ it('notificationTime을 10으로 하면 지정 시간 10분 전 알람 텍스트
   vi.setSystemTime(notificationTime);
 
   await screen.findByText('10분 후 10분 전 알림 테스트 일정이 시작됩니다.');
-
-  vi.useRealTimers();
 });

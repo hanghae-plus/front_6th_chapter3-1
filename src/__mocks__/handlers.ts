@@ -19,7 +19,7 @@ export const handlers = [
 
   http.post('/api/events', async ({ request }) => {
     const newEvent = (await request.json()) as EventForm;
-    
+
     const eventWithId: Event = {
       id: crypto.randomUUID(),
       ...newEvent,
