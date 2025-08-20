@@ -1,7 +1,7 @@
 import { Event } from '../types';
 
-const 초 = 1000;
-const 분 = 초 * 60;
+export const 초 = 1000;
+export const 분 = 초 * 60;
 
 export function getUpcomingEvents(events: Event[], now: Date, notifiedEvents: string[]) {
   return events.filter((event) => {
