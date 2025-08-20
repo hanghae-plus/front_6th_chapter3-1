@@ -5,14 +5,27 @@ import {
   isOverlapping,
   parseDateTime,
 } from '../../utils/eventOverlap';
+import { expect } from 'vitest';
 describe('parseDateTime', () => {
-  it('2025-07-01 14:30을 정확한 Date 객체로 변환한다', () => {});
+  it('2025-07-01 14:30을 정확한 Date 객체로 변환한다', () => {
+    const date = '2025-07-01';
+    const time = '14:30';
 
-  it('잘못된 날짜 형식에 대해 Invalid Date를 반환한다', () => {});
+    expect(parseDateTime(date, time)).toBeInstanceOf(Date);
+  });
 
-  it('잘못된 시간 형식에 대해 Invalid Date를 반환한다', () => {});
+  it('잘못된 날짜 형식에 대해 Invalid Date를 반환한다', () => {
+    //Date { NaN }
+    expect(parseDateTime('2025-09-666', '12:00').getDate()).toBeNaN();
+  });
 
-  it('날짜 문자열이 비어있을 때 Invalid Date를 반환한다', () => {});
+  it('잘못된 시간 형식에 대해 Invalid Date를 반환한다', () => {
+    expect(parseDateTime('2025-09-666', '299:00').getDate()).toBeNaN();
+  });
+
+  it('날짜 문자열이 비어있을 때 Invalid Date를 반환한다', () => {
+    expect(parseDateTime('', '12:00').toString()).toBe('Invalid Date');
+  });
 });
 
 describe('convertEventToDateRange', () => {
