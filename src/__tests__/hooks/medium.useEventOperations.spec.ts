@@ -4,6 +4,7 @@ import { setupMockErrorHandler, setupMockHandler } from '../../__mocks__/handler
 import { useEventOperations } from '../../hooks/useEventOperations.ts';
 import { Event, EventForm } from '../../types.ts';
 import { events as initialEvents } from '../../__mocks__/response/events.json' assert { type: 'json' };
+import { createEvent, createEventForm } from '../eventFactory.ts';
 
 const enqueueSnackbarFn = vi.fn();
 
@@ -32,25 +33,22 @@ describe('useEventOperations', () => {
     const { events } = result.current;
     const expected = initialEvents;
 
-    console.log('events:', events);
-    
     expect(events).toEqual(expected);
   });
 
   it('정의된 이벤트 정보를 기준으로 적절하게 저장이 된다', async () => {
     const { result } = renderHook(() => useEventOperations(false));
 
-    const newEvent: EventForm = {
+    const newEvent: EventForm = createEventForm({
       title: '테스트',
       date: '2025-01-01',
       startTime: '09:00',
       endTime: '10:00',
-      description: '',
-      location: '',
-      category: '',
-      repeat: { type: 'none', interval: 0 },
+      description: '테스트',
+      location: '테스트',
+      category: '테스트',
       notificationTime: 10,
-    };
+    });
 
     await act(async () => {
       await result.current.saveEvent(newEvent);
@@ -58,13 +56,15 @@ describe('useEventOperations', () => {
 
     const { events } = result.current;
 
-    console.log('events:', events);
-
     expect(events).toHaveLength(initialEvents.length + 1);
-    expect(events[events.length - 1].title).toBe(newEvent.title);
-    expect(events[events.length - 1].date).toBe(newEvent.date);
-    expect(events[events.length - 1].startTime).toBe(newEvent.startTime);
-    expect(events[events.length - 1].endTime).toBe(newEvent.endTime);
+    expect(events[events.length - 1].title).toBe('테스트');
+    expect(events[events.length - 1].date).toBe('2025-01-01');
+    expect(events[events.length - 1].startTime).toBe('09:00');
+    expect(events[events.length - 1].endTime).toBe('10:00');
+    expect(events[events.length - 1].description).toBe('테스트');
+    expect(events[events.length - 1].location).toBe('테스트');
+    expect(events[events.length - 1].category).toBe('테스트');
+    expect(events[events.length - 1].notificationTime).toBe(10);
   });
 
   it("새로 정의된 'title', 'endTime' 기준으로 적절하게 일정이 업데이트 된다", async () => {
@@ -85,8 +85,6 @@ describe('useEventOperations', () => {
     });
 
     const { events } = result.current;
-
-    console.log('events:', events);
 
     expect(events[events.length - 1].title).toBe('테스트 수정');
     expect(events[events.length - 1].endTime).toBe('11:00');
@@ -119,18 +117,10 @@ describe('useEventOperations', () => {
     });
 
     const prevEvent = result.current.events[0];
-    const notExistEvent: Event = {
+    
+    const notExistEvent: Event = createEvent({
       id: 'notExistEvent',
-      title: '테스트',
-      date: '2025-01-01',
-      startTime: '09:00',
-      endTime: '10:00',
-      description: '',
-      location: '',
-      category: '',
-      repeat: { type: 'none', interval: 0 },
-      notificationTime: 10,
-    };
+    });
     
     expect(prevEvent.id).not.toBe(notExistEvent.id);
 
