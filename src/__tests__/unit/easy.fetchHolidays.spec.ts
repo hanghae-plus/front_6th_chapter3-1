@@ -22,7 +22,6 @@ describe('fetchHolidays', () => {
   });
 
   it('공휴일이 없는 월에 대해 빈 객체를 반환한다', () => {
-    console.log('nonHolidayMonths[nonHolidayIndex] + 1', nonHolidayMonths[nonHolidayIndex] + 1);
     const paramDate = new Date(year, nonHolidayMonths[nonHolidayIndex], 1);
     const nonHolidays = fetchHolidays(paramDate);
 
