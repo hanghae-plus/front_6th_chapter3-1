@@ -1,7 +1,6 @@
 import { act, renderHook } from '@testing-library/react';
 
 import { useCalendarView } from '../../hooks/useCalendarView.ts';
-import { assertDate } from '../utils.ts';
 import { expect } from 'vitest';
 
 describe('초기 상태', () => {
