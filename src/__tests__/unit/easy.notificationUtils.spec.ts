@@ -1,16 +1,45 @@
-import { Event } from '../../types';
-import { createNotificationMessage, getUpcomingEvents } from '../../utils/notificationUtils';
+import { getTimeErrorMessage } from '../../utils/timeValidation';
 
-describe('getUpcomingEvents', () => {
-  it('알림 시간이 정확히 도래한 이벤트를 반환한다', () => {});
+describe('getTimeErrorMessage >', () => {
+  it('시작 시간이 종료 시간보다 늦을 때 에러 메시지를 반환한다', () => {
+    const result = getTimeErrorMessage('15:00', '14:00');
 
-  it('이미 알림이 간 이벤트는 제외한다', () => {});
+    expect(result.startTimeError).toBe('시작 시간은 종료 시간보다 빨라야 합니다.');
+    expect(result.endTimeError).toBe('종료 시간은 시작 시간보다 늦어야 합니다.');
+  });
 
-  it('알림 시간이 아직 도래하지 않은 이벤트는 반환하지 않는다', () => {});
+  it('시작 시간과 종료 시간이 같을 때 에러 메시지를 반환한다', () => {
+    const result = getTimeErrorMessage('14:00', '14:00');
 
-  it('알림 시간이 지난 이벤트는 반환하지 않는다', () => {});
-});
+    expect(result.startTimeError).toBe('시작 시간은 종료 시간보다 빨라야 합니다.');
+    expect(result.endTimeError).toBe('종료 시간은 시작 시간보다 늦어야 합니다.');
+  });
 
-describe('createNotificationMessage', () => {
-  it('올바른 알림 메시지를 생성해야 한다', () => {});
+  it('시작 시간이 종료 시간보다 빠를 때 null을 반환한다', () => {
+    const result = getTimeErrorMessage('14:00', '15:00');
+
+    expect(result.startTimeError).toBeNull();
+    expect(result.endTimeError).toBeNull();
+  });
+
+  it('시작 시간이 비어있을 때 null을 반환한다', () => {
+    const result = getTimeErrorMessage('', '15:00');
+
+    expect(result.startTimeError).toBeNull();
+    expect(result.endTimeError).toBeNull();
+  });
+
+  it('종료 시간이 비어있을 때 null을 반환한다', () => {
+    const result = getTimeErrorMessage('14:00', '');
+
+    expect(result.startTimeError).toBeNull();
+    expect(result.endTimeError).toBeNull();
+  });
+
+  it('시작 시간과 종료 시간이 모두 비어있을 때 null을 반환한다', () => {
+    const result = getTimeErrorMessage('', '');
+
+    expect(result.startTimeError).toBeNull();
+    expect(result.endTimeError).toBeNull();
+  });
 });
