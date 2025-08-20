@@ -1,6 +1,5 @@
 import { act, renderHook, waitFor } from '@testing-library/react';
 
-import { events } from '../../__mocks__/response/events.json' assert { type: 'json' };
 import { resetMockEvents } from '../../__mocks__/handlers.ts';
 import {
   setupMockHandlerCreation,
@@ -8,6 +7,7 @@ import {
   setupMockHandlerLoading,
   setupMockHandlerUpdating,
 } from '../../__mocks__/handlersUtils.ts';
+import { events } from '../../__mocks__/response/events.json' assert { type: 'json' };
 import { useEventOperations } from '../../hooks/useEventOperations.ts';
 import { server } from '../../setupTests.ts';
 

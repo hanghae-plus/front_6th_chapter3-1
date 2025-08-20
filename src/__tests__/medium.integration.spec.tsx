@@ -390,4 +390,41 @@ describe('일정 충돌', () => {
   });
 });
 
-it('notificationTime을 10으로 하면 지정 시간 10분 전 알람 텍스트가 노출된다', async () => {});
+it('notificationTime을 10으로 하면 지정 시간 10분 전 알람 텍스트가 노출된다', async () => {
+  // 일정과 같은 날짜로 시간 설정
+  const mockDate = new Date('2025-10-15');
+  vi.setSystemTime(mockDate);
+
+  const user = userEvent.setup();
+
+  render(<App />, { wrapper: TestWrapper });
+
+  await screen.findByText('일정 로딩 완료!');
+
+  const newEvent = {
+    title: '10분 전 알림 테스트',
+    date: '2025-10-15',
+    startTime: '14:00',
+    endTime: '15:00',
+    description: '10분 전 알림 테스트 일정',
+    location: '테스트 장소',
+    category: '업무',
+    notificationTime: '10분 전',
+  };
+
+  await fillEventForm(user, newEvent);
+  await selectComboboxOption(user, 0, newEvent.category);
+  await selectComboboxOption(user, 1, newEvent.notificationTime);
+  await toggleRepeatCheckbox(user, 'unchecked');
+
+  await user.click(screen.getByTestId('event-submit-button'));
+
+  await screen.findByText('일정이 추가되었습니다.');
+
+  const notificationTime = new Date('2025-10-15T13:50:00');
+  vi.setSystemTime(notificationTime);
+
+  await screen.findByText('10분 후 10분 전 알림 테스트 일정이 시작됩니다.');
+
+  vi.useRealTimers();
+});
