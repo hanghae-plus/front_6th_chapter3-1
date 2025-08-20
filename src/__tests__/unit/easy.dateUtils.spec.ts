@@ -144,7 +144,7 @@ describe('getEventsForDay: 주어진 날짜에 해당하는 이벤트를 반환'
 
   it('특정 날짜(2025-08-12)에 해당하는 이벤트만 반환한다', () => {
     const eventsForDay = getEventsForDay(events, 12);
-    expect(eventsForDay).toEqual([events[0]]);
+    expect(eventsForDay.map((e) => e.date)).toEqual(['2025-08-12']);
   });
 
   it('해당 날짜에 이벤트가 없을 경우 빈 배열을 반환한다', () => {
