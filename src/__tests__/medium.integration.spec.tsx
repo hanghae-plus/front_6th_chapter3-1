@@ -224,7 +224,19 @@ describe('일정 뷰', () => {
     vi.useRealTimers();
   });
 
-  it('달력에 1월 1일(신정)이 공휴일로 표시되는지 확인한다', async () => {});
+  it('달력에 1월 1일(신정)이 공휴일로 표시되는지 확인한다', async () => {
+    const mockDate = new Date('2025-01-01');
+    vi.setSystemTime(mockDate);
+
+    render(<App />, { wrapper: TestWrapper });
+
+    await screen.findByText('일정 로딩 완료!');
+
+    const calendarView = screen.getByTestId('month-view');
+    expect(within(calendarView).getByText('신정')).toBeInTheDocument();
+
+    vi.useRealTimers();
+  });
 });
 
 describe('검색 기능', () => {
