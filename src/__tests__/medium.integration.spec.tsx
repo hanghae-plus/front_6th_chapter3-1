@@ -240,11 +240,66 @@ describe('일정 뷰', () => {
 });
 
 describe('검색 기능', () => {
-  it('검색 결과가 없으면, "검색 결과가 없습니다."가 표시되어야 한다.', async () => {});
+  it('검색 결과가 없으면, "검색 결과가 없습니다."가 표시되어야 한다.', async () => {
+    const mockDate = new Date('2025-10-15');
+    vi.setSystemTime(mockDate);
 
-  it("'팀 회의'를 검색하면 해당 제목을 가진 일정이 리스트에 노출된다", async () => {});
+    const user = userEvent.setup();
 
-  it('검색어를 지우면 모든 일정이 다시 표시되어야 한다', async () => {});
+    render(<App />, { wrapper: TestWrapper });
+
+    await screen.findByText('일정 로딩 완료!');
+
+    const searchInput = screen.getByLabelText('일정 검색');
+    await user.type(searchInput, '존재하지 않는 일정');
+
+    const eventList = screen.getByTestId('event-list');
+    expect(within(eventList).getByText('검색 결과가 없습니다.')).toBeInTheDocument();
+
+    vi.useRealTimers();
+  });
+
+  it("'기존 회의'를 검색하면 해당 제목을 가진 일정이 리스트에 노출된다", async () => {
+    const mockDate = new Date('2025-10-15');
+    vi.setSystemTime(mockDate);
+
+    const user = userEvent.setup();
+
+    render(<App />, { wrapper: TestWrapper });
+
+    await screen.findByText('일정 로딩 완료!');
+
+    const searchInput = screen.getByLabelText('일정 검색');
+    await user.type(searchInput, '기존 회의');
+
+    const eventList = screen.getByTestId('event-list');
+    expect(within(eventList).getByText('기존 회의')).toBeInTheDocument();
+
+    vi.useRealTimers();
+  });
+
+  it('검색어를 지우면 모든 일정이 다시 표시되어야 한다', async () => {
+    const mockDate = new Date('2025-10-15');
+    vi.setSystemTime(mockDate);
+
+    const user = userEvent.setup();
+
+    render(<App />, { wrapper: TestWrapper });
+
+    await screen.findByText('일정 로딩 완료!');
+
+    const searchInput = screen.getByLabelText('일정 검색');
+    const eventList = screen.getByTestId('event-list');
+
+    await user.type(searchInput, '존재하지않는일정');
+    expect(within(eventList).getByText('검색 결과가 없습니다.')).toBeInTheDocument();
+
+    await user.clear(searchInput);
+
+    expect(within(eventList).getByText('기존 회의')).toBeInTheDocument();
+
+    vi.useRealTimers();
+  });
 });
 
 describe('일정 충돌', () => {
