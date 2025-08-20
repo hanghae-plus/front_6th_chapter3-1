@@ -151,6 +151,9 @@ describe('일정 CRUD 및 기본 기능', () => {
 
 describe('일정 뷰', () => {
   it('주별 뷰를 선택 후 해당 주에 일정이 없으면, 일정이 표시되지 않는다.', async () => {
+    const mockDate = new Date('2025-09-15');
+    vi.setSystemTime(mockDate);
+
     const user = userEvent.setup();
 
     render(<App />, { wrapper: TestWrapper });
@@ -189,9 +192,37 @@ describe('일정 뷰', () => {
     vi.useRealTimers();
   });
 
-  it('월별 뷰에 일정이 없으면, 일정이 표시되지 않아야 한다.', async () => {});
+  it('월별 뷰에 일정이 없으면, 일정이 표시되지 않아야 한다.', async () => {
+    const mockDate = new Date('2025-09-15');
+    vi.setSystemTime(mockDate);
 
-  it('월별 뷰에 일정이 정확히 표시되는지 확인한다', async () => {});
+    render(<App />, { wrapper: TestWrapper });
+
+    await screen.findByText('일정 로딩 완료!');
+
+    const calendarView = screen.getByTestId('month-view');
+
+    expect(within(calendarView).queryByText('기존 회의')).not.toBeInTheDocument();
+
+    vi.useRealTimers();
+  });
+
+  it('월별 뷰에 일정이 정확히 표시되는지 확인한다', async () => {
+    const mockDate = new Date('2025-10-15');
+    vi.setSystemTime(mockDate);
+
+    render(<App />, { wrapper: TestWrapper });
+
+    await screen.findByText('일정 로딩 완료!');
+
+    // 월별 뷰는 기본값이므로 별도 선택 불필요
+    const calendarView = screen.getByTestId('month-view');
+
+    // 기존 일정들이 표시되어야 함
+    expect(within(calendarView).getByText('기존 회의')).toBeInTheDocument();
+
+    vi.useRealTimers();
+  });
 
   it('달력에 1월 1일(신정)이 공휴일로 표시되는지 확인한다', async () => {});
 });
