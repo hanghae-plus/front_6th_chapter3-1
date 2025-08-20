@@ -41,7 +41,7 @@ describe('useCalendarView: 달력 뷰 관리 훅', () => {
     });
   });
 
-  it("view를 'week'으로 변경 시 적절하게 반영된다", () => {
+  it("view를 'week'으로 변경 시 week 뷰로 변경된다", () => {
     const { result } = renderHook(() => useCalendarView());
 
     act(() => {
@@ -51,7 +51,7 @@ describe('useCalendarView: 달력 뷰 관리 훅', () => {
     expect(result.current.view).toBe('week');
   });
 
-  it("주간 뷰에서 다음으로 navigate시 7일 후 '2025-10-08' 날짜로 지정이 된다", () => {
+  it("2025-10-01의 주간 뷰에서 다음으로 navigate시 7일 후 '2025-10-08' 날짜로 지정이 된다", () => {
     const { result } = renderHook(() => useCalendarView());
 
     act(() => {
@@ -67,7 +67,7 @@ describe('useCalendarView: 달력 뷰 관리 훅', () => {
     expect(result.current.currentDate).toEqual(new Date('2025-10-08'));
   });
 
-  it("주간 뷰에서 이전으로 navigate시 7일 후 '2025-09-24' 날짜로 지정이 된다", () => {
+  it("2025-10-18의 주간 뷰에서 이전으로 navigate시 7일 전 '2025-09-24' 날짜로 지정이 된다", () => {
     const { result } = renderHook(() => useCalendarView());
 
     act(() => {
@@ -83,7 +83,7 @@ describe('useCalendarView: 달력 뷰 관리 훅', () => {
     expect(result.current.currentDate).toEqual(new Date('2025-09-24'));
   });
 
-  it("월간 뷰에서 다음으로 navigate시 한 달 후 '2025-11-01' 날짜여야 한다", () => {
+  it("2025-10-01의 월간 뷰에서 다음으로 navigate시 한 달 후 '2025-11-01' 날짜여야 한다", () => {
     const { result } = renderHook(() => useCalendarView());
 
     act(() => {
@@ -99,7 +99,7 @@ describe('useCalendarView: 달력 뷰 관리 훅', () => {
     expect(result.current.currentDate).toEqual(new Date('2025-11-01'));
   });
 
-  it("월간 뷰에서 이전으로 navigate시 한 달 전 '2025-09-01' 날짜여야 한다", () => {
+  it("2025-10-01의 월간 뷰에서 이전으로 navigate시 한 달 전 '2025-09-01' 날짜여야 한다", () => {
     const { result } = renderHook(() => useCalendarView());
 
     act(() => {
