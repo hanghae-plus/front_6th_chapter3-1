@@ -1,7 +1,6 @@
 import { act, renderHook } from '@testing-library/react';
 
 import { useCalendarView } from '../../hooks/useCalendarView.ts';
-import { assertDate } from '../utils.ts';
 
 describe('초기 상태', () => {
   const { result } = renderHook(() => useCalendarView());
@@ -10,6 +9,7 @@ describe('초기 상태', () => {
     expect(result.current.view).toBe('month');
   });
 
+  // 오늘 날짜인 '10월 1일' -> 실제 오늘 날짜 수정
   it('currentDate는 현재 날짜여야 한다', () => {
     expect(result.current.currentDate.getFullYear()).toBe(new Date().getFullYear());
     expect(result.current.currentDate.getMonth()).toBe(new Date().getMonth());
@@ -25,10 +25,10 @@ it('holidays는 10월 휴일인 개천절, 한글날, 추석이 지정되어 있
   });
 
   const expected = {
+    '2025-10-03': '개천절',
     '2025-10-05': '추석',
     '2025-10-06': '추석',
     '2025-10-07': '추석',
-    '2025-10-03': '개천절',
     '2025-10-09': '한글날',
   };
 
