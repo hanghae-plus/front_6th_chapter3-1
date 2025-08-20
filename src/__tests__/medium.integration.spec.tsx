@@ -1,15 +1,24 @@
 import CssBaseline from '@mui/material/CssBaseline';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { render, screen, within } from '@testing-library/react';
-import { UserEvent, userEvent } from '@testing-library/user-event';
-import { http, HttpResponse } from 'msw';
+import {
+  // UserEvent,
+  userEvent,
+} from '@testing-library/user-event';
+// import { http, HttpResponse } from 'msw';
 import { SnackbarProvider } from 'notistack';
 import { ReactNode } from 'react';
 
-import App from '../App';
-import { server } from '../setupTests';
-import { Event } from '../types';
 import { resetMockEvents } from '../__mocks__/handlers';
+import App from '../App';
+// import { server } from '../setupTests';
+// import { Event } from '../types';
+import {
+  selectComboboxOption,
+  fillEventForm,
+  verifyEventInList,
+  toggleRepeatCheckbox,
+} from './medium.integration.utils';
 
 // 공통 테스트 래퍼 컴포넌트
 const TestWrapper = ({ children }: { children: ReactNode }) => (
@@ -43,30 +52,11 @@ describe('일정 CRUD 및 기본 기능', () => {
       notificationTime: '1분 전',
     };
 
-    await user.type(screen.getByLabelText('제목'), newEvent.title);
-    await user.type(screen.getByLabelText('날짜'), newEvent.date);
-    await user.type(screen.getByLabelText('시작 시간'), newEvent.startTime);
-    await user.type(screen.getByLabelText('종료 시간'), newEvent.endTime);
-    await user.type(screen.getByLabelText('설명'), newEvent.description);
-    await user.type(screen.getByLabelText('위치'), newEvent.location);
+    await fillEventForm(user, newEvent);
 
-    // 카테고리 Select: '개인' 선택
-    const categorySelect = screen.getAllByRole('combobox')[0];
-    await user.click(categorySelect);
-    const personalOption = await screen.findByRole('option', { name: /개인/ });
-    await user.click(personalOption);
-
-    // 알림 설정 Select: '1분 전' 선택
-    const notificationSelect = screen.getAllByRole('combobox')[1];
-    await user.click(notificationSelect);
-    const oneMinuteOption = await screen.findByRole('option', { name: /1분 전/ });
-    await user.click(oneMinuteOption);
-
-    // 반복 일정 Checkbox: 체크 해제
-    const repeatCheckbox = screen.getByRole('checkbox', { name: '반복 일정' });
-    expect(repeatCheckbox).toBeChecked();
-    await user.click(repeatCheckbox);
-    expect(repeatCheckbox).not.toBeChecked();
+    await selectComboboxOption(user, 0, newEvent.category);
+    await selectComboboxOption(user, 1, newEvent.notificationTime);
+    await toggleRepeatCheckbox(user, 'unchecked');
 
     await user.click(screen.getByTestId('event-submit-button'));
 
@@ -77,16 +67,7 @@ describe('일정 CRUD 및 기본 기능', () => {
     const eventList = screen.getByTestId('event-list');
 
     // 모든 필드가 정확히 저장되었는지 확인
-    // 제목만 await으로 UI 업데이트 완료 대기, 나머지는 로드가 보장되기 때문에 동기적으로 검증
-    await within(eventList).findByText(newEvent.title);
-    expect(within(eventList).getByText(newEvent.date)).toBeInTheDocument();
-    expect(
-      within(eventList).getByText(`${newEvent.startTime} - ${newEvent.endTime}`)
-    ).toBeInTheDocument();
-    expect(within(eventList).getByText(newEvent.description)).toBeInTheDocument();
-    expect(within(eventList).getByText(newEvent.location)).toBeInTheDocument();
-    expect(within(eventList).getByText(`카테고리: ${newEvent.category}`)).toBeInTheDocument();
-    expect(within(eventList).getByText(`알림: ${newEvent.notificationTime}`)).toBeInTheDocument();
+    await verifyEventInList(eventList, newEvent);
   });
 
   it('기존 일정의 세부 정보를 수정하고 변경사항이 정확히 반영된다', async () => {
@@ -118,41 +99,11 @@ describe('일정 CRUD 및 기본 기능', () => {
       notificationTime: '1분 전',
     };
 
-    const titleField = screen.getByLabelText('제목');
-    const dateField = screen.getByLabelText('날짜');
-    const startTimeField = screen.getByLabelText('시작 시간');
-    const endTimeField = screen.getByLabelText('종료 시간');
-    const descriptionField = screen.getByLabelText('설명');
-    const locationField = screen.getByLabelText('위치');
+    await fillEventForm(user, updatedEvent, true);
 
-    await user.clear(titleField);
-    await user.clear(dateField);
-    await user.clear(startTimeField);
-    await user.clear(endTimeField);
-    await user.clear(descriptionField);
-    await user.clear(locationField);
-
-    await user.type(titleField, updatedEvent.title);
-    await user.type(dateField, updatedEvent.date);
-    await user.type(startTimeField, updatedEvent.startTime);
-    await user.type(endTimeField, updatedEvent.endTime);
-    await user.type(descriptionField, updatedEvent.description);
-    await user.type(locationField, updatedEvent.location);
-
-    const categorySelect = screen.getAllByRole('combobox')[0];
-    await user.click(categorySelect);
-    const personalOption = await screen.findByRole('option', { name: /개인/ });
-    await user.click(personalOption);
-
-    const notificationSelect = screen.getAllByRole('combobox')[1];
-    await user.click(notificationSelect);
-    const oneMinuteOption = await screen.findByRole('option', { name: /1분 전/ });
-    await user.click(oneMinuteOption);
-
-    const repeatCheckbox = screen.getByRole('checkbox', { name: '반복 일정' });
-    expect(repeatCheckbox).not.toBeChecked();
-    await user.click(repeatCheckbox);
-    expect(repeatCheckbox).toBeChecked();
+    await selectComboboxOption(user, 0, updatedEvent.category);
+    await selectComboboxOption(user, 1, updatedEvent.notificationTime);
+    await toggleRepeatCheckbox(user, 'checked');
 
     await user.click(screen.getByTestId('event-submit-button'));
 
@@ -160,17 +111,7 @@ describe('일정 CRUD 및 기본 기능', () => {
     await screen.findByText('일정이 수정되었습니다.');
 
     // 수정된 데이터가 이벤트 리스트에 반영되었는지 확인
-    await within(eventList).findByText(updatedEvent.title);
-    expect(within(eventList).getByText(updatedEvent.date)).toBeInTheDocument();
-    expect(
-      within(eventList).getByText(`${updatedEvent.startTime} - ${updatedEvent.endTime}`)
-    ).toBeInTheDocument();
-    expect(within(eventList).getByText(updatedEvent.description)).toBeInTheDocument();
-    expect(within(eventList).getByText(updatedEvent.location)).toBeInTheDocument();
-    expect(within(eventList).getByText(`카테고리: ${updatedEvent.category}`)).toBeInTheDocument();
-    expect(
-      within(eventList).getByText(`알림: ${updatedEvent.notificationTime}`)
-    ).toBeInTheDocument();
+    await verifyEventInList(eventList, updatedEvent);
 
     vi.useRealTimers();
   });
