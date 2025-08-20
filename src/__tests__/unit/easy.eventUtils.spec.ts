@@ -1,7 +1,7 @@
 import { getFilteredEvents } from '../../utils/eventUtils';
 import { createMockEvent } from '../utils';
 
-describe('getFilteredEvents', () => {
+describe('getFilteredEvents: 검색된 이벤트를 주간 뷰 또는 월간 뷰에 맞게 필터링', () => {
   const events = [
     createMockEvent(1, {
       date: '2025-07-01',
@@ -40,7 +40,7 @@ describe('getFilteredEvents', () => {
       expect(result).toHaveLength(3);
     });
 
-    it('검색어가 대소문자를 구분하지 않고 작동한다', () => {
+    it('검색어는 대소문자를 구분하지 않고 작동한다', () => {
       const result = getFilteredEvents(events, 'event', new Date('2025-07-01'), 'month');
       expect(result.map((e) => e.title)).toEqual(['EVENT 3']);
     });
@@ -62,7 +62,7 @@ describe('getFilteredEvents', () => {
       expect(result.map((e) => e.id)).toEqual(['1']);
     });
 
-    it('주의 경계에 있는 이벤트를 올바르게 필터링한다', () => {
+    it('주의 경계(2025-06-29 ~ 2025-07-05)에 있는 이벤트를 올바르게 필터링한다', () => {
       const boundaryEvents = [
         createMockEvent(1, { date: '2025-06-29' }),
         createMockEvent(2, { date: '2025-07-05' }),
@@ -84,7 +84,7 @@ describe('getFilteredEvents', () => {
       expect(result.map((e) => e.id)).toEqual(['1', '2']);
     });
 
-    it('월의 초와 말일의 경계에 있는 이벤트를 올바르게 필터링한다', () => {
+    it('월의 초(2025-07-01)와 말일(2025-07-31)의 경계에 있는 이벤트를 올바르게 필터링한다', () => {
       const boundaryEvents = [
         createMockEvent(1, { date: '2025-07-01' }),
         createMockEvent(2, { date: '2025-07-31' }),
