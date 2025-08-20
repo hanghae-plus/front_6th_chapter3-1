@@ -86,28 +86,7 @@ describe('getFilteredEvents', () => {
 
   it('검색어가 대소문자를 구분하지 않고 작동한다', () => {
     const result = getFilteredEvents(events as Event[], 'TITLE', new Date('2025-07-01'), 'week');
-    expect(result).toEqual([
-      {
-        id: '1',
-        title: 'TitLe 1',
-        date: '2025-07-02',
-        startTime: '10:30',
-        endTime: '11:30',
-        description: 'Description 1',
-        location: 'Location 1',
-        category: 'Category 1',
-      },
-      {
-        id: '2',
-        title: 'titLe 2',
-        date: '2025-07-01',
-        startTime: '14:30',
-        endTime: '15:30',
-        description: 'dEscription 2',
-        location: 'locaTioN 2',
-        category: 'CateGory 2',
-      },
-    ]);
+    expect(result).toEqual([events[0], events[1]]);
   });
 
   it('월의 경계에 있는 이벤트를 올바르게 필터링한다', () => {});
