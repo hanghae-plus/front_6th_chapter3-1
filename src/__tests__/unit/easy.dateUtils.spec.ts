@@ -39,6 +39,19 @@ describe('getDaysInMonth', () => {
   //   const result = unValidMonth.map((month) => getDaysInMonth(2025, month));
   //   expect(result).toEqual([31, 31, 30]);
   // });
+
+  // TO BE : 위 대신 유효하지 않은 월에 대해 직접 올바른 케이스를 추가
+  it('0월은 이전 해의 12월로 처리한다.', () => {
+    expect(getDaysInMonth(2025, 0)).toEqual(31);
+  });
+
+  it('13월은 다음 해의 1월로 처리한다.', () => {
+    expect(getDaysInMonth(2025, 13)).toEqual(31);
+  });
+
+  it('-1월은 이전 해의 11월로 처리한다.', () => {
+    expect(getDaysInMonth(2025, -1)).toEqual(30);
+  });
 });
 
 describe('getWeekDates', () => {
