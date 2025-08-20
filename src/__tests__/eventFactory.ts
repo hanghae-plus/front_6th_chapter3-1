@@ -2,9 +2,6 @@ import { randomUUID } from 'crypto';
 import { Event, EventForm } from '../types';
 import { generateEndTimeAfterStart, getRandomDate, getRandomTime } from './utils';
 
-const categories = ['회의', '개인', '업무', '학습', '기타'];
-const locations = ['회의실 A', '회의실 B', '홈오피스', '카페', '온라인'];
-
 // 이벤트 폼
 export const createEventForm = (override: Partial<EventForm> = {}): EventForm => {
   const startTime = getRandomTime();
@@ -16,8 +13,8 @@ export const createEventForm = (override: Partial<EventForm> = {}): EventForm =>
     startTime,
     endTime,
     description: '',
-    location: locations[Math.floor(Math.random() * locations.length)],
-    category: categories[Math.floor(Math.random() * categories.length)],
+    location: '',
+    category: '',
     repeat: { type: 'none', interval: 0 },
     notificationTime: Math.floor(Math.random() * 60) + 1, // 1-60분
   };
