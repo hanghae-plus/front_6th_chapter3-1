@@ -12,15 +12,45 @@ import {
 } from '../../utils/dateUtils';
 
 describe('getDaysInMonth', () => {
-  it('1월은 31일 수를 반환한다', () => {});
+  it('1월은 31일 수를 반환한다', () => {
+    const year = 1993;
+    const month = 1;
 
-  it('4월은 30일 일수를 반환한다', () => {});
+    expect(getDaysInMonth(year, month)).toBe(31);
+  });
 
-  it('윤년의 2월에 대해 29일을 반환한다', () => {});
+  it('4월은 30일 일수를 반환한다', () => {
+    const year = 1993;
+    const month = 4;
 
-  it('평년의 2월에 대해 28일을 반환한다', () => {});
+    expect(getDaysInMonth(year, month)).toBe(30);
+  });
 
-  it('유효하지 않은 월에 대해 적절히 처리한다', () => {});
+  it('윤년의 2월에 대해 29일을 반환한다', () => {
+    const leapYear = 2000;
+    const month = 2;
+
+    expect(getDaysInMonth(leapYear, month)).toBe(29);
+  });
+
+  it('평년의 2월에 대해 28일을 반환한다', () => {
+    const normalYear = 1992;
+    const month = 2;
+
+    expect(getDaysInMonth(normalYear, month)).toBe(29);
+  });
+
+  // 해당 테스트는 이 프로젝트에서 설정한 기능이 아닌 Date 생성시 적용되는 규칙에 대한 테스트라 의미가 없어보입니다
+  it('월에 1부터 12까지가 아닌 숫자를 입력시 12로 나눈 나머지 숫자로 입력된다', () => {
+    const year = 1993;
+    const overMonth = 13;
+
+    expect(getDaysInMonth(year, overMonth)).toBe(31);
+
+    const belowMonth = 0;
+
+    expect(getDaysInMonth(year, belowMonth)).toBe(31);
+  });
 });
 
 describe('getWeekDates', () => {
