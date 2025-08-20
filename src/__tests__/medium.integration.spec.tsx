@@ -6,10 +6,56 @@ import { http, HttpResponse } from 'msw';
 import { SnackbarProvider } from 'notistack';
 import { ReactElement } from 'react';
 
+import {
+  setupMockHandlerCreation,
+  setupMockHandlerDeletion,
+  setupMockHandlerUpdating,
+} from '../__mocks__/handlersUtils';
 import App from '../App';
 import { server } from '../setupTests';
 import { Event } from '../types';
 
+const theme = createTheme();
+
+// ! HINT. 이 유틸을 사용해 리액트 컴포넌트를 렌더링해보세요.
+const setup = (element: ReactElement) => {
+  const user = userEvent.setup();
+
+  // ? Medium: 여기서 Provider로 묶어주는 동작은 의미있을까요? 있다면 어떤 의미일까요?
+  return {
+    ...render(
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <SnackbarProvider>{element}</SnackbarProvider>
+      </ThemeProvider>
+    ),
+    user,
+  };
+};
+
+// ! HINT. 이 유틸을 사용해 일정을 저장해보세요.
+const saveSchedule = async (
+  user: UserEvent,
+  form: Omit<Event, 'id' | 'notificationTime' | 'repeat'>
+) => {
+  const { title, date, startTime, endTime, location, description, category } = form;
+
+  await user.click(screen.getAllByText('일정 추가')[0]);
+
+  await user.type(screen.getByLabelText('제목'), title);
+  await user.type(screen.getByLabelText('날짜'), date);
+  await user.type(screen.getByLabelText('시작 시간'), startTime);
+  await user.type(screen.getByLabelText('종료 시간'), endTime);
+  await user.type(screen.getByLabelText('설명'), description);
+  await user.type(screen.getByLabelText('위치'), location);
+  await user.click(screen.getByLabelText('카테고리'));
+  await user.click(within(screen.getByLabelText('카테고리')).getByRole('combobox'));
+  await user.click(screen.getByRole('option', { name: `${category}-option` }));
+
+  await user.click(screen.getByTestId('event-submit-button'));
+};
+
+// ! HINT. "검색 결과가 없습니다"는 초기에 노출되는데요. 그럼 검증하고자 하는 액션이 실행되기 전에 검증해버리지 않을까요? 이 테스트를 신뢰성있게 만드려면 어떻게 할까요?
 describe('일정 CRUD 및 기본 기능', () => {
   it('입력한 새로운 일정 정보에 맞춰 모든 필드가 이벤트 리스트에 정확히 저장된다.', async () => {
     // ! HINT. event를 추가 제거하고 저장하는 로직을 잘 살펴보고, 만약 그대로 구현한다면 어떤 문제가 있을 지 고민해보세요.
