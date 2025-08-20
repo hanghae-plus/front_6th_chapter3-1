@@ -35,5 +35,12 @@ describe('getTimeErrorMessage - 일정 시간 유효성 검증', () => {
       expect(result.startTimeError).toBeNull();
       expect(result.endTimeError).toBeNull();
     });
+
+    // NOTE: 해당 테스트의 경우 상위의 두 테스트에서 검증이 가능하므로 불필요한 테스트로 생각됩니다.
+    test('시작 시간과 종료 시간이 모두 비어있을 때 null을 반환한다', () => {
+      const result = getTimeErrorMessage('', '');
+      expect(result.startTimeError).toBeNull();
+      expect(result.endTimeError).toBeNull();
+    });
   });
 });

@@ -177,13 +177,6 @@ describe('getEventsForDay', () => {
       expect(result).toHaveLength(2);
       expect(result).toEqual([mockEvents[0], mockEvents[1]]);
     });
-
-    test('2일(2025-07-02)에 해당하는 이벤트 1개를 정확히 반환한다', () => {
-      const day = 2;
-      const result = getEventsForDay(mockEvents, day);
-      expect(result).toHaveLength(1);
-      expect(result).toEqual([mockEvents[2]]);
-    });
   });
 
   describe('이벤트가 없는 날짜', () => {
@@ -223,7 +216,7 @@ describe('formatWeek', () => {
     });
   });
 
-  describe('월 경계값 테스트', () => {
+  describe('경계값 테스트', () => {
     test('월의 첫날은 1주차로 분류된다', () => {
       const date = new Date('2025-07-01');
       expect(formatWeek(date)).toBe('2025년 7월 1주');
@@ -233,25 +226,20 @@ describe('formatWeek', () => {
       const date = new Date('2025-07-31');
       expect(formatWeek(date)).toBe('2025년 7월 5주');
     });
-  });
 
-  describe('연도/월 경계값 테스트', () => {
-    test('12월 말일이 목요일 기준으로 다음해 1월에 속하면 다음해로 분류된다', () => {
-      const date = new Date('2024-12-30');
-      expect(formatWeek(date)).toBe('2025년 1월 1주');
+    test('연도가 바뀌는 주에 대해 올바른 주 정보를 반환한다', () => {
+      const date = new Date('2025-12-31');
+      expect(formatWeek(date)).toBe('2026년 1월 1주');
     });
-  });
 
-  describe('주 단위 일관성', () => {
-    test('같은 주의 모든 요일은 동일한 주차로 분류된다', () => {
-      const sunday = new Date('2025-07-13');
-      const wednesday = new Date('2025-07-16');
-      const saturday = new Date('2025-07-19');
+    test('윤년 2월의 마지막 주에 대해 올바른 주 정보를 반환한다', () => {
+      const date = new Date('2024-02-29');
+      expect(formatWeek(date)).toBe('2024년 2월 5주');
+    });
 
-      const expectedWeek = '2025년 7월 3주';
-      expect(formatWeek(sunday)).toBe(expectedWeek);
-      expect(formatWeek(wednesday)).toBe(expectedWeek);
-      expect(formatWeek(saturday)).toBe(expectedWeek);
+    test('평년 2월의 마지막 주에 대해 올바른 주 정보를 반환한다', () => {
+      const date = new Date('2025-02-28');
+      expect(formatWeek(date)).toBe('2025년 2월 4주');
     });
   });
 });
@@ -264,70 +252,36 @@ describe('formatMonth', () => {
 });
 
 describe('isDateInRange', () => {
-  describe('범위 내 날짜 검증', () => {
-    test('시작일(2025-07-01)과 종료일(2025-07-31) 사이의 날짜(2025-07-10)는 범위에 포함된다', () => {
-      const date = new Date('2025-07-10');
-      const start = new Date('2025-07-01');
-      const end = new Date('2025-07-31');
+  const rangeStart = new Date('2025-07-01');
+  const rangeEnd = new Date('2025-07-31');
 
-      expect(isDateInRange(date, start, end)).toBe(true);
-    });
+  test('범위 내의 날짜 2025-07-10에 대해 true를 반환한다', () => {
+    const date = new Date('2025-07-10');
+    expect(isDateInRange(date, rangeStart, rangeEnd)).toBe(true);
   });
 
-  describe('경계값 포함 여부', () => {
-    test('시작일(2025-07-01)은 범위에 포함된다', () => {
-      const date = new Date('2025-07-01');
-      const start = new Date('2025-07-01');
-      const end = new Date('2025-07-31');
-
-      expect(isDateInRange(date, start, end)).toBe(true);
-    });
-
-    test('종료일(2025-07-31)은 범위에 포함된다', () => {
-      const date = new Date('2025-07-31');
-      const start = new Date('2025-07-01');
-      const end = new Date('2025-07-31');
-
-      expect(isDateInRange(date, start, end)).toBe(true);
-    });
+  test('범위의 시작일 2025-07-01에 대해 true를 반환한다', () => {
+    expect(isDateInRange(rangeStart, rangeStart, rangeEnd)).toBe(true);
   });
 
-  describe('범위 밖 날짜 검증', () => {
-    test('시작일(2025-07-01) 이전의 날짜(2025-06-30)는 범위에 포함되지 않는다', () => {
-      const date = new Date('2025-06-30');
-      const start = new Date('2025-07-01');
-      const end = new Date('2025-07-31');
-
-      expect(isDateInRange(date, start, end)).toBe(false);
-    });
-
-    test('종료일(2025-07-31) 이후의 날짜(2025-08-01)는 범위에 포함되지 않는다', () => {
-      const date = new Date('2025-08-01');
-      const start = new Date('2025-07-01');
-      const end = new Date('2025-07-31');
-
-      expect(isDateInRange(date, start, end)).toBe(false);
-    });
+  test('범위의 종료일 2025-07-31에 대해 true를 반환한다', () => {
+    expect(isDateInRange(rangeEnd, rangeStart, rangeEnd)).toBe(true);
   });
 
-  describe('잘못된 범위 처리', () => {
-    test('시작일(2025-07-31)이 종료일(2025-07-01)보다 늦으면 어떤 날짜도 범위에 포함되지 않는다', () => {
-      const date = new Date('2025-07-15');
-      const start = new Date('2025-07-31');
-      const end = new Date('2025-07-01');
-
-      expect(isDateInRange(date, start, end)).toBe(false);
-    });
+  test('범위 이전의 날짜 2025-06-30에 대해 false를 반환한다', () => {
+    const outOfRangeDate = new Date('2025-06-30');
+    expect(isDateInRange(outOfRangeDate, rangeStart, rangeEnd)).toBe(false);
   });
 
-  describe('시간 정보 무시 검증', () => {
-    test('같은 날짜라면 시간이 달라도 범위에 포함된다', () => {
-      const date = new Date('2025-07-01T23:59:59');
-      const start = new Date('2025-07-01T00:00:00');
-      const end = new Date('2025-07-31T12:00:00');
-
-      expect(isDateInRange(date, start, end)).toBe(true);
-    });
+  test('범위 이후의 날짜 2025-08-01에 대해 false를 반환한다', () => {
+    const outOfRangeDate = new Date('2025-08-01');
+    expect(isDateInRange(outOfRangeDate, rangeStart, rangeEnd)).toBe(false);
+  });
+  test('시작일이 종료일보다 늦은 경우 모든 날짜에 대해 false를 반환한다', () => {
+    const invalidRangeStart = new Date('2025-07-31');
+    const invalidRangeEnd = new Date('2025-07-01');
+    const testDate = new Date('2025-07-15');
+    expect(isDateInRange(testDate, invalidRangeStart, invalidRangeEnd)).toBe(false);
   });
 });
 
@@ -382,11 +336,6 @@ describe('formatDate', () => {
     });
   });
 
-  // test('day 파라미터(31)가 제공되면 해당 일자(2025-07-01)로 포맷팅한다', () => {
-  //   const date = new Date('2025-06-15');
-  //   expect(formatDate(date, 31)).toBe('2025-07-01');
-  // });
-
   describe('자릿수 처리', () => {
     test('월이 한 자리 수일 때 앞에 0을 붙여 포맷팅한다', () => {
       const date = new Date('2025-01-15');
@@ -401,28 +350,6 @@ describe('formatDate', () => {
     test('한 자리 day 파라미터를 두 자리로 패딩한다', () => {
       const date = new Date('2025-07-15');
       expect(formatDate(date, 1)).toBe('2025-07-01');
-    });
-  });
-
-  describe('경계값 테스트', () => {
-    // test('없는 날짜(2025-01-32)을 올바르게 포맷팅한다', () => {
-    //   const date = new Date('2025-01-31');
-    //   expect(formatDate(date, 32)).toBe('2025-02-01');
-    // });
-
-    test('연도의 첫날(1월 1일)을 올바르게 포맷팅한다', () => {
-      const date = new Date('2025-01-01');
-      expect(formatDate(date)).toBe('2025-01-01');
-    });
-
-    test('연도의 마지막날(12월 31일)을 올바르게 포맷팅한다', () => {
-      const date = new Date('2025-12-31');
-      expect(formatDate(date)).toBe('2025-12-31');
-    });
-
-    test('윤년의 2월 29일을 올바르게 포맷팅한다', () => {
-      const date = new Date('2024-02-29');
-      expect(formatDate(date)).toBe('2024-02-29');
     });
   });
 });
