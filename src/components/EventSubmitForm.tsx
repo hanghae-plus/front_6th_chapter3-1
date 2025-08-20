@@ -13,8 +13,8 @@ import {
 } from '@mui/material';
 import { ChangeEvent } from 'react';
 
-import { Event } from '../../types';
-import { getTimeErrorMessage } from '../../utils/timeValidation';
+import { Event } from '../types';
+import { getTimeErrorMessage } from '../utils/timeValidation';
 
 const categories = ['업무', '개인', '가족', '기타'];
 

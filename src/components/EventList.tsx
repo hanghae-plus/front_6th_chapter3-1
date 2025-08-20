@@ -9,7 +9,7 @@ import {
   Typography,
 } from '@mui/material';
 
-import { Event } from '../../types';
+import { Event } from '../types';
 
 const notificationOptions = [
   { value: 1, label: '1분 전' },
