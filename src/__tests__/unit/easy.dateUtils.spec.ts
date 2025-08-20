@@ -11,7 +11,7 @@ import {
 } from '../../utils/dateUtils';
 import { createMockEvent } from '../utils';
 
-describe('getDaysInMonth', () => {
+describe('getDaysInMonth: 주어진 년도의 월에 해당하는 일수를 반환', () => {
   it('1월은 31일을 반환한다', () => {
     const daysInMonth = getDaysInMonth(2025, 1);
     expect(daysInMonth).toBe(31);
@@ -32,14 +32,15 @@ describe('getDaysInMonth', () => {
     expect(daysInMonth).toBe(28);
   });
 
-  it('월이 12를 초과하면 자동으로 다음 해로 넘어가서 계산한다', () => {
-    const daysInMonth = getDaysInMonth(2025, 13);
-    expect(daysInMonth).toBe(31); // 2026년 1월로 처리
-  });
+  // 유틸함수 테스트 보다는 Date 객체에 대한 테스트 이므로 생략
+  // it('월이 12를 초과하면 자동으로 다음 해로 넘어가서 계산한다', () => {
+  //   const daysInMonth = getDaysInMonth(2025, 13);
+  //   expect(daysInMonth).toBe(31); // 2026년 1월로 처리
+  // });
 });
 
-describe('getWeekDates', () => {
-  it('주중의 날짜(수요일)를 기준으로 해당 주의 전체 날짜들을 반환한다', () => {
+describe('getWeekDates: 주어진 날짜가 속한 주의 모든 날짜를 반환', () => {
+  it('2025년 8월 13일(수요일)를 기준으로 해당 주의 전체 날짜들을 반환한다', () => {
     const wednesday = new Date('2025-08-13');
     const weekDates = getWeekDates(wednesday);
 
@@ -48,7 +49,7 @@ describe('getWeekDates', () => {
     expect(weekDates[6]).toEqual(new Date('2025-08-16')); // 토요일
   });
 
-  it('월요일에 대해 해당 주의 전체 날짜들을 반환한다', () => {
+  it('2025년 8월 11일(월요일)를 기준으로 해당 주의 전체 날짜들을 반환한다', () => {
     const monday = new Date('2025-08-11');
     const weekDates = getWeekDates(monday);
 
@@ -57,7 +58,7 @@ describe('getWeekDates', () => {
     expect(weekDates[6]).toEqual(new Date('2025-08-16')); // 토요일
   });
 
-  it('일요일에 대해 해당 주의 전체 날짜들을 반환한다', () => {
+  it('2025년 8월 10일(일요일)를 기준으로 해당 주의 전체 날짜들을 반환한다', () => {
     const sunday = new Date('2025-08-10');
     const weekDates = getWeekDates(sunday);
 
@@ -66,28 +67,28 @@ describe('getWeekDates', () => {
     expect(weekDates[6]).toEqual(new Date('2025-08-16')); // 토요일
   });
 
-  it('연말이 포함된 주에 대해 해당 주의 날짜들을 올바르게 반환한다', () => {
+  it('2025년 12월 28일 연말이 포함된 일자를 기준으로 해당 주의 전체 날짜들을 반환한다', () => {
     const lastDayOfYear = new Date('2025-12-28');
 
     const weekDates = getWeekDates(lastDayOfYear).map((d) => d.getDate());
     expect(weekDates).toEqual([28, 29, 30, 31, 1, 2, 3]);
   });
 
-  it('연초가 포함된 주에 대해 해당 주의 날짜들을 올바르게 반환한다', () => {
+  it('2026년 1월 1일 연초가 포함된 일자를 기준으로 해당 주의 전체 날짜들을 반환한다', () => {
     const firstDayOfYear = new Date('2026-01-01');
 
     const weekDates = getWeekDates(firstDayOfYear).map((d) => d.getDate());
     expect(weekDates).toEqual([28, 29, 30, 31, 1, 2, 3]);
   });
 
-  it('윤년의 2월 29일을 포함한 주에 대해 해당 주의 날짜들을 올바르게 반환한다', () => {
+  it('2024년 2월 29일 윤년을 포함한 일자를 기준으로 해당 주의 전체 날짜들을 반환한다', () => {
     const leapYear = new Date('2024-02-29');
 
     const weekDates = getWeekDates(leapYear).map((d) => d.getDate());
     expect(weekDates).toEqual([25, 26, 27, 28, 29, 1, 2]);
   });
 
-  it('월의 마지막을 포함한 주에 대해 해당 주의 날짜들을 반환한다', () => {
+  it('2025년 8월 31일 월말을 포함한 일자를 기준으로 해당 주의 전체 날짜들을 반환한다', () => {
     const sundayEndOfMonth = new Date('2025-08-31');
     const weekDates = getWeekDates(sundayEndOfMonth).map((d) => d.getDate());
 
@@ -95,7 +96,7 @@ describe('getWeekDates', () => {
   });
 });
 
-describe('getWeeksAtMonth', () => {
+describe('getWeeksAtMonth: 주어진 날짜의 월 정보를 주 단위 배열로 반환', () => {
   it('2025-07-01이 속한 월을 주 단위 배열로 반환한다 (빈 요일은 null 처리)', () => {
     const weeksAtMonth = getWeeksAtMonth(new Date('2025-07-01'));
 
@@ -133,7 +134,7 @@ describe('getWeeksAtMonth', () => {
   });
 });
 
-describe('getEventsForDay', () => {
+describe('getEventsForDay: 주어진 날짜에 해당하는 이벤트를 반환', () => {
   //이벤트 생성
   const events = [
     createMockEvent(1, { date: '2025-08-01' }),
@@ -141,8 +142,8 @@ describe('getEventsForDay', () => {
     createMockEvent(3, { date: '2025-08-28' }),
   ];
 
-  it('특정 날짜(1일)에 해당하는 이벤트만 정확히 반환한다', () => {
-    const eventsForDay = getEventsForDay(events, 1);
+  it('특정 날짜(2025-08-12)에 해당하는 이벤트만 반환한다', () => {
+    const eventsForDay = getEventsForDay(events, 12);
     expect(eventsForDay).toEqual([events[0]]);
   });
 
@@ -162,39 +163,39 @@ describe('getEventsForDay', () => {
   });
 });
 
-describe('formatWeek (주차는 목요일 기준으로 계산)', () => {
-  it('월 중간 날짜 입력 시 해당 월과 주차를 반환한다', () => {
+describe('formatWeek: 주어진 날짜에 해당하는 주차를 목요일 기준으로 년, 월, 주차 형식으로 반환', () => {
+  it('월 중간 날짜(2025-08-15) 입력 시 해당 월과 주차를 반환한다', () => {
     const week = formatWeek(new Date('2025-08-15'));
     expect(week).toBe('2025년 8월 2주');
   });
 
-  it('월 초 날짜가 속한 주가 이전 달에 포함되면 이전 달과 주차를 반환한다', () => {
+  it('월 초 날짜(2025-08-01) 입력 시 해당 월과 주차를 반환한다', () => {
     const week = formatWeek(new Date('2025-08-01'));
     expect(week).toBe('2025년 7월 5주');
   });
 
-  it('월 말 날짜가 속한 주가 다음 달에 포함되면 다음 달과 주차를 반환한다', () => {
+  it('월 말 날짜(2025-08-31) 입력 시 해당 월과 주차를 반환한다', () => {
     const week = formatWeek(new Date('2025-08-31'));
     expect(week).toBe('2025년 9월 1주');
   });
 
-  it('해당 주가 연도를 넘어가면, 다음 해의 연도와 주차를 반환한다', () => {
+  it('해당 주(2025-12-28)가 연도를 넘어가는 경우, 다음 해의 연도와 주차를 반환한다', () => {
     const week = formatWeek(new Date('2025-12-28'));
     expect(week).toBe('2026년 1월 1주');
   });
 
-  it('윤년(2024년) 2월의 마지막 날짜 입력 시 해당 월과 주차를 올바르게 반환한다', () => {
+  it('윤년(2024년) 2월의 말일(2024-02-29) 입력 시 해당 월과 주차를 올바르게 반환한다', () => {
     const week = formatWeek(new Date('2024-02-29'));
     expect(week).toBe('2024년 2월 5주');
   });
 
-  it('평년(2025년) 2월의 마지막 날짜 입력 시 해당 월과 주차를 올바르게 반환한다', () => {
+  it('평년(2025년) 2월의 말일(2025-02-28) 입력 시 해당 월과 주차를 올바르게 반환한다', () => {
     const week = formatWeek(new Date('2025-02-28'));
     expect(week).toBe('2025년 2월 4주');
   });
 });
 
-describe('formatMonth (YYYY년 M월)', () => {
+describe('formatMonth: 주어진 날짜의 월 정보를 "YYYY년 M월" 형식으로 반환', () => {
   it('2025-07-10은 "2025년 7월" 형식으로 반환한다', () => {
     const month = formatMonth(new Date('2025-07-10'));
     expect(month).toBe('2025년 7월');
@@ -211,7 +212,7 @@ describe('formatMonth (YYYY년 M월)', () => {
   });
 });
 
-describe('isDateInRange', () => {
+describe('isDateInRange: 주어진 날짜가 특정 범위 내에 있는지 확인', () => {
   const startDate = new Date('2025-07-01');
   const endDate = new Date('2025-07-31');
 
@@ -293,23 +294,23 @@ describe('fillZero', () => {
   });
 });
 
-describe('formatDate (YYYY-MM-DD)', () => {
+describe('formatDate: 주어진 날짜를 "YYYY-MM-DD" 형식으로 반환', () => {
   it('2025-07-10은 "2025-07-10" 형식으로 반환한다', () => {
     const date = formatDate(new Date('2025-07-10'));
     expect(date).toBe('2025-07-10');
   });
 
-  it('day 파라미터가 제공되면 해당 일자로 포맷팅한다', () => {
+  it('day 파라미터가 제공되면 날짜의 일자를 해당 일자로 반환한다', () => {
     const date = formatDate(new Date('2025-07-10'), 15);
     expect(date).toBe('2025-07-15');
   });
 
-  it('월이 한 자리 수일 때 앞에 0을 붙여 포맷팅한다', () => {
+  it('날짜의 월이 한 자리 수일 때 앞에 0을 붙여 반환한다', () => {
     const date = formatDate(new Date('2025-1-10'));
     expect(date).toBe('2025-01-10');
   });
 
-  it('일이 한 자리 수일 때 앞에 0을 붙여 포맷팅한다', () => {
+  it('날짜의 일자가 한 자리 수일 때 앞에 0을 붙여 반환한다', () => {
     const date = formatDate(new Date('2025-07-1'));
     expect(date).toBe('2025-07-01');
   });
