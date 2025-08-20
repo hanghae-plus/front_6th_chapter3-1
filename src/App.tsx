@@ -1,4 +1,4 @@
-import { Notifications, ChevronLeft, ChevronRight, Delete, Edit, Close } from '@mui/icons-material';
+import { Notifications, Delete, Edit, Close } from '@mui/icons-material';
 import {
   Alert,
   AlertTitle,
@@ -24,6 +24,7 @@ import {
 import { useSnackbar } from 'notistack';
 import { useState } from 'react';
 
+import { CalendarNavigation } from './components/events/CalendarNavigation';
 import { MonthView } from './components/events/MonthView';
 import { WeekView } from './components/events/WeekView';
 import { useCalendarView } from './hooks/useCalendarView.ts';
@@ -308,27 +309,7 @@ function App() {
         <Stack flex={1} spacing={5}>
           <Typography variant="h4">일정 보기</Typography>
 
-          <Stack direction="row" spacing={2} justifyContent="space-between" alignItems="center">
-            <IconButton aria-label="Previous" onClick={() => navigate('prev')}>
-              <ChevronLeft />
-            </IconButton>
-            <Select
-              size="small"
-              aria-label="뷰 타입 선택"
-              value={view}
-              onChange={(e) => setView(e.target.value as 'week' | 'month')}
-            >
-              <MenuItem value="week" aria-label="week-option">
-                Week
-              </MenuItem>
-              <MenuItem value="month" aria-label="month-option">
-                Month
-              </MenuItem>
-            </Select>
-            <IconButton aria-label="Next" onClick={() => navigate('next')}>
-              <ChevronRight />
-            </IconButton>
-          </Stack>
+          <CalendarNavigation view={view} setView={setView} navigate={navigate} />
 
           {view === 'week' && (
             <WeekView
