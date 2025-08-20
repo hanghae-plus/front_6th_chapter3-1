@@ -18,6 +18,11 @@ const HOLIDAY_RECORD = {
 type HolidayRecord = typeof HOLIDAY_RECORD;
 type HolidayKeys = keyof HolidayRecord;
 
+/**
+ * 주어진 날짜의 2025년 공휴일을 반환
+ * @param date 날짜
+ * @returns 공휴일 객체([날짜] : 공휴일 이름)
+ */
 export function fetchHolidays(date: Date) {
   const y = date.getFullYear();
   const m = String(date.getMonth() + 1).padStart(2, '0');
