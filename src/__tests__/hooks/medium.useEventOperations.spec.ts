@@ -84,7 +84,63 @@ it('정의된 이벤트 정보를 기준으로 적절하게 저장이 된다', a
   });
 });
 
-it("새로 정의된 'title', 'endTime' 기준으로 적절하게 일정이 업데이트 된다", async () => {});
+it("새로 정의된 'title', 'endTime' 기준으로 적절하게 일정이 업데이트 된다", async () => {
+  // 기존 이벤트 데이터 준비
+  const existingEvent: Event = {
+    id: 'existing-event-id',
+    title: '기존 회의',
+    date: '2025-08-30',
+    startTime: '14:00',
+    endTime: '15:00',
+    description: '기존 회의 설명',
+    location: '회의실 A',
+    category: '업무',
+    repeat: { type: 'none', interval: 0 },
+    notificationTime: 10,
+  };
+
+  const mockHandlers = setupMockHandlerUpdating([existingEvent]);
+  server.use(mockHandlers.getHandler, mockHandlers.putHandler);
+
+  const { result } = renderHook(() => useEventOperations(true));
+
+  // 초기 상태: 기존 이벤트 1개
+  await waitFor(() => {
+    expect(result.current.events).toHaveLength(1);
+    expect(result.current.events[0]).toMatchObject({
+      id: 'existing-event-id',
+      title: '기존 회의',
+      endTime: '15:00',
+    });
+  });
+
+  // 업데이트할 이벤트 데이터 (title과 endTime 변경)
+  const updatedEventData: Event = {
+    ...existingEvent,
+    title: '업데이트된 회의',
+    endTime: '16:30',
+  };
+
+  await act(async () => {
+    await result.current.saveEvent(updatedEventData);
+  });
+
+  await waitFor(() => {
+    expect(result.current.events).toHaveLength(1);
+    expect(result.current.events[0]).toMatchObject({
+      id: 'existing-event-id',
+      title: '업데이트된 회의',
+      endTime: '16:30',
+      date: '2025-08-30',
+      startTime: '14:00',
+      location: '회의실 A',
+    });
+  });
+
+  expect(enqueueSnackbarFn).toHaveBeenCalledWith('일정이 수정되었습니다.', {
+    variant: 'success',
+  });
+});
 
 it('존재하는 이벤트 삭제 시 에러없이 아이템이 삭제된다.', async () => {});
 
