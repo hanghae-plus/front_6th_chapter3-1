@@ -5,11 +5,17 @@ import { Event } from '../../types.ts';
 import { formatDate } from '../../utils/dateUtils.ts';
 import { parseHM } from '../utils.ts';
 
+beforeAll(() => {
+  vi.useFakeTimers();
+});
+
+afterAll(() => {
+  vi.useRealTimers();
+});
+
 const skipTimer = (ms: number) => {
   act(() => {
-    vi.useFakeTimers();
     vi.advanceTimersByTime(ms);
-    vi.useRealTimers();
   });
 };
 
