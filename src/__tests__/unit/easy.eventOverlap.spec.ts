@@ -4,7 +4,7 @@ import {
   isOverlapping,
   parseDateTime,
 } from '../../utils/eventOverlap';
-import { createMockEvent } from '../utils';
+import { createMockEvent, assertDate } from '../utils';
 describe('parseDateTime', () => {
   it('2025-07-01 14:30을 정확한 Date 객체로 변환한다', () => {
     const result = parseDateTime('2025-07-01', '14:30');
@@ -35,8 +35,8 @@ describe('convertEventToDateRange', () => {
   it('일반적인 이벤트를 올바른 시작 및 종료 시간을 가진 객체로 변환한다', () => {
     const result = convertEventToDateRange(createMockEvent());
 
-    expect(result.start).toEqual(new Date('2025-08-01T09:00'));
-    expect(result.end).toEqual(new Date('2025-08-01T10:00'));
+    assertDate(result.start, new Date('2025-08-01T09:00'));
+    assertDate(result.end, new Date('2025-08-01T10:00'));
   });
 
   it('잘못된 날짜 형식의 이벤트에 대해 Invalid Date를 반환한다', () => {
