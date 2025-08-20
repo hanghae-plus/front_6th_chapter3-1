@@ -26,7 +26,7 @@ export const setupMockHandlerUpdating = () => {
     {
       id: '1',
       title: '수정테스트입니당',
-      date: '2025-08-17',
+      date: '2025-10-17',
       startTime: '09:00',
       endTime: '10:00',
       description: '수정하기~',
@@ -38,7 +38,7 @@ export const setupMockHandlerUpdating = () => {
     {
       id: '2',
       title: '수정테스트입니당2',
-      date: '2025-08-17',
+      date: '2025-10-17',
       startTime: '09:00',
       endTime: '10:00',
       description: '수정안하기~',
@@ -68,7 +68,7 @@ export const setupMockHandlerDeletion = () => {
     {
       id: '1',
       title: '삭제테스트입니당',
-      date: '2025-08-17',
+      date: '2025-10-17',
       startTime: '09:00',
       endTime: '10:00',
       description: '삭제하기~',
@@ -80,7 +80,7 @@ export const setupMockHandlerDeletion = () => {
     {
       id: '2',
       title: '삭제테스트입니당2',
-      date: '2025-08-17',
+      date: '2025-10-17',
       startTime: '09:00',
       endTime: '10:00',
       description: '삭제안하기~',
