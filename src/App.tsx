@@ -10,8 +10,9 @@ import { NotificationList } from './components/NotificationList.tsx';
 import { OverlapDialog } from './components/OverlapDialog.tsx';
 import { WeekView } from './components/WeekView.tsx';
 import { useCalendarView } from './hooks/useCalendarView.ts';
-import { useEventForm } from './hooks/useEventForm.ts';
+import { useEventFormData } from './hooks/useEventForm.ts';
 import { useEventOperations } from './hooks/useEventOperations.ts';
+import { useEventTimeManager } from './hooks/useEventTimeManager.ts';
 import { useNotifications } from './hooks/useNotifications.ts';
 import { useSearch } from './hooks/useSearch.ts';
 // import { Event, EventForm, RepeatType } from './types';
@@ -19,38 +20,43 @@ import { Event, EventForm } from './types';
 import { findOverlappingEvents } from './utils/eventOverlap';
 
 function App() {
+  // 폼 데이터 관리
   const {
-    title,
-    setTitle,
-    date,
-    setDate,
-    startTime,
-    endTime,
-    description,
-    setDescription,
-    location,
-    setLocation,
-    category,
-    setCategory,
-    isRepeating,
-    setIsRepeating,
-    repeatType,
-    // setRepeatType,
-    repeatInterval,
-    // setRepeatInterval,
-    repeatEndDate,
-    // setRepeatEndDate,
-    notificationTime,
-    setNotificationTime,
-    startTimeError,
-    endTimeError,
+    formData,
+    setFormData,
     editingEvent,
     setEditingEvent,
-    handleStartTimeChange,
-    handleEndTimeChange,
-    resetForm,
-    editEvent,
-  } = useEventForm();
+    getEventData,
+    setEventData,
+    resetFormData,
+  } = useEventFormData();
+
+  // 시간 검증
+  const { startTimeError, endTimeError, createTimeChangeHandler, clearTimeErrors } =
+    useEventTimeManager();
+
+  // 시간 변경 핸들러
+  const handleStartTimeChange = createTimeChangeHandler(
+    'start',
+    formData.endTime,
+    (value: string) => setFormData((prev) => ({ ...prev, startTime: value }))
+  );
+  const handleEndTimeChange = createTimeChangeHandler('end', formData.startTime, (value: string) =>
+    setFormData((prev) => ({ ...prev, endTime: value }))
+  );
+
+  // 폼 리셋 (데이터 + 에러)
+  const resetForm = () => {
+    resetFormData();
+    clearTimeErrors();
+  };
+
+  // 이벤트 편집
+  const editEvent = (event: Event) => {
+    setEventData(event);
+    setEditingEvent(event);
+    clearTimeErrors();
+  };
 
   const { events, saveEvent, deleteEvent } = useEventOperations(Boolean(editingEvent), () =>
     setEditingEvent(null)
@@ -66,7 +72,7 @@ function App() {
   const { enqueueSnackbar } = useSnackbar();
 
   const addOrUpdateEvent = async () => {
-    if (!title || !date || !startTime || !endTime) {
+    if (!formData.title || !formData.date || !formData.startTime || !formData.endTime) {
       enqueueSnackbar('필수 정보를 모두 입력해주세요.', { variant: 'error' });
       return;
     }
@@ -78,19 +84,7 @@ function App() {
 
     const eventData: Event | EventForm = {
       id: editingEvent ? editingEvent.id : undefined,
-      title,
-      date,
-      startTime,
-      endTime,
-      description,
-      location,
-      category,
-      repeat: {
-        type: isRepeating ? repeatType : 'none',
-        interval: repeatInterval,
-        endDate: repeatEndDate || undefined,
-      },
-      notificationTime,
+      ...getEventData(),
     };
 
     const overlapping = findOverlappingEvents(eventData, events);
@@ -107,26 +101,32 @@ function App() {
     <Box sx={{ width: '100%', height: '100vh', margin: 'auto', p: 5 }}>
       <Stack direction="row" spacing={6} sx={{ height: '100%' }}>
         <EventSubmitForm
-          title={title}
-          setTitle={setTitle}
-          date={date}
-          setDate={setDate}
-          startTime={startTime}
-          endTime={endTime}
+          title={formData.title}
+          setTitle={(value: string) => setFormData((prev) => ({ ...prev, title: value }))}
+          date={formData.date}
+          setDate={(value: string) => setFormData((prev) => ({ ...prev, date: value }))}
+          startTime={formData.startTime}
+          endTime={formData.endTime}
           handleStartTimeChange={handleStartTimeChange}
           handleEndTimeChange={handleEndTimeChange}
           startTimeError={startTimeError || ''}
           endTimeError={endTimeError || ''}
-          description={description}
-          setDescription={setDescription}
-          location={location}
-          setLocation={setLocation}
-          category={category}
-          setCategory={setCategory}
-          isRepeating={isRepeating}
-          setIsRepeating={setIsRepeating}
-          notificationTime={notificationTime}
-          setNotificationTime={setNotificationTime}
+          description={formData.description}
+          setDescription={(value: string) =>
+            setFormData((prev) => ({ ...prev, description: value }))
+          }
+          location={formData.location}
+          setLocation={(value: string) => setFormData((prev) => ({ ...prev, location: value }))}
+          category={formData.category}
+          setCategory={(value: string) => setFormData((prev) => ({ ...prev, category: value }))}
+          isRepeating={formData.isRepeating}
+          setIsRepeating={(value: boolean) =>
+            setFormData((prev) => ({ ...prev, isRepeating: value }))
+          }
+          notificationTime={formData.notificationTime}
+          setNotificationTime={(value: number) =>
+            setFormData((prev) => ({ ...prev, notificationTime: value }))
+          }
           editingEvent={editingEvent}
           addOrUpdateEvent={addOrUpdateEvent}
         />
@@ -171,19 +171,7 @@ function App() {
           setIsOverlapDialogOpen(false);
           saveEvent({
             id: editingEvent ? editingEvent.id : undefined,
-            title,
-            date,
-            startTime,
-            endTime,
-            description,
-            location,
-            category,
-            repeat: {
-              type: isRepeating ? repeatType : 'none',
-              interval: repeatInterval,
-              endDate: repeatEndDate || undefined,
-            },
-            notificationTime,
+            ...getEventData(),
           });
         }}
       />

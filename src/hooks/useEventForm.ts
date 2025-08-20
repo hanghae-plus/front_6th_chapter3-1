@@ -1,106 +1,90 @@
-import { ChangeEvent, useState } from 'react';
+import { useState } from 'react';
 
 import { Event, RepeatType } from '../types';
-import { getTimeErrorMessage } from '../utils/timeValidation';
 
-type TimeErrorRecord = Record<'startTimeError' | 'endTimeError', string | null>;
+// 폼 데이터 타입
+type FormData = {
+  title: string;
+  date: string;
+  startTime: string;
+  endTime: string;
+  description: string;
+  location: string;
+  category: string;
+  notificationTime: number;
+  isRepeating: boolean;
+  repeatType: RepeatType;
+  repeatInterval: number;
+  repeatEndDate: string;
+};
 
-export const useEventForm = (initialEvent?: Event) => {
-  const [title, setTitle] = useState(initialEvent?.title || '');
-  const [date, setDate] = useState(initialEvent?.date || '');
-  const [startTime, setStartTime] = useState(initialEvent?.startTime || '');
-  const [endTime, setEndTime] = useState(initialEvent?.endTime || '');
-  const [description, setDescription] = useState(initialEvent?.description || '');
-  const [location, setLocation] = useState(initialEvent?.location || '');
-  const [category, setCategory] = useState(initialEvent?.category || '업무');
-  const [isRepeating, setIsRepeating] = useState(initialEvent?.repeat.type !== 'none');
-  const [repeatType, setRepeatType] = useState<RepeatType>(initialEvent?.repeat.type || 'none');
-  const [repeatInterval, setRepeatInterval] = useState(initialEvent?.repeat.interval || 1);
-  const [repeatEndDate, setRepeatEndDate] = useState(initialEvent?.repeat.endDate || '');
-  const [notificationTime, setNotificationTime] = useState(initialEvent?.notificationTime || 10);
+const getInitialFormData = (initialEvent?: Event): FormData => ({
+  title: initialEvent?.title || '',
+  date: initialEvent?.date || '',
+  startTime: initialEvent?.startTime || '',
+  endTime: initialEvent?.endTime || '',
+  description: initialEvent?.description || '',
+  location: initialEvent?.location || '',
+  category: initialEvent?.category || '업무',
+  notificationTime: initialEvent?.notificationTime || 10,
+  isRepeating: initialEvent?.repeat.type !== 'none',
+  repeatType: initialEvent?.repeat.type || 'none',
+  repeatInterval: initialEvent?.repeat.interval || 1,
+  repeatEndDate: initialEvent?.repeat.endDate || '',
+});
 
+export const useEventFormData = (initialEvent?: Event) => {
+  const [formData, setFormData] = useState<FormData>(() => getInitialFormData(initialEvent));
   const [editingEvent, setEditingEvent] = useState<Event | null>(null);
 
-  const [{ startTimeError, endTimeError }, setTimeError] = useState<TimeErrorRecord>({
-    startTimeError: null,
-    endTimeError: null,
+  // 폼 데이터를 Event 형태로 변환하는 헬퍼
+  const getEventData = (): Omit<Event, 'id'> => ({
+    title: formData.title,
+    date: formData.date,
+    startTime: formData.startTime,
+    endTime: formData.endTime,
+    description: formData.description,
+    location: formData.location,
+    category: formData.category,
+    notificationTime: formData.notificationTime,
+    repeat: {
+      type: formData.isRepeating ? formData.repeatType : 'none',
+      interval: formData.repeatInterval,
+      ...(formData.repeatEndDate && { endDate: formData.repeatEndDate }),
+    },
   });
 
-  const handleStartTimeChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const newStartTime = e.target.value;
-    setStartTime(newStartTime);
-    setTimeError(getTimeErrorMessage(newStartTime, endTime));
+  // 이벤트 데이터로 폼 필드 설정
+  const setEventData = (event: Event) => {
+    setFormData({
+      title: event.title,
+      date: event.date,
+      startTime: event.startTime,
+      endTime: event.endTime,
+      description: event.description,
+      location: event.location,
+      category: event.category,
+      notificationTime: event.notificationTime,
+      isRepeating: event.repeat.type !== 'none',
+      repeatType: event.repeat.type,
+      repeatInterval: event.repeat.interval,
+      repeatEndDate: event.repeat.endDate || '',
+    });
   };
 
-  const handleEndTimeChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const newEndTime = e.target.value;
-    setEndTime(newEndTime);
-    setTimeError(getTimeErrorMessage(startTime, newEndTime));
-  };
-
-  const resetForm = () => {
-    setTitle('');
-    setDate('');
-    setStartTime('');
-    setEndTime('');
-    setDescription('');
-    setLocation('');
-    setCategory('업무');
-    setIsRepeating(false);
-    setRepeatType('none');
-    setRepeatInterval(1);
-    setRepeatEndDate('');
-    setNotificationTime(10);
-  };
-
-  const editEvent = (event: Event) => {
-    setEditingEvent(event);
-    setTitle(event.title);
-    setDate(event.date);
-    setStartTime(event.startTime);
-    setEndTime(event.endTime);
-    setDescription(event.description);
-    setLocation(event.location);
-    setCategory(event.category);
-    setIsRepeating(event.repeat.type !== 'none');
-    setRepeatType(event.repeat.type);
-    setRepeatInterval(event.repeat.interval);
-    setRepeatEndDate(event.repeat.endDate || '');
-    setNotificationTime(event.notificationTime);
+  // 폼 리셋
+  const resetFormData = () => {
+    setFormData(getInitialFormData());
+    setEditingEvent(null);
   };
 
   return {
-    title,
-    setTitle,
-    date,
-    setDate,
-    startTime,
-    setStartTime,
-    endTime,
-    setEndTime,
-    description,
-    setDescription,
-    location,
-    setLocation,
-    category,
-    setCategory,
-    isRepeating,
-    setIsRepeating,
-    repeatType,
-    setRepeatType,
-    repeatInterval,
-    setRepeatInterval,
-    repeatEndDate,
-    setRepeatEndDate,
-    notificationTime,
-    setNotificationTime,
-    startTimeError,
-    endTimeError,
+    formData,
+    setFormData,
     editingEvent,
     setEditingEvent,
-    handleStartTimeChange,
-    handleEndTimeChange,
-    resetForm,
-    editEvent,
+    getEventData,
+    setEventData,
+    resetFormData,
   };
 };
