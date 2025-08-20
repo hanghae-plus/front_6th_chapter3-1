@@ -1,13 +1,4 @@
-import { Close } from '@mui/icons-material';
-import {
-  Alert,
-  AlertTitle,
-  Box,
-  Button as _Button,
-  IconButton,
-  Stack,
-  Typography,
-} from '@mui/material';
+import { Box, Button as _Button, Stack, Typography } from '@mui/material';
 import { useSnackbar } from 'notistack';
 import { useState } from 'react';
 
@@ -15,6 +6,7 @@ import { CalendarNavigation } from './components/events/CalendarNavigation';
 import { EventList } from './components/events/EventList';
 import { EventSubmitForm } from './components/events/EventSubmitForm.tsx';
 import { MonthView } from './components/events/MonthView';
+import { NotificationList } from './components/events/NotificationList';
 import { OverlapDialog } from './components/events/OverlapDialog';
 import { WeekView } from './components/events/WeekView';
 import { useCalendarView } from './hooks/useCalendarView.ts';
@@ -196,27 +188,7 @@ function App() {
         }}
       />
 
-      {notifications.length > 0 && (
-        <Stack position="fixed" top={16} right={16} spacing={2} alignItems="flex-end">
-          {notifications.map((notification, index) => (
-            <Alert
-              key={index}
-              severity="info"
-              sx={{ width: 'auto' }}
-              action={
-                <IconButton
-                  size="small"
-                  onClick={() => setNotifications((prev) => prev.filter((_, i) => i !== index))}
-                >
-                  <Close />
-                </IconButton>
-              }
-            >
-              <AlertTitle>{notification.message}</AlertTitle>
-            </Alert>
-          ))}
-        </Stack>
-      )}
+      <NotificationList notifications={notifications} setNotifications={setNotifications} />
     </Box>
   );
 }
