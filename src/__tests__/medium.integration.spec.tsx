@@ -150,9 +150,44 @@ describe('일정 CRUD 및 기본 기능', () => {
 });
 
 describe('일정 뷰', () => {
-  it('주별 뷰를 선택 후 해당 주에 일정이 없으면, 일정이 표시되지 않는다.', async () => {});
+  it('주별 뷰를 선택 후 해당 주에 일정이 없으면, 일정이 표시되지 않는다.', async () => {
+    const user = userEvent.setup();
 
-  it('주별 뷰 선택 후 해당 일자에 일정이 존재한다면 해당 일정이 정확히 표시된다', async () => {});
+    render(<App />, { wrapper: TestWrapper });
+
+    await screen.findByText('일정 로딩 완료!');
+
+    await selectComboboxOption(user, 2, 'week-option');
+
+    const calendarView = screen.getByTestId('week-view');
+
+    // 일정이 표시되지 않아야 함
+    expect(within(calendarView).queryByText('기존 회의')).not.toBeInTheDocument();
+    expect(within(calendarView).queryByText('기존 팀 미팅')).not.toBeInTheDocument();
+  });
+
+  it('주별 뷰 선택 후 해당 일자에 일정이 존재한다면 해당 일정이 정확히 표시된다', async () => {
+    // 2025년 10월 15일에 MSW가 바라보는 일정이 있기 때문
+    const mockDate = new Date('2025-10-15');
+    vi.setSystemTime(mockDate);
+
+    const user = userEvent.setup();
+
+    render(<App />, { wrapper: TestWrapper });
+
+    await screen.findByText('일정 로딩 완료!');
+
+    // 주별 뷰 선택
+    await selectComboboxOption(user, 2, 'week-option');
+
+    // 주별 뷰에서 일정이 표시되는지 확인
+    const calendarView = screen.getByTestId('week-view');
+
+    // 기존 일정들이 표시되어야 함
+    expect(within(calendarView).getByText('기존 회의')).toBeInTheDocument();
+
+    vi.useRealTimers();
+  });
 
   it('월별 뷰에 일정이 없으면, 일정이 표시되지 않아야 한다.', async () => {});
 
