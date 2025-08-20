@@ -3,7 +3,24 @@ export interface TimeValidationResult {
   endTimeError: string | null;
 }
 
+const TIME_FORMAT_REGEX = /^([01]?[0-9]|2[0-3]):[0-5][0-9]$/;
+
 export function getTimeErrorMessage(start: string, end: string): TimeValidationResult {
+  // 시간 포멧 검증
+  if (start && !TIME_FORMAT_REGEX.test(start)) {
+    return {
+      startTimeError: '올바른 시간 형식을 입력해주세요. (예: 09:30)',
+      endTimeError: null,
+    };
+  }
+
+  if (end && !TIME_FORMAT_REGEX.test(end)) {
+    return {
+      startTimeError: null,
+      endTimeError: '올바른 시간 형식을 입력해주세요. (예: 09:30)',
+    };
+  }
+
   if (!start || !end) {
     return { startTimeError: null, endTimeError: null };
   }
