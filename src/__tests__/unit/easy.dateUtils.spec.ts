@@ -10,13 +10,7 @@ import {
   getWeeksAtMonth,
   isDateInRange,
 } from '../../utils/dateUtils';
-
-const createTestEvent = (overrides: Partial<Event> = {}) =>
-  ({
-    id: '1',
-    date: '2025-07-01',
-    ...overrides,
-  } as Event);
+import { createTestEvent } from '../utils';
 
 describe('getDaysInMonth', () => {
   it('1월은 31일 수를 반환한다', () => {

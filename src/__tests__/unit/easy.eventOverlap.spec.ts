@@ -1,18 +1,10 @@
-import { Event } from '../../types';
 import {
   convertEventToDateRange,
   findOverlappingEvents,
   isOverlapping,
   parseDateTime,
 } from '../../utils/eventOverlap';
-
-const createTestEvent = (overrides: Partial<Event> = {}) =>
-  ({
-    date: '2025-07-01',
-    startTime: '14:30',
-    endTime: '16:00',
-    ...overrides,
-  } as Event);
+import { createTestEvent } from '../utils';
 
 describe('parseDateTime', () => {
   it('2025-07-01 14:30을 정확한 Date 객체로 변환한다', () => {
