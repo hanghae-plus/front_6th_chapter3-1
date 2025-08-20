@@ -56,6 +56,29 @@ export const setupMockHandlerUpdating = (initEvents = [] as Event[]) => {
   };
 };
 
-export const setupMockHandlerDeletion = () => {
-  
+export const setupMockHandlerDeletion = (initEvents = [] as Event[]) => {
+  let currentEvents = [...initEvents];
+
+  return {
+    getHandler: http.get('/api/events', () => {
+      return HttpResponse.json({ events: currentEvents });
+    }),
+
+    deleteHandler: http.delete('/api/events/:id', ({ params }) => {
+      const { id } = params;
+      const index = currentEvents.findIndex((event) => event.id === id);
+
+      if (index === -1) {
+        return HttpResponse.json({ error: 'Event not found' }, { status: 404 });
+      }
+
+      currentEvents.splice(index, 1);
+      return HttpResponse.json({}, { status: 204 });
+    }),
+
+    getCurrentEvents: () => [...currentEvents],
+    setCurrentEvents: (events: Event[]) => {
+      currentEvents = [...events];
+    },
+  };
 };
