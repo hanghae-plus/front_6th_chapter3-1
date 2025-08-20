@@ -5,7 +5,7 @@ import {
   parseDateTime,
 } from '../../utils/eventOverlap';
 import { createMockEvent } from '../utils';
-describe('parseDateTime', () => {
+describe('parseDateTime: 날짜와 시간을 합쳐 Date 객체로 변환', () => {
   it('2025-07-01 날짜와 14:30 시간을 합쳐 Date 객체로 변환한다', () => {
     const date = parseDateTime('2025-08-01', '14:30');
     expect(date).toEqual(new Date('2025-08-01T14:30:00'));
@@ -32,7 +32,7 @@ describe('parseDateTime', () => {
   });
 });
 
-describe('convertEventToDateRange', () => {
+describe('convertEventToDateRange: 이벤트의 date, startTime, endTime을 동일한 날짜의 시작/종료 Date로 변환', () => {
   //이벤트 생성
   const [defaultEvent, wrongDateEvent, wrongTimeEvent] = [
     createMockEvent(1, { date: '2025-08-01', startTime: '09:00', endTime: '10:00' }),
@@ -48,7 +48,7 @@ describe('convertEventToDateRange', () => {
     });
   });
 
-  it('잘못된 날짜의 이벤트는 start와 end 모두 Invalid Date가 된다', () => {
+  it('잘못된 날짜(2025-08-32)의 이벤트는 start와 end 모두 Invalid Date가 된다', () => {
     const dateRange = convertEventToDateRange(wrongDateEvent);
 
     expect(dateRange).toEqual({
@@ -57,7 +57,7 @@ describe('convertEventToDateRange', () => {
     });
   });
 
-  it('잘못된 시간 형식의 이벤트에 대해서는 해당 시간대를 Invalid Date를 반환한다', () => {
+  it('잘못된 시간 형식(25:00)의 이벤트에 대해서는 해당 시간대를 Invalid Date로 반환한다', () => {
     const dateRange = convertEventToDateRange(wrongTimeEvent);
 
     expect(dateRange).toEqual({
@@ -67,7 +67,7 @@ describe('convertEventToDateRange', () => {
   });
 });
 
-describe('isOverlapping', () => {
+describe('isOverlapping: 두 이벤트의 시간이 겹치는지 확인', () => {
   it('두 이벤트 시간이 겹치는 경우 true를 반환한다', () => {
     const event1 = createMockEvent(1, { date: '2025-08-01', startTime: '09:00', endTime: '10:00' });
     const event2 = createMockEvent(2, { date: '2025-08-01', startTime: '09:30', endTime: '10:30' });
@@ -90,7 +90,7 @@ describe('isOverlapping', () => {
   });
 });
 
-describe('findOverlappingEvents', () => {
+describe('findOverlappingEvents: 새 이벤트와 겹치는 모든 이벤트를 반환', () => {
   it('새 이벤트와 겹치는 모든 이벤트를 반환한다', () => {
     const events = [
       createMockEvent(1, { date: '2025-08-01', startTime: '09:00', endTime: '10:00' }),
