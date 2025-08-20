@@ -18,12 +18,11 @@ beforeEach(() => {
 
 afterEach(() => {
   server.resetHandlers();
-  vi.clearAllMocks();
+  vi.resetAllMocks();
 });
 
 // 문제점 발견 : handler만 초기화 해서 events 데이터는 공유되어버림
 afterAll(() => {
-  vi.resetAllMocks();
   vi.useRealTimers();
   server.close();
 });
