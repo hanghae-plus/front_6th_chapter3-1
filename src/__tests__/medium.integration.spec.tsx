@@ -303,9 +303,91 @@ describe('검색 기능', () => {
 });
 
 describe('일정 충돌', () => {
-  it('겹치는 시간에 새 일정을 추가할 때 경고가 표시된다', async () => {});
+  it('겹치는 시간에 새 일정을 추가할 때 경고가 표시된다', async () => {
+    // MSW 데이터가 있는 날짜로 설정 (기존 회의: 2025-10-15 09:00-10:00)
+    const mockDate = new Date('2025-10-15');
+    vi.setSystemTime(mockDate);
 
-  it('기존 일정의 시간을 수정하여 충돌이 발생하면 경고가 노출된다', async () => {});
+    const user = userEvent.setup();
+
+    render(<App />, { wrapper: TestWrapper });
+
+    await screen.findByText('일정 로딩 완료!');
+
+    // 겹치는 시간의 새 일정 입력
+    const conflictingEvent = {
+      title: '충돌하는 회의',
+      date: '2025-10-15',
+      startTime: '09:30',
+      endTime: '10:30',
+      description: '기존 일정과 겹치는 회의',
+      location: '회의실 C',
+      category: '업무',
+      notificationTime: '1분 전',
+    };
+
+    await fillEventForm(user, conflictingEvent);
+    await selectComboboxOption(user, 0, conflictingEvent.category);
+    await selectComboboxOption(user, 1, conflictingEvent.notificationTime);
+    await toggleRepeatCheckbox(user, 'unchecked');
+
+    await user.click(screen.getByTestId('event-submit-button'));
+
+    // 충돌 경고 다이얼로그가 표시되는지 확인
+    expect(screen.getByText('일정 겹침 경고')).toBeInTheDocument();
+
+    vi.useRealTimers();
+  });
+
+  it('기존 일정의 시간을 수정하여 충돌이 발생하면 경고가 노출된다', async () => {
+    const mockDate = new Date('2025-10-15');
+    vi.setSystemTime(mockDate);
+
+    const user = userEvent.setup();
+
+    render(<App />, { wrapper: TestWrapper });
+
+    await screen.findByText('일정 로딩 완료!');
+
+    const newEvent = {
+      title: '추가 회의',
+      date: '2025-10-15',
+      startTime: '11:00',
+      endTime: '12:00',
+      description: '추가된 회의',
+      location: '회의실 D',
+      category: '업무',
+      notificationTime: '1분 전',
+    };
+
+    await fillEventForm(user, newEvent);
+    await selectComboboxOption(user, 0, newEvent.category);
+    await selectComboboxOption(user, 1, newEvent.notificationTime);
+    await toggleRepeatCheckbox(user, 'unchecked');
+    await user.click(screen.getByTestId('event-submit-button'));
+
+    await screen.findByText('일정이 추가되었습니다.');
+
+    // === 일정 추가 완료 시점 ===
+
+    const eventList = screen.getByTestId('event-list');
+    const editButton = within(eventList).getAllByLabelText('Edit event')[0];
+    await user.click(editButton);
+
+    const startTimeInput = screen.getByLabelText('시작 시간');
+    const endTimeInput = screen.getByLabelText('종료 시간');
+
+    await user.clear(startTimeInput);
+    await user.type(startTimeInput, '11:30');
+    await user.clear(endTimeInput);
+    await user.type(endTimeInput, '12:30');
+
+    await user.click(screen.getByTestId('event-submit-button'));
+
+    expect(screen.getByText('일정 겹침 경고')).toBeInTheDocument();
+
+    vi.useRealTimers();
+  });
 });
 
 it('notificationTime을 10으로 하면 지정 시간 10분 전 알람 텍스트가 노출된다', async () => {});
