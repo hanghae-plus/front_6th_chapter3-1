@@ -8,7 +8,7 @@ export const server = setupServer(...handlers);
 
 beforeAll(() => {
   server.listen();
-  vi.useFakeTimers();
+  vi.useFakeTimers({ shouldAdvanceTime: true });
 });
 
 beforeEach(() => {
