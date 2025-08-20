@@ -62,28 +62,8 @@ const notificationOptions = [
 
 function App() {
   const {
-    title,
-    setTitle,
-    date,
-    setDate,
-    startTime,
-    endTime,
-    description,
-    setDescription,
-    location,
-    setLocation,
-    category,
-    setCategory,
-    isRepeating,
-    setIsRepeating,
-    repeatType,
-    // setRepeatType,
-    repeatInterval,
-    // setRepeatInterval,
-    repeatEndDate,
-    // setRepeatEndDate,
-    notificationTime,
-    setNotificationTime,
+    eventForm,
+    setEventForm,
     startTimeError,
     endTimeError,
     editingEvent,
@@ -106,9 +86,25 @@ function App() {
   const [overlappingEvents, setOverlappingEvents] = useState<Event[]>([]);
 
   const { enqueueSnackbar } = useSnackbar();
+  const eventData: Event | EventForm = {
+    id: editingEvent ? editingEvent.id : undefined,
+    title: eventForm.title,
+    date: eventForm.date,
+    startTime: eventForm.startTime,
+    endTime: eventForm.endTime,
+    description: eventForm.description,
+    location: eventForm.location,
+    category: eventForm.category,
+    repeat: {
+      type: eventForm.isRepeating ? eventForm.repeatType : 'none',
+      interval: eventForm.repeatInterval,
+      endDate: eventForm.repeatEndDate || undefined,
+    },
+    notificationTime: eventForm.notificationTime,
+  };
 
   const addOrUpdateEvent = async () => {
-    if (!title || !date || !startTime || !endTime) {
+    if (!eventForm.title || !eventForm.date || !eventForm.startTime || !eventForm.endTime) {
       enqueueSnackbar('필수 정보를 모두 입력해주세요.', { variant: 'error' });
       return;
     }
@@ -117,23 +113,6 @@ function App() {
       enqueueSnackbar('시간 설정을 확인해주세요.', { variant: 'error' });
       return;
     }
-
-    const eventData: Event | EventForm = {
-      id: editingEvent ? editingEvent.id : undefined,
-      title,
-      date,
-      startTime,
-      endTime,
-      description,
-      location,
-      category,
-      repeat: {
-        type: isRepeating ? repeatType : 'none',
-        interval: repeatInterval,
-        endDate: repeatEndDate || undefined,
-      },
-      notificationTime,
-    };
 
     const overlapping = findOverlappingEvents(eventData, events);
     if (overlapping.length > 0) {
@@ -324,8 +303,8 @@ function App() {
             <TextField
               id="title"
               size="small"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
+              value={eventForm.title}
+              onChange={(e) => setEventForm({ ...eventForm, title: e.target.value })}
             />
           </FormControl>
 
@@ -335,8 +314,8 @@ function App() {
               id="date"
               size="small"
               type="date"
-              value={date}
-              onChange={(e) => setDate(e.target.value)}
+              value={eventForm.date}
+              onChange={(e) => setEventForm({ ...eventForm, date: e.target.value })}
             />
           </FormControl>
 
@@ -348,9 +327,9 @@ function App() {
                   id="start-time"
                   size="small"
                   type="time"
-                  value={startTime}
+                  value={eventForm.startTime}
                   onChange={handleStartTimeChange}
-                  onBlur={() => getTimeErrorMessage(startTime, endTime)}
+                  onBlur={() => getTimeErrorMessage(eventForm.startTime, eventForm.endTime)}
                   error={!!startTimeError}
                 />
               </Tooltip>
@@ -362,9 +341,9 @@ function App() {
                   id="end-time"
                   size="small"
                   type="time"
-                  value={endTime}
+                  value={eventForm.endTime}
                   onChange={handleEndTimeChange}
-                  onBlur={() => getTimeErrorMessage(startTime, endTime)}
+                  onBlur={() => getTimeErrorMessage(eventForm.startTime, eventForm.endTime)}
                   error={!!endTimeError}
                 />
               </Tooltip>
@@ -376,8 +355,8 @@ function App() {
             <TextField
               id="description"
               size="small"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
+              value={eventForm.description}
+              onChange={(e) => setEventForm({ ...eventForm, description: e.target.value })}
             />
           </FormControl>
 
@@ -386,8 +365,8 @@ function App() {
             <TextField
               id="location"
               size="small"
-              value={location}
-              onChange={(e) => setLocation(e.target.value)}
+              value={eventForm.location}
+              onChange={(e) => setEventForm({ ...eventForm, location: e.target.value })}
             />
           </FormControl>
 
@@ -396,8 +375,8 @@ function App() {
             <Select
               id="category"
               size="small"
-              value={category}
-              onChange={(e) => setCategory(e.target.value)}
+              value={eventForm.category}
+              onChange={(e) => setEventForm({ ...eventForm, category: e.target.value })}
               aria-labelledby="category-label"
               aria-label="카테고리"
             >
@@ -413,8 +392,8 @@ function App() {
             <FormControlLabel
               control={
                 <Checkbox
-                  checked={isRepeating}
-                  onChange={(e) => setIsRepeating(e.target.checked)}
+                  checked={eventForm.isRepeating}
+                  onChange={(e) => setEventForm({ ...eventForm, isRepeating: e.target.checked })}
                 />
               }
               label="반복 일정"
@@ -426,8 +405,10 @@ function App() {
             <Select
               id="notification"
               size="small"
-              value={notificationTime}
-              onChange={(e) => setNotificationTime(Number(e.target.value))}
+              value={eventForm.notificationTime}
+              onChange={(e) =>
+                setEventForm({ ...eventForm, notificationTime: Number(e.target.value) })
+              }
             >
               {notificationOptions.map((option) => (
                 <MenuItem key={option.value} value={option.value}>
@@ -609,22 +590,7 @@ function App() {
             color="error"
             onClick={() => {
               setIsOverlapDialogOpen(false);
-              saveEvent({
-                id: editingEvent ? editingEvent.id : undefined,
-                title,
-                date,
-                startTime,
-                endTime,
-                description,
-                location,
-                category,
-                repeat: {
-                  type: isRepeating ? repeatType : 'none',
-                  interval: repeatInterval,
-                  endDate: repeatEndDate || undefined,
-                },
-                notificationTime,
-              });
+              saveEvent(eventData);
             }}
           >
             계속 진행
