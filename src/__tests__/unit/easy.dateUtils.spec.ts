@@ -37,7 +37,7 @@ describe('getDaysInMonth', () => {
 });
 
 describe('getWeekDates', () => {
-  it.only('주중의 날짜(수요일)에 대해 올바른 주의 날짜들을 반환한다', () => {
+  it('주중의 날짜(수요일)에 대해 올바른 주의 날짜들을 반환한다', () => {
     expect(getWeekDates(new Date(2025, 7, 20))).toEqual([
       new Date(2025, 7, 17),
       new Date(2025, 7, 18),
@@ -49,7 +49,7 @@ describe('getWeekDates', () => {
     ]);
   });
 
-  it.only('주의 시작(월요일)에 대해 올바른 주의 날짜들을 반환한다', () => {
+  it('주의 시작(월요일)에 대해 올바른 주의 날짜들을 반환한다', () => {
     expect(getWeekDates(new Date(2025, 7, 17))).toEqual([
       new Date(2025, 7, 17),
       new Date(2025, 7, 18),
@@ -61,7 +61,7 @@ describe('getWeekDates', () => {
     ]);
   });
 
-  it.only('주의 끝(일요일)에 대해 올바른 주의 날짜들을 반환한다', () => {
+  it('주의 끝(일요일)에 대해 올바른 주의 날짜들을 반환한다', () => {
     expect(getWeekDates(new Date(2025, 7, 23))).toEqual([
       new Date(2025, 7, 17),
       new Date(2025, 7, 18),
@@ -73,7 +73,7 @@ describe('getWeekDates', () => {
     ]);
   });
 
-  it.only('연도를 넘어가는 주의 날짜를 정확히 처리한다 (연말)', () => {
+  it('연도를 넘어가는 주의 날짜를 정확히 처리한다 (연말)', () => {
     expect(getWeekDates(new Date(2025, 11, 29))).toEqual([
       new Date(2025, 11, 28),
       new Date(2025, 11, 29),
@@ -85,7 +85,7 @@ describe('getWeekDates', () => {
     ]);
   });
 
-  it.only('연도를 넘어가는 주의 날짜를 정확히 처리한다 (연초)', () => {
+  it('연도를 넘어가는 주의 날짜를 정확히 처리한다 (연초)', () => {
     expect(getWeekDates(new Date(2025, 0, 1))).toEqual([
       new Date(2024, 11, 29),
       new Date(2024, 11, 30),
@@ -97,7 +97,7 @@ describe('getWeekDates', () => {
     ]);
   });
 
-  it.only('윤년의 2월 29일을 포함한 주를 올바르게 처리한다', () => {
+  it('윤년의 2월 29일을 포함한 주를 올바르게 처리한다', () => {
     expect(getWeekDates(new Date(2024, 1, 29))).toEqual([
       new Date(2024, 1, 25),
       new Date(2024, 1, 26),
@@ -109,7 +109,7 @@ describe('getWeekDates', () => {
     ]);
   });
 
-  it.only('월의 마지막 날짜를 포함한 주를 올바르게 처리한다', () => {
+  it('월의 마지막 날짜를 포함한 주를 올바르게 처리한다', () => {
     expect(getWeekDates(new Date(2025, 8, 30))).toEqual([
       new Date(2025, 8, 28),
       new Date(2025, 8, 29),
