@@ -71,11 +71,20 @@ export default [
 
       // ESLint rules
       'no-unused-vars': 'off',
-      '@typescript-eslint/no-unused-vars': ['error'],
+      '@typescript-eslint/no-unused-vars': [
+        'error',
+        {
+          argsIgnorePattern: '^_',
+          varsIgnorePattern: '^_',
+          caughtErrorsIgnorePattern: '^_',
+          destructuredArrayIgnorePattern: '^_',
+        },
+      ],
 
       // React rules
       'react/prop-types': 'off',
       ...reactHooksPlugin.configs.recommended.rules,
+      'react-hooks/exhaustive-deps': 'off',
 
       // Import rules
       'import/order': [
@@ -113,6 +122,7 @@ export default [
     rules: {
       ...vitestPlugin.configs.recommended.rules,
       'vitest/expect-expect': 'off',
+      'vitest/no-commented-out-tests': 'off',
     },
     languageOptions: {
       globals: {

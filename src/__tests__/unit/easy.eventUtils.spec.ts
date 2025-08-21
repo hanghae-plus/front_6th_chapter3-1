@@ -1,6 +1,6 @@
+import { Event } from '../../types';
 import { getFilteredEvents } from '../../utils/eventUtils';
 import { createTestEvent } from '../utils';
-import { Event } from '../../types';
 
 describe('getFilteredEvents', () => {
   it("검색어 '기존 회의'에 맞는 이벤트만 반환한다", () => {

@@ -1,10 +1,10 @@
 import { screen, within, RenderResult } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { vi } from 'vitest';
-import { createTestEvent } from './utils';
-import { renderWithProvider } from './renderProvider';
-import { createMockHandlers } from '../__mocks__/handlersUtils';
 
+import { renderWithProvider } from './renderProvider';
+import { createTestEvent } from './utils';
+import { createMockHandlers } from '../__mocks__/handlersUtils';
 import App from '../App';
 import { server } from '../setupTests';
 
@@ -298,7 +298,7 @@ describe('검색 기능', () => {
     await user.click(getByTestId('event-submit-button'));
 
     // 폼 초기화
-    for (const [key, value] of Object.entries(form)) {
+    for (const [_key, value] of Object.entries(form)) {
       if (value instanceof HTMLInputElement || value instanceof HTMLTextAreaElement) {
         await user.clear(value);
       }
@@ -356,7 +356,7 @@ describe('일정 충돌', () => {
     }
     await user.click(getByTestId('event-submit-button'));
 
-    for (const [key, value] of Object.entries(form)) {
+    for (const [_key, value] of Object.entries(form)) {
       if (value instanceof HTMLInputElement || value instanceof HTMLTextAreaElement) {
         await user.clear(value);
       }
@@ -405,7 +405,7 @@ describe('일정 충돌', () => {
     await user.click(getByTestId('event-submit-button'));
 
     // 폼 초기화
-    for (const [key, value] of Object.entries(form)) {
+    for (const [_key, value] of Object.entries(form)) {
       if (value instanceof HTMLInputElement || value instanceof HTMLTextAreaElement) {
         await user.clear(value);
       }

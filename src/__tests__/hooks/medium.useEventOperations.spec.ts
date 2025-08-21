@@ -1,10 +1,11 @@
 import { act, renderHook, waitFor } from '@testing-library/react';
 import { http, HttpResponse } from 'msw';
-import { createTestEvent } from '../utils.ts';
+
 import { createMockHandlers } from '../../__mocks__/handlersUtils.ts';
 import { useEventOperations } from '../../hooks/useEventOperations.ts';
 import { server } from '../../setupTests.ts';
 import { Event } from '../../types.ts';
+import { createTestEvent } from '../utils.ts';
 
 const initialEventData = [
   createTestEvent({

@@ -1,5 +1,6 @@
 import { render, RenderOptions, RenderResult } from '@testing-library/react';
 import { ReactElement } from 'react';
+
 import { Provider } from '../Provider';
 
 export function renderWithProvider(

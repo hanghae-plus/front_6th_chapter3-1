@@ -1,6 +1,7 @@
 import { act, renderHook } from '@testing-library/react';
-import { createTestEvent } from '../utils.ts';
+
 import { useNotifications } from '../../hooks/useNotifications.ts';
+import { createTestEvent } from '../utils.ts';
 
 const testEvent = [
   createTestEvent({
