@@ -1,4 +1,4 @@
-import { Event } from '../../types';
+import type { Event } from '../../types';
 import { createNotificationMessage, getUpcomingEvents } from '../../utils/notificationUtils';
 
 const mockEvents: Event[] = [
@@ -17,28 +17,28 @@ const mockEvents: Event[] = [
 ];
 
 describe('getUpcomingEvents', () => {
-  it.only('알림 시간이 정확히 도래한 이벤트를 반환한다', () => {
+  it('알림 시간이 정확히 도래한 이벤트를 반환한다', () => {
     const now = new Date('2025-08-20T09:50:00');
     const upcomingEvents = getUpcomingEvents(mockEvents, now, []);
 
     expect(upcomingEvents).toEqual(mockEvents);
   });
 
-  it.only('이미 알림이 간 이벤트는 제외한다', () => {
+  it('이미 알림이 간 이벤트는 제외한다', () => {
     const now = new Date('2025-08-20T09:50:00');
     const upcomingEvents = getUpcomingEvents(mockEvents, now, ['1']);
 
     expect(upcomingEvents).toEqual([]);
   });
 
-  it.only('알림 시간이 아직 도래하지 않은 이벤트는 반환하지 않는다', () => {
+  it('알림 시간이 아직 도래하지 않은 이벤트는 반환하지 않는다', () => {
     const now = new Date('2025-08-20T09:30:00');
     const upcomingEvents = getUpcomingEvents(mockEvents, now, []);
 
     expect(upcomingEvents).toEqual([]);
   });
 
-  it.only('알림 시간이 지난 이벤트는 반환하지 않는다', () => {
+  it('알림 시간이 지난 이벤트는 반환하지 않는다', () => {
     const now = new Date('2025-08-20T10:00:00');
     const upcomingEvents = getUpcomingEvents(mockEvents, now, []);
 
@@ -47,10 +47,10 @@ describe('getUpcomingEvents', () => {
 });
 
 describe('createNotificationMessage', () => {
-  it.only('올바른 알림 메시지를 생성해야 한다', () => {
+  it('올바른 알림 메시지를 생성해야 한다', () => {
     const [mockEvent] = mockEvents;
     const notificationMessage = createNotificationMessage(mockEvent);
 
-    expect(notificationMessage).toBe('10분 후 팀 회의 일정이 시작됩니다.');
+    expect(notificationMessage).toBe('10분 후 팀 회의 일정이 시작됩니다');
   });
 });
