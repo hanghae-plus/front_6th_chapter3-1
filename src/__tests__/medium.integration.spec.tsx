@@ -1,6 +1,6 @@
 import CssBaseline from '@mui/material/CssBaseline';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import { render, screen, within, act, waitFor } from '@testing-library/react';
+import { render, screen, within, waitFor } from '@testing-library/react';
 import { UserEvent, userEvent } from '@testing-library/user-event';
 // import { http, HttpResponse } from 'msw';
 import { SnackbarProvider } from 'notistack';
@@ -212,7 +212,7 @@ describe('일정 뷰', () => {
   it('월별 뷰에 일정이 없으면, 일정이 표시되지 않아야 한다.', async () => {
     setupMockHandlerCreation();
 
-    const {} = setup(<App />);
+    setup(<App />);
 
     await waitFor(() => {
       expect(screen.queryByText('검색 결과가 없습니다')).not.toBeInTheDocument();
@@ -251,7 +251,7 @@ describe('일정 뷰', () => {
       },
     ]);
 
-    const {} = setup(<App />);
+    setup(<App />);
 
     await waitFor(() => {
       expect(screen.queryByText('검색 결과가 없습니다')).not.toBeInTheDocument();

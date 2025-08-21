@@ -1,8 +1,8 @@
 import { act, renderHook } from '@testing-library/react';
 
+import data from '../../__mocks__/response/realEvents.json';
 import { useNotifications } from '../../hooks/useNotifications.ts';
 import { Event } from '../../types.ts';
-import data from '../../__mocks__/response/realEvents.json';
 
 it('초기 상태에서는 알림이 없어야 한다', () => {
   const events = data.events as Array<Event>;

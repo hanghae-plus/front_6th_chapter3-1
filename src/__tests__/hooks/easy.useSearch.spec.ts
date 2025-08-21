@@ -1,8 +1,8 @@
 import { act, renderHook } from '@testing-library/react';
 
+import data from '../../__mocks__/response/realEvents.json';
 import { useSearch } from '../../hooks/useSearch.ts';
 import { Event } from '../../types.ts';
-import data from '../../__mocks__/response/realEvents.json';
 
 it('검색어가 비어있을 때 모든 해당 월에 대한 이벤트를 반환해야 한다', () => {
   const events = data.events as Array<Event>;

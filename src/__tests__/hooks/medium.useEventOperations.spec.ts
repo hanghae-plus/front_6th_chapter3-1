@@ -6,11 +6,11 @@ import {
   setupMockHandlerDeletion,
   setupMockHandlerUpdating,
 } from '../../__mocks__/handlersUtils.ts';
+import newData from '../../__mocks__/response/events.json';
+import data from '../../__mocks__/response/realEvents.json';
 import { useEventOperations } from '../../hooks/useEventOperations.ts';
 import { server } from '../../setupTests.ts';
 import { Event } from '../../types.ts';
-import data from '../../__mocks__/response/realEvents.json';
-import newData from '../../__mocks__/response/events.json';
 
 const enqueueSnackbarFn = vi.fn();
 
