@@ -23,7 +23,7 @@ export function Notifications({ notifications, onRemoveNotification }: Notificat
           severity="info"
           sx={{ width: 'auto' }}
           action={
-            <IconButton size="small" onClick={() => onRemoveNotification(index)}>
+            <IconButton size="small" onClick={() => onRemoveNotification(index)} aria-label="Close">
               <Close />
             </IconButton>
           }

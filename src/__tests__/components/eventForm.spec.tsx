@@ -1,22 +1,10 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import { EventFormComponent } from '../../components/EventForm';
 import { useEventForm } from '../../hooks/useEventForm';
-import { createEvent } from '../utils';
 import { Event } from '../../types';
 import userEvent from '@testing-library/user-event';
 import { SnackbarProvider } from 'notistack';
 
-const events = [
-  createEvent({
-    id: '1',
-    title: 'Event 1',
-    date: '2025-08-22',
-    startTime: '09:00',
-    endTime: '10:00',
-  }),
-];
-
-// EventForm을 테스트하기 위한 래퍼 컴포넌트
 function EventFormWrapper({
   events,
   saveEvent,
