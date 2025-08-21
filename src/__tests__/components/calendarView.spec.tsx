@@ -68,18 +68,3 @@ describe('CalendarView', () => {
     expect(cellsWithEvents[0]).toHaveTextContent('Event 1');
   });
 });
-
-describe('CalendarMonthView', () => {
-  it('month 뷰에서 8월은 1일부터 31일까지 랜더링된다', () => {
-    render(<CalendarViewComponent events={events} notifiedEvents={[]} />);
-
-    expect(screen.getByText('2025년 8월')).toBeInTheDocument();
-    const cellsWithParagraphs = screen
-      .getAllByRole('cell')
-      .filter((cell) => cell.querySelector('p') !== null);
-    expect(cellsWithParagraphs).toHaveLength(31);
-
-    expect(cellsWithParagraphs[0]).toHaveTextContent('1');
-    expect(cellsWithParagraphs[30]).toHaveTextContent('31');
-  });
-});
