@@ -23,10 +23,13 @@ export function getWeekDates(date: Date): Date[] {
   return weekDates;
 }
 
+/**
+ * 1일부터 ~ 마지막날까지 2차배열 형태로 담아 반환함
+ */
 export function getWeeksAtMonth(currentDate: Date) {
   const year = currentDate.getFullYear();
   const month = currentDate.getMonth();
-  const daysInMonth = getDaysInMonth(year, month + 1);
+  const daysInMonth = getDaysInMonth(year, month + 1); //해당 달의 일수
   const firstDayOfMonth = new Date(year, month, 1).getDay();
   const days = Array.from({ length: daysInMonth }, (_, i) => i + 1);
   const weeks = [];
@@ -51,10 +54,15 @@ export function getWeeksAtMonth(currentDate: Date) {
   return weeks;
 }
 
+/** 주어진 날짜에 대한 이벤트만 필터링해서 반환한다. */
 export function getEventsForDay(events: Event[], date: number): Event[] {
   return events.filter((event) => new Date(event.date).getDate() === date);
 }
 
+/**
+ * 주 번호는 '목요일'을 기준으로 한다.(ISO 8601 주 번호 규칙)
+ * 입력한 날짜에 해당하는 주를 'N년 M월 D주'형태로 반환한다.
+ */
 export function formatWeek(targetDate: Date) {
   const dayOfWeek = targetDate.getDay();
   const diffToThursday = 4 - dayOfWeek;
@@ -97,10 +105,18 @@ export function isDateInRange(date: Date, rangeStart: Date, rangeEnd: Date): boo
   return normalizedDate >= normalizedStart && normalizedDate <= normalizedEnd;
 }
 
+/**
+ * 자릿수를 size로 맞춘 string형태로 반환합니다.
+ * 자릿수가 size보다 작은 경우 앞의 자리수는 0으로 채웁니다.
+ */
 export function fillZero(value: number, size = 2) {
   return String(value).padStart(size, '0');
 }
 
+/**
+ * 첫번째 인자로 받은 값을 기준으로 'YYYY-MM-DD' 형태로 포매팅하여 반환합니다.
+ * 두번째 인자를 입력받은 경우, 그 날짜를 date로 취급합니다.
+ */
 export function formatDate(currentDate: Date, day?: number) {
   return [
     currentDate.getFullYear(),
