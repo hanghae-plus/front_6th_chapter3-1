@@ -108,3 +108,19 @@ export function formatDate(currentDate: Date, day?: number) {
     fillZero(day ?? currentDate.getDate()),
   ].join('-');
 }
+
+//이벤트 알림 1초전으로 세팅하는 함수
+/**
+ * @param date 이벤트 날짜
+ * @param startTime 이벤트 시작 시간
+ * @param notificationTime 알림 시간: 분 단위로 들어온다
+ * @returns 알림 시간 1초 전 시간
+ */
+export function setTimeEventBeforeSecond(date: Date, startTime: string, notificationTime: number) {
+  const [h, m] = startTime.split(':').map(Number);
+  const eventDate = new Date(date);
+  eventDate.setHours(h, m, 0, 0);
+  eventDate.setMinutes(eventDate.getMinutes() - notificationTime);
+  eventDate.setSeconds(-1);
+  return eventDate.getTime();
+}
