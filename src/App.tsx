@@ -1,23 +1,14 @@
-import { Delete, Edit, Notifications } from '@mui/icons-material';
-import {
-  Box,
-  FormControl,
-  FormLabel,
-  IconButton,
-  Stack,
-  TextField,
-  Typography,
-} from '@mui/material';
+import { Box, FormControl, FormLabel, Stack, TextField, Typography } from '@mui/material';
 import { useSnackbar } from 'notistack';
 import { useState } from 'react';
 
 import { CalendarNavigation } from './components/CalendarNavigation.tsx';
 import { EventFormPanel } from './components/EventFormPanel.tsx';
+import { EventList } from './components/EventList.tsx';
 import { EventOverlapDialog } from './components/EventOverlapDialog.tsx';
 import { MonthCalendar } from './components/MonthCalendar.tsx';
 import { NotificationToast } from './components/NotificationToast.tsx';
 import { WeekCalendar } from './components/WeekCalendar.tsx';
-import { NOTIFICATION_OPTIONS } from './constant/calendar.ts';
 import { useCalendarView } from './hooks/useCalendarView.ts';
 import { useEventForm } from './hooks/useEventForm.ts';
 import { useEventOperations } from './hooks/useEventOperations.ts';
@@ -103,7 +94,6 @@ function App() {
           handleEndTimeChange={handleEndTimeChange}
           addOrUpdateEvent={addOrUpdateEvent}
         />
-
         <Stack flex={1} spacing={5}>
           <Typography variant="h4">일정 보기</Typography>
           <CalendarNavigation view={view} setView={setView} navigate={navigate} />
@@ -123,7 +113,6 @@ function App() {
             />
           )}
         </Stack>
-
         <Stack
           data-testid="event-list"
           spacing={2}
@@ -140,64 +129,14 @@ function App() {
             />
           </FormControl>
 
-          {filteredEvents.length === 0 ? (
-            <Typography>검색 결과가 없습니다.</Typography>
-          ) : (
-            filteredEvents.map((event) => (
-              <Box key={event.id} sx={{ border: 1, borderRadius: 2, p: 3, width: '100%' }}>
-                <Stack direction="row" justifyContent="space-between">
-                  <Stack>
-                    <Stack direction="row" spacing={1} alignItems="center">
-                      {notifiedEvents.includes(event.id) && <Notifications color="error" />}
-                      <Typography
-                        fontWeight={notifiedEvents.includes(event.id) ? 'bold' : 'normal'}
-                        color={notifiedEvents.includes(event.id) ? 'error' : 'inherit'}
-                      >
-                        {event.title}
-                      </Typography>
-                    </Stack>
-                    <Typography>{event.date}</Typography>
-                    <Typography>
-                      {event.startTime} - {event.endTime}
-                    </Typography>
-                    <Typography>{event.description}</Typography>
-                    <Typography>{event.location}</Typography>
-                    <Typography>카테고리: {event.category}</Typography>
-                    {event.repeat.type !== 'none' && (
-                      <Typography>
-                        반복: {event.repeat.interval}
-                        {event.repeat.type === 'daily' && '일'}
-                        {event.repeat.type === 'weekly' && '주'}
-                        {event.repeat.type === 'monthly' && '월'}
-                        {event.repeat.type === 'yearly' && '년'}
-                        마다
-                        {event.repeat.endDate && ` (종료: ${event.repeat.endDate})`}
-                      </Typography>
-                    )}
-                    <Typography>
-                      알림:{' '}
-                      {
-                        NOTIFICATION_OPTIONS.find(
-                          (option) => option.value === event.notificationTime
-                        )?.label
-                      }
-                    </Typography>
-                  </Stack>
-                  <Stack>
-                    <IconButton aria-label="Edit event" onClick={() => editEvent(event)}>
-                      <Edit />
-                    </IconButton>
-                    <IconButton aria-label="Delete event" onClick={() => deleteEvent(event.id)}>
-                      <Delete />
-                    </IconButton>
-                  </Stack>
-                </Stack>
-              </Box>
-            ))
-          )}
+          <EventList
+            filteredEvents={filteredEvents}
+            notifiedEvents={notifiedEvents}
+            editEvent={editEvent}
+            deleteEvent={deleteEvent}
+          />
         </Stack>
       </Stack>
-
       <EventOverlapDialog
         eventData={eventData}
         isOverlapDialogOpen={isOverlapDialogOpen}
@@ -206,7 +145,6 @@ function App() {
         saveEvent={saveEvent}
         resetForm={resetForm}
       />
-
       <NotificationToast notifications={notifications} setNotifications={setNotifications} />
     </Box>
   );
