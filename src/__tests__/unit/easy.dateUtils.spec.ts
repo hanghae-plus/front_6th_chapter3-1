@@ -394,11 +394,23 @@ describe('fillZero', () => {
 });
 
 describe('formatDate', () => {
-  it('날짜를 YYYY-MM-DD 형식으로 포맷팅한다', () => {});
+  it('날짜를 YYYY-MM-DD 형식으로 포맷팅한다', () => {
+    const result = formatDate(new Date('1997-12-24'));
+    expect(result).toBe('1997-12-24');
+  });
 
-  it('day 파라미터가 제공되면 해당 일자로 포맷팅한다', () => {});
+  it('day 파라미터가 제공되면 해당 일자로 포맷팅한다', () => {
+    const result = formatDate(new Date('1997-12-24'), 25);
+    expect(result).toBe('1997-12-25');
+  });
 
-  it('월이 한 자리 수일 때 앞에 0을 붙여 포맷팅한다', () => {});
+  it('월이 한 자리 수일 때 앞에 0을 붙여 포맷팅한다', () => {
+    const result = formatDate(new Date('1997-1-24'));
+    expect(result).toBe('1997-01-24');
+  });
 
-  it('일이 한 자리 수일 때 앞에 0을 붙여 포맷팅한다', () => {});
+  it('일이 한 자리 수일 때 앞에 0을 붙여 포맷팅한다', () => {
+    const result = formatDate(new Date('1997-1-1'));
+    expect(result).toBe('1997-01-01');
+  });
 });
