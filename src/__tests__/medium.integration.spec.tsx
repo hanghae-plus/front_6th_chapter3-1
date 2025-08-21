@@ -6,7 +6,7 @@ import { http, HttpResponse } from 'msw';
 import { SnackbarProvider } from 'notistack';
 import { ReactElement } from 'react';
 
-import { setupMockHandlerCreation } from '../__mocks__/handlersUtils';
+import { setupMockHandlerCreation, setupMockHandlerUpdating } from '../__mocks__/handlersUtils';
 import App from '../App';
 import { useEventOperations } from '../hooks/useEventOperations';
 import { server } from '../setupTests';
@@ -68,8 +68,8 @@ describe('일정 CRUD 및 기본 기능', () => {
     const notifyLabel = await screen.findByText('알림 설정', { selector: 'label' });
     const notifySelect = await within(notifyLabel.parentElement!).findByRole('combobox');
     await user.click(notifySelect);
-    const tenMinuiteBefore = await screen.findByLabelText('10분 전');
-    await user.click(tenMinuiteBefore);
+    const notiListbox = await screen.findByRole('listbox');
+    await user.click(within(notiListbox).getByRole('option', { name: '10분 전' }));
 
     expect(notifySelect).toHaveTextContent('10분 전');
 
@@ -93,7 +93,90 @@ describe('일정 CRUD 및 기본 기능', () => {
     expect(within(eventList).getByText('알림: 10분 전')).toBeInTheDocument();
   });
 
-  it('기존 일정의 세부 정보를 수정하고 변경사항이 정확히 반영된다', async () => {});
+  it('기존 일정의 세부 정보를 수정하고 변경사항이 정확히 반영된다', async () => {
+    const prevEvent = {
+      id: '1',
+      title: '발제 모임',
+      date: '2025-08-24',
+      startTime: '13:00',
+      endTime: '11:00',
+      description: '발제 시청',
+      location: '아이콘 빌딩',
+      category: '업무',
+      repeat: { type: 'none', interval: 0 },
+      notificationTime: 10,
+    } as Event;
+
+    server.use(...setupMockHandlerUpdating([prevEvent]));
+
+    const user = userEvent.setup();
+
+    render(
+      <ThemeProvider theme={createTheme()}>
+        <SnackbarProvider>
+          <App />
+        </SnackbarProvider>
+      </ThemeProvider>
+    );
+
+    const eventList = await screen.findByTestId('event-list');
+    expect(await within(eventList).findByText('발제 모임')).toBeInTheDocument();
+
+    await user.click(within(eventList).getByRole('button', { name: 'Edit event' }));
+
+    const titleInput = await screen.findByRole('textbox', { name: '제목' });
+    await user.clear(titleInput);
+    await user.type(titleInput, '등산');
+
+    expect(titleInput).toHaveValue('등산');
+
+    const dateInput = await screen.findByLabelText('날짜');
+    await user.clear(dateInput);
+    await user.type(dateInput, '2025-08-30');
+
+    expect(dateInput).toHaveValue('2025-08-30');
+
+    const startTimeInput = await screen.findByLabelText('시작 시간');
+    await user.clear(startTimeInput);
+    await user.type(startTimeInput, '14:00');
+
+    expect(startTimeInput).toHaveValue('14:00');
+
+    const endTimeInput = await screen.findByLabelText('종료 시간');
+    await user.clear(endTimeInput);
+    await user.type(endTimeInput, '16:00');
+    expect(endTimeInput).toHaveValue('16:00');
+
+    const locationInput = await screen.findByRole('textbox', { name: '위치' });
+    await user.clear(locationInput);
+    await user.type(locationInput, '우면산');
+    expect(locationInput).toHaveValue('우면산');
+
+    const categoryContainer = await screen.findByLabelText('카테고리');
+    const categorySelect = await within(categoryContainer).findByRole('combobox');
+    await user.click(categorySelect);
+    const workingSelectItem = screen.getByRole('option', { name: '개인-option' });
+    await user.click(workingSelectItem);
+
+    const notifyLabel = await screen.findByText('알림 설정', { selector: 'label' });
+    const notifySelect = within(notifyLabel.parentElement!).getByRole('combobox');
+    await user.click(notifySelect);
+    const notiListbox = await screen.findByRole('listbox');
+    await user.click(within(notiListbox).getByRole('option', { name: '1시간 전' }));
+    expect(notifySelect).toHaveTextContent('1시간 전');
+
+    const submit = await screen.findByRole('button', { name: '일정 수정' });
+    await user.click(submit);
+
+    await screen.findByText('일정이 수정되었습니다.');
+
+    expect(await within(eventList).findByText('등산')).toBeInTheDocument();
+    expect(within(eventList).getByText('2025-08-30')).toBeInTheDocument();
+    expect(within(eventList).getByText('14:00 - 16:00')).toBeInTheDocument();
+    expect(within(eventList).getByText('우면산')).toBeInTheDocument();
+    expect(within(eventList).getByText('카테고리: 개인')).toBeInTheDocument();
+    expect(within(eventList).getByText('알림: 1시간 전')).toBeInTheDocument();
+  });
 
   it('일정을 삭제하고 더 이상 조회되지 않는지 확인한다', async () => {});
 });
