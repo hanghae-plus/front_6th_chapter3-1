@@ -13,6 +13,7 @@
     "test:coverage": "vitest run --coverage",
     "build": "tsc -b && vite build",
     "lint:eslint": "eslint . --ext ts,tsx --report-unused-disable-directives",
+    "lint:eslint:ci": "eslint . --ext ts,tsx --report-unused-disable-directives --quiet",
     "lint:tsc": "tsc --pretty",
     "lint": "pnpm lint:eslint && pnpm lint:tsc"
   },
