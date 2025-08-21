@@ -1,20 +1,10 @@
 import { renderHook, act } from '@testing-library/react';
 
+import { events } from '../../__mocks__/fixture/mockEvents.json';
 import { useFormState } from '../../hooks/useFormState';
 import { Event } from '../../types';
 
-const mockEvent: Event = {
-  id: '1',
-  title: '테스트 회의',
-  date: '2025-10-15',
-  startTime: '09:00',
-  endTime: '10:00',
-  description: '테스트 설명',
-  location: '회의실 A',
-  category: '업무',
-  repeat: { type: 'weekly', interval: 2, endDate: '2025-12-31' },
-  notificationTime: 15,
-};
+const mockEvent = events[0] as Event;
 
 describe('초기 상태 설정', () => {
   it('initialEvent가 없으면 기본값으로 초기화되어야 한다', () => {
@@ -34,11 +24,11 @@ describe('초기 상태 설정', () => {
     const { result } = renderHook(() => useFormState(mockEvent));
 
     // Then: initialEvent 값으로 폼 상태가 설정되어야 한다
-    expect(result.current.formState.title).toBe('테스트 회의');
-    expect(result.current.formState.date).toBe('2025-10-15');
-    expect(result.current.formState.isRepeating).toBe(true);
-    expect(result.current.formState.repeatType).toBe('weekly');
-    expect(result.current.formState.repeatInterval).toBe(2);
+    expect(result.current.formState.title).toBe('면접공부');
+    expect(result.current.formState.date).toBe('2025-08-17');
+    expect(result.current.formState.isRepeating).toBe(false);
+    expect(result.current.formState.repeatType).toBe('none');
+    expect(result.current.formState.repeatInterval).toBe(1);
   });
 });
 
@@ -93,8 +83,8 @@ describe('폼 리셋', () => {
     });
 
     // Then: initialEvent 값으로 리셋되어야 한다
-    expect(result.current.formState.title).toBe('테스트 회의');
-    expect(result.current.formState.category).toBe('업무');
+    expect(result.current.formState.title).toBe('면접공부');
+    expect(result.current.formState.category).toBe('개인');
   });
 });
 
