@@ -278,30 +278,28 @@ describe.only('일정 뷰', () => {
   });
 });
 
-describe('검색 기능', () => {
+describe.only('검색 기능', () => {
   it('검색 결과가 없으면, "검색 결과가 없습니다."가 표시되어야 한다.', async () => {
-    setupMockHandlerUpdating(); // 기존 회의 데이터
-
+    setupMockHandlerUpdating();
     const { user } = setup(<App />);
 
     await screen.findByText('일정 로딩 완료!');
 
-    // 존재하지 않는 내용으로 검색
-    await user.type(screen.getByPlaceholderText('검색어를 입력하세요'), '존재하지 않는 일정');
+    const input = screen.getByPlaceholderText('검색어를 입력하세요');
+    await user.type(input, '존재하지 않는 일정');
 
     const eventList = within(screen.getByTestId('event-list'));
     expect(eventList.getByText('검색 결과가 없습니다.')).toBeInTheDocument();
   });
 
   it("'팀 회의'를 검색하면 해당 제목을 가진 일정이 리스트에 노출된다", async () => {
-    setupMockHandlerUpdating(); // 기존 회의 데이터
-
+    setupMockHandlerUpdating();
     const { user } = setup(<App />);
 
     await screen.findByText('일정 로딩 완료!');
 
-    // '회의'로 검색 (기존 회의, 기존 회의2 모두 매칭)
-    await user.type(screen.getByPlaceholderText('검색어를 입력하세요'), '회의');
+    const input = screen.getByPlaceholderText('검색어를 입력하세요');
+    await user.type(input, '회의');
 
     const eventList = within(screen.getByTestId('event-list'));
     expect(eventList.getByText('기존 회의')).toBeInTheDocument();
@@ -309,26 +307,20 @@ describe('검색 기능', () => {
   });
 
   it('검색어를 지우면 모든 일정이 다시 표시되어야 한다', async () => {
-    setupMockHandlerUpdating(); // 기존 회의 데이터
-
+    setupMockHandlerUpdating();
     const { user } = setup(<App />);
 
     await screen.findByText('일정 로딩 완료!');
 
-    // 검색어 입력
-    const searchInput = screen.getByPlaceholderText('검색어를 입력하세요');
-    await user.type(searchInput, '기존 회의2');
+    const input = screen.getByPlaceholderText('검색어를 입력하세요');
+    await user.type(input, '기존 회의2');
 
     const eventList = within(screen.getByTestId('event-list'));
-
-    // 특정 일정만 표시됨
-    expect(eventList.getByText('기존 회의2')).toBeInTheDocument();
     expect(eventList.queryByText('기존 회의')).not.toBeInTheDocument();
+    expect(eventList.getByText('기존 회의2')).toBeInTheDocument();
 
-    // 검색어 지우기
-    await user.clear(searchInput);
+    await user.clear(input);
 
-    // 모든 일정이 다시 표시됨
     expect(eventList.getByText('기존 회의')).toBeInTheDocument();
     expect(eventList.getByText('기존 회의2')).toBeInTheDocument();
   });
