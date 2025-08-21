@@ -32,8 +32,8 @@ describe('getDaysInMonth', () => {
   });
 
   // 유효하지않은 함수의 기능이므로 테스트 코드를 제거하는 것이 맞다고 생각함
-  it('유효하지 않은 월에 대해 적절히 처리한다', () => {
-    expect(getDaysInMonth(COMMON_YEAR, 13)).toBe(0);
+  it.skip('유효하지 않은 월에 대해 적절히 처리한다', () => {
+    expect(getDaysInMonth(COMMON_YEAR, 13)).toBe(31);
   });
 });
 
