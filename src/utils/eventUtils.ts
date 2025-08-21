@@ -1,4 +1,4 @@
-import { Event } from '../types';
+import { CalendarViewType, Event } from '../types';
 import { getWeekDates, isDateInRange } from './dateUtils';
 
 function filterEventsByDateRange(events: Event[], start: Date, end: Date): Event[] {
@@ -42,15 +42,15 @@ export function getFilteredEvents(
   events: Event[],
   searchTerm: string,
   currentDate: Date,
-  view: 'week' | 'month'
+  view: CalendarViewType
 ): Event[] {
   const searchedEvents = searchEvents(events, searchTerm);
 
-  if (view === 'week') {
+  if (view === CalendarViewType.WEEK) {
     return filterEventsByDateRangeAtWeek(searchedEvents, currentDate);
   }
 
-  if (view === 'month') {
+  if (view === CalendarViewType.MONTH) {
     return filterEventsByDateRangeAtMonth(searchedEvents, currentDate);
   }
 

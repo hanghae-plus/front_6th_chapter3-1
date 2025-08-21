@@ -2,6 +2,7 @@ import { act, renderHook } from '@testing-library/react';
 
 import { useCalendarView } from '../../hooks/useCalendarView.ts';
 import { assertDate } from '../utils.ts';
+import { CalendarViewType } from '../../types.ts';
 
 beforeEach(() => {
   vi.useFakeTimers();
@@ -12,7 +13,7 @@ describe('초기 상태', () => {
   it('view는 "month"이어야 한다', () => {
     const { result } = renderHook(() => useCalendarView());
 
-    expect(result.current.view).toBe('month');
+    expect(result.current.view).toBe(CalendarViewType.MONTH);
   });
 
   it('currentDate는 오늘 날짜인 "2025-10-01"이어야 한다', () => {
@@ -38,17 +39,17 @@ it("view를 'week'으로 변경 시 적절하게 반영된다", () => {
   const { result } = renderHook(() => useCalendarView());
 
   act(() => {
-    result.current.setView('week');
+    result.current.setView(CalendarViewType.WEEK);
   });
 
-  expect(result.current.view).toBe('week');
+  expect(result.current.view).toBe(CalendarViewType.WEEK);
 });
 
 it("주간 뷰에서 다음으로 navigate시 7일 후인 '2025-10-08' 날짜로 지정이 된다", () => {
   const { result } = renderHook(() => useCalendarView());
 
   act(() => {
-    result.current.setView('week');
+    result.current.setView(CalendarViewType.WEEK);
   });
 
   act(() => {
@@ -62,7 +63,7 @@ it("주간 뷰에서 이전으로 navigate시 7일 후인 '2025-09-24' 날짜로
   const { result } = renderHook(() => useCalendarView());
 
   act(() => {
-    result.current.setView('week');
+    result.current.setView(CalendarViewType.WEEK);
   });
 
   act(() => {

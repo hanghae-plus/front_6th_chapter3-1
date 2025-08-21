@@ -1,4 +1,4 @@
-import { Event } from '../../types';
+import { CalendarViewType, Event } from '../../types';
 import { getFilteredEvents } from '../../utils/eventUtils';
 
 describe('getFilteredEvents', () => {
@@ -43,24 +43,44 @@ describe('getFilteredEvents', () => {
 
   describe('검색 기능', () => {
     test('검색어 "이벤트 2"에 맞는 이벤트만 반환한다', () => {
-      const result = getFilteredEvents(mockEvents, '이벤트 2', new Date('2025-07-01'), 'month');
+      const result = getFilteredEvents(
+        mockEvents,
+        '이벤트 2',
+        new Date('2025-07-01'),
+        CalendarViewType.MONTH
+      );
       expect(result).toHaveLength(1);
       expect(result[0].title).toBe('이벤트 2');
     });
 
     test("검색어 '이벤트'와 주간 뷰 필터링을 동시에 적용한다", () => {
-      const result = getFilteredEvents(mockEvents, '이벤트', new Date('2025-07-01'), 'week');
+      const result = getFilteredEvents(
+        mockEvents,
+        '이벤트',
+        new Date('2025-07-01'),
+        CalendarViewType.WEEK
+      );
       expect(result).toHaveLength(2);
       expect(result.map((e) => e.title)).toEqual(['이벤트 1', '이벤트 2']);
     });
 
     test('검색어가 없으면 모든 이벤트를 반환한다', () => {
-      const result = getFilteredEvents(mockEvents, '', new Date('2025-07-01'), 'month');
+      const result = getFilteredEvents(
+        mockEvents,
+        '',
+        new Date('2025-07-01'),
+        CalendarViewType.MONTH
+      );
       expect(result).toHaveLength(3);
     });
 
     test('검색어가 대소문자를 구분하지 않고 작동한다', () => {
-      const result = getFilteredEvents(mockEvents, '이벤트 2', new Date('2025-07-01'), 'month');
+      const result = getFilteredEvents(
+        mockEvents,
+        '이벤트 2',
+        new Date('2025-07-01'),
+        CalendarViewType.MONTH
+      );
       expect(result).toHaveLength(1);
       expect(result[0].title).toBe('이벤트 2');
     });
@@ -68,13 +88,23 @@ describe('getFilteredEvents', () => {
 
   describe('뷰별 필터링', () => {
     test('주간 뷰에서 2025-07-01 주의 이벤트만 반환한다', () => {
-      const result = getFilteredEvents(mockEvents, '', new Date('2025-07-01'), 'week');
+      const result = getFilteredEvents(
+        mockEvents,
+        '',
+        new Date('2025-07-01'),
+        CalendarViewType.WEEK
+      );
       expect(result).toHaveLength(2);
       expect(result.map((e) => e.title)).toEqual(['이벤트 1', '이벤트 2']);
     });
 
     test('월간 뷰에서 2025년 7월의 모든 이벤트를 반환한다', () => {
-      const result = getFilteredEvents(mockEvents, '', new Date('2025-07-01'), 'month');
+      const result = getFilteredEvents(
+        mockEvents,
+        '',
+        new Date('2025-07-01'),
+        CalendarViewType.MONTH
+      );
       expect(result).toHaveLength(3);
       expect(result.map((e) => e.title)).toEqual(['이벤트 1', '이벤트 2', '개인 운동']);
     });
@@ -110,13 +140,23 @@ describe('getFilteredEvents', () => {
         },
       ];
 
-      const result = getFilteredEvents(borderEvents, '', new Date('2025-07-15'), 'month');
+      const result = getFilteredEvents(
+        borderEvents,
+        '',
+        new Date('2025-07-15'),
+        CalendarViewType.MONTH
+      );
       expect(result).toHaveLength(3);
       expect(result.every((e) => e.date.startsWith('2025-07'))).toBe(true);
     });
 
     test('빈 이벤트 배열에 대해 빈 배열을 반환한다', () => {
-      const result = getFilteredEvents([], '검색어', new Date('2025-07-01'), 'month');
+      const result = getFilteredEvents(
+        [],
+        '검색어',
+        new Date('2025-07-01'),
+        CalendarViewType.MONTH
+      );
       expect(result).toHaveLength(0);
     });
   });

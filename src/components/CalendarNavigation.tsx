@@ -1,9 +1,10 @@
 import { ChevronLeft, ChevronRight } from '@mui/icons-material';
 import { IconButton, MenuItem, Select, Stack } from '@mui/material';
+import { CalendarViewType } from '../types';
 
 interface CalendarNavigationProps {
-  view: 'week' | 'month';
-  onViewChange: (view: 'week' | 'month') => void;
+  view: CalendarViewType;
+  onViewChange: (view: CalendarViewType) => void;
   onNavigate: (direction: 'prev' | 'next') => void;
 }
 
@@ -17,7 +18,7 @@ export const CalendarNavigation = ({ view, onViewChange, onNavigate }: CalendarN
         size="small"
         aria-label="뷰 타입 선택"
         value={view}
-        onChange={(e) => onViewChange(e.target.value as 'week' | 'month')}
+        onChange={(e) => onViewChange(e.target.value)}
       >
         <MenuItem value="week" aria-label="week-option">
           Week

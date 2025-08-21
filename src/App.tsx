@@ -31,7 +31,7 @@ import { useEventForm } from './hooks/useEventForm.ts';
 import { useEventOperations } from './hooks/useEventOperations.ts';
 import { useNotifications } from './hooks/useNotifications.ts';
 import { useSearch } from './hooks/useSearch.ts';
-import { Event, EventForm } from './types';
+import { CalendarViewType, Event, EventForm } from './types';
 import {
   formatDate,
   formatMonth,
@@ -494,8 +494,8 @@ function App() {
 
           <CalendarNavigation view={view} onViewChange={setView} onNavigate={navigate} />
 
-          {view === 'week' && renderWeekView()}
-          {view === 'month' && renderMonthView()}
+          {view === CalendarViewType.WEEK && renderWeekView()}
+          {view === CalendarViewType.MONTH && renderMonthView()}
         </Stack>
 
         <EventList
