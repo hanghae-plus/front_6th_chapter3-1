@@ -17,7 +17,6 @@ describe('초기 상태', () => {
 
   it('holidays는 10월 휴일인 개천절, 한글날, 추석이 지정되어 있어야 한다', () => {
     const { result } = renderHook(() => useCalendarView());
-    console.log(result.current.holidays);
     expect(result.current.holidays).toEqual({
       '2025-10-05': '추석',
       '2025-10-06': '추석',
