@@ -153,9 +153,24 @@ it("존재하지 않는 이벤트 수정 시 '일정 저장 실패'라는 토스
 
   const { result } = renderHook(() => useEventOperations(true));
 
+  const nonExistingEvent = {
+    id: '1',
+    title: '수정할 이벤트',
+    date: '2025-10-15',
+    startTime: '10:00',
+    endTime: '11:00',
+    description: '존재하지 않는 이벤트',
+    location: 'zip',
+    category: '업무',
+    repeat: { type: 'none' as const, interval: 0 },
+    notificationTime: 10,
+  };
+
   await act(async () => {
-    await result.current.fetchEvents();
+    await result.current.saveEvent(nonExistingEvent);
   });
+
+  expect(enqueueSnackbarFn).toHaveBeenCalledWith('일정 저장 실패', { variant: 'error' });
 });
 
 // TODO 테스트 순서에 대해 헷갈려서 물어보기

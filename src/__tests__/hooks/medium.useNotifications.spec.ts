@@ -19,14 +19,14 @@ const sampleEvents: Event[] = [
 ];
 
 beforeEach(() => {
-  vi.useFakeTimers();
   // 알림 트리거 시각을 notificationTime에 맞춰 20분 전인 07:40으로 설정
   vi.setSystemTime(new Date('2025-08-22T07:40:00'));
 });
 
-// 실제 타이머로 복귀하기
+// 전역에서 fakeTimers를 켰기 때문에 useRealTimers 쓰지 않아도 됨
 afterEach(() => {
-  vi.useRealTimers();
+  vi.clearAllTimers();
+  vi.clearAllMocks();
 });
 
 it('초기 상태에서는 알림이 없어야 한다', () => {
