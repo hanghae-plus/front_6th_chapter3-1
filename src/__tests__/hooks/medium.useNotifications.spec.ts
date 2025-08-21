@@ -44,7 +44,6 @@ it('초기 상태에서는 알림이 없어야 한다', () => {
   ];
 
   const { result } = renderHook(() => useNotifications(events));
-  console.log(result.current.notifications);
   expect(result.current.notifications).toEqual([]);
   expect(result.current.notifiedEvents).toEqual([]);
 });
@@ -72,7 +71,6 @@ it('지정된 시간이 된 경우 알림이 새롭게 생성되어 추가된다
     vi.advanceTimersByTime(1000); // 1초 경과
   });
   await waitFor(() => {
-    console.log(result.current.notifications);
     expect(result.current.notifications).toHaveLength(1);
     expect(result.current.notifications[0].message).toBe('10분 후 기존 회의 일정이 시작됩니다.');
   });
@@ -104,7 +102,6 @@ it('index를 기준으로 알림을 적절하게 제거할 수 있다', async ()
   act(() => {
     result.current.removeNotification(0);
   });
-  console.log(result.current.notifications);
   expect(result.current.notifications).toHaveLength(0);
   expect(result.current.notifiedEvents).toEqual(['1']);
 });
@@ -127,13 +124,11 @@ it('이미 알림이 발생한 이벤트에 대해서는 중복 알림이 발생
   ];
   vi.useFakeTimers();
   const { result } = renderHook(() => useNotifications(events));
-  console.log(result.current.notifications);
-  console.log(result.current.notifiedEvents);
+
   act(() => {
     vi.advanceTimersByTime(1000); // 1초 경과
   });
   await waitFor(() => {
-    console.log(result.current.notifiedEvents);
     expect(result.current.notifications).toHaveLength(1);
     expect(result.current.notifications[0].message).toBe('10분 후 기존 회의 일정이 시작됩니다.');
   });
@@ -143,7 +138,6 @@ it('이미 알림이 발생한 이벤트에 대해서는 중복 알림이 발생
   });
 
   await waitFor(() => {
-    console.log(result.current.notifiedEvents);
     expect(result.current.notifications).toHaveLength(1);
     expect(result.current.notifiedEvents).toEqual(['1']);
   });

@@ -40,9 +40,7 @@ it('저장되어있는 초기 이벤트 데이터를 적절하게 불러온다',
   setupMockHandlerCreation(initialEvents);
 
   const { result } = renderHook(() => useEventOperations(true));
-  console.log(result.current.events);
   await waitFor(() => {
-    console.log(result.current.events);
     expect(result.current.events).toEqual(initialEvents);
   });
 });
@@ -83,7 +81,6 @@ it('정의된 이벤트 정보를 기준으로 적절하게 저장이 된다', a
   });
 
   await waitFor(() => {
-    console.log(result.current.events);
     expect(result.current.events).toEqual([initialEvents[0], { ...newEvent, id: '2' }]);
   });
 });
@@ -93,7 +90,6 @@ it("새로 정의된 'title', 'endTime' 기준으로 적절하게 일정이 업�
 
   const { result } = renderHook(() => useEventOperations(true));
   await waitFor(() => {
-    console.log(result.current.events);
     expect(result.current.events.length).toBe(2);
   });
 
@@ -108,7 +104,6 @@ it("새로 정의된 'title', 'endTime' 기준으로 적절하게 일정이 업�
   });
 
   await waitFor(() => {
-    console.log(result.current.events);
     expect(result.current.events.length).toBe(2);
   });
 });
@@ -117,7 +112,6 @@ it('존재하는 이벤트 삭제 시 에러없이 아이템이 삭제된다.', 
   setupMockHandlerDeletion();
   const { result } = renderHook(() => useEventOperations(true));
   await waitFor(() => {
-    console.log(result.current.events);
     expect(result.current.events.length).toBe(1);
   });
 
@@ -126,7 +120,6 @@ it('존재하는 이벤트 삭제 시 에러없이 아이템이 삭제된다.', 
   });
 
   await waitFor(() => {
-    console.log(result.current.events);
     expect(result.current.events.length).toBe(0);
   });
 });
@@ -162,13 +155,10 @@ it("존재하지 않는 이벤트 수정 시 '일정 저장 실패'라는 토스
 
   await act(async () => {
     await result.current.saveEvent(updateEvent);
-    console.log(enqueueSnackbarFn.mock.calls);
-    console.log(result.current.events);
   });
 
   await waitFor(() => {
     expect(enqueueSnackbarFn).toHaveBeenCalledWith('일정 저장 실패', { variant: 'error' });
-    console.log(result.current.events);
   });
 });
 
@@ -187,7 +177,5 @@ it("네트워크 오류 시 '일정 삭제 실패'라는 텍스트가 노출되�
 
   await waitFor(() => {
     expect(enqueueSnackbarFn).toHaveBeenCalledWith('일정 삭제 실패', { variant: 'error' });
-    console.log(enqueueSnackbarFn.mock.calls);
-    console.log(result.current.events);
   });
 });

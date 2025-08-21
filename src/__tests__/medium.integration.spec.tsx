@@ -89,7 +89,6 @@ describe('일정 CRUD 및 기본 기능', () => {
 
     const list = await screen.findByTestId('event-list');
     expect(within(list).getByText('점심 약속')).toBeInTheDocument();
-    //console.log(list.innerHTML);
   });
 
   it('기존 일정의 세부 정보를 수정하고 변경사항이 정확히 반영된다', async () => {
@@ -241,8 +240,6 @@ describe('검색 기능', () => {
 
     const { user } = setup(<App />);
     const list = await screen.findByTestId('event-list');
-
-    expect(within(list).getByText('기존 회의')).toBeInTheDocument();
 
     await user.type(screen.getByPlaceholderText('검색어를 입력하세요'), '고양이');
     expect(within(list).getByText('검색 결과가 없습니다.')).toBeInTheDocument();

@@ -151,7 +151,6 @@ describe('getFilteredEvents', () => {
         notificationTime: 10,
       },
     ];
-    console.log(getFilteredEvents(events, '', new Date('2025-07-01'), 'month'));
     expect(getFilteredEvents(events, '기존', new Date('2025-07-01'), 'week')).toEqual([
       {
         id: '1',
