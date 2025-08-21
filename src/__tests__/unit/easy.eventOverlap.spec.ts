@@ -88,9 +88,46 @@ describe('convertEventToDateRange', () => {
 });
 
 describe('isOverlapping', () => {
-  it('두 이벤트가 겹치는 경우 true를 반환한다', () => {});
+  const event1: Event = {
+    id: '1',
+    title: '팀 회의',
+    date: '2025-08-20',
+    startTime: '10:00',
+    endTime: '11:00',
+    description: '주간 팀 미팅',
+    location: '회의실 A',
+    category: '업무',
+    repeat: { type: 'none', interval: 0 },
+    notificationTime: 1,
+  };
 
-  it('두 이벤트가 겹치지 않는 경우 false를 반환한다', () => {});
+  it.only('두 이벤트가 겹치는 경우 true를 반환한다', () => {
+    const event2: Event = {
+      ...event1,
+      id: '2',
+      title: '프로젝트 회의',
+      startTime: '10:30',
+      endTime: '11:30',
+    };
+
+    const result = isOverlapping(event1, event2);
+
+    expect(result).toBe(true);
+  });
+
+  it.only('두 이벤트가 겹치지 않는 경우 false를 반환한다', () => {
+    const event2: Event = {
+      ...event1,
+      id: '3',
+      title: '점심 팀회식',
+      startTime: '12:00',
+      endTime: '13:00',
+    };
+
+    const result = isOverlapping(event1, event2);
+
+    expect(result).toBe(false);
+  });
 });
 
 describe('findOverlappingEvents', () => {
