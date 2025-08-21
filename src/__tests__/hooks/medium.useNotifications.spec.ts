@@ -51,24 +51,20 @@ describe('useNotification', () => {
   });
 
   it('지정된 시간이 된 경우 알림이 새롭게 생성되어 추가된다', () => {
-    vitest.useFakeTimers();
-    vitest.setSystemTime(new Date('2025-08-20T09:59:00'));
+    vi.setSystemTime(new Date('2025-08-20T09:59:00'));
 
     const { result } = renderHook(() => useNotifications(events));
 
     expect(result.current.notifications).toHaveLength(0);
 
     act(() => {
-      vitest.advanceTimersByTime(1000);
+      vi.advanceTimersByTime(1000);
     });
 
     expect(result.current.notifications).toHaveLength(1);
-
-    vitest.useRealTimers();
   });
 
   it('index를 기준으로 알림을 적절하게 제거할 수 있다', () => {
-    vitest.useFakeTimers();
     vitest.setSystemTime(new Date('2025-08-20T09:59:00'));
 
     const { result } = renderHook(() => useNotifications(events));
@@ -85,12 +81,9 @@ describe('useNotification', () => {
     });
 
     expect(result.current.notifications).toHaveLength(0);
-
-    vitest.useRealTimers();
   });
 
   it('이미 알림이 발생한 이벤트에 대해서는 중복 알림이 발생하지 않아야 한다', () => {
-    vitest.useFakeTimers();
     vitest.setSystemTime(new Date('2025-08-20T09:59:00'));
 
     const { result } = renderHook(() => useNotifications(events));
@@ -107,7 +100,5 @@ describe('useNotification', () => {
     });
 
     expect(result.current.notifications).toHaveLength(1);
-
-    vitest.useRealTimers();
   });
 });

@@ -170,20 +170,18 @@ describe('일정 뷰', () => {
   });
 
   it('달력에 1월 1일(신정)이 공휴일로 표시되는지 확인한다', async () => {
-    vitest.useFakeTimers();
-    vitest.setSystemTime(new Date('2025-01-01'));
+    vi.setSystemTime(new Date('2025-01-01'));
 
     renderWithProviders();
 
     const day = screen.getByText('신정');
     expect(day).toHaveStyle({ color: '#d32f2f' });
-
-    vitest.useRealTimers();
   });
 });
 
 describe('검색 기능', () => {
   beforeEach(() => {
+    vi.setSystemTime(new Date('2025-08-15'));
     setupMockHandler([
       {
         id: 'mock-1',
@@ -223,6 +221,8 @@ describe('검색 기능', () => {
     renderWithProviders();
     const user = userEvent.setup();
 
+    await expect(screen.findByText('일정 로딩 완료!')).resolves.toBeInTheDocument();
+
     const searchInput = screen.getByLabelText('일정 검색');
     await user.type(searchInput, '팀 회의');
 
@@ -234,6 +234,8 @@ describe('검색 기능', () => {
   it('검색어를 지우면 모든 일정이 다시 표시되어야 한다', async () => {
     renderWithProviders();
     const user = userEvent.setup();
+
+    await expect(screen.findByText('일정 로딩 완료!')).resolves.toBeInTheDocument();
 
     const searchInput = screen.getByLabelText('일정 검색');
     await user.clear(searchInput);

@@ -1,15 +1,11 @@
 import { act, renderHook } from '@testing-library/react';
+import { vi } from 'vitest';
 
 import { useCalendarView } from '../../hooks/useCalendarView.ts';
 
 describe('useCalendarView : 초기 상태', () => {
   beforeEach(() => {
-    vitest.useFakeTimers();
-    vitest.setSystemTime(new Date('2025-10-01'));
-  });
-
-  afterEach(() => {
-    vitest.useRealTimers();
+    vi.setSystemTime(new Date('2025-10-01'));
   });
 
   it('view는 "month"이어야 한다', () => {
@@ -36,12 +32,7 @@ describe('useCalendarView : 초기 상태', () => {
 
 describe('useCalendarView : 액션일 일어날 경우', () => {
   beforeEach(() => {
-    vitest.useFakeTimers();
     vitest.setSystemTime(new Date('2025-10-01'));
-  });
-
-  afterEach(() => {
-    vitest.useRealTimers();
   });
 
   it("view를 'week'으로 변경 시 적절하게 반영된다", () => {
