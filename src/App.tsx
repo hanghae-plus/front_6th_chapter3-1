@@ -1,4 +1,9 @@
-import { Notifications, ChevronLeft, ChevronRight, Delete, Edit, Close } from '@mui/icons-material';
+import Notifications from '@mui/icons-material/Notifications';
+import ChevronLeft from '@mui/icons-material/ChevronLeft';
+import ChevronRight from '@mui/icons-material/ChevronRight';
+import Delete from '@mui/icons-material/Delete';
+import Edit from '@mui/icons-material/Edit';
+import Close from '@mui/icons-material/Close';
 import {
   Alert,
   AlertTitle,
@@ -109,6 +114,7 @@ function App() {
 
   const addOrUpdateEvent = async () => {
     if (!title || !date || !startTime || !endTime) {
+      console.log(title, date, startTime, endTime);
       enqueueSnackbar('필수 정보를 모두 입력해주세요.', { variant: 'error' });
       return;
     }
