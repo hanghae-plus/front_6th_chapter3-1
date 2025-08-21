@@ -108,15 +108,16 @@ it("이벤트 로딩 실패 시 '이벤트 로딩 실패'라는 텍스트와 함
   // 일부러 에러내기
   server.use(
     http.get('/api/events', () => {
-      return HttpResponse.error();
+      return new HttpResponse(null, { status: 500 });
     })
   );
 
-  renderHook(() => useEventOperations(false, enqueueSnackbarFn));
+  const { result } = renderHook(() => useEventOperations(false));
 
-  await waitFor(() => {
-    expect(enqueueSnackbarFn).toHaveBeenCalledWith('이벤트 로딩 실패', { variant: 'error' });
+  await waitFor(async () => {
+    await result.current.fetchEvents();
   });
+  expect(enqueueSnackbarFn).toHaveBeenCalledWith('이벤트 로딩 실패', { variant: 'error' });
 });
 
 it("존재하지 않는 이벤트 수정 시 '일정 저장 실패'라는 토스트가 노출되며 에러 처리가 되어야 한다", async () => {
