@@ -1,19 +1,16 @@
-import {
-  convertEventToDateRange,
-  findOverlappingEvents,
-  isOverlapping,
-  parseDateTime,
-} from '../../utils/eventOverlap';
+import { findOverlappingEvents, isOverlapping, parseDateTime } from '../../utils/eventOverlap';
 import { createTestEvent } from '../utils';
 
 describe('parseDateTime', () => {
   it('2025-07-01 14:30을 정확한 Date 객체로 변환한다', () => {
-    const input = ['2025-07-01', '14:30'];
-    const [date, time] = input;
-    const results = parseDateTime(date, time);
+    const testDate = '2025-07-01';
+    const testTime = '14:30';
+    const results = parseDateTime(testDate, testTime);
 
     expect(results).toBeInstanceOf(Date);
-    expect(results.toISOString()).toBe('2025-07-01T05:30:00.000Z');
+
+    const expectedDate = new Date(`${testDate}T${testTime}`);
+    expect(results.toISOString()).toBe(expectedDate.toISOString());
   });
 
   // Date 객체에 대한 테스트
