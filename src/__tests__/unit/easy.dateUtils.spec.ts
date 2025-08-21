@@ -39,20 +39,41 @@ describe('getDaysInMonth', () => {
     expect(getDaysInMonth(2025, 1)).toBe(31);
   });
 
-  it('4월은 30일 일수를 반환한다', () => {
+  it('1월, 3월, 5월, 7월, 8월, 10월, 12월은 31일 일수를 반환한다', () => {
+    expect(getDaysInMonth(2025, 1)).toBe(31);
+    expect(getDaysInMonth(2025, 3)).toBe(31);
+    expect(getDaysInMonth(2025, 5)).toBe(31);
+    expect(getDaysInMonth(2025, 7)).toBe(31);
+    expect(getDaysInMonth(2025, 8)).toBe(31);
+    expect(getDaysInMonth(2025, 10)).toBe(31);
+    expect(getDaysInMonth(2025, 12)).toBe(31);
+  });
+
+  it('4월, 6월, 9월, 11월은 30일 일수를 반환한다', () => {
     expect(getDaysInMonth(2025, 4)).toBe(30);
+    expect(getDaysInMonth(2025, 6)).toBe(30);
+    expect(getDaysInMonth(2025, 9)).toBe(30);
+    expect(getDaysInMonth(2025, 11)).toBe(30);
   });
 
   it('윤년의 2월에 대해 29일을 반환한다', () => {
     expect(getDaysInMonth(2024, 2)).toBe(29);
+    expect(getDaysInMonth(2020, 2)).toBe(29);
+    expect(getDaysInMonth(2016, 2)).toBe(29);
+    expect(getDaysInMonth(2000, 2)).toBe(29);
   });
 
   it('평년의 2월에 대해 28일을 반환한다', () => {
     expect(getDaysInMonth(2023, 2)).toBe(28);
+    expect(getDaysInMonth(2022, 2)).toBe(28);
+    expect(getDaysInMonth(2021, 2)).toBe(28);
+    expect(getDaysInMonth(2100, 2)).toBe(28);
   });
 
   it('유효하지 않은 월에 대해 적절히 처리한다', () => {
     expect(getDaysInMonth(2025, 13)).toBe(0);
+    expect(getDaysInMonth(2025, -1)).toBe(0);
+    expect(getDaysInMonth(2025, 100)).toBe(0);
   });
 });
 
@@ -145,6 +166,75 @@ describe('getWeeksAtMonth', () => {
     expect(result).toHaveLength(5);
     expect(result).toEqual(expected);
   });
+
+  it('월의 첫날이 일요일인 경우를 올바르게 처리한다', () => {
+    const testDate = new Date(2025, 5, 1);
+    const expected: Array<Array<number | null>> = [
+      [1, 2, 3, 4, 5, 6, 7],
+      [8, 9, 10, 11, 12, 13, 14],
+      [15, 16, 17, 18, 19, 20, 21],
+      [22, 23, 24, 25, 26, 27, 28],
+      [29, 30, null, null, null, null, null],
+    ];
+    const result = getWeeksAtMonth(testDate);
+
+    expect(result).toHaveLength(5);
+    expect(result).toEqual(expected);
+  });
+
+  it('월의 마지막날이 토요일인 경우를 올바르게 처리한다', () => {
+    const testDate = new Date(2025, 4, 1);
+    const expected: Array<Array<number | null>> = [
+      [null, null, null, null, 1, 2, 3],
+      [4, 5, 6, 7, 8, 9, 10],
+      [11, 12, 13, 14, 15, 16, 17],
+      [18, 19, 20, 21, 22, 23, 24],
+      [25, 26, 27, 28, 29, 30, 31],
+    ];
+    const result = getWeeksAtMonth(testDate);
+
+    expect(result).toHaveLength(5);
+    expect(result).toEqual(expected);
+  });
+
+  it('윤년 2월을 올바르게 처리한다', () => {
+    const testDate = new Date(2024, 1, 1);
+    const expected: Array<Array<number | null>> = [
+      [null, null, null, 1, 2, 3, 4],
+      [5, 6, 7, 8, 9, 10, 11],
+      [12, 13, 14, 15, 16, 17, 18],
+      [19, 20, 21, 22, 23, 24, 25],
+      [26, 27, 28, 29, null, null, null],
+    ];
+    const result = getWeeksAtMonth(testDate);
+
+    expect(result).toHaveLength(5);
+    expect(result).toEqual(expected);
+  });
+
+  it('평년 2월을 올바르게 처리한다', () => {
+    const testDate = new Date(2025, 1, 1);
+    const expected: Array<Array<number | null>> = [
+      [null, null, null, null, null, 1, 2],
+      [3, 4, 5, 6, 7, 8, 9],
+      [10, 11, 12, 13, 14, 15, 16],
+      [17, 18, 19, 20, 21, 22, 23],
+      [24, 25, 26, 27, 28, null, null],
+    ];
+    const result = getWeeksAtMonth(testDate);
+
+    expect(result).toHaveLength(5);
+    expect(result).toEqual(expected);
+  });
+
+  it('6주가 필요한 월을 올바르게 처리한다', () => {
+    const testDate = new Date(2025, 7, 1);
+    const result = getWeeksAtMonth(testDate);
+
+    expect(result).toHaveLength(6);
+    expect(result[0]).toEqual([null, null, null, null, 1, 2, 3]);
+    expect(result[5]).toEqual([31, null, null, null, null, null, null]);
+  });
 });
 
 describe('getEventsForDay', () => {
@@ -192,31 +282,119 @@ describe('getEventsForDay', () => {
   });
 
   it('특정 날짜(1일)에 해당하는 이벤트만 정확히 반환한다', () => {
-    const targetDate = 1;
     const expected: Event[] = [events[0]];
 
-    expect(getEventsForDay(events, targetDate)).toEqual(expected);
+    expect(getEventsForDay(events, 1)).toEqual(expected);
   });
 
   it('해당 날짜에 이벤트가 없을 경우 빈 배열을 반환한다', () => {
-    const targetDate = 4;
     const expected: Event[] = [];
 
-    expect(getEventsForDay(events, targetDate)).toEqual(expected);
+    expect(getEventsForDay(events, 4)).toEqual(expected);
   });
 
   it('날짜가 0일 경우 빈 배열을 반환한다', () => {
-    const targetDate = 0;
     const expected: Event[] = [];
 
-    expect(getEventsForDay(events, targetDate)).toEqual(expected);
+    expect(getEventsForDay(events, 0)).toEqual(expected);
   });
 
   it('날짜가 32일 이상인 경우 빈 배열을 반환한다', () => {
-    const targetDate = 32;
     const expected: Event[] = [];
 
-    expect(getEventsForDay(events, targetDate)).toEqual(expected);
+    expect(getEventsForDay(events, 32)).toEqual(expected);
+  });
+
+  it('같은 날짜에 여러 이벤트가 있을 경우 모두 반환한다', () => {
+    const multipleEvents: Event[] = [
+      ...events,
+      {
+        id: '4',
+        title: 'Event 4',
+        date: events[0].date,
+        startTime: '14:00',
+        endTime: '15:00',
+        description: 'Description 4',
+        location: 'Location 4',
+        category: 'Category 4',
+        repeat: { type: 'none', interval: 1 },
+        notificationTime: 10,
+      },
+    ];
+    const expected = [multipleEvents[0], multipleEvents[3]];
+
+    expect(getEventsForDay(multipleEvents, 1)).toEqual(expected);
+  });
+
+  it('빈 이벤트 배열에 대해 빈 배열을 반환한다', () => {
+    expect(getEventsForDay([], 1)).toEqual([]);
+  });
+
+  it('다양한 날짜 형식의 이벤트를 올바르게 처리한다', () => {
+    const mixedDateEvents: Event[] = [
+      {
+        id: '1',
+        title: 'Event 1',
+        date: '2025-08-15',
+        startTime: '10:00',
+        endTime: '11:00',
+        description: 'Description 1',
+        location: 'Location 1',
+        category: 'Category 1',
+        repeat: { type: 'none', interval: 1 },
+        notificationTime: 10,
+      },
+      {
+        id: '2',
+        title: 'Event 2',
+        date: '2025-08-31',
+        startTime: '10:00',
+        endTime: '11:00',
+        description: 'Description 2',
+        location: 'Location 2',
+        category: 'Category 2',
+        repeat: { type: 'none', interval: 1 },
+        notificationTime: 10,
+      },
+    ];
+
+    expect(getEventsForDay(mixedDateEvents, 15)).toEqual([mixedDateEvents[0]]);
+    expect(getEventsForDay(mixedDateEvents, 31)).toEqual([mixedDateEvents[1]]);
+    expect(getEventsForDay(mixedDateEvents, 16)).toEqual([]);
+  });
+
+  it('경계값 날짜를 올바르게 처리한다', () => {
+    const boundaryEvents: Event[] = [
+      {
+        id: '1',
+        title: 'Event 1',
+        date: '2025-08-01',
+        startTime: '10:00',
+        endTime: '11:00',
+        description: 'Description 1',
+        location: 'Location 1',
+        category: 'Category 1',
+        repeat: { type: 'none', interval: 1 },
+        notificationTime: 10,
+      },
+      {
+        id: '2',
+        title: 'Event 2',
+        date: '2025-08-31',
+        startTime: '10:00',
+        endTime: '11:00',
+        description: 'Description 2',
+        location: 'Location 2',
+        category: 'Category 2',
+        repeat: { type: 'none', interval: 1 },
+        notificationTime: 10,
+      },
+    ];
+
+    expect(getEventsForDay(boundaryEvents, 1)).toEqual([boundaryEvents[0]]);
+    expect(getEventsForDay(boundaryEvents, 31)).toEqual([boundaryEvents[1]]);
+    expect(getEventsForDay(boundaryEvents, 0)).toEqual([]);
+    expect(getEventsForDay(boundaryEvents, 32)).toEqual([]);
   });
 });
 
@@ -422,5 +600,45 @@ describe('formatDate', () => {
     const result = formatDate(testDate);
 
     expect(result).toBe('2025-01-01');
+  });
+
+  it('다양한 월의 날짜를 올바르게 포맷팅한다', () => {
+    const testCases = [
+      { date: new Date(2025, 0, 15), expected: '2025-01-15' },
+      { date: new Date(2025, 5, 30), expected: '2025-06-30' },
+      { date: new Date(2025, 11, 31), expected: '2025-12-31' },
+    ];
+
+    testCases.forEach(({ date, expected }) => {
+      expect(formatDate(date)).toBe(expected);
+    });
+  });
+
+  it('경계값 날짜를 올바르게 포맷팅한다', () => {
+    expect(formatDate(new Date(2025, 0, 1))).toBe('2025-01-01');
+    expect(formatDate(new Date(2025, 11, 31))).toBe('2025-12-31');
+    expect(formatDate(new Date(2025, 1, 28))).toBe('2025-02-28');
+    expect(formatDate(new Date(2024, 1, 29))).toBe('2024-02-29');
+  });
+
+  it('day 파라미터로 다양한 일자를 지정할 수 있다', () => {
+    const testDate = new Date(2025, 7, 21);
+
+    expect(formatDate(testDate, 1)).toBe('2025-08-01');
+    expect(formatDate(testDate, 15)).toBe('2025-08-15');
+    expect(formatDate(testDate, 31)).toBe('2025-08-31');
+  });
+
+  it('day 파라미터가 한 자리 수일 때도 올바르게 처리한다', () => {
+    const testDate = new Date(2025, 7, 21);
+
+    expect(formatDate(testDate, 5)).toBe('2025-08-05');
+    expect(formatDate(testDate, 9)).toBe('2025-08-09');
+  });
+
+  it('다양한 연도의 날짜를 올바르게 포맷팅한다', () => {
+    expect(formatDate(new Date(2020, 0, 1))).toBe('2020-01-01');
+    expect(formatDate(new Date(2030, 11, 31))).toBe('2030-12-31');
+    expect(formatDate(new Date(1999, 5, 15))).toBe('1999-06-15');
   });
 });
