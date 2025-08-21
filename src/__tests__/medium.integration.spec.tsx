@@ -1,23 +1,117 @@
 import CssBaseline from '@mui/material/CssBaseline';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import { render, screen, within, act } from '@testing-library/react';
+import { render, screen, within, act, waitFor, fireEvent } from '@testing-library/react';
 import { UserEvent, userEvent } from '@testing-library/user-event';
 import { http, HttpResponse } from 'msw';
 import { SnackbarProvider } from 'notistack';
 import { ReactElement } from 'react';
+import { debug } from 'vitest-preview';
 
 import App from '../App';
 import { server } from '../setupTests';
 import { Event } from '../types';
+import { createDefaultEvents, setupMockHandler } from '../__mocks__/handlersUtils';
+
+function renderWithProviders() {
+  const theme = createTheme();
+  return render(
+    <ThemeProvider theme={theme}>
+      <SnackbarProvider>
+        <CssBaseline />
+        <App />
+      </SnackbarProvider>
+    </ThemeProvider>
+  );
+}
 
 describe('일정 CRUD 및 기본 기능', () => {
   it('입력한 새로운 일정 정보에 맞춰 모든 필드가 이벤트 리스트에 정확히 저장된다.', async () => {
-    // ! HINT. event를 추가 제거하고 저장하는 로직을 잘 살펴보고, 만약 그대로 구현한다면 어떤 문제가 있을 지 고민해보세요.
+    const user = userEvent.setup();
+    renderWithProviders();
+
+    await expect(screen.findByText('일정 로딩 완료!')).resolves.toBeInTheDocument();
+
+    const titleInput = screen.getByLabelText('제목');
+    const dateInput = screen.getByLabelText('날짜');
+    const startTimeInput = screen.getByLabelText('시작 시간');
+    const endTimeInput = screen.getByLabelText('종료 시간');
+    const submitButton = screen.getByTestId('event-submit-button');
+
+    await user.type(titleInput, '과제 하기');
+    await user.type(dateInput, '2025-08-21');
+    await user.type(startTimeInput, '10:00');
+    await user.type(endTimeInput, '14:00');
+
+    await user.click(submitButton);
+
+    await expect(screen.findByText('일정이 추가되었습니다.')).resolves.toBeInTheDocument();
+
+    const eventList = screen.getByTestId('event-list');
+
+    expect(within(eventList).getByText('과제 하기')).toBeInTheDocument();
   });
 
-  it('기존 일정의 세부 정보를 수정하고 변경사항이 정확히 반영된다', async () => {});
+  it('기존 일정의 세부 정보를 수정하고 변경사항이 정확히 반영된다', async () => {
+    setupMockHandler(createDefaultEvents(new Date('2025-08-15')));
 
-  it('일정을 삭제하고 더 이상 조회되지 않는지 확인한다', async () => {});
+    const user = userEvent.setup();
+    renderWithProviders();
+
+    await expect(screen.findByText('일정 로딩 완료!')).resolves.toBeInTheDocument();
+
+    debug();
+    const editButton = screen.getAllByLabelText('Edit event');
+
+    await user.click(editButton[0]);
+
+    const submitButton = screen.getByTestId('event-submit-button');
+
+    expect(within(submitButton).getByText('일정 수정')).toBeInTheDocument();
+
+    const titleInput = screen.getByLabelText('제목');
+    const dateInput = screen.getByLabelText('날짜');
+    const descriptionInput = screen.getByLabelText('설명');
+
+    await user.clear(titleInput);
+    await user.type(titleInput, '수정한 제목');
+
+    fireEvent.change(dateInput, { target: { value: '2025-08-21' } });
+
+    await user.clear(descriptionInput);
+    await user.type(descriptionInput, '이것은 수정한 내용이니라.');
+
+    await user.click(submitButton);
+
+    await expect(screen.findByText('일정이 수정되었습니다.')).resolves.toBeInTheDocument();
+
+    const eventList = screen.getByTestId('event-list');
+
+    expect(within(eventList).getByText('수정한 제목')).toBeInTheDocument();
+  });
+
+  it('일정을 삭제하고 더 이상 조회되지 않는지 확인한다', async () => {
+    setupMockHandler(createDefaultEvents(new Date('2025-08-15')));
+
+    const user = userEvent.setup();
+    renderWithProviders();
+
+    await expect(screen.findByText('일정 로딩 완료!')).resolves.toBeInTheDocument();
+
+    const eventList = screen.getByTestId('event-list');
+
+    const firstEventTitle = within(eventList).getByText('회의');
+    expect(firstEventTitle).toBeInTheDocument();
+
+    const deletedButton = screen.getAllByLabelText('Delete event');
+    const initialItemCount = deletedButton.length;
+
+    await user.click(deletedButton[0]);
+
+    await expect(screen.findByText('일정이 삭제되었습니다.')).resolves.toBeInTheDocument();
+
+    expect(screen.getAllByLabelText('Delete event').length).toBe(initialItemCount - 1);
+    expect(within(eventList).queryByText('회의')).not.toBeInTheDocument();
+  });
 });
 
 describe('일정 뷰', () => {
