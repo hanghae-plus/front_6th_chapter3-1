@@ -18,7 +18,7 @@
       "date": "2025-08-17",
       "startTime": "12:00",
       "endTime": "13:00",
-      "description": "회의",
+      "description": "회의입니당",
       "location": "카페",
       "category": "업무",
       "repeat": { "type": "none", "interval": 0 },
