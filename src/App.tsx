@@ -15,9 +15,8 @@ import {
 import { useSnackbar } from 'notistack';
 
 import { CalendarSection } from './components/CalendarSection.tsx';
-import { EventCard } from './components/EventCard.tsx';
+import { EventList } from './components/EventList.tsx';
 import { OverlapDialog } from './components/OverlapDialog.tsx';
-import { SearchBar } from './components/SearchBar.tsx';
 import { CATEGORIES } from './constants/events.ts';
 import { NOTIFICATION_OPTIONS } from './constants/notification.ts';
 import Noti from './elements/Noti.tsx';
@@ -279,28 +278,15 @@ function App() {
           onNavigate={navigate}
         />
 
-        <Stack
-          data-testid="event-list"
-          spacing={2}
-          sx={{ width: '30%', height: '100%', overflowY: 'auto' }}
-        >
-          <SearchBar searchTerm={searchTerm} onSearchChange={setSearchTerm} />
-
-          {/* 검색 필터링된 이벤트 목록 렌더링 */}
-          {filteredEvents.length === 0 ? (
-            <Typography>검색 결과가 없습니다.</Typography>
-          ) : (
-            filteredEvents.map((event) => (
-              <EventCard
-                key={event.id}
-                event={event}
-                isNotified={notifiedEvents.includes(event.id)}
-                onEdit={() => editEvent(event)}
-                onDelete={() => deleteEvent(event.id)}
-              />
-            ))
-          )}
-        </Stack>
+        {/* 이벤트 목록 */}
+        <EventList
+          filteredEvents={filteredEvents}
+          notifiedEvents={notifiedEvents}
+          searchTerm={searchTerm}
+          onSearchChange={setSearchTerm}
+          onEditEvent={editEvent}
+          onDeleteEvent={deleteEvent}
+        />
       </Stack>
 
       {/* 중복 이벤트 alert */}
