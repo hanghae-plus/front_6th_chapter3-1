@@ -1,8 +1,9 @@
+import { randomUUID } from 'crypto';
+
 import { http, HttpResponse } from 'msw';
 
-import { Event } from '../types';
 import { server } from '../setupTests';
-import { randomUUID } from 'crypto';
+import { Event } from '../types';
 
 // ! Hard
 // ! 이벤트는 생성, 수정 되면 fetch를 다시 해 상태를 업데이트 합니다. 이를 위한 제어가 필요할 것 같은데요. 어떻게 작성해야 테스트가 병렬로 돌아도 안정적이게 동작할까요?
@@ -47,18 +48,18 @@ export const setupMockHandlerUpdating = () => {
       return HttpResponse.json({ events: mockEvents });
     }),
 
-    http.patch<{ id: string }, Event>('/api/events:id', async ({ params, request }) => {
+    http.put<{ id: string }, Event>('/api/events/:id', async ({ params, request }) => {
       const { id } = params;
 
       const updatedEvent = await request.json();
       const eventIndex = mockEvents.findIndex((event) => event.id === id);
       if (eventIndex > -1) {
-        const newEvents = {
+        mockEvents[eventIndex] = {
           ...mockEvents[eventIndex],
           ...updatedEvent,
         };
 
-        return HttpResponse.json(newEvents);
+        return HttpResponse.json(mockEvents[eventIndex]);
       } else {
         return HttpResponse.json({ error: 'Event not found' }, { status: 404 });
       }
@@ -92,6 +93,21 @@ export const setupMockHandlerDeletion = () => {
       const deleteEvent = mockEvents.findIndex((event) => event.id !== id);
 
       return HttpResponse.json(deleteEvent, { status: 204 });
+    })
+  );
+};
+
+export const setupMockHandlerLoadingError = () => {
+  server.use(
+    http.get('/api/events', () => {
+      return HttpResponse.error();
+    })
+  );
+};
+export const setupMockHandlerDeleteError = () => {
+  server.use(
+    http.delete('/api/events/:id', () => {
+      return HttpResponse.error();
     })
   );
 };
