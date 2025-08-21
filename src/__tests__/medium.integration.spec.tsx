@@ -1,16 +1,16 @@
 import { render, screen, within, act } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
+import { debug } from 'jest-preview';
 import { SnackbarProvider } from 'notistack';
 import { ReactElement } from 'react';
 
-import App from '../App';
-import { server } from '../setupTests';
 import {
   setupMockHandlerCreation,
   setupMockHandlerUpdating,
   setupMockHandlerDeletion,
 } from '../__mocks__/handlersUtils';
-import { debug } from 'jest-preview';
+import App from '../App';
+import { server } from '../setupTests';
 
 const setup = (element: ReactElement) => {
   const user = userEvent.setup();

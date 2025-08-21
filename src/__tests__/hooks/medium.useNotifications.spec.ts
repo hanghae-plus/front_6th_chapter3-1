@@ -3,8 +3,8 @@ import { act, renderHook } from '@testing-library/react';
 import { useNotifications } from '../../hooks/useNotifications.ts';
 import { Event } from '../../types.ts';
 import { formatDate } from '../../utils/dateUtils.ts';
-import { parseHM } from '../utils.ts';
 import { 분 } from '../../utils/notificationUtils.ts';
+import { parseHM } from '../utils.ts';
 
 test('초기 상태에서는 알림이 없어야 한다', () => {
   // Given: 빈 이벤트 배열로 useNotifications 훅을 초기화
