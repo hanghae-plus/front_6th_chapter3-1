@@ -1,6 +1,4 @@
 import { Box, Stack } from '@mui/material';
-import { useSnackbar } from 'notistack';
-import { useState } from 'react';
 
 import { CalendarView } from './components/CalendarView';
 import { EventForm } from './components/EventForm';
@@ -9,11 +7,11 @@ import { NotificationStack } from './components/NotificationStack';
 import { OverlapDialog } from './components/OverlapDialog';
 import { useCalendarView } from './hooks/useCalendarView.ts';
 import { useEventForm } from './hooks/useEventForm.ts';
+import { useEventHandlers } from './hooks/useEventHandlers.ts';
 import { useEventOperations } from './hooks/useEventOperations.ts';
 import { useNotifications } from './hooks/useNotifications.ts';
+import { useOverlapDialog } from './hooks/useOverlapDialog.ts';
 import { useSearch } from './hooks/useSearch.ts';
-import { Event, EventForm as EventFormType } from './types';
-import { findOverlappingEvents } from './utils/eventOverlap';
 
 function App() {
   const {
@@ -32,11 +30,8 @@ function App() {
     isRepeating,
     setIsRepeating,
     repeatType,
-    // setRepeatType,
     repeatInterval,
-    // setRepeatInterval,
     repeatEndDate,
-    // setRepeatEndDate,
     notificationTime,
     setNotificationTime,
     startTimeError,
@@ -56,70 +51,31 @@ function App() {
   const { notifications, notifiedEvents, setNotifications } = useNotifications(events);
   const { view, setView, currentDate, holidays, navigate } = useCalendarView();
   const { searchTerm, filteredEvents, setSearchTerm } = useSearch(events, currentDate, view);
+  const { isOverlapDialogOpen, overlappingEvents, openOverlapDialog, closeOverlapDialog } =
+    useOverlapDialog();
 
-  const [isOverlapDialogOpen, setIsOverlapDialogOpen] = useState(false);
-  const [overlappingEvents, setOverlappingEvents] = useState<Event[]>([]);
-
-  const { enqueueSnackbar } = useSnackbar();
-
-  const addOrUpdateEvent = async () => {
-    if (!title || !date || !startTime || !endTime) {
-      enqueueSnackbar('필수 정보를 모두 입력해주세요.', { variant: 'error' });
-      return;
-    }
-
-    if (startTimeError || endTimeError) {
-      enqueueSnackbar('시간 설정을 확인해주세요.', { variant: 'error' });
-      return;
-    }
-
-    const eventData: Event | EventFormType = {
-      id: editingEvent ? editingEvent.id : undefined,
-      title,
-      date,
-      startTime,
-      endTime,
-      description,
-      location,
-      category,
-      repeat: {
-        type: isRepeating ? repeatType : 'none',
-        interval: repeatInterval,
-        endDate: repeatEndDate || undefined,
-      },
-      notificationTime,
-    };
-
-    const overlapping = findOverlappingEvents(eventData, events);
-    if (overlapping.length > 0) {
-      setOverlappingEvents(overlapping);
-      setIsOverlapDialogOpen(true);
-    } else {
-      await saveEvent(eventData);
-      resetForm();
-    }
-  };
-
-  const handleOverlapDialogContinue = () => {
-    setIsOverlapDialogOpen(false);
-    saveEvent({
-      id: editingEvent ? editingEvent.id : undefined,
-      title,
-      date,
-      startTime,
-      endTime,
-      description,
-      location,
-      category,
-      repeat: {
-        type: isRepeating ? repeatType : 'none',
-        interval: repeatInterval,
-        endDate: repeatEndDate || undefined,
-      },
-      notificationTime,
-    });
-    resetForm();
-  };
+  const { addOrUpdateEvent, handleOverlapDialogContinue } = useEventHandlers({
+    title,
+    date,
+    startTime,
+    endTime,
+    description,
+    location,
+    category,
+    isRepeating,
+    repeatType,
+    repeatInterval,
+    repeatEndDate,
+    notificationTime,
+    startTimeError,
+    endTimeError,
+    editingEvent,
+    events,
+    saveEvent,
+    resetForm,
+    openOverlapDialog,
+    closeOverlapDialog,
+  });
 
   return (
     <Box sx={{ width: '100%', height: '100vh', margin: 'auto', p: 5 }}>
@@ -171,14 +127,14 @@ function App() {
 
       <OverlapDialog
         isOpen={isOverlapDialogOpen}
-        onClose={() => setIsOverlapDialogOpen(false)}
+        onClose={closeOverlapDialog}
         overlappingEvents={overlappingEvents}
         onContinue={handleOverlapDialogContinue}
       />
 
       <NotificationStack
         notifications={notifications}
-        onDismiss={(index) => setNotifications((prev) => prev.filter((_, i) => i !== index))}
+        onDismiss={(index: number) => setNotifications((prev) => prev.filter((_, i) => i !== index))}
       />
     </Box>
   );
