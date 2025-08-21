@@ -17,13 +17,11 @@ import { factoriesEvents } from '../__fixture__/eventFactory.ts';
 describe('getDaysInMonth', () => {
   it('1월은 31일 수를 반환한다', () => {
     const result = getDaysInMonth(2025, 1);
-
     expect(result).toBe(31);
   });
 
   it('4월은 30일 일수를 반환한다', () => {
     const result = getDaysInMonth(2025, 4);
-
     expect(result).toBe(30);
   });
 
