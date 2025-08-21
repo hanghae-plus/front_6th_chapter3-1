@@ -1,6 +1,5 @@
 import { Box, Stack } from '@mui/material';
 import { useSnackbar } from 'notistack';
-import { useState } from 'react';
 
 import {
   EventForm as EventFormComponent,
@@ -14,9 +13,9 @@ import { useCalendarView } from './hooks/useCalendarView.ts';
 import { useEventForm } from './hooks/useEventForm.ts';
 import { useEventOperations } from './hooks/useEventOperations.ts';
 import { useNotifications } from './hooks/useNotifications.ts';
+import { useOverlapCheck } from './hooks/useOverlapCheck.ts';
 import { useSearch } from './hooks/useSearch.ts';
 import { Event, EventForm } from './types';
-import { findOverlappingEvents } from './utils/eventOverlap';
 
 function App() {
   const {
@@ -60,10 +59,15 @@ function App() {
   const { view, setView, currentDate, holidays, navigate } = useCalendarView();
   const { searchTerm, filteredEvents, setSearchTerm } = useSearch(events, currentDate, view);
 
-  const [isOverlapDialogOpen, setIsOverlapDialogOpen] = useState(false);
-  const [overlappingEvents, setOverlappingEvents] = useState<Event[]>([]);
-
   const { enqueueSnackbar } = useSnackbar();
+
+  const {
+    isOverlapDialogOpen,
+    overlappingEvents,
+    checkForOverlap,
+    handleContinueWithOverlap,
+    closeOverlapDialog,
+  } = useOverlapCheck();
 
   const addOrUpdateEvent = async () => {
     if (!title || !date || !startTime || !endTime) {
@@ -93,11 +97,20 @@ function App() {
       notificationTime,
     };
 
-    const overlapping = findOverlappingEvents(eventData, events);
-    if (overlapping.length > 0) {
-      setOverlappingEvents(overlapping);
-      setIsOverlapDialogOpen(true);
-    } else {
+    // 중복 검사 수행
+    const overlapResult = checkForOverlap(eventData, events);
+
+    if (!overlapResult.hasOverlap) {
+      // 중복이 없으면 바로 저장
+      await saveEvent(eventData);
+      resetForm();
+    }
+    // 중복이 있으면 다이얼로그가 열리고 사용자가 선택할 수 있음
+  };
+
+  const handleContinueWithOverlapAndSave = async () => {
+    const eventData = handleContinueWithOverlap();
+    if (eventData) {
       await saveEvent(eventData);
       resetForm();
     }
@@ -159,27 +172,9 @@ function App() {
 
       <OverlapDialog
         open={isOverlapDialogOpen}
-        onClose={() => setIsOverlapDialogOpen(false)}
+        onClose={closeOverlapDialog}
         overlappingEvents={overlappingEvents}
-        onContinue={() => {
-          setIsOverlapDialogOpen(false);
-          saveEvent({
-            id: editingEvent ? editingEvent.id : undefined,
-            title,
-            date,
-            startTime,
-            endTime,
-            description,
-            location,
-            category,
-            repeat: {
-              type: isRepeating ? repeatType : 'none',
-              interval: repeatInterval,
-              endDate: repeatEndDate || undefined,
-            },
-            notificationTime,
-          });
-        }}
+        onContinue={handleContinueWithOverlapAndSave}
       />
 
       <NotificationStack
