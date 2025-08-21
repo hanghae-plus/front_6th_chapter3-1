@@ -86,7 +86,7 @@ const updateSchedule = async (
 };
 
 // ! HINT. "검색 결과가 없습니다"는 초기에 노출되는데요. 그럼 검증하고자 하는 액션이 실행되기 전에 검증해버리지 않을까요? 이 테스트를 신뢰성있게 만드려면 어떻게 할까요?
-describe.only('일정 CRUD 및 기본 기능', () => {
+describe('일정 CRUD 및 기본 기능', () => {
   it('입력한 새로운 일정 정보에 맞춰 모든 필드가 이벤트 리스트에 정확히 저장된다.', async () => {
     setupMockHandlerCreation();
 
@@ -164,7 +164,7 @@ describe.only('일정 CRUD 및 기본 기능', () => {
   });
 });
 
-describe.only('일정 뷰', () => {
+describe('일정 뷰', () => {
   it('주별 뷰를 선택 후 해당 주에 일정이 없으면, 일정이 표시되지 않는다.', async () => {
     setupMockHandlerCreation();
     const { user } = setup(<App />);
@@ -278,7 +278,7 @@ describe.only('일정 뷰', () => {
   });
 });
 
-describe.only('검색 기능', () => {
+describe('검색 기능', () => {
   it('검색 결과가 없으면, "검색 결과가 없습니다."가 표시되어야 한다.', async () => {
     setupMockHandlerUpdating();
     const { user } = setup(<App />);
@@ -326,7 +326,7 @@ describe.only('검색 기능', () => {
   });
 });
 
-describe.only('일정 충돌', () => {
+describe('일정 충돌', () => {
   it('겹치는 시간에 새 일정을 추가할 때 경고가 표시된다', async () => {
     setupMockHandlerCreation([
       {
@@ -379,7 +379,7 @@ describe.only('일정 충돌', () => {
   });
 });
 
-it.only('notificationTime을 10으로 하면 지정 시간 10분 전 알람 텍스트가 노출된다', async () => {
+it('notificationTime을 10으로 하면 지정 시간 10분 전 알람 텍스트가 노출된다', async () => {
   setupMockHandlerCreation([
     {
       id: '1',
