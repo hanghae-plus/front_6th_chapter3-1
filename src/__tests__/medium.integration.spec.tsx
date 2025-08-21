@@ -272,11 +272,33 @@ describe('일정 뷰', () => {
     await user.click(viewTypeSelect);
     await user.click(screen.getByRole('option', { name: 'week-option' }));
 
+    expect(await screen.findByTestId('week-view')).toBeInTheDocument();
+
     const weekView = await screen.findByTestId('week-view');
     expect(await within(weekView).findByText('발제')).toBeInTheDocument();
   });
 
-  it('월별 뷰에 일정이 없으면, 일정이 표시되지 않아야 한다.', async () => {});
+  it('월별 뷰에 일정이 없으면, 일정이 표시되지 않아야 한다.', async () => {
+    server.use(...setupMockHandlerCreation([]));
+
+    const user = userEvent.setup();
+    render(
+      <ThemeProvider theme={createTheme()}>
+        <SnackbarProvider>
+          <App />
+        </SnackbarProvider>
+      </ThemeProvider>
+    );
+
+    const viewTypeContainer = await screen.findByLabelText('뷰 타입 선택');
+    const viewTypeSelect = await within(viewTypeContainer).findByRole('combobox');
+    await user.click(viewTypeSelect);
+    await user.click(screen.getByRole('option', { name: 'month-option' }));
+
+    expect(await screen.findByTestId('month-view')).toBeInTheDocument();
+
+    await waitFor(() => expect(screen.getByText('검색 결과가 없습니다.')).toBeInTheDocument());
+  });
 
   it('월별 뷰에 일정이 정확히 표시되는지 확인한다', async () => {});
 
