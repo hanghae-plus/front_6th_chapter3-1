@@ -1,6 +1,6 @@
 import { Event, EventForm as EventFormType } from '../types';
 
-interface CreateEventDataParams {
+export interface CreateEventDataParams {
   editingEvent: Event | null;
   title: string;
   date: string;
