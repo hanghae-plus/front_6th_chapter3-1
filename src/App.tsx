@@ -1,15 +1,10 @@
-import { Notifications, ChevronLeft, ChevronRight, Delete, Edit, Close } from '@mui/icons-material';
+import { ChevronLeft, ChevronRight, Close, Delete, Edit, Notifications } from '@mui/icons-material';
 import {
   Alert,
   AlertTitle,
   Box,
   Button,
   Checkbox,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
   FormControl,
   FormControlLabel,
   FormLabel,
@@ -36,6 +31,7 @@ import { useEventOperations } from './hooks/useEventOperations.ts';
 import { useNotifications } from './hooks/useNotifications.ts';
 import { useSearch } from './hooks/useSearch.ts';
 // import { Event, EventForm, RepeatType } from './types';
+import { EventOverlapDialog } from './components/EventOverlapDialog.tsx';
 import { Event, EventForm } from './types';
 import {
   formatDate,
@@ -571,32 +567,14 @@ function App() {
         </Stack>
       </Stack>
 
-      <Dialog open={isOverlapDialogOpen} onClose={() => setIsOverlapDialogOpen(false)}>
-        <DialogTitle>일정 겹침 경고</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            다음 일정과 겹칩니다:
-            {overlappingEvents.map((event) => (
-              <Typography key={event.id}>
-                {event.title} ({event.date} {event.startTime}-{event.endTime})
-              </Typography>
-            ))}
-            계속 진행하시겠습니까?
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setIsOverlapDialogOpen(false)}>취소</Button>
-          <Button
-            color="error"
-            onClick={() => {
-              setIsOverlapDialogOpen(false);
-              saveEvent(eventData);
-            }}
-          >
-            계속 진행
-          </Button>
-        </DialogActions>
-      </Dialog>
+      <EventOverlapDialog
+        eventData={eventData}
+        isOverlapDialogOpen={isOverlapDialogOpen}
+        setIsOverlapDialogOpen={setIsOverlapDialogOpen}
+        overlappingEvents={overlappingEvents}
+        saveEvent={saveEvent}
+        resetForm={resetForm}
+      />
 
       {notifications.length > 0 && (
         <Stack position="fixed" top={16} right={16} spacing={2} alignItems="flex-end">
