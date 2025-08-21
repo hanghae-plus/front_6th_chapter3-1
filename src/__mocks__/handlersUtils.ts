@@ -57,6 +57,11 @@ export const setupMockHandlerUpdating = () => {
       const updatedEvent = (await request.json()) as Event;
       const index = mockEvents.findIndex((event) => event.id === id);
 
+      // 존재하지 않는 이벤트 처리 시 에러
+      if (index === -1) {
+        return HttpResponse.error();
+      }
+
       mockEvents[index] = { ...mockEvents[index], ...updatedEvent };
       return HttpResponse.json(mockEvents[index]);
     })

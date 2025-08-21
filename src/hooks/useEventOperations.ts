@@ -76,7 +76,6 @@ export const useEventOperations = (editing: boolean, onSave?: () => void) => {
 
   useEffect(() => {
     init();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return { events, fetchEvents, saveEvent, deleteEvent };
