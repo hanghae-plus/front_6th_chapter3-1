@@ -1,7 +1,7 @@
 import { Box, Stack } from '@mui/material';
 
-import { EventFormComponent } from './components/EventForm';
 import { CalendarViewComponent } from './components/CalendarView';
+import { EventFormComponent } from './components/EventForm';
 import { EventListComponent } from './components/EventList';
 import { Notification } from './components/Notification';
 import { useEventForm } from './hooks/useEventForm';

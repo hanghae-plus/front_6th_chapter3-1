@@ -15,10 +15,10 @@ import { useSnackbar } from 'notistack';
 import { useState } from 'react';
 
 import { OverlapDialog } from './OverlapDialog';
+import { CATEGORIES, NOTIFICATION_OPTIONS } from '../constants';
 import { Event, EventForm } from '../types';
 import { findOverlappingEvents } from '../utils/eventOverlap';
 import { getTimeErrorMessage } from '../utils/timeValidation';
-import { CATEGORIES, NOTIFICATION_OPTIONS } from '../constants';
 
 interface EventFormProps {
   events: Event[];

@@ -1,8 +1,8 @@
 import { Delete, Edit, Notifications } from '@mui/icons-material';
 import { Box, IconButton, Stack, Typography } from '@mui/material';
 
-import { Event } from '../types';
 import { NOTIFICATION_OPTIONS } from '../constants';
+import { Event } from '../types';
 
 interface EventCardProps {
   event: Event;

@@ -11,9 +11,9 @@ import {
   Typography,
 } from '@mui/material';
 
+import { WEEK_DAYS } from '../constants';
 import { Event } from '../types';
 import { formatDate, formatMonth, getEventsForDay, getWeeksAtMonth } from '../utils/dateUtils';
-import { WEEK_DAYS } from '../constants';
 
 interface CalendarMonthViewProps {
   currentDate: Date;
