@@ -1,7 +1,5 @@
-import { Notifications, ChevronLeft, ChevronRight, Close } from '@mui/icons-material';
+import { Notifications, ChevronLeft, ChevronRight } from '@mui/icons-material';
 import {
-  Alert,
-  AlertTitle,
   Box,
   Button,
   Checkbox,
@@ -31,6 +29,7 @@ import { useSnackbar } from 'notistack';
 import { useState } from 'react';
 
 import { EventList } from './components/EventList';
+import { NotificationPanel } from './components/NotificationPanel';
 import { useCalendarView } from './hooks/useCalendarView.ts';
 import { useEventForm } from './hooks/useEventForm.ts';
 import { useEventOperations } from './hooks/useEventOperations.ts';
@@ -568,27 +567,12 @@ function App() {
         </DialogActions>
       </Dialog>
 
-      {notifications.length > 0 && (
-        <Stack position="fixed" top={16} right={16} spacing={2} alignItems="flex-end">
-          {notifications.map((notification, index) => (
-            <Alert
-              key={index}
-              severity="info"
-              sx={{ width: 'auto' }}
-              action={
-                <IconButton
-                  size="small"
-                  onClick={() => setNotifications((prev) => prev.filter((_, i) => i !== index))}
-                >
-                  <Close />
-                </IconButton>
-              }
-            >
-              <AlertTitle>{notification.message}</AlertTitle>
-            </Alert>
-          ))}
-        </Stack>
-      )}
+      <NotificationPanel
+        notifications={notifications}
+        onRemoveNotification={(index) =>
+          setNotifications((prev) => prev.filter((_, i) => i !== index))
+        }
+      />
     </Box>
   );
 }
