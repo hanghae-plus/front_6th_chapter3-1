@@ -362,7 +362,32 @@ describe('검색 기능', () => {
 });
 
 describe('일정 충돌', () => {
-  it('겹치는 시간에 새 일정을 추가할 때 경고가 표시된다', async () => {});
+  it('겹치는 시간에 새 일정을 추가할 때 경고가 표시된다', async () => {
+    setupMockHandlerCreation([
+      createEventMock({
+        id: '1',
+        title: '기존 회의',
+        date: '2025-10-15',
+        startTime: '10:00',
+        endTime: '12:00',
+        category: '업무',
+      }),
+    ]);
+
+    const { user } = setup(<App />);
+
+    await saveSchedule(user, {
+      title: '겹치는 회의',
+      date: '2025-10-15',
+      startTime: '11:00',
+      endTime: '11:30',
+      description: '겹침 테스트',
+      location: '회의실 A',
+      category: '업무',
+    });
+
+    expect(await screen.findByText('일정 겹침 경고')).toBeInTheDocument();
+  });
 
   it('기존 일정의 시간을 수정하여 충돌이 발생하면 경고가 노출된다', async () => {
     setupMockHandlerUpdating();
