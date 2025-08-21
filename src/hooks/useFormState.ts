@@ -40,8 +40,8 @@ export const useFormState = (initialEvent?: Event) => {
   }, []);
 
   const resetForm = useCallback(() => {
-    setFormState(getInitialFormState());
-  }, []);
+    setFormState(getInitialFormState(initialEvent));
+  }, [initialEvent]);
 
   const loadEvent = useCallback((event: Event) => {
     setFormState(getInitialFormState(event));
