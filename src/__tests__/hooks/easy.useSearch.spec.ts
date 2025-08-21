@@ -2,7 +2,7 @@ import { act, renderHook } from '@testing-library/react';
 
 import { useSearch } from '../../hooks/useSearch.ts';
 import { Event } from '../../types.ts';
-import { mockEvents, mockNotificationEvents } from '../test-data.ts';
+import { mockNotificationEvents } from '../test-data.ts';
 
 it('검색어가 비어있을 때 모든 이벤트를 반환해야 한다', () => {
   const { result } = renderHook(() => useSearch([], new Date(), 'month'));

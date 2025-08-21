@@ -236,8 +236,9 @@ describe('일정 뷰', () => {
 
 describe('검색 기능', () => {
   it('검색 결과가 없으면, "검색 결과가 없습니다."가 표시되어야 한다.', async () => {
-    const { user } = setup(<App />);
-    await user.type(screen.getByLabelText('일정 검색'), 'gd');
+    setup(<App />);
+    const searchInput = screen.getByLabelText('일정 검색');
+    await userEvent.type(searchInput, 'gd');
 
     expect(screen.getByText('검색 결과가 없습니다.')).toBeInTheDocument();
   });
@@ -245,8 +246,9 @@ describe('검색 기능', () => {
   it("'팀 회의'를 검색하면 해당 제목을 가진 일정이 리스트에 노출된다", async () => {
     setupMockHandlerCreation([TEST_EVENTS.TEAM_MEETING]);
 
-    const { user } = setup(<App />);
-    await user.type(screen.getByLabelText('일정 검색'), '팀 회의');
+    setup(<App />);
+    const searchInput = screen.getByLabelText('일정 검색');
+    await userEvent.type(searchInput, '팀 회의');
 
     expect(within(screen.getByTestId('event-list')).getByText('팀 회의')).toBeInTheDocument();
   });
@@ -254,12 +256,13 @@ describe('검색 기능', () => {
   it('검색어를 지우면 모든 일정이 다시 표시되어야 한다', async () => {
     setupMockHandlerCreation([TEST_EVENTS.TEAM_MEETING]);
 
-    const { user } = setup(<App />);
-    await user.type(screen.getByLabelText('일정 검색'), '팀 회의');
+    setup(<App />);
+    const searchInput = screen.getByLabelText('일정 검색');
+    await userEvent.type(searchInput, '팀 회의');
 
     expect(within(screen.getByTestId('event-list')).getByText('팀 회의')).toBeInTheDocument();
 
-    await user.clear(screen.getByLabelText('일정 검색'));
+    await userEvent.clear(searchInput);
 
     expect(within(screen.getByTestId('event-list')).getByText('팀 회의')).toBeInTheDocument();
   });
