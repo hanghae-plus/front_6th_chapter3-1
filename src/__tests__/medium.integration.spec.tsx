@@ -1,8 +1,7 @@
 import CssBaseline from '@mui/material/CssBaseline';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import { render, screen, within, act, waitFor } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
 import { UserEvent, userEvent } from '@testing-library/user-event';
-import { http, HttpResponse } from 'msw';
 import { SnackbarProvider } from 'notistack';
 import { ReactElement } from 'react';
 
@@ -12,9 +11,7 @@ import {
   setupMockHandlerUpdating,
 } from '../__mocks__/handlersUtils';
 import App from '../App';
-import { server } from '../setupTests';
 import { Event } from '../types';
-import { li } from 'framer-motion/client';
 
 const theme = createTheme();
 
@@ -182,7 +179,7 @@ describe('일정 뷰', () => {
       },
     ];
     setupMockHandlerCreation(initialEvent); // mock 먼저
-    const { user } = setup(<App />);
+    setup(<App />);
     const list = await screen.findByTestId('event-list');
     expect(within(list).getByText('검색 결과가 없습니다.')).toBeInTheDocument();
   });
@@ -215,7 +212,7 @@ describe('일정 뷰', () => {
 
   it('달력에 1월 1일(신정)이 공휴일로 표시되는지 확인한다', async () => {
     vi.setSystemTime(new Date('2025-01-01T00:00:00Z')); // 1월 1일로 시스템 시간 설정
-    const { user } = setup(<App />);
+    setup(<App />);
     expect(screen.getByText('신정')).toBeInTheDocument();
   });
 });
@@ -358,7 +355,7 @@ describe('일정 충돌', () => {
 
 it('notificationTime을 10으로 하면 지정 시간 10분 전 알람 텍스트가 노출된다', async () => {
   vi.setSystemTime(new Date('2025-10-15T08:50:00Z'));
-  const { user } = setup(<App />);
+  setup(<App />);
 
   const list = await screen.findByTestId('event-list');
   expect(within(list).getByText('기존 회의')).toBeInTheDocument();
