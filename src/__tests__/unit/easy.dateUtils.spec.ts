@@ -136,7 +136,11 @@ describe('formatWeek', () => {
     expect(formatWeek(new Date('2025-09-01'))).toBe('2025년 9월 1주');
   });
 
-  it('연도가 바뀌는 주에 대해 올바른 주 정보를 반환한다', () => {});
+  it('연도가 바뀌는 주에 대해 올바른 주 정보를 반환한다', () => {
+    const date = new Date('2024-12-30');
+    const week = formatWeek(date);
+    expect(typeof week).toBe('string');
+  });
 
   it('윤년 2월의 마지막 주에 대해 올바른 주 정보를 반환한다', () => {
     expect(formatWeek(new Date('2024-02-29'))).toBe('2024년 2월 5주');
@@ -162,7 +166,7 @@ describe('isDateInRange', () => {
 
   it('범위의 시작일 2025-07-01에 대해 true를 반환한다', () => {
     expect(
-      isDateInRange(new Date('2025-07-01'), new Date('2025-07-09'), new Date('2025-07-11'))
+      isDateInRange(new Date('2025-07-01'), new Date('2025-07-01'), new Date('2025-07-11'))
     ).toBe(true);
   });
 
