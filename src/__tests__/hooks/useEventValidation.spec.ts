@@ -41,7 +41,7 @@ describe('useEventValidation', () => {
     vi.clearAllMocks();
   });
 
-  it('필수 필드가 누락되면 에러 메시지를 표시하고 저장하지 않는다.', async () => {
+  it('필수 필드가 누락되면 에러 메시지를 표시하고 저장을 중단한다.', async () => {
     const { result } = setup();
 
     const eventData: EventForm = {
@@ -69,7 +69,7 @@ describe('useEventValidation', () => {
     expect(mockSaveEvent).not.toHaveBeenCalled();
   });
 
-  it('시간 에러가 있으면 에러 메시지를 표시하고 저장하지 않는다.', async () => {
+  it('시간 설정에 오류가 있으면 에러 메시지를 표시하고 저장을 중단한다.', async () => {
     const { result } = setup();
 
     const eventData: EventForm = {
@@ -97,7 +97,7 @@ describe('useEventValidation', () => {
     expect(mockSaveEvent).not.toHaveBeenCalled();
   });
 
-  it('겹치는 이벤트가 없으면 바로 저장한다.', async () => {
+  it('겹치는 일정이 없으면 바로 저장한다.', async () => {
     const { result } = setup();
 
     const eventData: EventForm = {
@@ -122,7 +122,7 @@ describe('useEventValidation', () => {
     expect(mockSaveEvent).toHaveBeenCalledWith(eventData);
   });
 
-  it('겹치는 이벤트가 있으면 다이얼로그를 열고 pendingEventData를 설정한다.', async () => {
+  it('겹치는 일정이 있으면 다이얼로그를 열고 대기 중인 일정 데이터를 설정한다.', async () => {
     const { result } = setup();
 
     const eventData: EventForm = {
@@ -149,7 +149,7 @@ describe('useEventValidation', () => {
     expect(mockSaveEvent).not.toHaveBeenCalled();
   });
 
-  it('handleConfirmOverlap을 호출하면 pendingEventData를 저장하고 다이얼로그를 닫는다.', async () => {
+  it('handleConfirmOverlap을 호출하면 대기 중인 일정을 저장하고 다이얼로그를 닫는다.', async () => {
     const { result } = setup();
 
     const eventData: EventForm = {

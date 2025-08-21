@@ -51,7 +51,7 @@ const mockOverlappingEvents: Event[] = [
   },
 ];
 
-it('다이얼로그가 열려있을 때 겹치는 이벤트들이 표시된다.', () => {
+it('다이얼로그가 열려있을 때 겹치는 일정들이 표시된다.', () => {
   setup({
     open: true,
     overlappingEvents: mockOverlappingEvents,
@@ -62,7 +62,7 @@ it('다이얼로그가 열려있을 때 겹치는 이벤트들이 표시된다.'
   expect(screen.getByText('겹치는 일정 2 (2025-01-15 09:30-10:30)')).toBeInTheDocument();
 });
 
-it('다이얼로그가 닫혀있을 때는 아무것도 렌더링되지 않는다.', () => {
+it('다이얼로그가 닫혀있을 때는 렌더링되지 않는다.', () => {
   setup({
     open: false,
     overlappingEvents: mockOverlappingEvents,
@@ -80,7 +80,7 @@ it('취소 버튼을 클릭하면 onClose 함수가 호출된다.', async () => 
   });
 
   await user.click(screen.getByText('취소'));
-  expect(mockOnClose).toBeCalled();
+  expect(mockOnClose).toHaveBeenCalledTimes(1);
 });
 
 it('계속 진행 버튼을 클릭하면 onConfirm 함수가 호출된다.', async () => {
@@ -92,10 +92,10 @@ it('계속 진행 버튼을 클릭하면 onConfirm 함수가 호출된다.', asy
   });
 
   await user.click(screen.getByText('계속 진행'));
-  expect(mockOnConfirm).toBeCalled();
+  expect(mockOnConfirm).toHaveBeenCalledTimes(1);
 });
 
-it('겹치는 이벤트가 없을 때도 다이얼로그가 올바르게 렌더링된다.', () => {
+it('겹치는 일정이 없을 때도 다이얼로그가 올바르게 렌더링된다.', () => {
   setup({
     open: true,
     overlappingEvents: [],
