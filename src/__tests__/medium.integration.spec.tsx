@@ -326,48 +326,55 @@ describe.only('검색 기능', () => {
   });
 });
 
-describe('일정 충돌', () => {
+describe.only('일정 충돌', () => {
   it('겹치는 시간에 새 일정을 추가할 때 경고가 표시된다', async () => {
-    setupMockHandlerUpdating(); // 기존 회의: 2025-10-15 09:00-10:00
-
+    setupMockHandlerCreation([
+      {
+        id: '1',
+        title: '기존 회의',
+        date: '2025-10-15',
+        startTime: '09:00',
+        endTime: '10:00',
+        description: '기존 팀 미팅',
+        location: '회의실 B',
+        category: '업무',
+        repeat: { type: 'none', interval: 0 },
+        notificationTime: 10,
+      },
+    ] satisfies Event[]);
     const { user } = setup(<App />);
 
     await screen.findByText('일정 로딩 완료!');
 
-    // 겹치는 시간의 새 일정 추가 시도
     await saveSchedule(user, {
       title: '충돌 일정',
       date: '2025-10-15',
-      startTime: '09:30', // 기존 회의와 겹침
+      startTime: '09:30',
       endTime: '10:30',
       description: '겹치는 시간 테스트',
       location: '회의실',
       category: '업무',
     });
 
-    // 경고 메시지 확인
     expect(screen.getByText('일정 겹침 경고')).toBeInTheDocument();
   });
 
   it('기존 일정의 시간을 수정하여 충돌이 발생하면 경고가 노출된다', async () => {
-    setupMockHandlerUpdating(); // 기존 회의: 09:00-10:00, 기존 회의2: 11:00-12:00
-
+    setupMockHandlerUpdating();
     const { user } = setup(<App />);
 
     await screen.findByText('일정 로딩 완료!');
 
-    // 기존 회의를 수정해서 기존 회의2와 겹치게 만들기
     await updateSchedule(user, {
       title: '기존 회의',
       date: '2025-10-15',
-      startTime: '11:30', // 기존 회의2와 겹침
+      startTime: '11:30',
       endTime: '12:30',
       description: '기존 팀 미팅',
       location: '회의실 B',
       category: '업무',
     });
 
-    // 경고 메시지 확인
     expect(screen.getByText('일정 겹침 경고')).toBeInTheDocument();
   });
 });
