@@ -8,9 +8,10 @@ import {
   TableRow,
   Typography,
 } from '@mui/material';
+
+import { EventItem } from './EventItem';
 import { Event } from '../../types';
 import { formatWeek, getWeekDates } from '../../utils/dateUtils';
-import { EventItem } from './EventItem';
 
 interface WeekViewProps {
   currentDate: Date;

@@ -1,5 +1,6 @@
 import { Delete, Edit } from '@mui/icons-material';
 import { IconButton, Stack } from '@mui/material';
+
 import { Event } from '../../types';
 
 interface EventActionsProps {

@@ -8,9 +8,10 @@ import {
   TableRow,
   Typography,
 } from '@mui/material';
+
+import { EventItem } from './EventItem';
 import { Event } from '../../types';
 import { formatDate, formatMonth, getEventsForDay, getWeeksAtMonth } from '../../utils/dateUtils';
-import { EventItem } from './EventItem';
 
 interface MonthViewProps {
   currentDate: Date;

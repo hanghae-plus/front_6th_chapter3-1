@@ -1,7 +1,8 @@
 import { Stack, Typography } from '@mui/material';
-import { Event } from '../../types';
+
 import { EventListItem } from './EventListItem';
 import { EventSearch } from './EventSearch';
+import { Event } from '../../types';
 
 interface EventListProps {
   filteredEvents: Event[];

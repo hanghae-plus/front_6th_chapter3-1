@@ -1,4 +1,5 @@
 import { FormControl, FormLabel, MenuItem, Select } from '@mui/material';
+
 import { notificationOptions } from '../../constants/notificationOptions';
 
 interface NotificationSelectProps {

@@ -1,7 +1,8 @@
 import { Notifications } from '@mui/icons-material';
 import { Box, Stack, Typography } from '@mui/material';
-import { Event } from '../../types';
+
 import { EventActions } from './EventActions';
+import { Event } from '../../types';
 
 interface EventListItemProps {
   event: Event;

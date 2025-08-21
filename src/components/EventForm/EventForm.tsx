@@ -1,11 +1,12 @@
 import { Button, Stack, Typography } from '@mui/material';
 import { ChangeEvent } from 'react';
-import { Event } from '../../types';
+
 import { BasicFields } from './BasicFields';
 import { CategorySelect } from './CategorySelect';
 import { NotificationSelect } from './NotificationSelect';
 import { RepeatCheckbox } from './RepeatCheckbox';
 import { TimeFields } from './TimeFields';
+import { Event } from '../../types';
 
 interface EventFormProps {
   title: string;

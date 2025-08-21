@@ -1,4 +1,5 @@
 import { FormControl, FormLabel, MenuItem, Select } from '@mui/material';
+
 import { categories } from '../../constants/categories';
 
 interface CategorySelectProps {
