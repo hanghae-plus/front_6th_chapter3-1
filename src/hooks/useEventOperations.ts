@@ -1,11 +1,11 @@
-import { useSnackbar } from 'notistack';
 import { useEffect, useState } from 'react';
 
+import { useToast } from './useToast';
 import { Event, EventForm } from '../types';
 
 export const useEventOperations = (editing: boolean, onSave?: () => void) => {
   const [events, setEvents] = useState<Event[]>([]);
-  const { enqueueSnackbar } = useSnackbar();
+  const toast = useToast();
 
   const fetchEvents = async () => {
     try {
@@ -17,7 +17,7 @@ export const useEventOperations = (editing: boolean, onSave?: () => void) => {
       setEvents(events);
     } catch (error) {
       console.error('Error fetching events:', error);
-      enqueueSnackbar('이벤트 로딩 실패', { variant: 'error' });
+      toast.error('이벤트 로딩 실패');
     }
   };
 
@@ -44,12 +44,10 @@ export const useEventOperations = (editing: boolean, onSave?: () => void) => {
 
       await fetchEvents();
       onSave?.();
-      enqueueSnackbar(editing ? '일정이 수정되었습니다.' : '일정이 추가되었습니다.', {
-        variant: 'success',
-      });
+      toast.success(editing ? '일정이 수정되었습니다.' : '일정이 추가되었습니다.');
     } catch (error) {
       console.error('Error saving event:', error);
-      enqueueSnackbar('일정 저장 실패', { variant: 'error' });
+      toast.error('일정 저장 실패');
     }
   };
 
@@ -62,16 +60,16 @@ export const useEventOperations = (editing: boolean, onSave?: () => void) => {
       }
 
       await fetchEvents();
-      enqueueSnackbar('일정이 삭제되었습니다.', { variant: 'info' });
+      toast.info('일정이 삭제되었습니다.');
     } catch (error) {
       console.error('Error deleting event:', error);
-      enqueueSnackbar('일정 삭제 실패', { variant: 'error' });
+      toast.error('일정 삭제 실패');
     }
   };
 
   async function init() {
     await fetchEvents();
-    enqueueSnackbar('일정 로딩 완료!', { variant: 'info' });
+    toast.info('일정 로딩 완료!');
   }
 
   useEffect(() => {
