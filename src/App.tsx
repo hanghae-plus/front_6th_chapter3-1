@@ -26,6 +26,7 @@ import { useSnackbar } from 'notistack';
 import { CalendarEventItem } from './components/CalendarEventItem.tsx';
 import { EventCard } from './components/EventCard.tsx';
 import { OverlapDialog } from './components/OverlapDialog.tsx';
+import { SearchBar } from './components/SearchBar.tsx';
 import { CATEGORIES, WEEK_DAYS } from './constants/events.ts';
 import { NOTIFICATION_OPTIONS } from './constants/notification.ts';
 import Noti from './elements/Noti.tsx';
@@ -441,16 +442,7 @@ function App() {
           spacing={2}
           sx={{ width: '30%', height: '100%', overflowY: 'auto' }}
         >
-          <FormControl fullWidth>
-            <FormLabel htmlFor="search">일정 검색</FormLabel>
-            <TextField
-              id="search"
-              size="small"
-              placeholder="검색어를 입력하세요"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-          </FormControl>
+          <SearchBar searchTerm={searchTerm} onSearchChange={setSearchTerm} />
 
           {/* 검색 필터링된 이벤트 목록 렌더링 */}
           {filteredEvents.length === 0 ? (
