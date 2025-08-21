@@ -27,7 +27,7 @@ const mockNotifications = [
   { message: '테스트 알림 3' },
 ];
 
-it('알림이 없을 때는 아무것도 렌더링되지 않는다.', () => {
+it('알림이 없을 때는 렌더링되지 않는다.', () => {
   setup({ notifications: [] });
 
   const body = document.querySelector('body')!;
@@ -62,7 +62,7 @@ it('알림 닫기 버튼을 클릭하면 onRemoveNotification 함수가 호출�
   expect(mockOnRemoveNotification).toBeCalled();
 });
 
-it('InfoOutlinedIcon 아이콘이 있다.', () => {
+it('각 알림에 InfoOutlinedIcon 아이콘이 표시된다.', () => {
   setup({ notifications: mockNotifications });
 
   const infoOutlinedIcon = screen.getAllByTestId('InfoOutlinedIcon');
