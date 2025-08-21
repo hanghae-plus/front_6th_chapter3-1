@@ -1,6 +1,6 @@
 import CssBaseline from '@mui/material/CssBaseline';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import { render, screen, within, getByRole } from '@testing-library/react';
+import { render, screen, within, getByRole, act } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { SnackbarProvider } from 'notistack';
 
@@ -436,4 +436,16 @@ describe('일정 충돌', () => {
   });
 });
 
-it('notificationTime을 10으로 하면 지정 시간 10분 전 알람 텍스트가 노출된다', async () => {});
+it('notificationTime을 10으로 하면 지정 시간 10분 전 알람 텍스트가 노출된다', async () => {
+  vi.useFakeTimers();
+  vi.setSystemTime(new Date('2025-10-14T23:59:49Z'));
+  renderApp();
+
+  await act(() => vi.advanceTimersByTime(1000));
+  await act(() => vi.advanceTimersByTime(1000));
+
+  const [alert] = screen.queryAllByRole('alert');
+  expect(within(alert).getByText('10분 후 기존 회의 일정이 시작됩니다.')).toBeInTheDocument();
+
+  vi.useRealTimers();
+});
