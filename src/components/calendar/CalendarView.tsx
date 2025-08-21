@@ -3,11 +3,12 @@ import { IconButton, MenuItem, Select, Stack, Typography } from '@mui/material';
 
 import { MonthView } from './MonthView';
 import { WeekView } from './WeekView';
+import { Event } from '../../types';
 
 interface CalendarViewProps {
   view: 'week' | 'month';
   currentDate: Date;
-  filteredEvents: any[];
+  filteredEvents: Event[];
   notifiedEvents: string[];
   holidays: Record<string, string>;
   onViewChange: (view: 'week' | 'month') => void;

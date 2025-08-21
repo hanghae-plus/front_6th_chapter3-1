@@ -36,11 +36,11 @@ describe('getDaysInMonth', () => {
    *
    * 그리고 해당 테스트를 통해서 유의미한 결과값을 도출해낼 수 있는지 잘 모르겠음
    */
-  // it('유효하지 않은 월을 입력할 경우 자동으로 이월하여 올바른 월의 일수를 반환한다', () => {
-  //   expect(getDaysInMonth(2025, 13)).toBe(31); // 2026년 1월의 일수
-  //   expect(getDaysInMonth(2025, 25)).toBe(31); // 2027년 1월의 일수
-  //   expect(getDaysInMonth(2025, -2)).toBe(31); // 2024년 10월의 일수
-  // });
+  it('유효하지 않은 월을 입력할 경우 자동으로 이월하여 올바른 월의 일수를 반환한다', () => {
+    expect(getDaysInMonth(2025, 13)).toBe(31); // 2026년 1월의 일수
+    expect(getDaysInMonth(2025, 25)).toBe(31); // 2027년 1월의 일수
+    expect(getDaysInMonth(2025, -2)).toBe(31); // 2024년 10월의 일수
+  });
 });
 
 describe('getWeekDates', () => {
@@ -65,20 +65,20 @@ describe('getWeekDates', () => {
     expect(result[6].toDateString()).toBe(new Date('2025-01-18').toDateString()); // 토요일
   });
 
-  // it('주의 시작(월요일)에 대해 올바른 주의 날짜들을 반환한다', () => {
-  //   const result = getWeekDates(new Date('2025-01-13')); // 월요일
-  //   expect(result).toHaveLength(7);
-  //   expect(result[0].toDateString()).toBe(new Date('2025-01-12').toDateString()); // 일요일
-  //   expect(result[1].toDateString()).toBe(new Date('2025-01-13').toDateString()); // 월요일
-  //   expect(result[6].toDateString()).toBe(new Date('2025-01-18').toDateString()); // 토요일
-  // });
+  it('주의 시작(월요일)에 대해 올바른 주의 날짜들을 반환한다', () => {
+    const result = getWeekDates(new Date('2025-01-13')); // 월요일
+    expect(result).toHaveLength(7);
+    expect(result[0].toDateString()).toBe(new Date('2025-01-12').toDateString()); // 일요일
+    expect(result[1].toDateString()).toBe(new Date('2025-01-13').toDateString()); // 월요일
+    expect(result[6].toDateString()).toBe(new Date('2025-01-18').toDateString()); // 토요일
+  });
 
-  // it('주의 끝(일요일)에 대해 올바른 주의 날짜들을 반환한다', () => {
-  //   const result = getWeekDates(new Date('2025-01-19')); // 일요일
-  //   expect(result).toHaveLength(7);
-  //   expect(result[0].toDateString()).toBe(new Date('2025-01-19').toDateString()); // 일요일
-  //   expect(result[6].toDateString()).toBe(new Date('2025-01-25').toDateString()); // 토요일
-  // });
+  it('주의 끝(일요일)에 대해 올바른 주의 날짜들을 반환한다', () => {
+    const result = getWeekDates(new Date('2025-01-19')); // 일요일
+    expect(result).toHaveLength(7);
+    expect(result[0].toDateString()).toBe(new Date('2025-01-19').toDateString()); // 일요일
+    expect(result[6].toDateString()).toBe(new Date('2025-01-25').toDateString()); // 토요일
+  });
 
   /**
    * 아래의 두 개의 테스트는 목적은 동일하지만, 위 주석친 사례와 달리 반례를 다루고 있음
@@ -178,41 +178,38 @@ describe('getEventsForDay', () => {
   });
 
   /**
-   * 날짜가 0 혹은 32 이상이 되는 경우는 존재하지 않으므로 주석으로 처리
+   * 날짜가 0 혹은 32 이상이 되는 경우는 존재하지 않음.
+   * 아래 두 개의 테스트는 불필요한 테스트
    */
-  // it('날짜가 0일 경우 빈 배열을 반환한다', () => {
-  //   const result = getEventsForDay(mockEvents, 0);
-  //   expect(result).toEqual([]);
-  // });
+  it('날짜가 0일 경우 빈 배열을 반환한다', () => {
+    const result = getEventsForDay(mockEvents, 0);
+    expect(result).toEqual([]);
+  });
 
-  // it('날짜가 32일 이상인 경우 빈 배열을 반환한다', () => {
-  //   const result = getEventsForDay(mockEvents, 32);
-  //   expect(result).toEqual([]);
-  // });
+  it('날짜가 32일 이상인 경우 빈 배열을 반환한다', () => {
+    const result = getEventsForDay(mockEvents, 32);
+    expect(result).toEqual([]);
+  });
 });
 
 describe('formatWeek', () => {
   /**
-   * 1. 월의 중간 날짜에 대해 올바른 주 정보를 반환한다
-   * 2. 월의 첫 주에 대해 올바른 주 정보를 반환한다
-   * 3. 월의 마지막 주에 대해 올바른 주 정보를 반환한다
-   *
-   * 위 테스트들은 모두 동일한 목적을 가지는 테스트로 불필요한 테스트이다.
+   * 아래 3개의 테스트들은 모두 동일한 목적을 가지는 테스트로 불필요한 테스트이다.
    */
-  // it('월의 중간 날짜에 대해 올바른 주 정보를 반환한다', () => {
-  //   const result = formatWeek(new Date('2025-07-15'));
-  //   expect(result).toBe('2025년 7월 3주');
-  // });
+  it('월의 중간 날짜에 대해 올바른 주 정보를 반환한다', () => {
+    const result = formatWeek(new Date('2025-07-15'));
+    expect(result).toBe('2025년 7월 3주');
+  });
 
-  // it('월의 첫 주에 대해 올바른 주 정보를 반환한다', () => {
-  //   const result = formatWeek(new Date('2025-07-01'));
-  //   expect(result).toBe('2025년 7월 1주');
-  // });
+  it('월의 첫 주에 대해 올바른 주 정보를 반환한다', () => {
+    const result = formatWeek(new Date('2025-07-01'));
+    expect(result).toBe('2025년 7월 1주');
+  });
 
-  // it('월의 마지막 주에 대해 올바른 주 정보를 반환한다', () => {
-  //   const result = formatWeek(new Date('2025-07-31'));
-  //   expect(result).toBe('2025년 7월 5주');
-  // });
+  it('월의 마지막 주에 대해 올바른 주 정보를 반환한다', () => {
+    const result = formatWeek(new Date('2025-07-31'));
+    expect(result).toBe('2025년 7월 5주');
+  });
 
   it('연도가 바뀌는 주에 대해 올바른 주 정보를 반환한다', () => {
     const result = formatWeek(new Date('2025-12-31'));
@@ -252,19 +249,19 @@ describe('isDateInRange', () => {
     expect(isDateInRange(testDate, start, end)).toBe(true);
   });
 
-  // it('범위의 시작일 2025-07-01에 대해 true를 반환한다', () => {
-  //   const start = new Date('2025-07-01');
-  //   const end = new Date('2025-07-31');
-  //   const testDate = new Date('2025-07-01');
-  //   expect(isDateInRange(testDate, start, end)).toBe(true);
-  // });
+  it('범위의 시작일 2025-07-01에 대해 true를 반환한다', () => {
+    const start = new Date('2025-07-01');
+    const end = new Date('2025-07-31');
+    const testDate = new Date('2025-07-01');
+    expect(isDateInRange(testDate, start, end)).toBe(true);
+  });
 
-  // it('범위의 종료일 2025-07-31에 대해 true를 반환한다', () => {
-  //   const start = new Date('2025-07-01');
-  //   const end = new Date('2025-07-31');
-  //   const testDate = new Date('2025-07-31');
-  //   expect(isDateInRange(testDate, start, end)).toBe(true);
-  // });
+  it('범위의 종료일 2025-07-31에 대해 true를 반환한다', () => {
+    const start = new Date('2025-07-01');
+    const end = new Date('2025-07-31');
+    const testDate = new Date('2025-07-31');
+    expect(isDateInRange(testDate, start, end)).toBe(true);
+  });
 
   it('범위 이전의 날짜 2025-06-30에 대해 false를 반환한다', () => {
     const start = new Date('2025-07-01');
@@ -283,12 +280,12 @@ describe('isDateInRange', () => {
   /**
    * 범위 이전 날짜 검증에 대한 테스트와 동일한 목적을 가지는 테스트
    */
-  // it('시작일이 종료일보다 늦은 경우 모든 날짜에 대해 false를 반환한다', () => {
-  //   const start = new Date('2025-07-31');
-  //   const end = new Date('2025-07-01');
-  //   const testDate = new Date('2025-07-15');
-  //   expect(isDateInRange(testDate, start, end)).toBe(false);
-  // });
+  it('시작일이 종료일보다 늦은 경우 모든 날짜에 대해 false를 반환한다', () => {
+    const start = new Date('2025-07-31');
+    const end = new Date('2025-07-01');
+    const testDate = new Date('2025-07-15');
+    expect(isDateInRange(testDate, start, end)).toBe(false);
+  });
 });
 
 describe('fillZero', () => {
@@ -317,22 +314,25 @@ describe('fillZero', () => {
     expect(fillZero(0, 2)).toBe('00');
   });
 
-  // it("1을 5자리로 변환하면 '00001'을 반환한다", () => {
-  //   expect(fillZero(1, 5)).toBe('00001');
-  // });
+  // 필요하지 않은 테스트
+  it("1을 5자리로 변환하면 '00001'을 반환한다", () => {
+    expect(fillZero(1, 5)).toBe('00001');
+  });
 
-  // it('소수점이 있는 3.14를 5자리로 변환하면 "03.14"를 반환한다', () => {
-  //   expect(fillZero(3.14, 5)).toBe('03.14');
-  // });
+  // 필요하지 않은 테스트
+  it('소수점이 있는 3.14를 5자리로 변환하면 "03.14"를 반환한다', () => {
+    expect(fillZero(3.14, 5)).toBe('03.14');
+  });
 
   // 반례
   it('size 파라미터를 생략하면 기본값 2를 사용한다', () => {
     expect(fillZero(5)).toBe('05');
   });
 
-  // it('value가 지정된 size보다 큰 자릿수를 가지면 원래 값을 그대로 반환한다', () => {
-  //   expect(fillZero(100, 2)).toBe('100');
-  // });
+  // 필요하지 않은 테스트
+  it('value가 지정된 size보다 큰 자릿수를 가지면 원래 값을 그대로 반환한다', () => {
+    expect(fillZero(100, 2)).toBe('100');
+  });
 });
 
 describe('formatDate', () => {
@@ -347,15 +347,16 @@ describe('formatDate', () => {
   });
 
   /**
-   * "날짜를 YYYY-MM-DD 형식으로 포맷팅한다" 테스트에서 충분히 검증이 가능한 테스트이므로 주석처리
+   * "날짜를 YYYY-MM-DD 형식으로 포맷팅한다" 테스트에서 충분히 검증이 가능한 테스트이므로,
+   * 아래 2개의 테스트는 불필요한 테스트
    */
-  // it('월이 한 자리 수일 때 앞에 0을 붙여 포맷팅한다', () => {
-  //   const result = formatDate(new Date('2025-03-15'));
-  //   expect(result).toBe('2025-03-15');
-  // });
+  it('월이 한 자리 수일 때 앞에 0을 붙여 포맷팅한다', () => {
+    const result = formatDate(new Date('2025-03-15'));
+    expect(result).toBe('2025-03-15');
+  });
 
-  // it('일이 한 자리 수일 때 앞에 0을 붙여 포맷팅한다', () => {
-  //   const result = formatDate(new Date('2025-07-05'));
-  //   expect(result).toBe('2025-07-05');
-  // });
+  it('일이 한 자리 수일 때 앞에 0을 붙여 포맷팅한다', () => {
+    const result = formatDate(new Date('2025-07-05'));
+    expect(result).toBe('2025-07-05');
+  });
 });
