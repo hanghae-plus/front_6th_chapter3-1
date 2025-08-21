@@ -1,7 +1,4 @@
-import { Close } from '@mui/icons-material';
 import {
-  Alert,
-  AlertTitle,
   Box,
   Button,
   Dialog,
@@ -9,7 +6,6 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
-  IconButton,
   Stack,
   Typography,
 } from '@mui/material';
@@ -23,6 +19,7 @@ import { useNotifications } from './hooks/useNotifications.ts';
 import { useSearch } from './hooks/useSearch.ts';
 import { CalendarView } from './components/calendar';
 import { EventForm as EventFormComponent } from './components/eventForm';
+import { NotificationToast } from './components/notification';
 import { EventList } from './components/eventList';
 import { Event, EventForm } from './types';
 
@@ -206,27 +203,10 @@ function App() {
         </DialogActions>
       </Dialog>
 
-      {notifications.length > 0 && (
-        <Stack position="fixed" top={16} right={16} spacing={2} alignItems="flex-end">
-          {notifications.map((notification, index) => (
-            <Alert
-              key={index}
-              severity="info"
-              sx={{ width: 'auto' }}
-              action={
-                <IconButton
-                  size="small"
-                  onClick={() => setNotifications((prev) => prev.filter((_, i) => i !== index))}
-                >
-                  <Close />
-                </IconButton>
-              }
-            >
-              <AlertTitle>{notification.message}</AlertTitle>
-            </Alert>
-          ))}
-        </Stack>
-      )}
+      <NotificationToast
+        notifications={notifications}
+        onRemoveNotification={() => setNotifications([])}
+      />
     </Box>
   );
 }
