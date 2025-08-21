@@ -34,6 +34,7 @@ export const handlers = [
 
     if (index !== -1) {
       // 수정하고자 하는 이벤트가 (findIndex로) 잘 찾아졌으면
+      events[index] = { ...events[index], ...updateEvent };
       return HttpResponse.json({ ...events[index], ...updateEvent }, { status: 200 });
     }
 
@@ -48,6 +49,7 @@ export const handlers = [
     const index = events.findIndex((event) => event.id === id); // 삭제할 이벤트 찾기
     if (index !== -1) {
       // 삭제하고자 하는 이벤트가 잘 찾아졌으면
+      events.splice(index, 1);
       return HttpResponse.json(null, { status: 204 });
     }
 
