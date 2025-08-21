@@ -49,8 +49,20 @@ export const setupMockHandlerCreation = (initEvents = [] as Event[]) => {
 export const setupMockHandlerUpdating = () => {
   //이벤트 생성
   const events = [
-    createMockEvent(1, { title: '개발 공부' }),
-    createMockEvent(2, { title: '회의' }),
+    createMockEvent(1, {
+      title: '개발 공부',
+      date: '2025-10-13',
+      notificationTime: 10,
+      startTime: '09:00',
+      endTime: '10:00',
+    }),
+    createMockEvent(2, {
+      title: '회의',
+      date: '2025-10-13',
+      notificationTime: 10,
+      startTime: '11:00',
+      endTime: '12:00',
+    }),
   ];
 
   // 기존 핸들러 초기화
@@ -85,7 +97,15 @@ export const setupMockHandlerUpdating = () => {
 /** 이벤트 삭제 */
 export const setupMockHandlerDeletion = () => {
   //삭제할 이벤트
-  let events = [createMockEvent(1, { title: '개발 공부' })];
+  let events = [
+    createMockEvent(1, {
+      title: '개발 공부',
+      date: '2025-10-13',
+      notificationTime: 10,
+      startTime: '09:00',
+      endTime: '10:00',
+    }),
+  ];
 
   // 기존 핸들러 초기화
   server.resetHandlers();
