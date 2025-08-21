@@ -5,19 +5,38 @@ import { getTimeErrorMessage } from '../utils/timeValidation';
 
 type TimeErrorRecord = Record<'startTimeError' | 'endTimeError', string | null>;
 
+// 폼 데이터를 하나의 객체로 통합
+interface FormData {
+  title: string;
+  date: string;
+  startTime: string;
+  endTime: string;
+  description: string;
+  location: string;
+  category: string;
+  isRepeating: boolean;
+  repeatType: RepeatType;
+  repeatInterval: number;
+  repeatEndDate: string;
+  notificationTime: number;
+}
+
 export const useEventForm = (initialEvent?: Event) => {
-  const [title, setTitle] = useState(initialEvent?.title || '');
-  const [date, setDate] = useState(initialEvent?.date || '');
-  const [startTime, setStartTime] = useState(initialEvent?.startTime || '');
-  const [endTime, setEndTime] = useState(initialEvent?.endTime || '');
-  const [description, setDescription] = useState(initialEvent?.description || '');
-  const [location, setLocation] = useState(initialEvent?.location || '');
-  const [category, setCategory] = useState(initialEvent?.category || '업무');
-  const [isRepeating, setIsRepeating] = useState(initialEvent?.repeat.type !== 'none');
-  const [repeatType, setRepeatType] = useState<RepeatType>(initialEvent?.repeat.type || 'none');
-  const [repeatInterval, setRepeatInterval] = useState(initialEvent?.repeat.interval || 1);
-  const [repeatEndDate, setRepeatEndDate] = useState(initialEvent?.repeat.endDate || '');
-  const [notificationTime, setNotificationTime] = useState(initialEvent?.notificationTime || 10);
+  // 모든 폼 상태를 하나의 객체로 통합
+  const [formData, setFormData] = useState<FormData>({
+    title: initialEvent?.title || '',
+    date: initialEvent?.date || '',
+    startTime: initialEvent?.startTime || '',
+    endTime: initialEvent?.endTime || '',
+    description: initialEvent?.description || '',
+    location: initialEvent?.location || '',
+    category: initialEvent?.category || '업무',
+    isRepeating: initialEvent?.repeat.type !== 'none',
+    repeatType: initialEvent?.repeat.type || 'none',
+    repeatInterval: initialEvent?.repeat.interval || 1,
+    repeatEndDate: initialEvent?.repeat.endDate || '',
+    notificationTime: initialEvent?.notificationTime || 10,
+  });
 
   const [editingEvent, setEditingEvent] = useState<Event | null>(null);
 
@@ -26,74 +45,90 @@ export const useEventForm = (initialEvent?: Event) => {
     endTimeError: null,
   });
 
+  // 폼 데이터 업데이트 함수
+  const updateFormData = (updates: Partial<FormData>) => {
+    setFormData((prev) => ({ ...prev, ...updates }));
+  };
+
   const handleStartTimeChange = (e: ChangeEvent<HTMLInputElement>) => {
     const newStartTime = e.target.value;
-    setStartTime(newStartTime);
-    setTimeError(getTimeErrorMessage(newStartTime, endTime));
+    updateFormData({ startTime: newStartTime });
+    setTimeError(getTimeErrorMessage(newStartTime, formData.endTime));
   };
 
   const handleEndTimeChange = (e: ChangeEvent<HTMLInputElement>) => {
     const newEndTime = e.target.value;
-    setEndTime(newEndTime);
-    setTimeError(getTimeErrorMessage(startTime, newEndTime));
+    updateFormData({ endTime: newEndTime });
+    setTimeError(getTimeErrorMessage(formData.startTime, newEndTime));
   };
 
   const resetForm = () => {
-    setTitle('');
-    setDate('');
-    setStartTime('');
-    setEndTime('');
-    setDescription('');
-    setLocation('');
-    setCategory('업무');
-    setIsRepeating(false);
-    setRepeatType('none');
-    setRepeatInterval(1);
-    setRepeatEndDate('');
-    setNotificationTime(10);
+    setFormData({
+      title: '',
+      date: '',
+      startTime: '',
+      endTime: '',
+      description: '',
+      location: '',
+      category: '업무',
+      isRepeating: false,
+      repeatType: 'none',
+      repeatInterval: 1,
+      repeatEndDate: '',
+      notificationTime: 10,
+    });
   };
 
   const editEvent = (event: Event) => {
     setEditingEvent(event);
-    setTitle(event.title);
-    setDate(event.date);
-    setStartTime(event.startTime);
-    setEndTime(event.endTime);
-    setDescription(event.description);
-    setLocation(event.location);
-    setCategory(event.category);
-    setIsRepeating(event.repeat.type !== 'none');
-    setRepeatType(event.repeat.type);
-    setRepeatInterval(event.repeat.interval);
-    setRepeatEndDate(event.repeat.endDate || '');
-    setNotificationTime(event.notificationTime);
+    setFormData({
+      title: event.title,
+      date: event.date,
+      startTime: event.startTime,
+      endTime: event.endTime,
+      description: event.description,
+      location: event.location,
+      category: event.category,
+      isRepeating: event.repeat.type !== 'none',
+      repeatType: event.repeat.type,
+      repeatInterval: event.repeat.interval,
+      repeatEndDate: event.repeat.endDate || '',
+      notificationTime: event.notificationTime,
+    });
   };
 
   return {
-    title,
-    setTitle,
-    date,
-    setDate,
-    startTime,
-    setStartTime,
-    endTime,
-    setEndTime,
-    description,
-    setDescription,
-    location,
-    setLocation,
-    category,
-    setCategory,
-    isRepeating,
-    setIsRepeating,
-    repeatType,
-    setRepeatType,
-    repeatInterval,
-    setRepeatInterval,
-    repeatEndDate,
-    setRepeatEndDate,
-    notificationTime,
-    setNotificationTime,
+    // 폼 데이터와 업데이트 함수
+    formData,
+    updateFormData,
+
+    // 개별 필드 접근을 위한 getter (기존 코드와의 호환성을 위해)
+    title: formData.title,
+    setTitle: (title: string) => updateFormData({ title }),
+    date: formData.date,
+    setDate: (date: string) => updateFormData({ date }),
+    startTime: formData.startTime,
+    setStartTime: (startTime: string) => updateFormData({ startTime }),
+    endTime: formData.endTime,
+    setEndTime: (endTime: string) => updateFormData({ endTime }),
+    description: formData.description,
+    setDescription: (description: string) => updateFormData({ description }),
+    location: formData.location,
+    setLocation: (location: string) => updateFormData({ location }),
+    category: formData.category,
+    setCategory: (category: string) => updateFormData({ category }),
+    isRepeating: formData.isRepeating,
+    setIsRepeating: (isRepeating: boolean) => updateFormData({ isRepeating }),
+    repeatType: formData.repeatType,
+    setRepeatType: (repeatType: RepeatType) => updateFormData({ repeatType }),
+    repeatInterval: formData.repeatInterval,
+    setRepeatInterval: (repeatInterval: number) => updateFormData({ repeatInterval }),
+    repeatEndDate: formData.repeatEndDate,
+    setRepeatEndDate: (repeatEndDate: string) => updateFormData({ repeatEndDate }),
+    notificationTime: formData.notificationTime,
+    setNotificationTime: (notificationTime: number) => updateFormData({ notificationTime }),
+
+    // 에러 상태와 기타 함수들
     startTimeError,
     endTimeError,
     editingEvent,
