@@ -1,15 +1,12 @@
 import CssBaseline from '@mui/material/CssBaseline';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import { render, screen, within, act, waitFor } from '@testing-library/react';
-import { UserEvent, userEvent } from '@testing-library/user-event';
-import { http, HttpResponse } from 'msw';
+import { render, screen, within, waitFor } from '@testing-library/react';
+import { userEvent } from '@testing-library/user-event';
 import { SnackbarProvider } from 'notistack';
 import { ReactElement } from 'react';
 import { vi } from 'vitest';
 
 import App from '../App';
-import { server } from '../setupTests';
-import { Event } from '../types';
 import {
   setupMockHandlerCreation,
   setupMockHandlerDeletion,

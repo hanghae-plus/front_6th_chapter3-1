@@ -1,7 +1,6 @@
 import { act, renderHook } from '@testing-library/react';
 
 import { useSearch } from '../../hooks/useSearch.ts';
-import { Event } from '../../types.ts';
 import { createEvent } from '../utils.ts';
 
 const events = [

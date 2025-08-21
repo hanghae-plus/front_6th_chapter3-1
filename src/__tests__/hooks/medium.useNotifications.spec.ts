@@ -2,8 +2,7 @@ import { act, renderHook } from '@testing-library/react';
 
 import { useNotifications } from '../../hooks/useNotifications.ts';
 import { Event } from '../../types.ts';
-import { formatDate } from '../../utils/dateUtils.ts';
-import { createEvent, parseHM } from '../utils.ts';
+import { createEvent } from '../utils.ts';
 
 it('초기 상태에서는 알림이 없어야 한다', () => {
   const mockEvents: Event[] = [];
