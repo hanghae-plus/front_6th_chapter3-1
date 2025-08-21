@@ -11,7 +11,6 @@ import {
   Tooltip,
   Typography,
 } from '@mui/material';
-
 import React from 'react';
 
 import { Event, EventForm } from '../../types';
