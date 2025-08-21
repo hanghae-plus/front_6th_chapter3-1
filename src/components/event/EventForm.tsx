@@ -13,8 +13,8 @@ import {
   Typography,
 } from '@mui/material';
 
-import { Event, EventForm } from '../types';
-import { getTimeErrorMessage } from '../utils/timeValidation';
+import { Event, EventForm } from '../../types';
+import { getTimeErrorMessage } from '../../utils/timeValidation';
 
 interface FormState {
   title: string;

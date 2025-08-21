@@ -3,10 +3,9 @@ import { useSnackbar } from 'notistack';
 import { useState } from 'react';
 
 import { CalendarView } from './components/calendar';
-import { EventFormComponent } from './components/EventForm';
-import { EventList } from './components/EventList';
-import { NotificationToast } from './components/NotificationToast';
-import { OverlapDialog } from './components/OverlapDialog';
+import { EventFormComponent, EventList } from './components/event';
+import { NotificationToast } from './components/notification';
+import { OverlapDialog } from './components/dialog';
 import { useCalendarView } from './hooks/useCalendarView.ts';
 import { useEventForm } from './hooks/useEventForm.ts';
 import { useEventOperations } from './hooks/useEventOperations.ts';
