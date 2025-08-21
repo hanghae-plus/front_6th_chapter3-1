@@ -39,11 +39,46 @@ describe('parseDateTime', () => {
 });
 
 describe('convertEventToDateRange', () => {
-  it('일반적인 이벤트를 올바른 시작 및 종료 시간을 가진 객체로 변환한다', () => {});
+  it('일반적인 이벤트를 올바른 시작 및 종료 시간을 가진 객체로 변환한다', () => {
+    const event = {
+      date: '2025-08-22',
+      startTime: '10:00',
+      endTime: '16:00',
+    } as Event;
 
-  it('잘못된 날짜 형식의 이벤트에 대해 Invalid Date를 반환한다', () => {});
+    expect(convertEventToDateRange(event)).toEqual({
+      start: new Date(2025, 7, 22, 10), // 2025-08-22 10:00
+      end: new Date(2025, 7, 22, 16), // 2025-08-22 16:00
+    });
+  });
 
-  it('잘못된 시간 형식의 이벤트에 대해 Invalid Date를 반환한다', () => {});
+  // wrongDateEvent의 반환값은 parseDateTime을 그대로 반환하는 것으로 Invalid Date 여부는 parseDateTime의 책임이다
+  it('잘못된 날짜 형식의 이벤트에 대해 Invalid Date를 반환한다', () => {
+    const wrongDateEvent = {
+      date: '2025-08-228088',
+      startTime: '10:00',
+      endTime: '16:00',
+    } as Event;
+
+    const startTime = convertEventToDateRange(wrongDateEvent).start.getTime();
+    const endTime = convertEventToDateRange(wrongDateEvent).end.getTime();
+
+    expect(isNaN(startTime) || isNaN(endTime)).toBe(true);
+  });
+
+  // wrongDateEvent의 반환값은 parseDateTime을 그대로 반환하는 것으로 Invalid Date 여부는 parseDateTime의 책임이다
+  it('잘못된 시간 형식의 이벤트에 대해 Invalid Date를 반환한다', () => {
+    const wrongTimeEvent = {
+      date: '2025-08-22',
+      startTime: '시작시간은 열시다!',
+      endTime: '16:00',
+    } as Event;
+
+    const startTime = convertEventToDateRange(wrongTimeEvent).start.getTime();
+    const endTime = convertEventToDateRange(wrongTimeEvent).end.getTime();
+
+    expect(isNaN(startTime) || isNaN(endTime)).toBe(true);
+  });
 });
 
 describe('isOverlapping', () => {
