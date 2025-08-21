@@ -88,6 +88,7 @@ describe('isOverlapping', () => {
       startTime: '10:00',
       endTime: '16:00',
     } as Event;
+
     const overlappedEvent = {
       date: '2025-08-22',
       startTime: '14:00',
@@ -114,7 +115,44 @@ describe('isOverlapping', () => {
 });
 
 describe('findOverlappingEvents', () => {
-  it('새 이벤트와 겹치는 모든 이벤트를 반환한다', () => {});
+  it('새 이벤트와 겹치는 모든 이벤트를 반환한다', () => {
+    const newEvent = {
+      date: '2025-08-22',
+      startTime: '10:00',
+      endTime: '16:00',
+    } as Event;
 
-  it('겹치는 이벤트가 없으면 빈 배열을 반환한다', () => {});
+    const notOverlappedEvents = [
+      { id: 'firstNotOverlapped', date: '2025-08-22', startTime: '09:00', endTime: '09:30' },
+      { id: 'secondNotOverlapped', date: '2025-08-22', startTime: '17:00', endTime: '18:00' },
+    ] as Event[];
+
+    const overlappedEvents = [
+      { id: 'firstOverlapped', date: '2025-08-22', startTime: '14:00', endTime: '18:00' },
+      { id: 'secondOverlapped', date: '2025-08-22', startTime: '06:00', endTime: '12:00' },
+    ] as Event[];
+
+    expect(
+      findOverlappingEvents(newEvent, [...notOverlappedEvents, ...overlappedEvents])
+    ).toMatchObject([{ id: 'firstOverlapped' }, { id: 'secondOverlapped' }]);
+  });
+
+  it('겹치는 이벤트가 없으면 빈 배열을 반환한다', () => {
+    const newEvent = {
+      date: '2025-08-22',
+      startTime: '10:00',
+      endTime: '16:00',
+    } as Event;
+
+    const notOverlappedEvents = [
+      { id: 'firstNotOverlapped', date: '2025-08-22', startTime: '09:00', endTime: '09:30' },
+      { id: 'secondNotOverlapped', date: '2025-08-22', startTime: '17:00', endTime: '18:00' },
+    ] as Event[];
+
+    const overlappedEvents = [] as Event[];
+
+    expect(findOverlappingEvents(newEvent, [...notOverlappedEvents, ...overlappedEvents])).toEqual(
+      []
+    );
+  });
 });
