@@ -4,14 +4,14 @@ import { SnackbarProvider } from 'notistack';
 
 import { EventFormComponent } from '../../components/EventForm';
 import { useEventForm } from '../../hooks/useEventForm';
-import { Event } from '../../types';
+import { Event, EventForm } from '../../types';
 
 function EventFormWrapper({
   events,
   saveEvent,
 }: {
   events: Event[];
-  saveEvent: (eventData: Event | any) => Promise<void>;
+  saveEvent: (eventData: Event | EventForm) => Promise<void>;
 }) {
   const eventForm = useEventForm();
   return (
