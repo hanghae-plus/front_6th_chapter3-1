@@ -1,13 +1,13 @@
 import { act, renderHook } from '@testing-library/react';
 
+import { createTestEvent } from '../../__mocks__/handlersUtils.ts';
 import { useNotifications } from '../../hooks/useNotifications.ts';
-import { Event } from '../../types.ts';
 
 describe('알림 초기 상태', () => {
   it('훅 초기화 시 알림 목록과 알림 완료 이벤트 목록이 비어있다', () => {
     // Given: 이벤트 목록이 주어진 상황
     const testEvents = [
-      {
+      createTestEvent({
         id: '1',
         title: '팀 회의',
         date: '2025-12-25',
@@ -18,8 +18,8 @@ describe('알림 초기 상태', () => {
         category: '업무',
         repeat: { type: 'none', interval: 0 },
         notificationTime: 30,
-      },
-    ] as Event[];
+      }),
+    ];
 
     // When: useNotifications 훅을 초기화할 때
     const { result } = renderHook(() => useNotifications(testEvents));
@@ -42,7 +42,7 @@ describe('알림 생성', () => {
   it('이벤트 시작 시간이 알림 설정 시간에 도달하면 새 알림을 생성한다', async () => {
     // Given: 14:00에 시작하는 이벤트와 30분 전 알림 설정
     const testEvents = [
-      {
+      createTestEvent({
         id: '1',
         title: '중요한 미팅',
         date: '2025-10-15',
@@ -53,8 +53,8 @@ describe('알림 생성', () => {
         category: '업무',
         repeat: { type: 'none', interval: 0 },
         notificationTime: 30,
-      },
-    ] as Event[];
+      }),
+    ];
 
     // 현재 시간을 13:30으로 설정 (이벤트 시작 30분 전)
     vi.setSystemTime(new Date('2025-10-15T13:30:00'));
@@ -79,7 +79,7 @@ describe('알림 생성', () => {
   it('여러 이벤트가 동시에 알림 조건을 만족하면 모든 알림을 생성한다', async () => {
     // Given: 동시간대에 알림이 필요한 여러 이벤트
     const testEvents = [
-      {
+      createTestEvent({
         id: '1',
         title: '팀 회의',
         date: '2025-10-15',
@@ -90,8 +90,8 @@ describe('알림 생성', () => {
         category: '업무',
         repeat: { type: 'none', interval: 0 },
         notificationTime: 15,
-      },
-      {
+      }),
+      createTestEvent({
         id: '2',
         title: '1:1 미팅',
         date: '2025-10-15',
@@ -102,8 +102,8 @@ describe('알림 생성', () => {
         category: '업무',
         repeat: { type: 'none', interval: 0 },
         notificationTime: 20,
-      },
-    ] as Event[];
+      }),
+    ];
 
     // 현재 시간을 13:50으로 설정 (첫 번째 이벤트 10분 전, 두 번째 이벤트 20분 전)
     vi.setSystemTime(new Date('2025-10-15T13:50:00'));
@@ -133,7 +133,7 @@ describe('알림 생성', () => {
   it('알림 시간이 지나지 않은 이벤트는 알림을 생성하지 않는다', async () => {
     // Given: 알림 시간이 아직 도달하지 않은 이벤트
     const testEvents = [
-      {
+      createTestEvent({
         id: '1',
         title: '미래 회의',
         date: '2025-10-15',
@@ -144,8 +144,8 @@ describe('알림 생성', () => {
         category: '업무',
         repeat: { type: 'none', interval: 0 },
         notificationTime: 30,
-      },
-    ] as Event[];
+      }),
+    ];
 
     // 현재 시간을 15:00으로 설정 (이벤트 시작 60분 전, 알림 설정은 30분 전)
     vi.setSystemTime(new Date('2025-10-15T15:00:00'));
@@ -165,7 +165,7 @@ describe('알림 생성', () => {
   it('이미 시작된 이벤트는 알림을 생성하지 않는다', async () => {
     // Given: 이미 시작된 이벤트
     const testEvents = [
-      {
+      createTestEvent({
         id: '1',
         title: '과거 회의',
         date: '2025-10-15',
@@ -176,8 +176,8 @@ describe('알림 생성', () => {
         category: '업무',
         repeat: { type: 'none', interval: 0 },
         notificationTime: 30,
-      },
-    ] as Event[];
+      }),
+    ];
 
     // 현재 시간을 13:30으로 설정 (이벤트 시작 후 30분 경과)
     vi.setSystemTime(new Date('2025-10-15T13:30:00'));
@@ -207,7 +207,7 @@ describe('중복 알림 방지', () => {
   it('이미 알림이 발생한 이벤트는 중복 알림을 생성하지 않는다', async () => {
     // Given: 알림 조건을 만족하는 이벤트
     const testEvents = [
-      {
+      createTestEvent({
         id: '1',
         title: '테스트 회의',
         date: '2025-10-15',
@@ -218,8 +218,8 @@ describe('중복 알림 방지', () => {
         category: '업무',
         repeat: { type: 'none', interval: 0 },
         notificationTime: 30,
-      },
-    ] as Event[];
+      }),
+    ];
 
     vi.setSystemTime(new Date('2025-10-15T13:30:00'));
     const { result } = renderHook(() => useNotifications(testEvents));
@@ -249,7 +249,7 @@ describe('알림 제거', () => {
   it('지정된 인덱스의 알림을 올바르게 제거한다', async () => {
     // Given: 여러 개의 알림이 있는 상황
     const testEvents = [
-      {
+      createTestEvent({
         id: '1',
         title: '첫 번째 회의',
         date: '2025-10-15',
@@ -260,8 +260,8 @@ describe('알림 제거', () => {
         category: '업무',
         repeat: { type: 'none', interval: 0 },
         notificationTime: 30,
-      },
-      {
+      }),
+      createTestEvent({
         id: '2',
         title: '두 번째 회의',
         date: '2025-10-15',
@@ -272,8 +272,8 @@ describe('알림 제거', () => {
         category: '업무',
         repeat: { type: 'none', interval: 0 },
         notificationTime: 30,
-      },
-    ] as Event[];
+      }),
+    ];
 
     vi.useFakeTimers();
     vi.setSystemTime(new Date('2025-10-15T13:30:00'));
@@ -304,8 +304,7 @@ describe('알림 제거', () => {
 
   it('존재하지 않는 인덱스로 제거 시도해도 에러가 발생하지 않는다', () => {
     // Given: 빈 알림 목록
-    const testEvents = [] as Event[];
-    const { result } = renderHook(() => useNotifications(testEvents));
+    const { result } = renderHook(() => useNotifications([]));
 
     // When: 존재하지 않는 인덱스로 제거를 시도할 때
     act(() => {
@@ -330,7 +329,7 @@ describe('이벤트 목록 변경 대응', () => {
   it('이벤트 목록이 변경되면 새로운 이벤트에 대한 알림을 체크한다', async () => {
     // Given: 초기 이벤트 목록
     const initialEvents = [
-      {
+      createTestEvent({
         id: '1',
         title: '기존 회의',
         date: '2025-10-15',
@@ -341,8 +340,8 @@ describe('이벤트 목록 변경 대응', () => {
         category: '업무',
         repeat: { type: 'none', interval: 0 },
         notificationTime: 30,
-      },
-    ] as Event[];
+      }),
+    ];
 
     const { result, rerender } = renderHook(({ events }) => useNotifications(events), {
       initialProps: { events: initialEvents },
@@ -357,7 +356,7 @@ describe('이벤트 목록 변경 대응', () => {
     // When: 새 이벤트가 추가된 목록으로 업데이트할 때
     const updatedEvents = [
       ...initialEvents,
-      {
+      createTestEvent({
         id: '2',
         title: '새로운 회의',
         date: '2025-10-15',
@@ -368,8 +367,8 @@ describe('이벤트 목록 변경 대응', () => {
         category: '업무',
         repeat: { type: 'none', interval: 0 },
         notificationTime: 45,
-      },
-    ] as Event[];
+      }),
+    ];
 
     rerender({ events: updatedEvents });
 

@@ -1,10 +1,10 @@
 import { act, renderHook, waitFor } from '@testing-library/react';
 import { http, HttpResponse } from 'msw';
 
+import { createTestEvent } from '../../__mocks__/handlersUtils.ts';
 import { events } from '../../__mocks__/response/events.json' with { type: 'json' };
 import { useEventOperations } from '../../hooks/useEventOperations.ts';
 import { server } from '../../setupTests.ts';
-import { Event, EventForm } from '../../types.ts';
 
 const enqueueSnackbarFn = vi.fn();
 
@@ -44,7 +44,7 @@ describe('새 이벤트 생성', () => {
     const onSaveCallback = vi.fn();
     const { result } = renderHook(() => useEventOperations(isEditing, onSaveCallback));
 
-    const newEventData = {
+    const newEventData = createTestEvent({
       title: '새로운 미팅',
       date: '2025-08-18',
       startTime: '10:00',
@@ -54,7 +54,7 @@ describe('새 이벤트 생성', () => {
       category: '업무',
       repeat: { type: 'none', interval: 0 },
       notificationTime: 60,
-    } as EventForm;
+    });
 
     // When: 새 이벤트를 저장할 때
     await act(async () => {
@@ -89,7 +89,7 @@ describe('기존 이벤트 수정', () => {
     const onSaveCallback = vi.fn();
     const { result } = renderHook(() => useEventOperations(isEditing, onSaveCallback));
 
-    const updatedEventData = {
+    const updatedEventData = createTestEvent({
       id: '1',
       title: '수정된 팀 회의',
       date: '2025-08-18',
@@ -100,7 +100,7 @@ describe('기존 이벤트 수정', () => {
       category: '업무',
       repeat: { type: 'none', interval: 0 },
       notificationTime: 60,
-    } as Event;
+    });
 
     // When: 기존 이벤트를 수정할 때
     await act(async () => {
@@ -174,7 +174,7 @@ describe('에러 처리', () => {
     );
 
     const { result } = renderHook(() => useEventOperations(false));
-    const newEvent = {
+    const newEvent = createTestEvent({
       title: '테스트 이벤트',
       date: '2025-08-18',
       startTime: '10:00',
@@ -184,7 +184,7 @@ describe('에러 처리', () => {
       category: '테스트',
       repeat: { type: 'none', interval: 0 },
       notificationTime: 60,
-    } as EventForm;
+    });
 
     // When: 이벤트 저장을 시도할 때
     await act(async () => {
