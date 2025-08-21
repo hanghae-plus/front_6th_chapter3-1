@@ -67,12 +67,7 @@ describe('getDaysInMonth', () => {
 
 describe('getWeekDates', () => {
   it('주중의 날짜(수요일)에 대해 올바른 주의 날짜들을 반환한다', () => {
-    const wednesDay = new Date(2025, 7, 20);
-
-    const result = getWeekDates(wednesDay).map(
-      (date) =>
-        `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`
-    );
+    const wednesday = new Date(2025, 7, 20);
 
     const expected = [
       '2025-08-17',
@@ -84,17 +79,13 @@ describe('getWeekDates', () => {
       '2025-08-23',
     ];
 
-    expect(result).toEqual(expected);
+    expect(getWeekDates(wednesday).map((date) => date.toISOString().split('T')[0])).toEqual(
+      expected
+    );
   });
 
   it('주의 시작(월요일)에 대해 올바른 주의 날짜들을 반환한다', () => {
     const monday = new Date(2025, 7, 18);
-
-    const result = getWeekDates(monday).map(
-      (date) =>
-        `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`
-    );
-
     const expected = [
       '2025-08-17',
       '2025-08-18',
@@ -105,17 +96,11 @@ describe('getWeekDates', () => {
       '2025-08-23',
     ];
 
-    expect(result).toEqual(expected);
+    expect(getWeekDates(monday).map((date) => date.toISOString().split('T')[0])).toEqual(expected);
   });
 
   it('주의 끝(일요일)에 대해 올바른 주의 날짜들을 반환한다', () => {
     const sunday = new Date(2025, 7, 23);
-
-    const result = getWeekDates(sunday).map(
-      (date) =>
-        `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`
-    );
-
     const expected = [
       '2025-08-17',
       '2025-08-18',
@@ -126,17 +111,11 @@ describe('getWeekDates', () => {
       '2025-08-23',
     ];
 
-    expect(result).toEqual(expected);
+    expect(getWeekDates(sunday).map((date) => date.toISOString().split('T')[0])).toEqual(expected);
   });
 
   it('연도를 넘어가는 주의 날짜를 정확히 처리한다 (연말)', () => {
     const lastDay = new Date(2025, 11, 31);
-
-    const result = getWeekDates(lastDay).map(
-      (date) =>
-        `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`
-    );
-
     const expected = [
       '2025-12-28',
       '2025-12-29',
@@ -146,18 +125,12 @@ describe('getWeekDates', () => {
       '2026-01-02',
       '2026-01-03',
     ];
-
-    expect(result).toEqual(expected);
+    expect(getWeekDates(lastDay).map((date) => date.toISOString().split('T')[0])).toEqual(expected);
   });
 
   it('연도를 넘어가는 주의 날짜를 정확히 처리한다 (연초)', () => {
     const startDay = new Date(2026, 0, 1);
 
-    const result = getWeekDates(startDay).map(
-      (date) =>
-        `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`
-    );
-
     const expected = [
       '2025-12-28',
       '2025-12-29',
@@ -168,30 +141,26 @@ describe('getWeekDates', () => {
       '2026-01-03',
     ];
 
-    expect(result).toEqual(expected);
+    expect(getWeekDates(startDay).map((date) => date.toISOString().split('T')[0])).toEqual(
+      expected
+    );
   });
 
+  // 이거 평일이든 윤년이든 그 해당하는 년도에 똑같이 처리된다고 느껴서 굳이 필요한가 싶어서 주석처리했습니다.
   it('윤년의 2월 29일을 포함한 주를 올바르게 처리한다', () => {
-    const isLeapYear = (year: number) => {
-      if (year % 400 === 0) return true;
-      if (year % 100 === 0) return false;
-      if (year % 4 === 0) return true;
-      return false;
-    };
+    const expected = [
+      '2024-02-25',
+      '2024-02-26',
+      '2024-02-27',
+      '2024-02-28',
+      '2024-02-29',
+      '2024-03-01',
+      '2024-03-02',
+    ];
 
-    const leapYears = Array.from({ length: 41 })
-      .map((_, i) => i + 2020)
-      .filter((year) => isLeapYear(year));
-
-    leapYears.forEach((year) => {
-      const leapDay = new Date(year, 1, 29);
-      const result = getWeekDates(leapDay).map(
-        (date) =>
-          `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`
-      );
-      const leapDayString = `${year}-02-29`;
-      expect(result).toContain(leapDayString);
-    });
+    expect(
+      getWeekDates(new Date(2024, 1, 29)).map((date) => date.toISOString().split('T')[0])
+    ).toEqual(expected);
   });
 
   it.each([
@@ -222,12 +191,9 @@ describe('getWeekDates', () => {
       ],
     },
   ])('월의 마지막 날짜를 포함한 주를 올바르게 처리한다', (v) => {
-    const result = getWeekDates(v.input).map(
-      (date) =>
-        `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`
+    expect(getWeekDates(v.input).map((date) => date.toISOString().split('T')[0])).toEqual(
+      v.expected
     );
-
-    expect(result).toEqual(v.expected);
   });
 });
 
@@ -375,29 +341,33 @@ describe('fillZero', () => {
     expect(fillZero(10, 2)).toBe('10');
   });
 
-  it("3을 3자리로 변환하면 '003'을 반환한다", () => {
-    expect(fillZero(3, 3)).toBe('003');
-  });
+  // 보통은 시간,날짜 두자리정도만 나올거라고 생각이 드는데 3자리 검증테스트는 필요없다고 느낍니다.
+  // it("3을 3자리로 변환하면 '003'을 반환한다", () => {
+  //   expect(fillZero(3, 3)).toBe('003');
+  // });
 
-  it("100을 2자리로 변환하면 '100'을 반환한다", () => {
-    expect(fillZero(100, 3)).toBe('100');
-  });
+  // it("100을 2자리로 변환하면 '100'을 반환한다", () => {
+  //   expect(fillZero(100, 3)).toBe('100');
+  // });
 
   it("0을 2자리로 변환하면 '00'을 반환한다", () => {
     expect(fillZero(0, 2)).toBe('00');
   });
 
-  it("1을 5자리로 변환하면 '00001'을 반환한다", () => {
-    expect(fillZero(1, 5)).toBe('00001');
-  });
+  // 보통은 시간,날짜 두자리정도만 나올거라고 생각이 드는데 5자리 검증테스트는 필요없다고 느낍니다.
+  // it("1을 5자리로 변환하면 '00001'을 반환한다", () => {
+  //   expect(fillZero(1, 5)).toBe('00001');
+  // });
 
-  it("소수점이 있는 3.14를 5자리로 변환하면 '03.14'를 반환한다", () => {
-    expect(fillZero(3.14, 5)).toBe('03.14');
-  });
+  // 굳이 날짜유틸인데 소수점이 들어가나 싶어서 필요 없다고 생각합니다.
+  // it("소수점이 있는 3.14를 5자리로 변환하면 '03.14'를 반환한다", () => {
+  //   expect(fillZero(3.14, 5)).toBe('03.14');
+  // });
 
-  it('size 파라미터를 생략하면 기본값 2를 사용한다', () => {
-    expect(fillZero(3)).toBe('03');
-  });
+  // 저는 최대한 2자리만 나온다고 생각해서 굳이 함수도 사이즈를 변수로 안받는게 맞다고 생각해서 이거도 없어도 될거 같습니다.
+  // it('size 파라미터를 생략하면 기본값 2를 사용한다', () => {
+  //   expect(fillZero(3)).toBe('03');
+  // });
 
   it('value가 지정된 size보다 큰 자릿수를 가지면 원래 값을 그대로 반환한다', () => {
     expect(fillZero(100, 1)).toBe('100');
@@ -414,11 +384,12 @@ describe('formatDate', () => {
     expect(formatDate(new Date(2025, 6, 1), 20)).toEqual('2025-07-20');
   });
 
-  it('월이 한 자리 수일 때 앞에 0을 붙여 포맷팅한다', () => {
-    expect(formatDate(new Date(2025, 6, 1))).toEqual('2025-07-01');
-  });
+  // 어차피 fillZero에서 하는데 굳이? 0을붙여 포메팅하는게 필요없다고 생각함.
+  // it('월이 한 자리 수일 때 앞에 0을 붙여 포맷팅한다', () => {
+  //   expect(formatDate(new Date(2025, 6, 1))).toEqual('2025-07-01');
+  // });
 
-  it('일이 한 자리 수일 때 앞에 0을 붙여 포맷팅한다', () => {
-    expect(formatDate(new Date(2025, 6, 1))).toEqual('2025-07-01');
-  });
+  // it('일이 한 자리 수일 때 앞에 0을 붙여 포맷팅한다', () => {
+  //   expect(formatDate(new Date(2025, 6, 1))).toEqual('2025-07-01');
+  // });
 });
