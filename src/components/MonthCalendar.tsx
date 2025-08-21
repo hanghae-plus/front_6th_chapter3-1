@@ -1,3 +1,4 @@
+import { Notifications } from '@mui/icons-material';
 import {
   Box,
   Stack,
@@ -9,10 +10,10 @@ import {
   TableRow,
   Typography,
 } from '@mui/material';
+
 import { WEEK_DAYS } from '../constant/calendar';
-import { formatDate, formatMonth, getEventsForDay, getWeeksAtMonth } from '../utils/dateUtils';
 import { Event } from '../types';
-import { Notifications } from '@mui/icons-material';
+import { formatDate, formatMonth, getEventsForDay, getWeeksAtMonth } from '../utils/dateUtils';
 
 interface MonthCalendarProps {
   currentDate: Date;

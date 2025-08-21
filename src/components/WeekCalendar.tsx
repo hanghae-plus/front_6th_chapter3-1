@@ -10,9 +10,10 @@ import {
   TableRow,
   Typography,
 } from '@mui/material';
-import { formatWeek, getWeekDates } from '../utils/dateUtils';
+
 import { WEEK_DAYS } from '../constant/calendar';
 import { Event } from '../types';
+import { formatWeek, getWeekDates } from '../utils/dateUtils';
 
 interface WeekCalendarProps {
   currentDate: Date;

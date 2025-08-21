@@ -1,5 +1,6 @@
 import { Delete, Edit, Notifications } from '@mui/icons-material';
 import { Box, IconButton, Stack, Typography } from '@mui/material';
+
 import { NOTIFICATION_OPTIONS } from '../constant/calendar';
 import { Event } from '../types';
 

@@ -12,9 +12,10 @@ import {
   Typography,
 } from '@mui/material';
 import { ChangeEvent, Dispatch, SetStateAction } from 'react';
-import { getTimeErrorMessage } from '../utils/timeValidation';
+
 import { CATEGORIES, NOTIFICATION_OPTIONS } from '../constant/calendar';
 import { Event, RepeatType } from '../types';
+import { getTimeErrorMessage } from '../utils/timeValidation';
 
 interface EventFormPanelProps {
   editingEvent: Event | null;

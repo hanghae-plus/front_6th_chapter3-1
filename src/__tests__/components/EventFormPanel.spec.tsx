@@ -1,4 +1,5 @@
 import { render, screen } from '@testing-library/react';
+
 import { EventFormPanel } from '../../components/EventFormPanel';
 import { RepeatType } from '../../types';
 import { createMockEvent } from '../utils';
