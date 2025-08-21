@@ -294,7 +294,33 @@ describe('formatWeek', () => {
 });
 
 describe('formatMonth', () => {
-  it("2025년 7월 10일을 '2025년 7월'로 반환한다", () => {});
+  it.only("2025년 7월 10일을 '2025년 7월'로 반환한다", () => {
+    const date = new Date('2025-07-10');
+    const result = formatMonth(date);
+    
+    expect(result).toBe('2025년 7월');
+  });
+
+  it.only("2025년 8월 1일을 '2025년 8월'로 반환한다", () => {
+    const date = new Date('2025-08-01');
+    const result = formatMonth(date);
+    
+    expect(result).toBe('2025년 8월');
+  });
+
+  it.only("2024년 2월 29일을 '2024년 2월'로 반환한다 (윤년)", () => {
+    const date = new Date('2024-02-29');
+    const result = formatMonth(date);
+    
+    expect(result).toBe('2024년 2월');
+  });
+
+  it.only("2025년 12월 31일을 '2025년 12월'로 반환한다", () => {
+    const date = new Date('2025-12-31');
+    const result = formatMonth(date);
+    
+    expect(result).toBe('2025년 12월');
+  });
 });
 
 describe('isDateInRange', () => {
