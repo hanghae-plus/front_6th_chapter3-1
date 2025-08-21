@@ -1,30 +1,51 @@
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 
 import { Event, RepeatType } from '../types';
 import { getTimeErrorMessage } from '../utils/timeValidation';
 
 type TimeErrorRecord = Record<'startTimeError' | 'endTimeError', string | null>;
 
-export const useEventForm = (initialEvent?: Event) => {
-  const [title, setTitle] = useState(initialEvent?.title || '');
-  const [date, setDate] = useState(initialEvent?.date || '');
-  const [startTime, setStartTime] = useState(initialEvent?.startTime || '');
-  const [endTime, setEndTime] = useState(initialEvent?.endTime || '');
-  const [description, setDescription] = useState(initialEvent?.description || '');
-  const [location, setLocation] = useState(initialEvent?.location || '');
-  const [category, setCategory] = useState(initialEvent?.category || '업무');
-  const [isRepeating, setIsRepeating] = useState(initialEvent?.repeat.type !== 'none');
-  const [repeatType, setRepeatType] = useState<RepeatType>(initialEvent?.repeat.type || 'none');
-  const [repeatInterval, setRepeatInterval] = useState(initialEvent?.repeat.interval || 1);
-  const [repeatEndDate, setRepeatEndDate] = useState(initialEvent?.repeat.endDate || '');
-  const [notificationTime, setNotificationTime] = useState(initialEvent?.notificationTime || 10);
-
-  const [editingEvent, setEditingEvent] = useState<Event | null>(null);
+export const useEventForm = (
+  editingEvent?: Event | null,
+  onEditingEventChange?: (event: Event | null) => void
+) => {
+  const [title, setTitle] = useState('');
+  const [date, setDate] = useState('');
+  const [startTime, setStartTime] = useState('');
+  const [endTime, setEndTime] = useState('');
+  const [description, setDescription] = useState('');
+  const [location, setLocation] = useState('');
+  const [category, setCategory] = useState('업무');
+  const [isRepeating, setIsRepeating] = useState(false);
+  const [repeatType, setRepeatType] = useState<RepeatType>('none');
+  const [repeatInterval, setRepeatInterval] = useState(1);
+  const [repeatEndDate, setRepeatEndDate] = useState('');
+  const [notificationTime, setNotificationTime] = useState(10);
 
   const [{ startTimeError, endTimeError }, setTimeError] = useState<TimeErrorRecord>({
     startTimeError: null,
     endTimeError: null,
   });
+
+  // editingEvent가 변경될 때마다 폼 데이터 업데이트
+  useEffect(() => {
+    if (editingEvent) {
+      setTitle(editingEvent.title);
+      setDate(editingEvent.date);
+      setStartTime(editingEvent.startTime);
+      setEndTime(editingEvent.endTime);
+      setDescription(editingEvent.description);
+      setLocation(editingEvent.location);
+      setCategory(editingEvent.category);
+      setIsRepeating(editingEvent.repeat.type !== 'none');
+      setRepeatType(editingEvent.repeat.type);
+      setRepeatInterval(editingEvent.repeat.interval);
+      setRepeatEndDate(editingEvent.repeat.endDate || '');
+      setNotificationTime(editingEvent.notificationTime);
+    } else {
+      resetForm();
+    }
+  }, [editingEvent]);
 
   const handleStartTimeChange = (e: ChangeEvent<HTMLInputElement>) => {
     const newStartTime = e.target.value;
@@ -51,22 +72,11 @@ export const useEventForm = (initialEvent?: Event) => {
     setRepeatInterval(1);
     setRepeatEndDate('');
     setNotificationTime(10);
+    onEditingEventChange?.(null);
   };
 
   const editEvent = (event: Event) => {
-    setEditingEvent(event);
-    setTitle(event.title);
-    setDate(event.date);
-    setStartTime(event.startTime);
-    setEndTime(event.endTime);
-    setDescription(event.description);
-    setLocation(event.location);
-    setCategory(event.category);
-    setIsRepeating(event.repeat.type !== 'none');
-    setRepeatType(event.repeat.type);
-    setRepeatInterval(event.repeat.interval);
-    setRepeatEndDate(event.repeat.endDate || '');
-    setNotificationTime(event.notificationTime);
+    onEditingEventChange?.(event);
   };
 
   return {
@@ -96,8 +106,6 @@ export const useEventForm = (initialEvent?: Event) => {
     setNotificationTime,
     startTimeError,
     endTimeError,
-    editingEvent,
-    setEditingEvent,
     handleStartTimeChange,
     handleEndTimeChange,
     resetForm,
