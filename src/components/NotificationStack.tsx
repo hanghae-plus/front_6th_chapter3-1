@@ -13,20 +13,26 @@ export function NotificationStack({ notifications, onRemoveNotification }: Notif
 
   return (
     <Stack position="fixed" top={16} right={16} spacing={2} alignItems="flex-end">
-      {notifications.map((notification, index) => (
-        <Alert
-          key={index}
-          severity="info"
-          sx={{ width: 'auto' }}
-          action={
-            <IconButton size="small" onClick={() => onRemoveNotification(index)}>
-              <Close />
-            </IconButton>
-          }
-        >
-          <AlertTitle>{notification.message}</AlertTitle>
-        </Alert>
-      ))}
+      {notifications.map(
+        (
+          notification,
+          // eslint-disable-next-line no-unused-vars
+          index
+        ) => (
+          <Alert
+            key={index}
+            severity="info"
+            sx={{ width: 'auto' }}
+            action={
+              <IconButton size="small" onClick={() => onRemoveNotification(index)}>
+                <Close />
+              </IconButton>
+            }
+          >
+            <AlertTitle>{notification.message}</AlertTitle>
+          </Alert>
+        )
+      )}
     </Stack>
   );
 }

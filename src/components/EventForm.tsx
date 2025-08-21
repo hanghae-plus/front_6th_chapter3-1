@@ -1,4 +1,3 @@
-import React from 'react';
 import {
   Button,
   Checkbox,
@@ -12,6 +11,7 @@ import {
   Tooltip,
   Typography,
 } from '@mui/material';
+import React from 'react';
 
 import { EventForm as EventFormType } from '../types';
 import { getTimeErrorMessage } from '../utils/timeValidation';
@@ -52,18 +52,24 @@ interface EventFormProps {
 }
 
 export function EventForm({
+  // eslint-disable-next-line no-unused-vars
   title,
   setTitle,
+  // eslint-disable-next-line no-unused-vars
   date,
   setDate,
   startTime,
   endTime,
+  // eslint-disable-next-line no-unused-vars
   description,
   setDescription,
+  // eslint-disable-next-line no-unused-vars
   location,
   setLocation,
+  // eslint-disable-next-line no-unused-vars
   category,
   setCategory,
+  // eslint-disable-next-line no-unused-vars
   isRepeating,
   setIsRepeating,
   notificationTime,

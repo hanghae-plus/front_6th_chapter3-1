@@ -29,11 +29,14 @@ interface EventListProps {
 }
 
 export function EventList({
+  // eslint-disable-next-line no-unused-vars
   searchTerm,
   setSearchTerm,
   filteredEvents,
   notifiedEvents,
+  // eslint-disable-next-line no-unused-vars
   onEditEvent,
+  // eslint-disable-next-line no-unused-vars
   onDeleteEvent,
 }: EventListProps) {
   return (

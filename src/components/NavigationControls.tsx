@@ -7,7 +7,12 @@ interface NavigationControlsProps {
   onNavigate: (direction: 'prev' | 'next') => void;
 }
 
-export function NavigationControls({ view, setView, onNavigate }: NavigationControlsProps) {
+export function NavigationControls({
+  // eslint-disable-next-line no-unused-vars
+  view,
+  setView,
+  onNavigate,
+}: NavigationControlsProps) {
   return (
     <Stack direction="row" spacing={2} justifyContent="space-between" alignItems="center">
       <IconButton aria-label="Previous" onClick={() => onNavigate('prev')}>
