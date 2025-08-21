@@ -1,4 +1,10 @@
-import { Notifications, ChevronLeft, ChevronRight, Delete, Edit, Close } from '@mui/icons-material';
+import Notifications from '@mui/icons-material/Notifications';
+import ChevronLeft from '@mui/icons-material/ChevronLeft';
+import Delete from '@mui/icons-material/Delete';
+import Edit from '@mui/icons-material/Edit';
+import ChevronRight from '@mui/icons-material/ChevronRight';
+import Close from '@mui/icons-material/Close';
+
 import {
   Alert,
   AlertTitle,
