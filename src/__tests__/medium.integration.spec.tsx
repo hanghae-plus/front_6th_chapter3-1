@@ -359,14 +359,14 @@ describe('일정 뷰', () => {
 describe('검색 기능', () => {
   it("'팀 회의'를 검색하면 해당 제목을 가진 일정이 리스트에 노출된다", async () => {
     const events: Event[] = [
-      makeEvent({ title: '팀 회의', date: '2025-10-12' }),
-      makeEvent({ title: '밑 의회', date: '2025-10-12' }),
+      makeEvent({ title: '팀 회의', date: '2025-08-12' }),
+      makeEvent({ title: '밑 의회', date: '2025-08-12' }),
     ];
     server.use(...setupMockHandlerCreation(events));
 
     const user = userEvent.setup();
     vi.useFakeTimers();
-    vi.setSystemTime(new Date(2025, 9, 12));
+    vi.setSystemTime(new Date(2025, 7, 12));
     render(
       <ThemeProvider theme={createTheme()}>
         <SnackbarProvider>
@@ -389,7 +389,42 @@ describe('검색 기능', () => {
     expect(list.queryByText('검색 결과가 없습니다.')).not.toBeInTheDocument();
   });
 
-  it('검색어를 지우면 모든 일정이 다시 표시되어야 한다', async () => {});
+  it('검색어를 지우면 모든 일정이 다시 표시되어야 한다', async () => {
+    const events: Event[] = [
+      makeEvent({ id: '1', title: '팀 회의', date: '2025-08-12' }),
+      makeEvent({ id: '2', title: '밑 의회', date: '2025-08-12' }),
+    ];
+    server.use(...setupMockHandlerCreation(events));
+
+    const user = userEvent.setup();
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date(2025, 7, 12));
+
+    render(
+      <ThemeProvider theme={createTheme()}>
+        <SnackbarProvider>
+          <App />
+        </SnackbarProvider>
+      </ThemeProvider>
+    );
+    vi.useRealTimers();
+
+    const listEl = await screen.findByTestId('event-list');
+    const list = within(listEl);
+    await list.findByText('밑 의회');
+
+    const search = screen.getByLabelText('일정 검색');
+    await user.clear(search);
+    await user.type(search, '팀 회의');
+
+    expect(await list.findByText(/^팀 회의$/)).toBeInTheDocument();
+    expect(list.queryByText('밑 의회')).not.toBeInTheDocument();
+
+    await user.clear(search);
+    await list.findByText('팀 회의');
+    expect(list.getByText('밑 의회')).toBeInTheDocument();
+    expect(list.queryByText('검색 결과가 없습니다.')).not.toBeInTheDocument();
+  });
 });
 
 describe('일정 충돌', () => {
