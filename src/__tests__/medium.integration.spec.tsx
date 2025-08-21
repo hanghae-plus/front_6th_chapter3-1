@@ -1,14 +1,12 @@
 import CssBaseline from '@mui/material/CssBaseline';
-import { ThemeProvider, createTheme } from '@mui/material/styles';
-import { render, screen, within, act } from '@testing-library/react';
-import { UserEvent, userEvent } from '@testing-library/user-event';
-import { http, HttpResponse } from 'msw';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { render, screen } from '@testing-library/react';
+import { userEvent } from '@testing-library/user-event';
 import { SnackbarProvider } from 'notistack';
-import { ReactElement } from 'react';
 
+import { setupMockHandlerCreation } from '../__mocks__/handlersUtils';
 import App from '../App';
-import { server } from '../setupTests';
-import { Event } from '../types';
+import { createMockEvent } from './utils';
 
 /**
  * 통합 테스트: 여러 모듈이 연관된 상태에서 잘 동작하는지 검증
@@ -19,7 +17,6 @@ import { Event } from '../types';
 
 // 테스트용 App 생성
 const renderApp = () => {
-  // 테스트용 테마 설정
   const theme = createTheme();
 
   return render(
@@ -34,25 +31,47 @@ const renderApp = () => {
 
 describe('일정 CRUD 및 기본 기능', () => {
   it('입력한 새로운 일정 정보에 맞춰 모든 필드가 이벤트 리스트에 정확히 저장된다.', async () => {
-    const user = userEvent.setup();
+    const events = [
+      createMockEvent(1, { title: '회의', date: '2025-10-15' }),
+      createMockEvent(2, { title: '개인 일정', date: '2025-10-15' }),
+    ];
+
+    setupMockHandlerCreation(events);
+
     renderApp();
 
+    const user = userEvent.setup();
+
+    // // 기존 이벤트가 표시되는지 확인
+    // expect(screen.getByText('회의')).toBeInTheDocument();
+
     // form 입력
-    await act(async () => {
-      await user.type(screen.getByLabelText('제목'), '새로운 일정');
-      await user.type(screen.getByLabelText('날짜'), '2025-10-01');
-      await user.type(screen.getByLabelText('시작 시간'), '10:00');
-      await user.type(screen.getByLabelText('종료 시간'), '11:00');
-      await user.type(screen.getByLabelText('설명'), '테스트 일정입니다');
-      await user.type(screen.getByLabelText('위치'), '회의실 A');
-    });
+
+    await user.type(screen.getByLabelText('제목'), '새로운 일정');
+    await user.type(screen.getByLabelText('날짜'), '2025-10-01');
+    await user.type(screen.getByLabelText('시작 시간'), '10:00');
+    await user.type(screen.getByLabelText('종료 시간'), '11:00');
+    await user.type(screen.getByLabelText('설명'), '테스트 일정입니다');
+    await user.type(screen.getByLabelText('위치'), '회의실 A');
+
+    // 카테고리 선택 (올바른 방법)
+    const categorySelect = screen.getByLabelText('카테고리');
+    await user.click(categorySelect);
+    await user.click(screen.getByText('기타')); // 직접 텍스트로 찾기
+
+    // 알림 설정 선택 (필요시)
+    const notificationSelect = screen.getByLabelText('알림 설정');
+    await user.click(notificationSelect);
+    await user.click(screen.getByText('10분 전'));
 
     // 일정 추가 버튼 클릭
-    await act(async () => {
-      await user.click(screen.getByTestId('event-submit-button'));
-    });
+    await user.click(screen.getByTestId('event-submit-button'));
 
+    // 성공 메시지 확인
     expect(screen.getByText('일정이 추가되었습니다.')).toBeInTheDocument();
+
+    // 새로 추가된 일정이 표시 확인
+    expect(screen.getByText('새로운 일정')).toBeInTheDocument();
   });
 
   it('기존 일정의 세부 정보를 수정하고 변경사항이 정확히 반영된다', async () => {});
