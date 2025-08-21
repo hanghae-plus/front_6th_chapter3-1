@@ -1,7 +1,6 @@
 import { act, renderHook } from '@testing-library/react';
 
 import { useSearch } from '../../hooks/useSearch.ts';
-import { Event } from '../../types.ts';
 import { createEvents } from '../eventFactory.ts';
 
 it('검색어가 비어있을 때 view에 해당하는 모든 이벤트를 반환해야 한다', () => {

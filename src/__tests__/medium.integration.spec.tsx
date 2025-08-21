@@ -1,6 +1,6 @@
 import CssBaseline from '@mui/material/CssBaseline';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import { act, cleanup, fireEvent, render, screen, within } from '@testing-library/react';
+import { act, fireEvent, render, screen, within } from '@testing-library/react';
 import { UserEvent, userEvent } from '@testing-library/user-event';
 import { SnackbarProvider } from 'notistack';
 
@@ -9,7 +9,6 @@ import { setupMockHandler } from '../__mocks__/handlersUtils';
 import App from '../App';
 import { EventForm } from '../types';
 import { getDateString } from './utils';
-import { server } from '../setupTests';
 
 const RenderApp = () => {
   const theme = createTheme();
@@ -330,7 +329,7 @@ describe('일정 뷰', () => {
 });
 
 describe('검색 기능', () => {
-  it('검색 결과가 없으면, "검색 결과가 없습니다."가 표시되어야 한다.', async () => {
+  it('검색 결과가 없으면, "검색 결과가 없습니다."가 표시되어야 한다', async () => {
     const events = createEvents([
       { title: '회의A', date: todayDate },
       { title: '회의B', date: todayDate },
