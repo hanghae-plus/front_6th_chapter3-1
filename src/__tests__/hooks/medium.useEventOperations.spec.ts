@@ -1,4 +1,4 @@
-import { act, renderHook } from '@testing-library/react';
+import { renderHook, waitFor } from '@testing-library/react';
 import { http, HttpResponse } from 'msw';
 
 import {
@@ -54,13 +54,11 @@ it('저장되어있는 초기 이벤트 데이터를 적절하게 불러온다',
 
   const { result } = renderHook(() => useEventOperations(false));
 
-  await act(async () => {
-    await new Promise((resolve) => setTimeout(resolve, 0));
+  await waitFor(() => {
+    expect(result.current.events).toHaveLength(1);
+    expect(result.current.events[0]).toEqual(mockEvents[0]);
+    expect(enqueueSnackbarFn).toHaveBeenCalledWith('일정 로딩 완료!', { variant: 'info' });
   });
-
-  expect(result.current.events).toHaveLength(1);
-  expect(result.current.events[0]).toEqual(mockEvents[0]);
-  expect(enqueueSnackbarFn).toHaveBeenCalledWith('일정 로딩 완료!', { variant: 'info' });
 });
 
 it('정의된 이벤트 정보를 기준으로 적절하게 저장이 된다', async () => {
@@ -79,13 +77,12 @@ it('정의된 이벤트 정보를 기준으로 적절하게 저장이 된다', a
   setupMockHandlerCreation();
 
   const { result } = renderHook(() => useEventOperations(false));
+  result.current.saveEvent(newEvent);
 
-  await act(async () => {
-    await result.current.saveEvent(newEvent);
-  });
-
-  expect(enqueueSnackbarFn).toHaveBeenCalledWith('일정이 추가되었습니다.', {
-    variant: 'success',
+  await waitFor(() => {
+    expect(enqueueSnackbarFn).toHaveBeenCalledWith('일정이 추가되었습니다.', {
+      variant: 'success',
+    });
   });
 });
 
@@ -112,13 +109,12 @@ it("새로 정의된 'title', 'endTime' 기준으로 적절하게 일정이 업�
   setupMockHandlerUpdating();
 
   const { result } = renderHook(() => useEventOperations(true));
+  result.current.saveEvent(updatedEvent);
 
-  await act(async () => {
-    await result.current.saveEvent(updatedEvent);
-  });
-
-  expect(enqueueSnackbarFn).toHaveBeenCalledWith('일정이 수정되었습니다.', {
-    variant: 'success',
+  await waitFor(() => {
+    expect(enqueueSnackbarFn).toHaveBeenCalledWith('일정이 수정되었습니다.', {
+      variant: 'success',
+    });
   });
 });
 
@@ -126,12 +122,11 @@ it('존재하는 이벤트 삭제 시 에러없이 아이템이 삭제된다.', 
   setupMockHandlerDeletion();
 
   const { result } = renderHook(() => useEventOperations(false));
+  result.current.deleteEvent('1');
 
-  await act(async () => {
-    await result.current.deleteEvent('1');
+  await waitFor(() => {
+    expect(enqueueSnackbarFn).toHaveBeenCalledWith('일정이 삭제되었습니다.', { variant: 'info' });
   });
-
-  expect(enqueueSnackbarFn).toHaveBeenCalledWith('일정이 삭제되었습니다.', { variant: 'info' });
 });
 
 it("이벤트 로딩 실패 시 '이벤트 로딩 실패'라는 텍스트와 함께 에러 토스트가 표시되어야 한다", async () => {
@@ -143,12 +138,10 @@ it("이벤트 로딩 실패 시 '이벤트 로딩 실패'라는 텍스트와 함
 
   const { result } = renderHook(() => useEventOperations(false));
 
-  await act(async () => {
-    await new Promise((resolve) => setTimeout(resolve, 0));
+  await waitFor(() => {
+    expect(enqueueSnackbarFn).toHaveBeenCalledWith('이벤트 로딩 실패', { variant: 'error' });
+    expect(result.current.events).toHaveLength(0);
   });
-
-  expect(enqueueSnackbarFn).toHaveBeenCalledWith('이벤트 로딩 실패', { variant: 'error' });
-  expect(result.current.events).toHaveLength(0);
 });
 
 it("존재하지 않는 이벤트 수정 시 '일정 저장 실패'라는 토스트가 노출되며 에러 처리가 되어야 한다", async () => {
@@ -172,12 +165,11 @@ it("존재하지 않는 이벤트 수정 시 '일정 저장 실패'라는 토스
   );
 
   const { result } = renderHook(() => useEventOperations(true));
+  result.current.saveEvent(nonExistentEvent);
 
-  await act(async () => {
-    await result.current.saveEvent(nonExistentEvent);
+  await waitFor(() => {
+    expect(enqueueSnackbarFn).toHaveBeenCalledWith('일정 저장 실패', { variant: 'error' });
   });
-
-  expect(enqueueSnackbarFn).toHaveBeenCalledWith('일정 저장 실패', { variant: 'error' });
 });
 
 it("네트워크 오류 시 '일정 삭제 실패'라는 텍스트가 노출되며 이벤트 삭제가 실패해야 한다", async () => {
@@ -188,10 +180,9 @@ it("네트워크 오류 시 '일정 삭제 실패'라는 텍스트가 노출되�
   );
 
   const { result } = renderHook(() => useEventOperations(false));
+  result.current.deleteEvent('1');
 
-  await act(async () => {
-    await result.current.deleteEvent('1');
+  await waitFor(() => {
+    expect(enqueueSnackbarFn).toHaveBeenCalledWith('일정 삭제 실패', { variant: 'error' });
   });
-
-  expect(enqueueSnackbarFn).toHaveBeenCalledWith('일정 삭제 실패', { variant: 'error' });
 });
