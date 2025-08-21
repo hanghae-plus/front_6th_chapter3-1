@@ -1,10 +1,106 @@
-import { Event } from '../types';
+import { http, HttpResponse, PathParams } from 'msw';
+
+import { events } from '../__mocks__/response/events.json' assert { type: 'json' };
+import { server } from '../setupTests';
+import { Event, EventForm } from '../types';
 
 // ! Hard
 // ! 이벤트는 생성, 수정 되면 fetch를 다시 해 상태를 업데이트 합니다. 이를 위한 제어가 필요할 것 같은데요. 어떻게 작성해야 테스트가 병렬로 돌아도 안정적이게 동작할까요?
 // ! 아래 이름을 사용하지 않아도 되니, 독립적이게 테스트를 구동할 수 있는 방법을 찾아보세요. 그리고 이 로직을 PR에 설명해주세요.
-export const setupMockHandlerCreation = (initEvents = [] as Event[]) => {};
+// 문제 예상 점 1 : 테스트 간 데이터 오염 현상
+// 문제 예상 점 2 : 병렬 동작 시 같은 배열을 수정하므로 매번 같은 결과가 아닌 예측 불가능한 결과를 발생시킴
+export const setupMockHandlerCreation = (initEvents = [] as Event[]) => {
+  const mockEvents = [...initEvents];
 
-export const setupMockHandlerUpdating = () => {};
+  server.use(
+    http.get('/api/events', () => {
+      return HttpResponse.json({ events: mockEvents });
+    }),
 
-export const setupMockHandlerDeletion = () => {};
+    http.post<PathParams, EventForm>('/api/events', async ({ request }) => {
+      const newEvent = await request.json();
+      const id = `${mockEvents.length + 1}`;
+
+      mockEvents.push({ ...newEvent, id });
+
+      return HttpResponse.json({ ...newEvent, id });
+    })
+  );
+};
+
+export const setupMockHandlerUpdating = () => {
+  const mockEvents = [
+    {
+      id: '1',
+      title: '기존 회의',
+      date: '2025-10-15',
+      startTime: '09:00',
+      endTime: '10:00',
+      description: '기존 팀 미팅',
+      location: '회의실 B',
+      category: '업무',
+      repeat: { type: 'none', interval: 0 },
+      notificationTime: 10,
+    },
+    {
+      id: '2',
+      title: '새로운 회의',
+      date: '2025-10-15',
+      startTime: '11:00',
+      endTime: '12:00',
+      description: '새로운 팀 미팅',
+      location: '회의실 A',
+      category: '업무',
+      repeat: { type: 'none', interval: 0 },
+      notificationTime: 10,
+    },
+  ];
+
+  server.use(
+    http.get('/api/events', () => {
+      return HttpResponse.json({ events: mockEvents });
+    }),
+
+    http.put<{ id: string }, EventForm>('/api/events/:id', async ({ params, request }) => {
+      const { id } = params;
+      const updatedEvent = await request.json();
+      const eventIndex = mockEvents.findIndex((event) => event.id === id);
+
+      if (eventIndex === -1) {
+        return HttpResponse.json({ error: 'Event not found' }, { status: 404 });
+      }
+
+      const result = {
+        ...mockEvents[eventIndex],
+        ...updatedEvent,
+      };
+
+      mockEvents[eventIndex] = result;
+
+      return HttpResponse.json(result);
+    })
+  );
+};
+
+export const setupMockHandlerDeletion = () => {
+  let mockEvents = [...events];
+
+  server.use(
+    http.get('/api/events', () => {
+      return HttpResponse.json({ events: mockEvents });
+    }),
+
+    http.delete<{ id: string }>('/api/events/:id', async ({ params }) => {
+      const { id } = params;
+      const eventIndex = mockEvents.findIndex((event) => event.id === id);
+
+      if (eventIndex === -1) {
+        return HttpResponse.json({ error: 'Event not found' }, { status: 404 });
+      }
+
+      mockEvents = mockEvents.filter((event) => event.id !== id);
+
+      return HttpResponse.json({ events: mockEvents });
+    })
+  );
+};

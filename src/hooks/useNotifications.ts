@@ -31,5 +31,5 @@ export const useNotifications = (events: Event[]) => {
     return () => clearInterval(interval);
   }, [events, notifiedEvents]);
 
-  return { notifications, notifiedEvents, setNotifications, removeNotification };
+  return { notifications, notifiedEvents, removeNotification };
 };
