@@ -92,3 +92,48 @@ export const setupMockHandlerDeletion = () => {
     })
   );
 };
+
+export const setupMockHandlerLoadingError = () => {
+  server.use(
+    http.get('/api/events', () => {
+      return new HttpResponse(null, { status: 500 });
+    })
+  );
+};
+
+export const setupMockHandlerSaveError = () => {
+  server.use(
+    http.get('/api/events', () => {
+      return HttpResponse.json({ events: [] });
+    }),
+    http.put('/api/events/:id', () => {
+      return new HttpResponse(null, { status: 404 });
+    })
+  );
+};
+
+export const setupMockHandlerDeleteError = () => {
+  const mockEvents: Event[] = [
+    {
+      id: '1',
+      title: '삭제할 이벤트',
+      date: '2025-10-15',
+      startTime: '09:00',
+      endTime: '10:00',
+      description: '삭제할 이벤트입니다',
+      location: '어딘가',
+      category: '기타',
+      repeat: { type: 'none', interval: 0 },
+      notificationTime: 10,
+    },
+  ];
+
+  server.use(
+    http.get('/api/events', () => {
+      return HttpResponse.json({ events: mockEvents });
+    }),
+    http.delete('/api/events/:id', () => {
+      return new HttpResponse(null, { status: 500 });
+    })
+  );
+};
