@@ -72,7 +72,10 @@ export function isOverlapping(event1: Event | EventForm, event2: Event | EventFo
  * const existingEvents = [{ id: 'existing', date: '2025-07-10', startTime: '12:00', endTime: '13:00' }];
  * findOverlappingEvents(newEvent, existingEvents) // [시간이 겹치는 이벤트들]
  */
-export function findOverlappingEvents(newEvent: Event | EventForm, events: Event[]) {
+export function findOverlappingEvents(
+  newEvent: Event | EventForm,
+  events: Readonly<Event[]>
+): Readonly<Event[]> {
   return events.filter(
     (event) => event.id !== (newEvent as Event).id && isOverlapping(event, newEvent)
   );

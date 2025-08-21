@@ -13,7 +13,7 @@ import { Event } from '../types';
 
 type Props = {
   isOpen: boolean;
-  events: Event[];
+  events: Readonly<Event[]>;
   onClose: () => void;
   onSubmit: () => void;
 };
