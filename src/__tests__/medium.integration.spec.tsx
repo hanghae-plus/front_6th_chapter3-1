@@ -1,6 +1,7 @@
 import { render, screen, within, act } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { SnackbarProvider } from 'notistack';
+import { OverlayProvider } from 'overlay-kit';
 import { ReactElement } from 'react';
 
 import {
@@ -10,16 +11,15 @@ import {
 } from '../__mocks__/handlersUtils';
 import App from '../App';
 import { server } from '../setupTests';
-import { OverlayProvider } from 'overlay-kit';
 
 const setup = (element: ReactElement) => {
   const user = userEvent.setup();
 
   return {
     ...render(
-      <SnackbarProvider>
-        <OverlayProvider>{element}</OverlayProvider>
-      </SnackbarProvider>
+      <OverlayProvider>
+        <SnackbarProvider>{element}</SnackbarProvider>
+      </OverlayProvider>
     ),
     user,
   };
