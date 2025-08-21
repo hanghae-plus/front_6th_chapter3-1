@@ -15,25 +15,25 @@ describe('getTimeErrorMessage >', () => {
 
   it('시작 시간이 종료 시간보다 빠를 때 null을 반환한다', () => {
     const errorMessage = getTimeErrorMessage('10:00', '15:00');
-    expect(errorMessage.startTimeError).toBe(null);
-    expect(errorMessage.endTimeError).toBe(null);
+    expect(errorMessage.startTimeError).toBeNull();
+    expect(errorMessage.endTimeError).toBeNull();
   });
 
   it('시작 시간이 비어있을 때 null을 반환한다', () => {
     const errorMessage = getTimeErrorMessage('', '15:00');
-    expect(errorMessage.startTimeError).toBe(null);
-    expect(errorMessage.endTimeError).toBe(null);
+    expect(errorMessage.startTimeError).toBeNull();
+    expect(errorMessage.endTimeError).toBeNull();
   });
 
   it('종료 시간이 비어있을 때 null을 반환한다', () => {
     const errorMessage = getTimeErrorMessage('10:00', '');
-    expect(errorMessage.startTimeError).toBe(null);
-    expect(errorMessage.endTimeError).toBe(null);
+    expect(errorMessage.startTimeError).toBeNull();
+    expect(errorMessage.endTimeError).toBeNull();
   });
 
   it('시작 시간과 종료 시간이 모두 비어있을 때 null을 반환한다', () => {
     const errorMessage = getTimeErrorMessage('', '');
-    expect(errorMessage.startTimeError).toBe(null);
-    expect(errorMessage.endTimeError).toBe(null);
+    expect(errorMessage.startTimeError).toBeNull();
+    expect(errorMessage.endTimeError).toBeNull();
   });
 });
