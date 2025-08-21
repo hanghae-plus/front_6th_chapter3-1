@@ -109,7 +109,7 @@ describe('일정 CRUD 및 기본 기능', () => {
     await expect(screen.findByText('일정이 삭제되었습니다.')).resolves.toBeInTheDocument();
 
     expect(screen.getAllByLabelText('Delete event').length).toBe(initialItemCount - 1);
-    expect(within(eventList).queryByText('회의')).not.toBeInTheDocument();
+    expect(eventList.textContent).not.toContain('회의');
   });
 });
 
@@ -190,11 +190,65 @@ describe('일정 뷰', () => {
 });
 
 describe('검색 기능', () => {
-  it('검색 결과가 없으면, "검색 결과가 없습니다."가 표시되어야 한다.', async () => {});
+  beforeEach(() => {
+    setupMockHandler([
+      {
+        id: 'mock-1',
+        title: '팀 회의',
+        date: '2025-08-15',
+        startTime: '09:00',
+        endTime: '10:00',
+        description: '팀 미팅',
+        location: '회의실 B',
+        category: '업무',
+        repeat: { type: 'none', interval: 0 },
+        notificationTime: 10,
+      },
+      {
+        id: 'mock-2',
+        title: '숙면',
+        date: '2025-08-16',
+        startTime: '09:00',
+        endTime: '10:00',
+        description: '숙면을 위한 휴가',
+        location: '침대',
+        category: '개인',
+        repeat: { type: 'none', interval: 0 },
+        notificationTime: 10,
+      },
+    ]);
+  });
 
-  it("'팀 회의'를 검색하면 해당 제목을 가진 일정이 리스트에 노출된다", async () => {});
+  it('검색 결과가 없으면, "검색 결과가 없습니다."가 표시되어야 한다.', async () => {
+    renderWithProviders();
 
-  it('검색어를 지우면 모든 일정이 다시 표시되어야 한다', async () => {});
+    const eventList = screen.getByTestId('event-list');
+    expect(within(eventList).getByText('검색 결과가 없습니다.')).toBeInTheDocument();
+  });
+
+  it("'팀 회의'를 검색하면 해당 제목을 가진 일정이 리스트에 노출된다", async () => {
+    renderWithProviders();
+    const user = userEvent.setup();
+
+    const searchInput = screen.getByLabelText('일정 검색');
+    await user.type(searchInput, '팀 회의');
+
+    const eventList = screen.getByTestId('event-list');
+    expect(eventList.textContent).toContain('팀 회의');
+    expect(eventList.textContent).not.toContain('숙면');
+  });
+
+  it('검색어를 지우면 모든 일정이 다시 표시되어야 한다', async () => {
+    renderWithProviders();
+    const user = userEvent.setup();
+
+    const searchInput = screen.getByLabelText('일정 검색');
+    await user.clear(searchInput);
+
+    const eventList = screen.getByTestId('event-list');
+    expect(eventList.textContent).toContain('팀 회의');
+    expect(eventList.textContent).toContain('숙면');
+  });
 });
 
 describe('일정 충돌', () => {
