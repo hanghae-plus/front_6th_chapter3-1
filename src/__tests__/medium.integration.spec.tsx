@@ -26,7 +26,7 @@ const setup = (element: ReactElement) => {
 };
 
 describe('일정 CRUD 및 기본 기능', () => {
-  it('입력한 새로운 일정 정보에 맞춰 모든 필드가 이벤트 리스트에 정확히 저장된다.', async () => {
+  test('입력한 새로운 일정 정보에 맞춰 모든 필드가 이벤트 리스트에 정확히 저장된다.', async () => {
     // Given: 빈 이벤트 목록으로 시작하는 앱과 새로운 일정 정보
     // ! HINT. event를 추가 제거하고 저장하는 로직을 잘 살펴보고, 만약 그대로 구현한다면 어떤 문제가 있을 지 고민해보세요.
     setupMockHandlerCreation();
@@ -52,7 +52,7 @@ describe('일정 CRUD 및 기본 기능', () => {
     expect(eventList.getByText('10:00 - 11:00')).toBeInTheDocument();
   });
 
-  it('기존 일정의 세부 정보를 수정하고 변경사항이 정확히 반영된다', async () => {
+  test('기존 일정의 세부 정보를 수정하고 변경사항이 정확히 반영된다', async () => {
     // Given: 수정 가능한 기존 일정이 있는 상태
     const { user } = setup(<App />);
     setupMockHandlerUpdating();
@@ -73,7 +73,7 @@ describe('일정 CRUD 및 기본 기능', () => {
     expect(eventList.getByText('회의 내용 변경')).toBeInTheDocument();
   });
 
-  it('일정을 삭제하고 더 이상 조회되지 않는지 확인한다', async () => {
+  test('일정을 삭제하고 더 이상 조회되지 않는지 확인한다', async () => {
     // Given: 삭제할 수 있는 기존 일정이 있는 상태
     setupMockHandlerDeletion();
     const { user } = setup(<App />);
@@ -91,7 +91,7 @@ describe('일정 CRUD 및 기본 기능', () => {
 });
 
 describe('일정 뷰', () => {
-  it('주별 뷰를 선택 후 해당 주에 일정이 없으면, 일정이 표시되지 않는다.', async () => {
+  test('주별 뷰를 선택 후 해당 주에 일정이 없으면, 일정이 표시되지 않는다.', async () => {
     // Given: 빈 일정 목록으로 시작하는 앱
     setupMockHandlerCreation([]);
     const { user } = setup(<App />);
@@ -108,7 +108,7 @@ describe('일정 뷰', () => {
     expect(eventList.getByText('검색 결과가 없습니다.')).toBeInTheDocument();
   });
 
-  it('주별 뷰 선택 후 해당 일자에 일정이 존재한다면 해당 일정이 정확히 표시된다', async () => {
+  test('주별 뷰 선택 후 해당 일자에 일정이 존재한다면 해당 일정이 정확히 표시된다', async () => {
     // Given: 기존 일정이 있는 앱
     const { user } = setup(<App />);
 
@@ -123,7 +123,7 @@ describe('일정 뷰', () => {
     expect(eventList.getByText('기존 회의')).toBeInTheDocument();
   });
 
-  it('월별 뷰에 일정이 없으면, 일정이 표시되지 않아야 한다.', async () => {
+  test('월별 뷰에 일정이 없으면, 일정이 표시되지 않아야 한다.', async () => {
     // Given: 해당 월에 일정이 없는 상태로 앱 시작
     vi.setSystemTime(new Date('2019-01-01'));
     setup(<App />);
@@ -135,7 +135,7 @@ describe('일정 뷰', () => {
     expect(eventList.getByText('검색 결과가 없습니다.')).toBeInTheDocument();
   });
 
-  it('월별 뷰에 일정이 정확히 표시되는지 확인한다', async () => {
+  test('월별 뷰에 일정이 정확히 표시되는지 확인한다', async () => {
     // Given: 특정 일정이 있는 상태
     setupMockHandlerCreation([
       {
@@ -160,7 +160,7 @@ describe('일정 뷰', () => {
     expect(monthView.getByText('황준일 고양이')).toBeInTheDocument();
   });
 
-  it('달력에 1월 1일(신정)이 공휴일로 표시되는지 확인한다', async () => {
+  test('달력에 1월 1일(신정)이 공휴일로 표시되는지 확인한다', async () => {
     // Given: 2025년 1월 1일 신정으로 시간을 설정하고 앱 시작
     vi.setSystemTime(new Date('2025-01-01'));
     setup(<App />);
@@ -208,7 +208,7 @@ describe('검색 기능', () => {
     server.resetHandlers();
   });
 
-  it('검색 결과가 없으면, "검색 결과가 없습니다."가 표시되어야 한다.', async () => {
+  test('검색 결과가 없으면, "검색 결과가 없습니다."가 표시되어야 한다.', async () => {
     // Given: 기존 일정들이 있는 앱
     const { user } = setup(<App />);
 
@@ -221,7 +221,7 @@ describe('검색 기능', () => {
     expect(eventList.getByText('검색 결과가 없습니다.')).toBeInTheDocument();
   });
 
-  it("'팀 회의'를 검색하면 해당 제목을 가진 일정이 리스트에 노출된다", async () => {
+  test("'팀 회의'를 검색하면 해당 제목을 가진 일정이 리스트에 노출된다", async () => {
     // Given: '팀 회의' 일정이 있는 앱
     const { user } = setup(<App />);
 
@@ -234,7 +234,7 @@ describe('검색 기능', () => {
     expect(eventList.getByText('팀 회의')).toBeInTheDocument();
   });
 
-  it('검색어를 지우면 모든 일정이 다시 표시되어야 한다', async () => {
+  test('검색어를 지우면 모든 일정이 다시 표시되어야 한다', async () => {
     // Given: 여러 일정이 있는 앱
     const { user } = setup(<App />);
 
@@ -251,7 +251,7 @@ describe('검색 기능', () => {
 });
 
 describe('일정 충돌', () => {
-  it('겹치는 시간에 새 일정을 추가할 때 경고가 표시된다', async () => {
+  test('겹치는 시간에 새 일정을 추가할 때 경고가 표시된다', async () => {
     // Given: 기존 일정이 있는 앱
     const { user } = setup(<App />);
     const titleInput = screen.getByLabelText('제목');
@@ -272,7 +272,7 @@ describe('일정 충돌', () => {
     expect(screen.getByText('기존 회의 (2025-10-15 09:00-10:00)')).toBeInTheDocument();
   });
 
-  it('기존 일정의 시간을 수정하여 충돌이 발생하면 경고가 노출된다', async () => {
+  test('기존 일정의 시간을 수정하여 충돌이 발생하면 경고가 노출된다', async () => {
     // Given: 수정 가능한 기존 일정들이 있는 상태
     setupMockHandlerUpdating();
     const { user } = setup(<App />);

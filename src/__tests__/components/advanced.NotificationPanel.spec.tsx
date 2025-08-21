@@ -18,7 +18,7 @@ describe('NotificationPanel', () => {
   });
 
   describe('조건부 렌더링', () => {
-    it('알림이 없으면 아무것도 표시하지 않아야 한다', () => {
+    test('알림이 없으면 아무것도 표시하지 않아야 한다', () => {
       // Given & When: 빈 알림 배열로 렌더링하면
       const { container } = render(
         <NotificationPanel notifications={[]} onRemoveNotification={mockOnRemoveNotification} />
@@ -28,7 +28,7 @@ describe('NotificationPanel', () => {
       expect(container.firstChild).toBeNull();
     });
 
-    it('알림이 있으면 모든 알림 메시지가 표시되어야 한다', () => {
+    test('알림이 있으면 모든 알림 메시지가 표시되어야 한다', () => {
       // Given & When: 여러 알림과 함께 렌더링하면
       render(
         <NotificationPanel
@@ -45,7 +45,7 @@ describe('NotificationPanel', () => {
   });
 
   describe('알림 제거 기능', () => {
-    it('X 버튼 클릭 시 해당 알림의 인덱스로 onRemoveNotification이 호출되어야 한다', async () => {
+    test('X 버튼 클릭 시 해당 알림의 인덱스로 onRemoveNotification이 호출되어야 한다', async () => {
       // Given: 여러 알림이 있는 상태로 렌더링
       const user = userEvent.setup();
       render(
@@ -64,7 +64,7 @@ describe('NotificationPanel', () => {
       expect(mockOnRemoveNotification).toHaveBeenCalledTimes(1);
     });
 
-    it('다른 알림의 X 버튼 클릭 시 올바른 인덱스로 호출되어야 한다', async () => {
+    test('다른 알림의 X 버튼 클릭 시 올바른 인덱스로 호출되어야 한다', async () => {
       // Given: 여러 알림이 있는 상태로 렌더링
       const user = userEvent.setup();
       render(

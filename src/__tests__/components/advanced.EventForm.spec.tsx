@@ -44,7 +44,7 @@ describe('EventForm', () => {
   });
 
   describe('모드별 제목과 버튼 표시', () => {
-    it('추가 모드일 때 "일정 추가" 제목과 버튼이 표시되어야 한다', () => {
+    test('추가 모드일 때 "일정 추가" 제목과 버튼이 표시되어야 한다', () => {
       // Given & When: 추가 모드로 렌더링하면
       render(<EventForm {...mockProps} />);
 
@@ -53,7 +53,7 @@ describe('EventForm', () => {
       expect(screen.getByRole('button', { name: '일정 추가' })).toBeInTheDocument();
     });
 
-    it('편집 모드일 때 "일정 수정" 제목과 버튼이 표시되어야 한다', () => {
+    test('편집 모드일 때 "일정 수정" 제목과 버튼이 표시되어야 한다', () => {
       // Given & When: 편집 모드로 렌더링하면
       render(<EventForm {...mockProps} editingEvent={mockEditingEvent} />);
 
@@ -64,7 +64,7 @@ describe('EventForm', () => {
   });
 
   describe('폼 필드 값 표시', () => {
-    it('전달받은 props 값이 폼 필드에 표시되어야 한다', () => {
+    test('전달받은 props 값이 폼 필드에 표시되어야 한다', () => {
       // Given & When: 값이 있는 props로 렌더링하면
       render(
         <EventForm
@@ -85,7 +85,7 @@ describe('EventForm', () => {
   });
 
   describe.skip('사용자 입력 처리', () => {
-    it('제목 입력 시 setTitle이 호출되어야 한다', async () => {
+    test('제목 입력 시 setTitle이 호출되어야 한다', async () => {
       // Given: EventForm이 렌더링된 상태
       const user = userEvent.setup();
       render(<EventForm {...mockProps} />);
@@ -100,7 +100,7 @@ describe('EventForm', () => {
       expect(mockProps.setTitle).toHaveBeenCalledWith('목');
     });
 
-    it('카테고리 선택 시 setCategory가 호출되어야 한다', async () => {
+    test('카테고리 선택 시 setCategory가 호출되어야 한다', async () => {
       // Given: EventForm이 렌더링된 상태
       const user = userEvent.setup();
       render(<EventForm {...mockProps} />);
@@ -115,7 +115,7 @@ describe('EventForm', () => {
       expect(mockProps.setCategory).toHaveBeenCalledWith('개인');
     });
 
-    it('반복 일정 체크박스 클릭 시 setIsRepeating이 호출되어야 한다', async () => {
+    test('반복 일정 체크박스 클릭 시 setIsRepeating이 호출되어야 한다', async () => {
       // Given: EventForm이 렌더링된 상태
       const user = userEvent.setup();
       render(<EventForm {...mockProps} />);
@@ -130,7 +130,7 @@ describe('EventForm', () => {
   });
 
   describe.skip('시간 필드 처리', () => {
-    it('시작 시간 입력 시 handleStartTimeChange가 호출되어야 한다', async () => {
+    test('시작 시간 입력 시 handleStartTimeChange가 호출되어야 한다', async () => {
       // Given: EventForm이 렌더링된 상태
       const user = userEvent.setup();
       render(<EventForm {...mockProps} />);
@@ -143,7 +143,7 @@ describe('EventForm', () => {
       expect(mockProps.handleStartTimeChange).toHaveBeenCalled();
     });
 
-    it('종료 시간 입력 시 handleEndTimeChange가 호출되어야 한다', async () => {
+    test('종료 시간 입력 시 handleEndTimeChange가 호출되어야 한다', async () => {
       // Given: EventForm이 렌더링된 상태
       const user = userEvent.setup();
       render(<EventForm {...mockProps} />);
@@ -158,7 +158,7 @@ describe('EventForm', () => {
   });
 
   describe('시간 에러 표시', () => {
-    it('시간 에러가 있을 때 에러 상태가 표시되어야 한다', () => {
+    test('시간 에러가 있을 때 에러 상태가 표시되어야 한다', () => {
       // Given & When: 시간 에러가 있는 상태로 렌더링하면
       render(
         <EventForm
@@ -177,7 +177,7 @@ describe('EventForm', () => {
     });
 
     describe.skip('폼 제출', () => {
-      it('제출 버튼 클릭 시 onSubmit이 호출되어야 한다', async () => {
+      test('제출 버튼 클릭 시 onSubmit이 호출되어야 한다', async () => {
         // Given: EventForm이 렌더링된 상태
         const user = userEvent.setup();
         render(<EventForm {...mockProps} />);

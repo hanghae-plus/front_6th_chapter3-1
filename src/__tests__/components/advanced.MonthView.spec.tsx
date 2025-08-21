@@ -17,7 +17,7 @@ describe('MonthView', () => {
   const currentDate = new Date('2025-08-17');
 
   describe('월간 캘린더 기본 구조', () => {
-    it('사용자에게 현재 월 정보가 표시되어야 한다', () => {
+    test('사용자에게 현재 월 정보가 표시되어야 한다', () => {
       // Given & When: 2025년 8월로 MonthView를 렌더링하면
       render(
         <MonthView
@@ -38,7 +38,7 @@ describe('MonthView', () => {
       });
     });
 
-    it('월간 캘린더의 모든 날짜가 표시되어야 한다', () => {
+    test('월간 캘린더의 모든 날짜가 표시되어야 한다', () => {
       // Given & When: MonthView를 렌더링하면
       render(
         <MonthView
@@ -59,7 +59,7 @@ describe('MonthView', () => {
   });
 
   describe('이벤트 날짜별 표시', () => {
-    it('각 날짜에 해당하는 이벤트가 올바르게 표시되어야 한다', () => {
+    test('각 날짜에 해당하는 이벤트가 올바르게 표시되어야 한다', () => {
       // Given & When: 8월 17일과 24일에 이벤트가 있는 상태로 렌더링하면
       render(
         <MonthView
@@ -76,7 +76,7 @@ describe('MonthView', () => {
       expect(screen.getByText('코테풀기')).toBeInTheDocument();
     });
 
-    it('같은 날짜에 여러 이벤트가 있으면 모두 표시되어야 한다', () => {
+    test('같은 날짜에 여러 이벤트가 있으면 모두 표시되어야 한다', () => {
       // Given & When: 8월 17일에 두 개의 이벤트가 있는 상태로 렌더링하면
       render(
         <MonthView
@@ -97,7 +97,7 @@ describe('MonthView', () => {
   });
 
   describe('공휴일 표시 기능', () => {
-    it('공휴일이 해당 날짜에 표시되어야 한다', () => {
+    test('공휴일이 해당 날짜에 표시되어야 한다', () => {
       // Given & When: 공휴일 정보와 함께 렌더링하면
       render(
         <MonthView
@@ -113,7 +113,7 @@ describe('MonthView', () => {
       expect(screen.getByText('임시공휴일')).toBeInTheDocument();
     });
 
-    it('공휴일과 이벤트가 같은 날에 있으면 둘 다 표시되어야 한다', () => {
+    test('공휴일과 이벤트가 같은 날에 있으면 둘 다 표시되어야 한다', () => {
       // Given: 공휴일과 이벤트가 겹치는 상황
       const eventsWithHoliday: Event[] = [
         ...mockEvents,
@@ -147,7 +147,7 @@ describe('MonthView', () => {
       expect(screen.getByText('회의')).toBeInTheDocument();
     });
 
-    it('공휴일 정보가 없으면 공휴일이 표시되지 않아야 한다', () => {
+    test('공휴일 정보가 없으면 공휴일이 표시되지 않아야 한다', () => {
       // Given & When: 공휴일 정보 없이 렌더링하면
       render(
         <MonthView
@@ -165,7 +165,7 @@ describe('MonthView', () => {
   });
 
   describe('이벤트 필터링', () => {
-    it('필터링된 이벤트만 표시되어야 한다', () => {
+    test('필터링된 이벤트만 표시되어야 한다', () => {
       // Given: 일부 이벤트만 필터된 상태
       const filteredEvents = [mockEvents[0], mockEvents[2]]; // 면접공부, 코테풀기만
 
@@ -185,7 +185,7 @@ describe('MonthView', () => {
       expect(screen.queryByText('회의')).not.toBeInTheDocument();
     });
 
-    it('이벤트가 없는 월이면 빈 캘린더가 표시되어야 한다', () => {
+    test('이벤트가 없는 월이면 빈 캘린더가 표시되어야 한다', () => {
       // Given & When: 이벤트가 없는 상태로 렌더링하면
       render(
         <MonthView
@@ -209,7 +209,7 @@ describe('MonthView', () => {
   });
 
   describe('월간 네비게이션', () => {
-    it('다른 월로 이동했을 때 해당 월의 제목과 구조가 표시되어야 한다', () => {
+    test('다른 월로 이동했을 때 해당 월의 제목과 구조가 표시되어야 한다', () => {
       // Given: 다른 월의 날짜
       const septemberDate = new Date('2025-09-15');
 

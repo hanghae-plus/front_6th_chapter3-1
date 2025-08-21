@@ -7,7 +7,7 @@ import { Event } from '../../types';
 const mockEvent = events[0] as Event;
 
 describe('초기 상태 설정', () => {
-  it('initialEvent가 없으면 기본값으로 초기화되어야 한다', () => {
+  test('initialEvent가 없으면 기본값으로 초기화되어야 한다', () => {
     // Given & When: initialEvent 없이 훅을 초기화하면
     const { result } = renderHook(() => useFormState());
 
@@ -19,7 +19,7 @@ describe('초기 상태 설정', () => {
     expect(result.current.formState.notificationTime).toBe(10);
   });
 
-  it('initialEvent가 있으면 해당 값으로 초기화되어야 한다', () => {
+  test('initialEvent가 있으면 해당 값으로 초기화되어야 한다', () => {
     // Given & When: initialEvent와 함께 훅을 초기화하면
     const { result } = renderHook(() => useFormState(mockEvent));
 
@@ -33,7 +33,7 @@ describe('초기 상태 설정', () => {
 });
 
 describe('필드 업데이트', () => {
-  it('updateField 호출 시 해당 필드만 업데이트되어야 한다', () => {
+  test('updateField 호출 시 해당 필드만 업데이트되어야 한다', () => {
     // Given: 초기화된 훅이 있고
     const { result } = renderHook(() => useFormState());
 
@@ -49,7 +49,7 @@ describe('필드 업데이트', () => {
 });
 
 describe('폼 리셋', () => {
-  it('initialEvent 없이 resetForm 호출 시 기본값으로 리셋되어야 한다', () => {
+  test('initialEvent 없이 resetForm 호출 시 기본값으로 리셋되어야 한다', () => {
     // Given: 필드가 수정된 상태의 훅이 있고
     const { result } = renderHook(() => useFormState());
 
@@ -68,7 +68,7 @@ describe('폼 리셋', () => {
     expect(result.current.formState.category).toBe('업무');
   });
 
-  it('initialEvent가 있을 때 resetForm 호출 시 initialEvent 값으로 리셋되어야 한다', () => {
+  test('initialEvent가 있을 때 resetForm 호출 시 initialEvent 값으로 리셋되어야 한다', () => {
     // Given: initialEvent가 있고 필드가 수정된 상태의 훅이 있고
     const { result } = renderHook(() => useFormState(mockEvent));
 
@@ -89,7 +89,7 @@ describe('폼 리셋', () => {
 });
 
 describe('이벤트 로드', () => {
-  it('loadEvent 호출 시 새로운 이벤트 데이터로 폼 상태가 변경되어야 한다', () => {
+  test('loadEvent 호출 시 새로운 이벤트 데이터로 폼 상태가 변경되어야 한다', () => {
     // Given: 초기화된 훅이 있고
     const { result } = renderHook(() => useFormState());
 

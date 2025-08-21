@@ -18,7 +18,7 @@ describe('EventList', () => {
   });
 
   describe('검색 기능', () => {
-    it('검색어 입력 시 setSearchTerm이 호출되어야 한다', async () => {
+    test('검색어 입력 시 setSearchTerm이 호출되어야 한다', async () => {
       // Given: EventList가 렌더링된 상태
       const user = userEvent.setup();
       render(
@@ -41,7 +41,7 @@ describe('EventList', () => {
       expect(mockSetSearchTerm).toHaveBeenCalledWith('의');
     });
 
-    it('현재 검색어가 입력 필드에 표시되어야 한다', () => {
+    test('현재 검색어가 입력 필드에 표시되어야 한다', () => {
       // Given & When: 검색어가 있는 상태로 렌더링하면
       render(
         <EventList
@@ -60,7 +60,7 @@ describe('EventList', () => {
   });
 
   describe('이벤트 목록 표시', () => {
-    it('이벤트가 있을 때 모든 이벤트가 표시되어야 한다', () => {
+    test('이벤트가 있을 때 모든 이벤트가 표시되어야 한다', () => {
       // Given & When: 이벤트 목록과 함께 렌더링하면
       render(
         <EventList
@@ -79,7 +79,7 @@ describe('EventList', () => {
       expect(screen.getByText('코테풀기')).toBeInTheDocument();
     });
 
-    it('이벤트가 없을 때 "검색 결과가 없습니다" 메시지가 표시되어야 한다', () => {
+    test('이벤트가 없을 때 "검색 결과가 없습니다" 메시지가 표시되어야 한다', () => {
       // Given & When: 빈 이벤트 배열로 렌더링하면
       render(
         <EventList
@@ -99,7 +99,7 @@ describe('EventList', () => {
   });
 
   describe('알림 상태 표시', () => {
-    it('알림된 이벤트에 알림 아이콘이 표시되어야 한다', () => {
+    test('알림된 이벤트에 알림 아이콘이 표시되어야 한다', () => {
       // Given & When: 일부 이벤트가 알림된 상태로 렌더링하면
       render(
         <EventList
@@ -119,7 +119,7 @@ describe('EventList', () => {
   });
 
   describe('이벤트 액션', () => {
-    it('편집 버튼 클릭 시 onEditEvent가 호출되어야 한다', async () => {
+    test('편집 버튼 클릭 시 onEditEvent가 호출되어야 한다', async () => {
       // Given: EventList가 렌더링된 상태
       const user = userEvent.setup();
       render(
@@ -142,7 +142,7 @@ describe('EventList', () => {
       expect(mockOnEditEvent).toHaveBeenCalledTimes(1);
     });
 
-    it('삭제 버튼 클릭 시 onDeleteEvent가 호출되어야 한다', async () => {
+    test('삭제 버튼 클릭 시 onDeleteEvent가 호출되어야 한다', async () => {
       // Given: EventList가 렌더링된 상태
       const user = userEvent.setup();
       render(

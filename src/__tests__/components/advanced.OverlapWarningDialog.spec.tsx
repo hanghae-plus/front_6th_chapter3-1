@@ -40,7 +40,7 @@ describe('OverlapWarningDialog', () => {
   });
 
   describe('기본 표시 기능', () => {
-    it('열린 상태일 때 경고 메시지와 겹치는 이벤트 정보가 표시되어야 한다', () => {
+    test('열린 상태일 때 경고 메시지와 겹치는 이벤트 정보가 표시되어야 한다', () => {
       // Given & When: 다이얼로그가 열린 상태로 렌더링하면
       render(
         <OverlapWarningDialog
@@ -58,7 +58,7 @@ describe('OverlapWarningDialog', () => {
       expect(screen.getByText('고객 미팅 (2025-08-17 10:30-12:00)')).toBeInTheDocument();
     });
 
-    it('닫힌 상태일 때는 화면에 표시되지 않아야 한다', () => {
+    test('닫힌 상태일 때는 화면에 표시되지 않아야 한다', () => {
       // Given & When: 다이얼로그가 닫힌 상태로 렌더링하면
       render(
         <OverlapWarningDialog
@@ -75,7 +75,7 @@ describe('OverlapWarningDialog', () => {
   });
 
   describe('사용자 액션 처리', () => {
-    it('취소 버튼 클릭 시 onClose가 호출되어야 한다', () => {
+    test('취소 버튼 클릭 시 onClose가 호출되어야 한다', () => {
       // Given: 다이얼로그가 열린 상태
       render(
         <OverlapWarningDialog
@@ -94,7 +94,7 @@ describe('OverlapWarningDialog', () => {
       expect(mockOnConfirm).not.toHaveBeenCalled();
     });
 
-    it('계속 진행 버튼 클릭 시 onConfirm이 호출되어야 한다', () => {
+    test('계속 진행 버튼 클릭 시 onConfirm이 호출되어야 한다', () => {
       // Given: 다이얼로그가 열린 상태
       render(
         <OverlapWarningDialog
