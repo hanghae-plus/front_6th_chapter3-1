@@ -16,8 +16,8 @@ import { Event } from '../types';
 interface WeekViewProps {
   weekDays: string[];
   currentDate: Date;
-  formatWeek: (d: Date) => string;
-  getWeekDates: (d: Date) => Date[];
+  formatWeek: (unusedDate: Date) => string;
+  getWeekDates: (unusedDate: Date) => Date[];
   events: Event[];
   notifiedEvents: string[];
 }

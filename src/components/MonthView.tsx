@@ -16,10 +16,10 @@ import { Event } from '../types';
 interface MonthViewProps {
   weekDays: string[];
   currentDate: Date;
-  formatMonth: (d: Date) => string;
-  getWeeksAtMonth: (d: Date) => Array<Array<number | null>>;
+  formatMonth: (unusedDate: Date) => string;
+  getWeeksAtMonth: (unusedDate: Date) => Array<Array<number | null>>;
   getEventsForDay: (events: Event[], day: number) => Event[];
-  formatDate: (d: Date, day?: number) => string;
+  formatDate: (unusedDate: Date, unusedDay?: number) => string;
   holidays: Record<string, string>;
   events: Event[];
   notifiedEvents: string[];

@@ -7,8 +7,8 @@ interface EventCardProps {
   event: Event;
   notified: boolean;
   notificationLabel: string | undefined;
-  onEdit: (event: Event) => void;
-  onDelete: (id: string) => void;
+  onEdit: (_event: Event) => void;
+  onDelete: (_id: string) => void;
 }
 
 export function EventCard({
