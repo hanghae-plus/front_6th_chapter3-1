@@ -1,4 +1,3 @@
-import { ChangeEvent } from 'react';
 import {
   Button,
   Checkbox,
@@ -12,6 +11,7 @@ import {
   Tooltip,
   Typography,
 } from '@mui/material';
+import { ChangeEvent } from 'react';
 
 import { Event } from '../types';
 import { getTimeErrorMessage } from '../utils/timeValidation';
