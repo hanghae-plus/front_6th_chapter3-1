@@ -4,30 +4,21 @@ import {
   AlertTitle,
   Box,
   Button,
-  Checkbox,
   Dialog,
   DialogActions,
   DialogContent,
   DialogContentText,
   DialogTitle,
-  FormControl,
-  FormControlLabel,
-  FormLabel,
   IconButton,
-  MenuItem,
-  Select,
   Stack,
-  TextField,
-  Tooltip,
   Typography,
 } from '@mui/material';
 import { useSnackbar } from 'notistack';
 import { useState } from 'react';
 
-import CalendarToolbar from './components/CalendarToolbar';
-import EventCard from './components/EventCard';
-import MonthView from './components/MonthView';
-import WeekView from './components/WeekView';
+import CalendarViewPanel from './components/CalendarViewPanel';
+import EventFormPanel from './components/EventFormPanel';
+import EventListPanel from './components/EventListPanel';
 import { useCalendarView } from './hooks/useCalendarView.ts';
 import { useEventForm } from './hooks/useEventForm.ts';
 import { useEventOperations } from './hooks/useEventOperations.ts';
@@ -44,9 +35,7 @@ import {
   getWeeksAtMonth,
 } from './utils/dateUtils';
 import { findOverlappingEvents } from './utils/eventOverlap';
-import { getTimeErrorMessage } from './utils/timeValidation';
-
-const categories = ['업무', '개인', '가족', '기타'];
+// keep getTimeErrorMessage only used inside form panel
 
 const weekDays = ['일', '월', '화', '수', '목', '금', '토'];
 
@@ -148,205 +137,58 @@ function App() {
   return (
     <Box sx={{ width: '100%', height: '100vh', margin: 'auto', p: 5 }}>
       <Stack direction="row" spacing={6} sx={{ height: '100%' }}>
-        <Stack spacing={2} sx={{ width: '20%' }}>
-          <Typography variant="h4">{editingEvent ? '일정 수정' : '일정 추가'}</Typography>
+        <EventFormPanel
+          editingEvent={editingEvent}
+          title={title}
+          setTitle={setTitle}
+          date={date}
+          setDate={setDate}
+          startTime={startTime}
+          endTime={endTime}
+          handleStartTimeChange={handleStartTimeChange}
+          handleEndTimeChange={handleEndTimeChange}
+          startTimeError={startTimeError}
+          endTimeError={endTimeError}
+          description={description}
+          setDescription={setDescription}
+          location={location}
+          setLocation={setLocation}
+          category={category}
+          setCategory={setCategory}
+          isRepeating={isRepeating}
+          setIsRepeating={setIsRepeating}
+          notificationTime={notificationTime}
+          setNotificationTime={setNotificationTime}
+          onSubmit={addOrUpdateEvent}
+        />
 
-          <FormControl fullWidth>
-            <FormLabel htmlFor="title">제목</FormLabel>
-            <TextField
-              id="title"
-              size="small"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-            />
-          </FormControl>
+        <CalendarViewPanel
+          view={view}
+          onChangeView={(v) => setView(v)}
+          onPrev={() => navigate('prev')}
+          onNext={() => navigate('next')}
+          weekDays={weekDays}
+          currentDate={currentDate}
+          formatWeek={formatWeek}
+          getWeekDates={getWeekDates}
+          formatMonth={formatMonth}
+          getWeeksAtMonth={getWeeksAtMonth}
+          getEventsForDay={getEventsForDay}
+          formatDate={formatDate}
+          holidays={holidays}
+          events={filteredEvents}
+          notifiedEvents={notifiedEvents}
+        />
 
-          <FormControl fullWidth>
-            <FormLabel htmlFor="date">날짜</FormLabel>
-            <TextField
-              id="date"
-              size="small"
-              type="date"
-              value={date}
-              onChange={(e) => setDate(e.target.value)}
-            />
-          </FormControl>
-
-          <Stack direction="row" spacing={2}>
-            <FormControl fullWidth>
-              <FormLabel htmlFor="start-time">시작 시간</FormLabel>
-              <Tooltip title={startTimeError || ''} open={!!startTimeError} placement="top">
-                <TextField
-                  id="start-time"
-                  size="small"
-                  type="time"
-                  value={startTime}
-                  onChange={handleStartTimeChange}
-                  onBlur={() => getTimeErrorMessage(startTime, endTime)}
-                  error={!!startTimeError}
-                />
-              </Tooltip>
-            </FormControl>
-            <FormControl fullWidth>
-              <FormLabel htmlFor="end-time">종료 시간</FormLabel>
-              <Tooltip title={endTimeError || ''} open={!!endTimeError} placement="top">
-                <TextField
-                  id="end-time"
-                  size="small"
-                  type="time"
-                  value={endTime}
-                  onChange={handleEndTimeChange}
-                  onBlur={() => getTimeErrorMessage(startTime, endTime)}
-                  error={!!endTimeError}
-                />
-              </Tooltip>
-            </FormControl>
-          </Stack>
-
-          <FormControl fullWidth>
-            <FormLabel htmlFor="description">설명</FormLabel>
-            <TextField
-              id="description"
-              size="small"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-            />
-          </FormControl>
-
-          <FormControl fullWidth>
-            <FormLabel htmlFor="location">위치</FormLabel>
-            <TextField
-              id="location"
-              size="small"
-              value={location}
-              onChange={(e) => setLocation(e.target.value)}
-            />
-          </FormControl>
-
-          <FormControl fullWidth>
-            <FormLabel id="category-label">카테고리</FormLabel>
-            <Select
-              id="category"
-              size="small"
-              value={category}
-              onChange={(e) => setCategory(e.target.value)}
-              aria-labelledby="category-label"
-              aria-label="카테고리"
-            >
-              {categories.map((cat) => (
-                <MenuItem key={cat} value={cat} aria-label={`${cat}-option`}>
-                  {cat}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-
-          <FormControl>
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={isRepeating}
-                  onChange={(e) => setIsRepeating(e.target.checked)}
-                />
-              }
-              label="반복 일정"
-            />
-          </FormControl>
-
-          <FormControl fullWidth>
-            <FormLabel htmlFor="notification">알림 설정</FormLabel>
-            <Select
-              id="notification"
-              size="small"
-              value={notificationTime}
-              onChange={(e) => setNotificationTime(Number(e.target.value))}
-            >
-              {notificationOptions.map((option) => (
-                <MenuItem key={option.value} value={option.value}>
-                  {option.label}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-          <Button
-            data-testid="event-submit-button"
-            onClick={addOrUpdateEvent}
-            variant="contained"
-            color="primary"
-          >
-            {editingEvent ? '일정 수정' : '일정 추가'}
-          </Button>
-        </Stack>
-
-        <Stack flex={1} spacing={5}>
-          <Typography variant="h4">일정 보기</Typography>
-
-          <CalendarToolbar
-            view={view}
-            onChangeView={(v) => setView(v)}
-            onPrev={() => navigate('prev')}
-            onNext={() => navigate('next')}
-          />
-
-          {view === 'week' && (
-            <WeekView
-              weekDays={weekDays}
-              currentDate={currentDate}
-              formatWeek={formatWeek}
-              getWeekDates={getWeekDates}
-              events={filteredEvents}
-              notifiedEvents={notifiedEvents}
-            />
-          )}
-          {view === 'month' && (
-            <MonthView
-              weekDays={weekDays}
-              currentDate={currentDate}
-              formatMonth={formatMonth}
-              getWeeksAtMonth={getWeeksAtMonth}
-              getEventsForDay={getEventsForDay}
-              formatDate={formatDate}
-              holidays={holidays}
-              events={filteredEvents}
-              notifiedEvents={notifiedEvents}
-            />
-          )}
-        </Stack>
-
-        <Stack
-          data-testid="event-list"
-          spacing={2}
-          sx={{ width: '30%', height: '100%', overflowY: 'auto' }}
-        >
-          <FormControl fullWidth>
-            <FormLabel htmlFor="search">일정 검색</FormLabel>
-            <TextField
-              id="search"
-              size="small"
-              placeholder="검색어를 입력하세요"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-          </FormControl>
-
-          {filteredEvents.length === 0 ? (
-            <Typography>검색 결과가 없습니다.</Typography>
-          ) : (
-            filteredEvents.map((event) => (
-              <EventCard
-                key={event.id}
-                event={event}
-                notified={notifiedEvents.includes(event.id)}
-                notificationLabel={
-                  notificationOptions.find((option) => option.value === event.notificationTime)
-                    ?.label
-                }
-                onEdit={editEvent}
-                onDelete={deleteEvent}
-              />
-            ))
-          )}
-        </Stack>
+        <EventListPanel
+          searchTerm={searchTerm}
+          setSearchTerm={setSearchTerm}
+          events={filteredEvents}
+          notifiedEvents={notifiedEvents}
+          notificationLabelFor={(m) => notificationOptions.find((o) => o.value === m)?.label}
+          onEdit={editEvent}
+          onDelete={deleteEvent}
+        />
       </Stack>
 
       <Dialog open={isOverlapDialogOpen} onClose={() => setIsOverlapDialogOpen(false)}>
