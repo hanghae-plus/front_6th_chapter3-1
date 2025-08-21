@@ -177,7 +177,7 @@ describe('일정 뷰', () => {
       {
         id: '1',
         title: '주간 회의',
-        date: '2025-10-06', // 10월 2주
+        date: '2025-10-02',
         startTime: '09:00',
         endTime: '10:00',
         description: '팀 주간 회의',
