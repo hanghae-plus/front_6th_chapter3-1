@@ -1,13 +1,13 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import { Event } from '../types';
 import { createNotificationMessage, getUpcomingEvents } from '../utils/notificationUtils';
 
-export const useNotifications = (events: Event[]) => {
+export const useNotifications = (events: Readonly<Event[]>) => {
   const [notifications, setNotifications] = useState<{ id: string; message: string }[]>([]);
   const [notifiedEvents, setNotifiedEvents] = useState<string[]>([]);
 
-  const checkUpcomingEvents = () => {
+  const checkUpcomingEvents = useCallback(() => {
     const now = new Date();
     const upcomingEvents = getUpcomingEvents(events, now, notifiedEvents);
 
@@ -20,7 +20,7 @@ export const useNotifications = (events: Event[]) => {
     ]);
 
     setNotifiedEvents((prev) => [...prev, ...upcomingEvents.map(({ id }) => id)]);
-  };
+  }, [events, notifiedEvents]);
 
   const removeNotification = (index: number) => {
     setNotifications((prev) => prev.filter((_, i) => i !== index));
@@ -29,7 +29,7 @@ export const useNotifications = (events: Event[]) => {
   useEffect(() => {
     const interval = setInterval(checkUpcomingEvents, 1000); // 1초마다 체크
     return () => clearInterval(interval);
-  }, [events, notifiedEvents]);
+  }, [checkUpcomingEvents, events, notifiedEvents]);
 
   return { notifications, notifiedEvents, setNotifications, removeNotification };
 };

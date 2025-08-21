@@ -1,14 +1,10 @@
-import { act, renderHook } from '@testing-library/react';
+import { act, renderHook, waitFor } from '@testing-library/react';
 import { http, HttpResponse } from 'msw';
 
-import {
-  setupMockHandlerCreation,
-  setupMockHandlerDeletion,
-  setupMockHandlerUpdating,
-} from '../../__mocks__/handlersUtils.ts';
+import { createTestEvent } from '../../__mocks__/handlersUtils.ts';
+import { events } from '../../__mocks__/response/events.json' with { type: 'json' };
 import { useEventOperations } from '../../hooks/useEventOperations.ts';
 import { server } from '../../setupTests.ts';
-import { Event } from '../../types.ts';
 
 const enqueueSnackbarFn = vi.fn();
 
@@ -22,16 +18,203 @@ vi.mock('notistack', async () => {
   };
 });
 
-it('저장되어있는 초기 이벤트 데이터를 적절하게 불러온다', async () => {});
+beforeEach(() => {
+  enqueueSnackbarFn.mockClear();
+});
 
-it('정의된 이벤트 정보를 기준으로 적절하게 저장이 된다', async () => {});
+describe('초기 데이터 로딩', () => {
+  it('훅 초기화 시 서버에서 이벤트 목록을 불러와 state에 저장한다', async () => {
+    // Given: 서버에 이벤트 데이터가 존재하는 상황
+    const isEditing = false;
 
-it("새로 정의된 'title', 'endTime' 기준으로 적절하게 일정이 업데이트 된다", async () => {});
+    // When: useEventOperations 훅을 초기화할 때
+    const { result } = renderHook(() => useEventOperations(isEditing));
 
-it('존재하는 이벤트 삭제 시 에러없이 아이템이 삭제된다.', async () => {});
+    // Then: 서버의 이벤트 데이터가 올바르게 로드되어야 함
+    await waitFor(() => {
+      expect(result.current.events).toEqual(events);
+    });
+  });
+});
 
-it("이벤트 로딩 실패 시 '이벤트 로딩 실패'라는 텍스트와 함께 에러 토스트가 표시되어야 한다", async () => {});
+describe('새 이벤트 생성', () => {
+  it('새 이벤트 정보를 전달하면 서버에 저장하고 목록을 업데이트한다', async () => {
+    // Given: 새 이벤트 생성 모드와 저장 콜백
+    const isEditing = false;
+    const onSaveCallback = vi.fn();
+    const { result } = renderHook(() => useEventOperations(isEditing, onSaveCallback));
 
-it("존재하지 않는 이벤트 수정 시 '일정 저장 실패'라는 토스트가 노출되며 에러 처리가 되어야 한다", async () => {});
+    const newEventData = createTestEvent({
+      title: '새로운 미팅',
+      date: '2025-08-18',
+      startTime: '10:00',
+      endTime: '12:00',
+      description: '중요한 회의',
+      location: '본사 3층 회의실',
+      category: '업무',
+      repeat: { type: 'none', interval: 0 },
+      notificationTime: 60,
+    });
 
-it("네트워크 오류 시 '일정 삭제 실패'라는 텍스트가 노출되며 이벤트 삭제가 실패해야 한다", async () => {});
+    // When: 새 이벤트를 저장할 때
+    await act(async () => {
+      await result.current.saveEvent(newEventData);
+    });
+
+    // Then: 성공 알림이 표시되고 콜백이 호출되며 이벤트 목록에 추가되어야 함
+    expect(enqueueSnackbarFn).toHaveBeenCalledWith('일정이 추가되었습니다.', {
+      variant: 'success',
+    });
+    expect(onSaveCallback).toHaveBeenCalledOnce();
+
+    const createdEvent = result.current.events.find((event) => event.title === newEventData.title);
+    expect(createdEvent).toEqual(
+      expect.objectContaining({
+        title: '새로운 미팅',
+        date: '2025-08-18',
+        startTime: '10:00',
+        endTime: '12:00',
+        description: '중요한 회의',
+        location: '본사 3층 회의실',
+        category: '업무',
+      })
+    );
+  });
+});
+
+describe('기존 이벤트 수정', () => {
+  it('기존 이벤트 ID와 함께 수정된 정보를 전달하면 서버에서 업데이트한다', async () => {
+    // Given: 이벤트 수정 모드와 기존 이벤트 ID
+    const isEditing = true;
+    const onSaveCallback = vi.fn();
+    const { result } = renderHook(() => useEventOperations(isEditing, onSaveCallback));
+
+    const updatedEventData = createTestEvent({
+      id: '1',
+      title: '수정된 팀 회의',
+      date: '2025-08-18',
+      startTime: '10:00',
+      endTime: '12:00',
+      description: '수정된 회의 내용',
+      location: '새로운 회의실',
+      category: '업무',
+      repeat: { type: 'none', interval: 0 },
+      notificationTime: 60,
+    });
+
+    // When: 기존 이벤트를 수정할 때
+    await act(async () => {
+      await result.current.saveEvent(updatedEventData);
+    });
+
+    // Then: 수정 성공 알림이 표시되고 콜백이 호출되어야 함
+    expect(enqueueSnackbarFn).toHaveBeenCalledWith('일정이 수정되었습니다.', {
+      variant: 'success',
+    });
+    expect(onSaveCallback).toHaveBeenCalledOnce();
+  });
+});
+
+describe('이벤트 삭제', () => {
+  it('기존 이벤트 ID를 전달하면 서버에서 삭제하고 목록을 업데이트한다', async () => {
+    // Given: 삭제할 이벤트가 존재하는 상황
+    const { result } = renderHook(() => useEventOperations(false));
+
+    // 초기 데이터 로딩 대기
+    await waitFor(() => {
+      expect(result.current.events.length).toBeGreaterThan(0);
+    });
+
+    const initialEventCount = result.current.events.length;
+    const targetEventId = '1';
+
+    // When: 이벤트를 삭제할 때
+    await act(async () => {
+      await result.current.deleteEvent(targetEventId);
+    });
+
+    // Then: 삭제 성공 알림이 표시되고 이벤트 목록에서 제거되어야 함
+    expect(enqueueSnackbarFn).toHaveBeenCalledWith('일정이 삭제되었습니다.', {
+      variant: 'info',
+    });
+
+    await waitFor(() => {
+      expect(result.current.events.length).toBe(initialEventCount - 1);
+      expect(result.current.events.find((event) => event.id === targetEventId)).toBeUndefined();
+    });
+  });
+});
+
+describe('에러 처리', () => {
+  it('이벤트 로딩 실패 시 에러 토스트를 표시한다', async () => {
+    // Given: 서버에서 이벤트 로딩이 실패하는 상황
+    server.use(
+      http.get('/api/events', () => {
+        return new HttpResponse(null, { status: 500 });
+      })
+    );
+
+    // When: 훅을 초기화할 때
+    renderHook(() => useEventOperations(false));
+
+    // Then: 에러 토스트가 표시되어야 함
+    await waitFor(() => {
+      expect(enqueueSnackbarFn).toHaveBeenCalledWith('이벤트 로딩 실패', {
+        variant: 'error',
+      });
+    });
+  });
+
+  it('이벤트 저장 실패 시 에러 토스트를 표시한다', async () => {
+    // Given: 서버에서 이벤트 저장이 실패하는 상황
+    server.use(
+      http.post('/api/events', () => {
+        return new HttpResponse(null, { status: 500 });
+      })
+    );
+
+    const { result } = renderHook(() => useEventOperations(false));
+    const newEvent = createTestEvent({
+      title: '테스트 이벤트',
+      date: '2025-08-18',
+      startTime: '10:00',
+      endTime: '12:00',
+      description: '테스트',
+      location: '테스트',
+      category: '테스트',
+      repeat: { type: 'none', interval: 0 },
+      notificationTime: 60,
+    });
+
+    // When: 이벤트 저장을 시도할 때
+    await act(async () => {
+      await result.current.saveEvent(newEvent);
+    });
+
+    // Then: 에러 토스트가 표시되어야 함
+    expect(enqueueSnackbarFn).toHaveBeenCalledWith('일정 저장 실패', {
+      variant: 'error',
+    });
+  });
+
+  it('이벤트 삭제 실패 시 에러 토스트를 표시한다', async () => {
+    // Given: 서버에서 이벤트 삭제가 실패하는 상황
+    server.use(
+      http.delete('/api/events/1', () => {
+        return new HttpResponse(null, { status: 500 });
+      })
+    );
+
+    const { result } = renderHook(() => useEventOperations(false));
+
+    // When: 이벤트 삭제를 시도할 때
+    await act(async () => {
+      await result.current.deleteEvent('1');
+    });
+
+    // Then: 에러 토스트가 표시되어야 함
+    expect(enqueueSnackbarFn).toHaveBeenCalledWith('일정 삭제 실패', {
+      variant: 'error',
+    });
+  });
+});
