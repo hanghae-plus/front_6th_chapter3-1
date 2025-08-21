@@ -10,7 +10,7 @@ describe('초기 상태', () => {
 
   it('currentDate는 입력된 당시의 날짜이어야 한다', () => {
     const { result } = renderHook(() => useCalendarView());
-    const todayDate = new Date(); // 2025-10-01
+    const todayDate = new Date();
 
     expect(result.current.currentDate.getFullYear()).toBe(todayDate.getFullYear());
     expect(result.current.currentDate.getMonth()).toBe(todayDate.getMonth());
@@ -19,7 +19,7 @@ describe('초기 상태', () => {
 
   it('holidays는 10월 휴일인 개천절, 한글날, 추석이 지정되어 있어야 한다', () => {
     const { result } = renderHook(() => useCalendarView());
-    const octoberDay = new Date(2025, 9, 1);
+    const octoberDay = new Date(2025, 9, 1); // 2025-10-01
 
     act(() => {
       result.current.setCurrentDate(octoberDay);

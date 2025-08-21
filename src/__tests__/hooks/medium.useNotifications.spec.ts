@@ -1,10 +1,7 @@
 import { act, renderHook, waitFor } from '@testing-library/react';
 
 import { useNotifications } from '../../hooks/useNotifications.ts';
-import { Event } from '../../types.ts';
-import { formatDate } from '../../utils/dateUtils.ts';
 import { makeEvent } from '../factories/eventFactory';
-import { parseHM } from '../utils.ts';
 
 beforeEach(() => {
   vi.useFakeTimers({ shouldAdvanceTime: true });
