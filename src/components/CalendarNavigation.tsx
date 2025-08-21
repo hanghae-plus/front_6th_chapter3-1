@@ -1,5 +1,6 @@
 import { ChevronLeft, ChevronRight } from '@mui/icons-material';
 import { IconButton, MenuItem, Select, Stack } from '@mui/material';
+
 import { CalendarViewType } from '../types';
 
 interface CalendarNavigationProps {
