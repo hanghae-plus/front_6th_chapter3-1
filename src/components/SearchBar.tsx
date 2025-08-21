@@ -1,6 +1,6 @@
 import { FormControl, FormLabel, TextField } from '@mui/material';
 
-interface SearchBarProps {
+export interface SearchBarProps {
   searchTerm: string;
   onSearchChange: (term: string) => void;
 }

@@ -6,7 +6,7 @@ import { Box, IconButton, Stack, Typography } from '@mui/material';
 import { Event } from '../types';
 import { formatRepeatInfo, getNotificationLabel } from '../utils/eventUtils';
 
-interface EventCardProps {
+export interface EventCardProps {
   event: Event;
   isNotified: boolean;
   onEdit: (event: Event) => void;

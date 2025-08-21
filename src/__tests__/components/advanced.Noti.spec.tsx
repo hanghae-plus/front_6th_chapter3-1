@@ -1,4 +1,5 @@
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { vi } from 'vitest';
 
 import { Noti } from '../../elements/Noti';
@@ -69,7 +70,7 @@ describe('Noti: 알림 컴포넌트', () => {
     expect(screen.getByText('세 번째 알림')).toBeInTheDocument();
   });
 
-  it('닫기 버튼을 클릭하면 해당 알림이 제거되어야 한다', () => {
+  it('닫기 버튼을 클릭하면 해당 알림이 제거되어야 한다', async () => {
     const mockNotifications = [
       { id: '1', message: '첫 번째 알림' },
       { id: '2', message: '두 번째 알림' },
@@ -82,11 +83,13 @@ describe('Noti: 알림 컴포넌트', () => {
       removeNotification: vi.fn(),
     });
 
+    const user = userEvent.setup();
+
     render(<Noti events={mockEvents} />);
 
     // 첫 번째 닫기 버튼 클릭
     const closeButtons = screen.getAllByRole('button');
-    fireEvent.click(closeButtons[0]);
+    await user.click(closeButtons[0]);
 
     // setNotifications가 호출되었는지 확인
     expect(mockSetNotifications).toHaveBeenCalledTimes(1);
