@@ -1,4 +1,3 @@
-import { Event } from '../../types';
 import { createNotificationMessage, getUpcomingEvents } from '../../utils/notificationUtils';
 import { METTING_0823 } from '../mockEvents';
 describe('getUpcomingEvents', () => {
