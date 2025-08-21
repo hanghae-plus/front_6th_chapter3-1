@@ -15,12 +15,16 @@ import { server } from '../setupTests';
 // 그런데 테스트를 하다 보면 다른 상황에서의 API 호출(fetch)이 필요하니
 // 그때 server.use로 handler.ts에 적혀 있는 msw를 덮어 씌우는 역할을 함
 // 특정 상황에서만 사용되니 export
+
+// 같은 변수값 상태 공유를 위해 상단에서 초기화
+let events: Event[] = [];
+
 export const setupMockHandlerCreation = (initEvents = [] as Event[]) => {
   // 이벤트 생성 -> 이벤트 배열이 우선적으로 필요하고, 거기에 id를 추가한 새 이벤트를 넣는다
   // handlers.ts에 있는 http.get, http.post와 비슷...?
   // initEvents가 필요한 이유: 테스트마다 다른 값들이 필요할 수 있어서..
 
-  const events = [...initEvents];
+  events = [...initEvents];
 
   server.use(
     http.get('/api/events', () => {
@@ -44,7 +48,7 @@ export const setupMockHandlerUpdating = () => {
   // update면 http.put과 비슷하게 해도 되지 않을까?
   // 그런데 왜 인자 request가 없을까.. -> 기본적인 목업 데이터를 만들어라?
 
-  const events = [
+  events = [
     {
       id: '1',
       title: '소희랑 밥 먹기',
@@ -53,7 +57,7 @@ export const setupMockHandlerUpdating = () => {
       endTime: '23:00',
       description: '수민지혜유진송이 초대하기',
       location: '강남역',
-      category: '약속',
+      category: '개인',
       repeat: { type: 'none', interval: 0 },
       notificationTime: 10,
     },
@@ -65,7 +69,7 @@ export const setupMockHandlerUpdating = () => {
       endTime: '23:00',
       description: '4팀 7팀 다 모여',
       location: '병준이네 집',
-      category: '약속',
+      category: '개인',
       repeat: { type: 'none', interval: 0 },
       notificationTime: 10,
     },
@@ -96,7 +100,7 @@ export const setupMockHandlerUpdating = () => {
 };
 
 export const setupMockHandlerDeletion = () => {
-  const events = [
+  events = [
     {
       id: '1',
       title: '소희랑 밥 먹기',
@@ -105,7 +109,7 @@ export const setupMockHandlerDeletion = () => {
       endTime: '23:00',
       description: '수민지혜유진송이 초대하기',
       location: '강남역',
-      category: '약속',
+      category: '개인',
       repeat: { type: 'none', interval: 0 },
       notificationTime: 10,
     },
@@ -117,7 +121,7 @@ export const setupMockHandlerDeletion = () => {
       endTime: '23:00',
       description: '4팀 7팀 다 모여',
       location: '병준이네 집',
-      category: '약속',
+      category: '개인',
       repeat: { type: 'none', interval: 0 },
       notificationTime: 10,
     },
