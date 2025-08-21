@@ -158,11 +158,9 @@ describe('일정 뷰', () => {
     // 순서대로 div -> ul -> li 이렇게
     await user.click(selectElement);
     await user.click(within(selectElement).getByRole('combobox'));
-    debug();
     await user.click(screen.getByRole('option', { name: `week-option` }));
 
     const targetList = within(await screen.getByTestId('event-list'));
-    debug();
     expect(targetList.getByText('기존 회의')).toBeInTheDocument();
   });
 

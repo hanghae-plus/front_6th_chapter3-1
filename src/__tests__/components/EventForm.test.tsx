@@ -3,7 +3,6 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { SnackbarProvider } from 'notistack';
 import { describe, it, expect, vi } from 'vitest';
-import { debug } from 'vitest-preview';
 
 import { Form } from '../../components';
 
@@ -28,6 +27,21 @@ const setup = () => {
 };
 
 describe('EventForm', () => {
+  it('모든 폼 필드가 올바르게 렌더링된다', () => {
+    setup();
+
+    // 모든 라벨과 입력 필드 확인
+    expect(screen.getByLabelText('제목')).toBeInTheDocument();
+    expect(screen.getByLabelText('날짜')).toBeInTheDocument();
+    expect(screen.getByLabelText('시작 시간')).toBeInTheDocument();
+    expect(screen.getByLabelText('종료 시간')).toBeInTheDocument();
+    expect(screen.getByLabelText('설명')).toBeInTheDocument();
+    expect(screen.getByLabelText('위치')).toBeInTheDocument();
+    expect(screen.getByText('카테고리')).toBeInTheDocument();
+    expect(screen.getByText('알림 설정')).toBeInTheDocument();
+    expect(screen.getByText('반복 일정')).toBeInTheDocument();
+  });
+
   it('필수 필드가 채워져있지 않으면, 에러 토스트가 나옴', async () => {
     const { user } = setup();
     // 빈 폼으로 제출 버튼 클릭
