@@ -54,19 +54,124 @@ describe('getDaysInMonth', () => {
 });
 
 describe('getWeekDates', () => {
-  it('주중의 날짜(수요일)에 대해 올바른 주의 날짜들을 반환한다', () => {});
+  it('주중의 날짜(수요일)에 대해 올바른 주의 날짜들을 반환한다', () => {
+    const date = new Date('2025-08-20');
+    const wed = getWeekDates(date);
 
-  it('주의 시작(월요일)에 대해 올바른 주의 날짜들을 반환한다', () => {});
+    // 1. 7일인지 배열 길이 체크
+    expect(wed).toHaveLength(7);
 
-  it('주의 끝(일요일)에 대해 올바른 주의 날짜들을 반환한다', () => {});
+    // 2. 0~6번째 배열 반환 (일주일은 일요일부터)
+    expect(wed[0]).toEqual(new Date('2025-08-17')); // 일요일
+    expect(wed[1]).toEqual(new Date('2025-08-18')); // 월요일
+    expect(wed[2]).toEqual(new Date('2025-08-19')); // 화요일
+    expect(wed[3]).toEqual(new Date('2025-08-20')); // 수요일
+    expect(wed[4]).toEqual(new Date('2025-08-21')); // 목요일
+    expect(wed[5]).toEqual(new Date('2025-08-22')); // 금요일
+    expect(wed[6]).toEqual(new Date('2025-08-23')); // 토요일
+  });
 
-  it('연도를 넘어가는 주의 날짜를 정확히 처리한다 (연말)', () => {});
+  it('주의 시작(월요일)에 대해 올바른 주의 날짜들을 반환한다', () => {
+    const date = new Date('2025-08-18');
+    const mon = getWeekDates(date);
 
-  it('연도를 넘어가는 주의 날짜를 정확히 처리한다 (연초)', () => {});
+    // 1. 7일인지 배열 길이 체크
+    expect(mon).toHaveLength(7);
 
-  it('윤년의 2월 29일을 포함한 주를 올바르게 처리한다', () => {});
+    // 2. 0~6번째 배열 반환 (일주일은 일요일부터)
+    expect(mon[0]).toEqual(new Date('2025-08-17')); // 일요일
+    expect(mon[1]).toEqual(new Date('2025-08-18')); // 월요일
+    expect(mon[2]).toEqual(new Date('2025-08-19')); // 화요일
+    expect(mon[3]).toEqual(new Date('2025-08-20')); // 수요일
+    expect(mon[4]).toEqual(new Date('2025-08-21')); // 목요일
+    expect(mon[5]).toEqual(new Date('2025-08-22')); // 금요일
+    expect(mon[6]).toEqual(new Date('2025-08-23')); // 토요일
+  });
 
-  it('월의 마지막 날짜를 포함한 주를 올바르게 처리한다', () => {});
+  it('주의 끝(일요일)에 대해 올바른 주의 날짜들을 반환한다', () => {
+    const date = new Date('2025-08-17');
+    const sun = getWeekDates(date);
+
+    // 1. 7일인지 배열 길이 체크
+    expect(sun).toHaveLength(7);
+
+    // 2. 0~6번째 배열 반환 (일주일은 일요일부터)
+    expect(sun[0]).toEqual(new Date('2025-08-17')); // 일요일
+    expect(sun[1]).toEqual(new Date('2025-08-18')); // 월요일
+    expect(sun[2]).toEqual(new Date('2025-08-19')); // 화요일
+    expect(sun[3]).toEqual(new Date('2025-08-20')); // 수요일
+    expect(sun[4]).toEqual(new Date('2025-08-21')); // 목요일
+    expect(sun[5]).toEqual(new Date('2025-08-22')); // 금요일
+    expect(sun[6]).toEqual(new Date('2025-08-23')); // 토요일
+  });
+
+  it('연도를 넘어가는 주의 날짜를 정확히 처리한다 (연말)', () => {
+    const date = new Date('2025-12-31');
+    const last = getWeekDates(date);
+
+    // 1. 7일인지 배열 길이 체크
+    expect(last).toHaveLength(7);
+
+    // 2. 0~6번째 배열 반환 (일주일은 일요일부터)
+    expect(last[0]).toEqual(new Date('2025-12-28')); // 일요일
+    expect(last[1]).toEqual(new Date('2025-12-29')); // 월요일
+    expect(last[2]).toEqual(new Date('2025-12-30')); // 화요일
+    expect(last[3]).toEqual(new Date('2025-12-31')); // 수요일
+    expect(last[4]).toEqual(new Date('2026-01-01')); // 목요일
+    expect(last[5]).toEqual(new Date('2026-01-02')); // 금요일
+    expect(last[6]).toEqual(new Date('2026-01-03')); // 토요일
+  });
+
+  it('연도를 넘어가는 주의 날짜를 정확히 처리한다 (연초)', () => {
+    const date = new Date('2025-01-01');
+    const first = getWeekDates(date);
+
+    // 1. 7일인지 배열 길이 체크
+    expect(first).toHaveLength(7);
+
+    // 2. 0~6번째 배열 반환 (일주일은 일요일부터)
+    expect(first[0]).toEqual(new Date('2024-12-29')); // 일요일
+    expect(first[1]).toEqual(new Date('2024-12-30')); // 월요일
+    expect(first[2]).toEqual(new Date('2024-12-31')); // 화요일
+    expect(first[3]).toEqual(new Date('2025-01-01')); // 수요일
+    expect(first[4]).toEqual(new Date('2025-01-02')); // 목요일
+    expect(first[5]).toEqual(new Date('2025-01-03')); // 금요일
+    expect(first[6]).toEqual(new Date('2025-01-04')); // 토요일
+  });
+
+  it('윤년의 2월 29일을 포함한 주를 올바르게 처리한다', () => {
+    const date = new Date('2024-02-29');
+    const week = getWeekDates(date);
+
+    // 1. 7일인지 배열 길이 체크
+    expect(week).toHaveLength(7);
+
+    // 2. 0~6번째 배열 반환 (일주일은 일요일부터)
+    expect(week[0]).toEqual(new Date('2024-02-25')); // 일요일
+    expect(week[1]).toEqual(new Date('2024-02-26')); // 월요일
+    expect(week[2]).toEqual(new Date('2024-02-27')); // 화요일
+    expect(week[3]).toEqual(new Date('2024-02-28')); // 수요일
+    expect(week[4]).toEqual(new Date('2024-02-29')); // 목요일
+    expect(week[5]).toEqual(new Date('2024-03-01')); // 금요일
+    expect(week[6]).toEqual(new Date('2024-03-02')); // 토요일
+  });
+
+  it('월의 마지막 날짜를 포함한 주를 올바르게 처리한다', () => {
+    const date = new Date('2025-01-31');
+    const week = getWeekDates(date);
+
+    // 1. 7일인지 배열 길이 체크
+    expect(week).toHaveLength(7);
+
+    // 2. 0~6번째 배열 반환 (일주일은 일요일부터)
+    expect(week[0]).toEqual(new Date('2025-01-26')); // 일요일
+    expect(week[1]).toEqual(new Date('2025-01-27')); // 월요일
+    expect(week[2]).toEqual(new Date('2025-01-28')); // 화요일
+    expect(week[3]).toEqual(new Date('2025-01-29')); // 수요일
+    expect(week[4]).toEqual(new Date('2025-01-30')); // 목요일
+    expect(week[5]).toEqual(new Date('2025-01-31')); // 토요일
+    expect(week[6]).toEqual(new Date('2025-02-01')); // 금요일
+  });
 });
 
 describe('getWeeksAtMonth', () => {
