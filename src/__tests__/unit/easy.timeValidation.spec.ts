@@ -1,6 +1,6 @@
 import { getTimeErrorMessage } from '../../utils/timeValidation';
 
-describe('getTimeErrorMessage >', () => {
+describe('getTimeErrorMessage: 시작 시간과 종료 시간 유효성 검사', () => {
   describe('시작 시간과 종료 시간 둘다 값이 있는 경우', () => {
     it('시작 시간(10:00)이 종료 시간(09:00)보다 늦을 때 에러 메시지를 반환한다', () => {
       const result = getTimeErrorMessage('10:00', '09:00');

@@ -12,6 +12,10 @@ const advanceTime = async (minutes: number) => {
 
 describe('useNotifications: 예정된 이벤트를 주기적으로 확인하고 알림 생성', () => {
   // ? setupTest에서 설정을 했는데, 여기서 다시 설정을 하는거지? 근데 안하면 통과가 안된다.
+  // > 시간까지 설정했더니 되네... 기존 2025-10-01에서 2025-10-01 00:00:00 으로 설정을 바꿨다.
+  // > 이번엔 캘린더 훅 테스트에서 터짐... 그냥 여기서만 시간 설정하는 걸로...
+
+  //그리고 shouldAdvanceTime: true 로 설정하면 타이머가 자동으로 진행된다라는 말이 있던데, 왜 안 흐를까..
 
   beforeEach(() => {
     // 시간을 2025-10-01 00:00:00으로 설정
@@ -29,8 +33,6 @@ describe('useNotifications: 예정된 이벤트를 주기적으로 확인하고 
 
   describe('알림 생성', () => {
     it('지정된 시간이 된 경우 알림이 새롭게 생성되어 추가된다', async () => {
-      // 현재 시간을 00:00:00으로 설정
-
       const events = [
         createMockEvent(1, {
           date: '2025-10-01',

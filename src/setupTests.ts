@@ -1,5 +1,5 @@
-import { setupServer } from 'msw/node';
 import '@testing-library/jest-dom';
+import { setupServer } from 'msw/node';
 
 import { handlers } from './__mocks__/handlers';
 
@@ -52,7 +52,7 @@ beforeAll(() => {
 
 beforeEach(() => {
   expect.hasAssertions(); //최소 하나의 assertion이 있는지 확인, assertion 없으면 테스트 실패
-  vi.setSystemTime(new Date('2025-10-01')); // 시간을 원하는 시점으로 고정
+  vi.setSystemTime(new Date('2025-10-01')); // 원하는 시점으로 고정
 });
 
 afterEach(() => {

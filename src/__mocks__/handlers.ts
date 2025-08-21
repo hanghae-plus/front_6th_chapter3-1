@@ -27,7 +27,7 @@ export const handlers = [
 
     const createEvent = {
       ...newEvent,
-      id: events.length + 1,
+      id: String(events.length + 1),
     };
 
     return HttpResponse.json(createEvent, { status: 201 });
