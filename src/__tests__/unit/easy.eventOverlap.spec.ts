@@ -204,18 +204,20 @@ describe('findOverlappingEvents', () => {
     };
 
     const findSameEvents = findOverlappingEvents(newEvent, existingEvents);
-    expect(findSameEvents).toEqual({
-      id: '2',
-      title: '기존 회의2',
-      date: '2025-08-15',
-      startTime: '13:00',
-      endTime: '17:00',
-      description: '기존 팀 미팅',
-      location: '회의실 B',
-      category: '업무',
-      repeat: { type: 'none', interval: 0 },
-      notificationTime: 10,
-    });
+    expect(findSameEvents).toEqual([
+      {
+        id: '2',
+        title: '기존 회의2',
+        date: '2025-08-15',
+        startTime: '13:00',
+        endTime: '17:00',
+        description: '기존 팀 미팅',
+        location: '회의실 B',
+        category: '업무',
+        repeat: { type: 'none', interval: 0 },
+        notificationTime: 10,
+      },
+    ]);
   });
 
   it('겹치는 이벤트가 없으면 빈 배열을 반환한다', () => {

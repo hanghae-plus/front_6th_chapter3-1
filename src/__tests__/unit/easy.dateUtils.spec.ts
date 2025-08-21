@@ -228,7 +228,11 @@ describe('getEventsForDay', () => {
     expect(filteredEvents).toEqual([]);
   });
 
-  it('날짜가 32일 이상인 경우 빈 배열을 반환한다', () => {});
+  it('날짜가 32일 이상인 경우 빈 배열을 반환한다', () => {
+    const filteredEvents = getEventsForDay(sampleEvents, 32);
+
+    expect(filteredEvents).toEqual([]);
+  });
 });
 
 describe('formatWeek', () => {
@@ -358,7 +362,7 @@ describe('fillZero', () => {
     const ten = 10;
     const twoDigit = fillZero(ten);
 
-    expect(twoDigit).toBe('05');
+    expect(twoDigit).toBe('10');
   });
 
   it("3을 3자리로 변환하면 '003'을 반환한다", () => {
