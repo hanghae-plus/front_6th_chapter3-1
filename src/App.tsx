@@ -316,6 +316,7 @@ function App() {
   return (
     <Box sx={{ width: '100%', height: '100vh', margin: 'auto', p: 5 }}>
       <Stack direction="row" spacing={6} sx={{ height: '100%' }}>
+        {/* 일정 추가&수정 폼 */}
         <Stack spacing={2} sx={{ width: '20%' }}>
           <Typography variant="h4">{editingEvent ? '일정 수정' : '일정 추가'}</Typography>
 
@@ -487,6 +488,7 @@ function App() {
           </Button>
         </Stack>
 
+        {/* 일정 보기 달력 섹션 */}
         <Stack flex={1} spacing={5}>
           <Typography variant="h4">일정 보기</Typography>
 
@@ -515,7 +517,7 @@ function App() {
           {view === 'week' && renderWeekView()}
           {view === 'month' && renderMonthView()}
         </Stack>
-
+        {/* 일정 목록&검색 섹션 */}
         <Stack
           data-testid="event-list"
           spacing={2}
@@ -589,7 +591,7 @@ function App() {
           )}
         </Stack>
       </Stack>
-
+      {/* 일정 겹침 경고 모달  */}
       <Dialog open={isOverlapDialogOpen} onClose={() => setIsOverlapDialogOpen(false)}>
         <DialogTitle>일정 겹침 경고</DialogTitle>
         <DialogContent>
@@ -631,7 +633,7 @@ function App() {
           </Button>
         </DialogActions>
       </Dialog>
-
+      {/* 알림 토스트*/}
       {notifications.length > 0 && (
         <Stack position="fixed" top={16} right={16} spacing={2} alignItems="flex-end">
           {notifications.map((notification, index) => (
@@ -642,7 +644,11 @@ function App() {
               action={
                 <IconButton
                   size="small"
-                  onClick={() => setNotifications((prev) => prev.filter((_, i) => i !== index))}
+                  onClick={() => {
+                    // 리팩토링 TODO: 여기 removeNotification 쓰면 됨
+                    console.log('여기 removeNotification 쓰면 됨');
+                    setNotifications((prev) => prev.filter((_, i) => i !== index));
+                  }}
                 >
                   <Close />
                 </IconButton>
