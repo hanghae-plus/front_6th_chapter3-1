@@ -8,7 +8,7 @@ interface NotiProps {
   events: Event[];
 }
 
-const Noti = ({ events }: NotiProps) => {
+export const Noti = ({ events }: NotiProps) => {
   /**알림 목록 */
   const { notifications, setNotifications } = useNotifications(events);
 
@@ -40,5 +40,3 @@ const Noti = ({ events }: NotiProps) => {
     </>
   );
 };
-
-export default Noti;
