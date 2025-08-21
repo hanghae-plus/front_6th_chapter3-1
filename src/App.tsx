@@ -1,5 +1,4 @@
 import { Box, Stack } from '@mui/material';
-import { useSnackbar } from 'notistack';
 
 import { CalendarSection } from './components/CalendarSection.tsx';
 import { EventEditor } from './components/EventEditor.tsx';
@@ -9,12 +8,10 @@ import { Noti } from './elements/Noti.tsx';
 import { useCalendarView } from './hooks/useCalendarView.ts';
 import { useEventForm } from './hooks/useEventForm.ts';
 import { useEventOperations } from './hooks/useEventOperations.ts';
+import { useEventSave } from './hooks/useEventSave.ts';
 import { useNotifications } from './hooks/useNotifications.ts';
 import { useOverlapDialog } from './hooks/useOverlapDialog.ts';
 import { useSearch } from './hooks/useSearch.ts';
-import { Event, EventForm } from './types';
-import { findOverlappingEvents } from './utils/eventOverlap';
-import { validateEventData } from './utils/eventUtils.ts';
 
 function App() {
   const {
@@ -51,70 +48,40 @@ function App() {
   const { isOverlapDialogOpen, overlappingEvents, openOverlapDialog, closeOverlapDialog } =
     useOverlapDialog();
 
-  const { enqueueSnackbar } = useSnackbar();
-
-  /** 일정 추가 또는 수정 */
-  const addOrUpdateEvent = async () => {
-    const error = validateEventData(title, date, startTime, endTime, startTimeError, endTimeError);
-
-    if (error) {
-      enqueueSnackbar(error, { variant: 'error' });
-      return;
-    }
-
-    const eventData: Event | EventForm = {
-      id: editingEvent ? editingEvent.id : undefined,
-      title,
-      date,
-      startTime,
-      endTime,
-      description,
-      location,
-      category,
-      repeat: {
-        type: isRepeating ? repeatType : 'none',
-        interval: repeatInterval,
-        endDate: repeatEndDate || undefined,
-      },
-      notificationTime,
-    };
-
-    const overlapping = findOverlappingEvents(eventData, events);
-    if (overlapping.length > 0) {
-      openOverlapDialog(overlapping);
-    } else {
-      await saveEvent(eventData);
-      resetForm();
-    }
-  };
+  // 이벤트 저장
+  const { handleSaveEvent, handleConfirmSave } = useEventSave({
+    title,
+    date,
+    startTime,
+    endTime,
+    description,
+    location,
+    category,
+    isRepeating,
+    repeatType,
+    repeatInterval,
+    repeatEndDate,
+    notificationTime,
+    startTimeError,
+    endTimeError,
+    editingEvent,
+    events,
+    saveEvent,
+    resetForm,
+    openOverlapDialog,
+  });
 
   /** 중복 이벤트 발생시 alert */
   const handleOverlapConfirm = () => {
     closeOverlapDialog();
-    saveEvent({
-      id: editingEvent ? editingEvent.id : undefined,
-      title,
-      date,
-      startTime,
-      endTime,
-      description,
-      location,
-      category,
-      repeat: {
-        type: isRepeating ? repeatType : 'none',
-        interval: repeatInterval,
-        endDate: repeatEndDate || undefined,
-      },
-      notificationTime,
-    });
-    resetForm();
+    handleConfirmSave();
   };
 
   return (
     <Box sx={{ width: '100%', height: '100vh', margin: 'auto', p: 5 }}>
       <Stack direction="row" spacing={6} sx={{ height: '100%' }}>
         {/* 일정 입력 폼 */}
-        <EventEditor {...eventEditorProps} onSubmit={addOrUpdateEvent} />
+        <EventEditor {...eventEditorProps} onSubmit={handleSaveEvent} />
 
         {/* 캘린더 뷰 선택 */}
         <CalendarSection
