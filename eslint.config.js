@@ -88,13 +88,7 @@ export default [
           'newlines-between': 'always',
         },
       ],
-
-      // Prettier rules
-      ...prettierConfig.rules,
       'prettier/prettier': 'error',
-
-      // Storybook rules
-      ...storybookPlugin.configs.recommended.rules,
     },
   },
 
@@ -146,4 +140,5 @@ export default [
       },
     },
   },
+  prettierConfig,
 ];
