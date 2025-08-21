@@ -49,7 +49,7 @@ export const useEventForm = (initialEvent?: Event) => {
       description: '',
       location: '',
       category: '업무',
-      isRepeating: false,
+      isRepeating: true,
       repeatType: 'none',
       repeatInterval: 1,
       repeatEndDate: '',
