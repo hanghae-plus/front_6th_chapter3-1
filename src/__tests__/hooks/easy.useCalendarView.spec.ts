@@ -1,20 +1,8 @@
 import { act, renderHook } from '@testing-library/react';
-import { vi } from 'vitest';
-
 import { useCalendarView } from '../../hooks/useCalendarView.ts';
 import { assertDate } from '../utils.ts';
 
 describe('초기 상태', () => {
-  beforeEach(() => {
-    vi.useRealTimers();
-    vi.useFakeTimers();
-    vi.setSystemTime(new Date('2025-10-01T00:00:00'));
-  });
-
-  afterEach(() => {
-    vi.useRealTimers();
-  });
-
   it('view는 "month"이어야 한다', () => {
     const { result } = renderHook(() => useCalendarView());
     expect(result.current.view).toBe('month');
