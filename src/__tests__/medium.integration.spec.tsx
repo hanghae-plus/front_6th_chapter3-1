@@ -1,8 +1,7 @@
 import CssBaseline from '@mui/material/CssBaseline';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import { render, screen, within, act, waitFor } from '@testing-library/react';
+import { render, screen, within, act } from '@testing-library/react';
 import { UserEvent, userEvent } from '@testing-library/user-event';
-import { http, HttpResponse } from 'msw';
 import { SnackbarProvider } from 'notistack';
 import { ReactElement } from 'react';
 
@@ -12,7 +11,6 @@ import {
   setupMockHandlerUpdating,
 } from '../__mocks__/handlersUtils';
 import App from '../App';
-import { server } from '../setupTests';
 import { Event } from '../types';
 
 const theme = createTheme();
@@ -60,7 +58,6 @@ const updateSchedule = async (
   form: Omit<Event, 'id' | 'notificationTime' | 'repeat'>
 ) => {
   const { title, date, startTime, endTime, location, description, category } = form;
-
   // 기존 값 초기화
   await user.clear(screen.getByLabelText('제목'));
   await user.clear(screen.getByLabelText('설명'));
@@ -141,29 +138,229 @@ describe('일정 CRUD 및 기본 기능', () => {
 });
 
 describe('일정 뷰', () => {
-  it('주별 뷰를 선택 후 해당 주에 일정이 없으면, 일정이 표시되지 않는다.', async () => {});
+  it('주별 뷰를 선택 후 해당 주에 일정이 없으면, 일정이 표시되지 않는다.', async () => {
+    const { user } = setup(<App />);
 
-  it('주별 뷰 선택 후 해당 일자에 일정이 존재한다면 해당 일정이 정확히 표시된다', async () => {});
+    await user.click(within(screen.getByLabelText('뷰 타입 선택')).getByRole('combobox'));
+    await user.click(screen.getByRole('option', { name: `week-option` }));
 
-  it('월별 뷰에 일정이 없으면, 일정이 표시되지 않아야 한다.', async () => {});
+    //해당 주에 일정이 없다.
+    expect(screen.getByText('검색 결과가 없습니다.')).toBeInTheDocument();
+  });
 
-  it('월별 뷰에 일정이 정확히 표시되는지 확인한다', async () => {});
+  it('주별 뷰 선택 후 해당 일자에 일정이 존재한다면 해당 일정이 정확히 표시된다', async () => {
+    setupMockHandlerCreation();
+    const { user } = setup(<App />);
 
-  it('달력에 1월 1일(신정)이 공휴일로 표시되는지 확인한다', async () => {});
+    await saveSchedule(user, {
+      title: '항해 주간 회의',
+      date: '2025-10-04',
+      startTime: '14:00',
+      endTime: '15:00',
+      location: 'A104',
+      description: '회의합니다.',
+      category: '업무',
+    });
+
+    await user.click(within(screen.getByLabelText('뷰 타입 선택')).getByRole('combobox'));
+    await user.click(screen.getByRole('option', { name: `week-option` }));
+
+    //해당 주에 일정이 있다.
+    const weekViewBox = screen.getByTestId('week-view');
+    expect(within(weekViewBox).getByText('항해 주간 회의')).toBeInTheDocument();
+  });
+
+  it('월별 뷰에 일정이 없으면, 일정이 표시되지 않아야 한다.', async () => {
+    setup(<App />);
+
+    //해당 달에 일정이 없다.
+    expect(screen.getByText('검색 결과가 없습니다.')).toBeInTheDocument();
+  });
+
+  it('월별 뷰에 일정이 정확히 표시되는지 확인한다', async () => {
+    setupMockHandlerCreation();
+    const { user } = setup(<App />);
+
+    await saveSchedule(user, {
+      title: '항해 주간 회의',
+      date: '2025-10-04',
+      startTime: '14:00',
+      endTime: '15:00',
+      location: 'A104',
+      description: '회의합니다.',
+      category: '업무',
+    });
+
+    //해당 달에 일정이 있다.
+    const monthViewBox = screen.getByTestId('month-view');
+    expect(within(monthViewBox).getByText('항해 주간 회의')).toBeInTheDocument();
+  });
+
+  it('달력에 1월 1일(신정)이 공휴일로 표시되는지 확인한다', async () => {
+    const { user } = setup(<App />);
+
+    // Previous 버튼을 9번 클릭
+    for (let i = 0; i < 9; i++) {
+      await user.click(await screen.findByLabelText('Previous'));
+    }
+
+    expect(screen.getByText('2025년 1월')).toBeInTheDocument();
+
+    //해당 달에 일정이 있다.
+    const monthViewBox = screen.getByTestId('month-view');
+    expect(within(monthViewBox).getByText('신정')).toBeInTheDocument();
+  });
 });
 
 describe('검색 기능', () => {
-  it('검색 결과가 없으면, "검색 결과가 없습니다."가 표시되어야 한다.', async () => {});
+  beforeEach(() => {
+    setupMockHandlerCreation([
+      {
+        id: '1',
+        title: '팀 회의',
+        date: '2025-10-04',
+        startTime: '14:00',
+        endTime: '15:00',
+        location: 'A104',
+        description: '필참',
+        category: '업무',
+        repeat: { type: 'none', interval: 0 },
+        notificationTime: 10,
+      },
+      {
+        id: '2',
+        title: '팀 회의2',
+        date: '2025-10-05',
+        startTime: '14:00',
+        endTime: '15:00',
+        location: 'A104',
+        description: '필참',
+        category: '업무',
+        repeat: { type: 'none', interval: 0 },
+        notificationTime: 10,
+      },
+      {
+        id: '3',
+        title: '이건 주간 회의',
+        date: '2025-10-06',
+        startTime: '14:00',
+        endTime: '15:00',
+        location: 'A104',
+        description: '필참',
+        category: '업무',
+        repeat: { type: 'none', interval: 0 },
+        notificationTime: 10,
+      },
+    ]);
+  });
 
-  it("'팀 회의'를 검색하면 해당 제목을 가진 일정이 리스트에 노출된다", async () => {});
+  it('검색 결과가 없으면, "검색 결과가 없습니다."가 표시되어야 한다.', async () => {
+    const { user } = setup(<App />);
 
-  it('검색어를 지우면 모든 일정이 다시 표시되어야 한다', async () => {});
+    // id="search"인 검색 입력창에 존재하지 않는 검색어 입력
+    const searchInput = screen.getByPlaceholderText('검색어를 입력하세요');
+    await user.type(searchInput, '테스트코드으악');
+
+    // 검색 결과가 없다는 메시지가 표시되는지 확인
+    expect(screen.getByText('검색 결과가 없습니다.')).toBeInTheDocument();
+  });
+
+  it("'팀 회의'를 검색하면 해당 제목을 가진 일정이 리스트에 노출된다", async () => {
+    const { user } = setup(<App />);
+
+    const searchInput = screen.getByPlaceholderText('검색어를 입력하세요');
+    await user.type(searchInput, '팀 회의');
+
+    const eventList = within(screen.getByTestId('event-list'));
+    expect(eventList.getByText('팀 회의')).toBeInTheDocument();
+  });
+
+  it('검색어를 지우면 모든 일정이 다시 표시되어야 한다', async () => {
+    const { user } = setup(<App />);
+
+    const searchInput = screen.getByPlaceholderText('검색어를 입력하세요');
+    await user.clear(searchInput);
+
+    const eventList = within(screen.getByTestId('event-list'));
+    expect(eventList.getAllByText(/회의/)).toHaveLength(3);
+  });
 });
 
 describe('일정 충돌', () => {
-  it('겹치는 시간에 새 일정을 추가할 때 경고가 표시된다', async () => {});
+  it('겹치는 시간에 새 일정을 추가할 때 경고가 표시된다', async () => {
+    setupMockHandlerCreation([
+      {
+        id: '2',
+        title: '팀 회의2',
+        date: '2025-10-05',
+        startTime: '14:00',
+        endTime: '15:00',
+        location: 'A104',
+        description: '필참',
+        category: '업무',
+        repeat: { type: 'none', interval: 0 },
+        notificationTime: 10,
+      },
+    ]);
+    const { user } = setup(<App />);
 
-  it('기존 일정의 시간을 수정하여 충돌이 발생하면 경고가 노출된다', async () => {});
+    await saveSchedule(user, {
+      title: '팀 회의 충돌!!!',
+      date: '2025-10-05',
+      startTime: '14:00',
+      endTime: '15:00',
+      location: 'A104',
+      description: '필참',
+      category: '업무',
+    });
+
+    expect(screen.getByText('일정 겹침 경고')).toBeInTheDocument();
+  });
+
+  it('기존 일정의 시간을 수정하여 충돌이 발생하면 경고가 노출된다', async () => {
+    setupMockHandlerUpdating();
+    const { user } = setup(<App />);
+
+    const eventList = await screen.findByTestId('event-list');
+
+    const editButtons = await within(eventList).findAllByLabelText('Edit event');
+    await user.click(editButtons[0]);
+
+    await user.clear(screen.getByLabelText('시작 시간'));
+    await user.clear(screen.getByLabelText('종료 시간'));
+    await user.type(screen.getByLabelText('시작 시간'), '11:00');
+    await user.type(screen.getByLabelText('종료 시간'), '12:00');
+
+    await user.click(screen.getByTestId('event-submit-button'));
+
+    expect(screen.getByText('일정 겹침 경고')).toBeInTheDocument();
+  });
 });
 
-it('notificationTime을 10으로 하면 지정 시간 10분 전 알람 텍스트가 노출된다', async () => {});
+it('notificationTime을 10으로 하면 지정 시간 10분 전 알람 텍스트가 노출된다', async () => {
+  vi.setSystemTime(new Date('2025-10-01T13:49:59'));
+  setupMockHandlerCreation([
+    {
+      id: '1',
+      title: '팀 회의',
+      date: '2025-10-01',
+      startTime: '14:00',
+      endTime: '15:00',
+      location: 'A104',
+      description: '필참',
+      category: '업무',
+      repeat: { type: 'none', interval: 0 },
+      notificationTime: 10,
+    },
+  ]);
+
+  setup(<App />);
+
+  await screen.findByText('일정 로딩 완료!');
+
+  act(() => {
+    vi.advanceTimersByTime(1000);
+  });
+
+  expect(screen.getByText('10분 후 팀 회의 일정이 시작됩니다.')).toBeInTheDocument();
+});
