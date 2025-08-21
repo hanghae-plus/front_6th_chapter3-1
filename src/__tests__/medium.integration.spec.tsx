@@ -60,7 +60,6 @@ describe('일정 CRUD 및 기본 기능', () => {
     await expect(screen.findByText('일정 로딩 완료!')).resolves.toBeInTheDocument();
 
     const editButton = screen.getAllByLabelText('Edit event');
-
     await user.click(editButton[0]);
 
     const submitButton = screen.getByTestId('event-submit-button');
@@ -73,9 +72,7 @@ describe('일정 CRUD 및 기본 기능', () => {
 
     await user.clear(titleInput);
     await user.type(titleInput, '수정한 제목');
-
     fireEvent.change(dateInput, { target: { value: '2025-08-21' } });
-
     await user.clear(descriptionInput);
     await user.type(descriptionInput, '이것은 수정한 내용이니라.');
 
@@ -252,9 +249,86 @@ describe('검색 기능', () => {
 });
 
 describe('일정 충돌', () => {
-  it('겹치는 시간에 새 일정을 추가할 때 경고가 표시된다', async () => {});
+  it('겹치는 시간에 새 일정을 추가할 때 경고가 표시된다', async () => {
+    setupMockHandler(createDefaultEvents(new Date('2025-08-15')));
 
-  it('기존 일정의 시간을 수정하여 충돌이 발생하면 경고가 노출된다', async () => {});
+    const user = userEvent.setup();
+    renderWithProviders();
+
+    await expect(screen.findByText('일정 로딩 완료!')).resolves.toBeInTheDocument();
+
+    const titleInput = screen.getByLabelText('제목');
+    const dateInput = screen.getByLabelText('날짜');
+    const startTimeInput = screen.getByLabelText('시작 시간');
+    const endTimeInput = screen.getByLabelText('종료 시간');
+    const submitButton = screen.getByTestId('event-submit-button');
+
+    await user.type(titleInput, '과제 하고 잠들기');
+    await user.type(dateInput, '2025-08-15');
+    await user.type(startTimeInput, '09:00');
+    await user.type(endTimeInput, '10:00');
+
+    await user.click(submitButton);
+
+    await expect(screen.findByText('일정 겹침 경고')).resolves.toBeInTheDocument();
+
+    const eventList = screen.getByTestId('event-list');
+    expect(eventList.textContent).not.toContain('과제 하고 잠들기');
+  });
+
+  it('기존 일정의 시간을 수정하여 충돌이 발생하면 경고가 노출된다', async () => {
+    setupMockHandler([
+      {
+        id: 'mock-1',
+        title: '팀 회의',
+        date: '2025-08-15',
+        startTime: '09:00',
+        endTime: '10:00',
+        description: '팀 미팅',
+        location: '회의실 B',
+        category: '업무',
+        repeat: { type: 'none', interval: 0 },
+        notificationTime: 10,
+      },
+      {
+        id: 'mock-2',
+        title: '숙면',
+        date: '2025-08-16',
+        startTime: '09:00',
+        endTime: '10:00',
+        description: '숙면을 위한 휴가',
+        location: '침대',
+        category: '개인',
+        repeat: { type: 'none', interval: 0 },
+        notificationTime: 10,
+      },
+    ]);
+    const user = userEvent.setup();
+    renderWithProviders();
+
+    await expect(screen.findByText('일정 로딩 완료!')).resolves.toBeInTheDocument();
+
+    const editButton = screen.getAllByLabelText('Edit event');
+    await user.click(editButton[0]);
+
+    const submitButton = screen.getByTestId('event-submit-button');
+    expect(within(submitButton).getByText('일정 수정')).toBeInTheDocument();
+
+    const dateInput = screen.getByLabelText('날짜');
+    const startTimeInput = screen.getByLabelText('시작 시간');
+    const endTimeInput = screen.getByLabelText('종료 시간');
+
+    fireEvent.change(dateInput, { target: { value: '2025-08-16' } });
+    fireEvent.change(startTimeInput, { target: { value: '09:00' } });
+    fireEvent.change(endTimeInput, { target: { value: '10:00' } });
+
+    await user.click(submitButton);
+
+    await expect(screen.findByText('일정 겹침 경고')).resolves.toBeInTheDocument();
+
+    const eventList = screen.getByTestId('event-list');
+    expect(eventList.textContent).not.toContain('과제 하고 잠들기');
+  });
 });
 
 it('notificationTime을 10으로 하면 지정 시간 10분 전 알람 텍스트가 노출된다', async () => {});
