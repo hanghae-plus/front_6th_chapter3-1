@@ -457,7 +457,48 @@ describe('일정 충돌', () => {
     expect(await screen.findByRole('dialog', { name: '일정 겹침 경고' })).toBeInTheDocument();
   });
 
-  it('기존 일정의 시간을 수정하여 충돌이 발생하면 경고가 노출된다', async () => {});
+  it('기존 일정의 시간을 수정하여 충돌이 발생하면 경고가 노출된다', async () => {
+    const events = [
+      makeEvent({
+        title: '피티 수업',
+        date: '2025-08-24',
+        startTime: '13:00',
+        endTime: '15:00',
+      }),
+      makeEvent({
+        title: '보드게임',
+        date: '2025-08-24',
+        startTime: '16:00',
+        endTime: '17:00',
+      }),
+    ];
+    server.use(...setupMockHandlerCreation(events));
+
+    const user = userEvent.setup();
+    render(
+      <ThemeProvider theme={createTheme()}>
+        <SnackbarProvider>
+          <App />
+        </SnackbarProvider>
+      </ThemeProvider>
+    );
+
+    const eventList = await screen.findByTestId('event-list');
+    const editButtons = await within(eventList).findAllByRole('button', { name: 'Edit event' });
+    await user.click(editButtons[1]);
+
+    const startInput = screen.getByLabelText('시작 시간');
+    await user.clear(startInput);
+    await user.type(startInput, '13:30');
+
+    const endInput = screen.getByLabelText('종료 시간');
+    await user.clear(endInput);
+    await user.type(endInput, '14:00');
+
+    await user.click(screen.getByRole('button', { name: '일정 수정' }));
+
+    expect(await screen.findByRole('dialog', { name: '일정 겹침 경고' })).toBeInTheDocument();
+  });
 });
 
 it('notificationTime을 10으로 하면 지정 시간 10분 전 알람 텍스트가 노출된다', async () => {});
