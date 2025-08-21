@@ -11,10 +11,7 @@
     "test": "vitest",
     "test:ui": "vitest --ui",
     "test:coverage": "vitest run --coverage",
-    "build": "tsc -b && vite build",
-    "lint:eslint": "eslint . --ext ts,tsx --report-unused-disable-directives",
-    "lint:tsc": "tsc --pretty",
-    "lint": "pnpm lint:eslint && pnpm lint:tsc"
+    "build": "tsc -b && vite build"
   },
   "dependencies": {
     "@emotion/react": "^11.11.4",
