@@ -14,11 +14,46 @@ import { Event } from '../types';
  * 통합 테스트: 여러 모듈이 연관된 상태에서 잘 동작하는지 검증
  *
  *  Q. event를 추가 제거하고 저장하는 로직을 잘 살펴보고, 만약 그대로 구현한다면 어떤 문제가 있을 지 고민해보세요.
- *  A. 데이터 추가 제거 시 데이터가
+ *  A. 실제 api를 호출할때 얘기인가....................뭐지?!
  */
 
+// 테스트용 App 생성
+const renderApp = () => {
+  // 테스트용 테마 설정
+  const theme = createTheme();
+
+  return render(
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <SnackbarProvider>
+        <App />
+      </SnackbarProvider>
+    </ThemeProvider>
+  );
+};
+
 describe('일정 CRUD 및 기본 기능', () => {
-  it('입력한 새로운 일정 정보에 맞춰 모든 필드가 이벤트 리스트에 정확히 저장된다.', async () => {});
+  it('입력한 새로운 일정 정보에 맞춰 모든 필드가 이벤트 리스트에 정확히 저장된다.', async () => {
+    const user = userEvent.setup();
+    renderApp();
+
+    // form 입력
+    await act(async () => {
+      await user.type(screen.getByLabelText('제목'), '새로운 일정');
+      await user.type(screen.getByLabelText('날짜'), '2025-10-01');
+      await user.type(screen.getByLabelText('시작 시간'), '10:00');
+      await user.type(screen.getByLabelText('종료 시간'), '11:00');
+      await user.type(screen.getByLabelText('설명'), '테스트 일정입니다');
+      await user.type(screen.getByLabelText('위치'), '회의실 A');
+    });
+
+    // 일정 추가 버튼 클릭
+    await act(async () => {
+      await user.click(screen.getByTestId('event-submit-button'));
+    });
+
+    expect(screen.getByText('일정이 추가되었습니다.')).toBeInTheDocument();
+  });
 
   it('기존 일정의 세부 정보를 수정하고 변경사항이 정확히 반영된다', async () => {});
 
