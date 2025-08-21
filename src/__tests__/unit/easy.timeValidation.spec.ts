@@ -46,7 +46,7 @@ describe('getTimeErrorMessage >', () => {
     expect(errorMessage.endTimeError).toBeNull();
   });
 
-  /** 불필요한 테스트 */
+  /** 불필요한 테스트, 위의 두 테스트를 통해 이것은 이미 검증되었음 */
   it('시작 시간과 종료 시간이 모두 비어있을 때 null을 반환한다', () => {
     const start = '';
     const end = '';
