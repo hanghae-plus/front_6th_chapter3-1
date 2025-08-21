@@ -4,6 +4,7 @@ import { dummyEvent } from '../data/dummy';
 
 describe('getFilteredEvents', () => {
   let events: Event[];
+
   let event1: Event;
   let event2: Event;
   let event3: Event;
