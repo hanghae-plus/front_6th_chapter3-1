@@ -14,13 +14,15 @@
     "build": "tsc -b && vite build",
     "lint:eslint": "eslint . --ext ts,tsx --report-unused-disable-directives",
     "lint:tsc": "tsc --pretty",
-    "lint": "pnpm lint:eslint && pnpm lint:tsc"
+    "lint": "pnpm lint:eslint && pnpm lint:tsc",
+    "vitest-preview": "vitest-preview"
   },
   "dependencies": {
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.5",
     "@mui/icons-material": "7.2.0",
     "@mui/material": "7.2.0",
+    "eslint-js": "github:eslint/js",
     "express": "^4.19.2",
     "framer-motion": "^12.23.0",
     "msw": "^2.10.3",
@@ -29,6 +31,7 @@
     "react-dom": "19.1.0"
   },
   "devDependencies": {
+    "@eslint/js": "^9.33.0",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.3.0",
     "@testing-library/user-event": "^14.5.2",
@@ -54,6 +57,7 @@
     "typescript": "^5.2.2",
     "vite": "^7.0.2",
     "vite-plugin-eslint": "^1.8.1",
-    "vitest": "^3.2.4"
+    "vitest": "^3.2.4",
+    "vitest-preview": "^0.0.1"
   }
 }
