@@ -11,7 +11,7 @@ export const createMockHandlers = (initEvents = [] as Event[]) => {
 
   const handlers = [
     http.get('/api/events', () => {
-      return HttpResponse.json(testEvents);
+      return HttpResponse.json({ events: testEvents });
     }),
 
     http.post('/api/events', async ({ request }) => {
