@@ -1,13 +1,6 @@
 import { act, renderHook, waitFor } from '@testing-library/react';
-import { http, HttpResponse } from 'msw';
 
-import {
-  setupMockHandlerCreation,
-  setupMockHandlerDeletion,
-  setupMockHandlerUpdating,
-} from '../../__mocks__/handlersUtils.ts';
 import { useEventOperations } from '../../hooks/useEventOperations.ts';
-import { server } from '../../setupTests.ts';
 import { Event } from '../../types.ts';
 import { mockNotificationEvents } from '../test-data.ts';
 
@@ -165,7 +158,7 @@ it('존재하는 이벤트 삭제 시 에러없이 아이템이 삭제된다.', 
 it("이벤트 로딩 실패 시 '이벤트 로딩 실패'라는 텍스트와 함께 에러 토스트가 표시되어야 한다", async () => {
   global.fetch = vi.fn().mockRejectedValue(new Error('Failed to fetch events'));
 
-  const { result } = renderHook(() => useEventOperations(false));
+  renderHook(() => useEventOperations(false));
 
   // 2. waitFor를 사용하여 enqueueSnackbar가 호출될 때까지 기다립니다.
   await waitFor(() => {

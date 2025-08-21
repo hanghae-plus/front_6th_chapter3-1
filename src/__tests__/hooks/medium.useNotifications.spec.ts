@@ -2,9 +2,8 @@ import { act, renderHook } from '@testing-library/react';
 
 import { useNotifications } from '../../hooks/useNotifications.ts';
 import { Event } from '../../types.ts';
-import { formatDate } from '../../utils/dateUtils.ts';
-import { parseHM } from '../utils.ts';
 import { createNotificationMessage, getUpcomingEvents } from '../../utils/notificationUtils.ts';
+import { parseHM } from '../utils.ts';
 
 // 유틸리티 함수들을 모킹합니다.
 vi.mock('../../utils/notificationUtils', () => ({

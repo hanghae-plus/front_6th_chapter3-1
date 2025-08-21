@@ -1,4 +1,3 @@
-import { Event } from '../../types';
 import { getFilteredEvents } from '../../utils/eventUtils';
 import { mock20250701WeekData, mockEvents } from '../test-data';
 
