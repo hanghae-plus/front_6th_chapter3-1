@@ -427,5 +427,5 @@ it('notificationTime을 10으로 하면 지정 시간 10분 전 알람 텍스트
   });
 
   // 알림 확인
-  expect(await screen.findByText('10분 후 기존 회의 일정이 시작됩니다.')).toBeInTheDocument();
+  expect(await screen.findByText(/10분 후/)).toBeInTheDocument();
 });

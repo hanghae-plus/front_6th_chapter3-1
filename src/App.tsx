@@ -47,6 +47,7 @@ import {
 } from './utils/dateUtils';
 import { findOverlappingEvents } from './utils/eventOverlap';
 import { getTimeErrorMessage } from './utils/timeValidation';
+import NotificationContainer from './components/Notification/NotificationContainer.tsx';
 
 const categories = ['업무', '개인', '가족', '기타'];
 
@@ -632,27 +633,12 @@ function App() {
         </DialogActions>
       </Dialog>
 
-      {notifications.length > 0 && (
-        <Stack position="fixed" top={16} right={16} spacing={2} alignItems="flex-end">
-          {notifications.map((notification, index) => (
-            <Alert
-              key={index}
-              severity="info"
-              sx={{ width: 'auto' }}
-              action={
-                <IconButton
-                  size="small"
-                  onClick={() => setNotifications((prev) => prev.filter((_, i) => i !== index))}
-                >
-                  <Close />
-                </IconButton>
-              }
-            >
-              <AlertTitle>{notification.message}</AlertTitle>
-            </Alert>
-          ))}
-        </Stack>
-      )}
+      <NotificationContainer
+        notifications={notifications}
+        onRemoveNotification={(index) =>
+          setNotifications((prev) => prev.filter((_, i) => i !== index))
+        }
+      />
     </Box>
   );
 }
