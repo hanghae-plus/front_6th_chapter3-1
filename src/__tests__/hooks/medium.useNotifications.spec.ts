@@ -4,8 +4,7 @@ import { useNotifications } from '../../hooks/useNotifications.ts';
 import { Event } from '../../types.ts';
 // TODO formatDate, parseHM 어디에 적용하면 좋을지 생각해보기
 // TODO Describe로 묶었을 때 시간이 제대로 적용되지 않는 부분 확인하기
-import { formatDate } from '../../utils/dateUtils.ts';
-import { createEventMock, parseHM } from '../utils.ts';
+import { createEventMock } from '../utils.ts';
 
 const sampleEvents: Event[] = [
   createEventMock({
