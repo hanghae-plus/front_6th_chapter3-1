@@ -3,6 +3,7 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { render, screen, within, act } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { SnackbarProvider } from 'notistack';
+import { OverlayProvider } from 'overlay-kit';
 
 import { createTestEvent, setupMockEvents } from '../__mocks__/handlersUtils';
 import App from '../App';
@@ -41,9 +42,11 @@ const renderApp = () => {
   return render(
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <SnackbarProvider>
-        <App />
-      </SnackbarProvider>
+      <OverlayProvider>
+        <SnackbarProvider>
+          <App />
+        </SnackbarProvider>
+      </OverlayProvider>
     </ThemeProvider>
   );
 };
