@@ -19,13 +19,18 @@ export const timeToMinutes = (timeStr: string) => {
   return hours * 60 + minutes;
 };
 
+// 날짜를 'yyyy-mm-dd' 형태로 변환
+export const getDateString = (date: Date) => {
+  return date.toISOString().split('T')[0];
+}
+
 // 오늘 날짜에서 한 달 전후로 랜덤한 날짜 반환
 export const getRandomDate = () => {
   const today = new Date();
   const oneMonthAgo = new Date(today.getTime() - 30 * 24 * 60 * 60 * 1000);
   const oneMonthLater = new Date(today.getTime() + 30 * 24 * 60 * 60 * 1000);
   const randomTime = oneMonthAgo.getTime() + Math.random() * (oneMonthLater.getTime() - oneMonthAgo.getTime());
-  return new Date(randomTime).toISOString().split('T')[0];
+  return getDateString(new Date(randomTime));
 };
 
 // 30분 단위로 랜덤한 시간 'hh:mm' 형태로 반환
