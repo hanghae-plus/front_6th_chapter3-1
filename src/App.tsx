@@ -1,14 +1,4 @@
-import {
-  Box,
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-  Stack,
-  Typography,
-} from '@mui/material';
+import { Box, Stack } from '@mui/material';
 import { useSnackbar } from 'notistack';
 import { useState } from 'react';
 
@@ -16,6 +6,7 @@ import { CalendarView } from './components/calendar';
 import { EventFormComponent } from './components/EventForm';
 import { EventList } from './components/EventList';
 import { NotificationToast } from './components/NotificationToast';
+import { OverlapDialog } from './components/OverlapDialog';
 import { useCalendarView } from './hooks/useCalendarView.ts';
 import { useEventForm } from './hooks/useEventForm.ts';
 import { useEventOperations } from './hooks/useEventOperations.ts';
@@ -70,6 +61,27 @@ function App() {
   const [overlappingEvents, setOverlappingEvents] = useState<Event[]>([]);
 
   const { enqueueSnackbar } = useSnackbar();
+
+  const handleOverlapConfirm = () => {
+    setIsOverlapDialogOpen(false);
+    saveEvent({
+      id: editingEvent ? editingEvent.id : undefined,
+      title,
+      date,
+      startTime,
+      endTime,
+      description,
+      location,
+      category,
+      repeat: {
+        type: isRepeating ? repeatType : 'none',
+        interval: repeatInterval,
+        endDate: repeatEndDate || undefined,
+      },
+      notificationTime,
+    });
+    resetForm();
+  };
 
   const addOrUpdateEvent = async () => {
     if (!title || !date || !startTime || !endTime) {
@@ -168,47 +180,12 @@ function App() {
         />
       </Stack>
 
-      <Dialog open={isOverlapDialogOpen} onClose={() => setIsOverlapDialogOpen(false)}>
-        <DialogTitle>일정 겹침 경고</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            다음 일정과 겹칩니다:
-            {overlappingEvents.map((event) => (
-              <Typography key={event.id}>
-                {event.title} ({event.date} {event.startTime}-{event.endTime})
-              </Typography>
-            ))}
-            계속 진행하시겠습니까?
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setIsOverlapDialogOpen(false)}>취소</Button>
-          <Button
-            color="error"
-            onClick={() => {
-              setIsOverlapDialogOpen(false);
-              saveEvent({
-                id: editingEvent ? editingEvent.id : undefined,
-                title,
-                date,
-                startTime,
-                endTime,
-                description,
-                location,
-                category,
-                repeat: {
-                  type: isRepeating ? repeatType : 'none',
-                  interval: repeatInterval,
-                  endDate: repeatEndDate || undefined,
-                },
-                notificationTime,
-              });
-            }}
-          >
-            계속 진행
-          </Button>
-        </DialogActions>
-      </Dialog>
+      <OverlapDialog
+        open={isOverlapDialogOpen}
+        onClose={() => setIsOverlapDialogOpen(false)}
+        overlappingEvents={overlappingEvents}
+        onConfirm={handleOverlapConfirm}
+      />
 
       <NotificationToast notifications={notifications} setNotifications={setNotifications} />
     </Box>
