@@ -355,11 +355,23 @@ describe('fillZero', () => {
 });
 
 describe('formatDate', () => {
-  it('날짜를 YYYY-MM-DD 형식으로 포맷팅한다', () => {});
+  it('날짜를 YYYY-MM-DD 형식으로 포맷팅한다', () => {
+    const date = new Date(2025, 11, 21); // 2025-12-21
+    expect(formatDate(date)).toBe('2025-12-21');
+  });
 
-  it('day 파라미터가 제공되면 해당 일자로 포맷팅한다', () => {});
+  it('day 파라미터가 제공되면 해당 일자로 포맷팅한다', () => {
+    const date = new Date(2025, 11, 21); // 2025-12-21
+    expect(formatDate(date, 3)).toBe('2025-12-03');
+  });
 
-  it('월이 한 자리 수일 때 앞에 0을 붙여 포맷팅한다', () => {});
+  it('월이 한 자리 수일 때 앞에 0을 붙여 포맷팅한다', () => {
+    const date = new Date(2025, 7, 21); // 2025-08-21
+    expect(formatDate(date)).toBe('2025-08-21');
+  });
 
-  it('일이 한 자리 수일 때 앞에 0을 붙여 포맷팅한다', () => {});
+  it('일이 한 자리 수일 때 앞에 0을 붙여 포맷팅한다', () => {
+    const date = new Date(2025, 11, 1); // 2025-12-01
+    expect(formatDate(date)).toBe('2025-12-01');
+  });
 });
