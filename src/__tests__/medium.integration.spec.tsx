@@ -2,11 +2,8 @@ import CssBaseline from '@mui/material/CssBaseline';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { render, screen, within, act } from '@testing-library/react';
 import { UserEvent, userEvent } from '@testing-library/user-event';
-import { http, HttpResponse } from 'msw';
 import { SnackbarProvider } from 'notistack';
 import { ReactElement } from 'react';
-
-import { debug } from 'vitest-preview';
 
 import {
   setupMockHandlerCreation,
@@ -16,9 +13,7 @@ import {
   setupMockHandlerWeeklyView,
 } from '../__mocks__/handlersUtils';
 import App from '../App';
-import { server } from '../setupTests';
 import { Event } from '../types';
-import { L } from 'vitest/dist/chunks/reporters.d.BFLkQcL6.js';
 
 const theme = createTheme();
 
