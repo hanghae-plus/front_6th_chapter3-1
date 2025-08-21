@@ -11,6 +11,7 @@ import {
   Tooltip,
 } from '@mui/material';
 import { useSnackbar } from 'notistack';
+import React from 'react';
 
 import { Event, EventForm as EventFormType, RepeatType } from '../types';
 import { findOverlappingEvents } from '../utils/eventOverlap';
