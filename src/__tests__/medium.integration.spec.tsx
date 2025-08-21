@@ -1,6 +1,6 @@
 import CssBaseline from '@mui/material/CssBaseline';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import { render, screen, within, fireEvent } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { SnackbarProvider } from 'notistack';
 import { vi } from 'vitest';
@@ -68,7 +68,8 @@ describe('일정 CRUD 및 기본 기능', () => {
 
     await user.clear(titleInput);
     await user.type(titleInput, '수정한 제목');
-    fireEvent.change(dateInput, { target: { value: '2025-08-21' } });
+    await user.clear(dateInput);
+    await user.type(dateInput, '2025-08-21');
     await user.clear(descriptionInput);
     await user.type(descriptionInput, '이것은 수정한 내용이니라.');
 
@@ -316,9 +317,12 @@ describe('일정 충돌', () => {
     const startTimeInput = screen.getByLabelText('시작 시간');
     const endTimeInput = screen.getByLabelText('종료 시간');
 
-    fireEvent.change(dateInput, { target: { value: '2025-08-16' } });
-    fireEvent.change(startTimeInput, { target: { value: '09:00' } });
-    fireEvent.change(endTimeInput, { target: { value: '10:00' } });
+    await user.clear(dateInput);
+    await user.type(dateInput, '2025-08-16');
+    await user.clear(startTimeInput);
+    await user.type(startTimeInput, '09:00');
+    await user.clear(endTimeInput);
+    await user.type(endTimeInput, '10:00');
 
     await user.click(submitButton);
 
