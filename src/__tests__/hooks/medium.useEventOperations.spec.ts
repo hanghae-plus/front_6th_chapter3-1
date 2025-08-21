@@ -81,7 +81,6 @@ it("새로 정의된 'title', 'endTime' 기준으로 적절하게 일정이 업�
     await result.current.saveEvent(updatedEvent as Event);
   });
 
-  // 이 테스트 확인은 필요 할 듯?
   // 수정된 타이틀과 종료시간 이벤트들 확인
   expect(result.current.events[0].title).toBe('수정된 회의');
   expect(result.current.events[0].endTime).toBe('16:00');
@@ -118,7 +117,7 @@ it("이벤트 로딩 실패 시 '이벤트 로딩 실패'라는 텍스트와 함
     })
   );
 
-  const { result } = renderHook(() => useEventOperations(false));
+  renderHook(() => useEventOperations(false));
 
   await act(async () => {
     await new Promise((resolve) => setTimeout(resolve, 0));
