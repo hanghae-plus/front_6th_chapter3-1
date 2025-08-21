@@ -338,7 +338,7 @@ describe('알람 기능', () => {
     await user.type(screen.getByLabelText('시작 시간'), '15:00');
     await user.type(screen.getByLabelText('종료 시간'), '16:00');
 
-    await user.click(screen.getByTestId('notification-select'));
+    await user.click(await screen.findByText('1분 전'));
     await user.click(await screen.findByText('10분 전'));
 
     await user.click(screen.getByTestId('event-submit-button'));
