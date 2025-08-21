@@ -216,7 +216,27 @@ describe('일정 CRUD 및 기본 기능', () => {
 });
 
 describe('일정 뷰', () => {
-  it('주별 뷰를 선택 후 해당 주에 일정이 없으면, 일정이 표시되지 않는다.', async () => {});
+  it('주별 뷰를 선택 후 해당 주에 일정이 없으면, 일정이 표시되지 않는다.', async () => {
+    server.use(...setupMockHandlerCreation([]));
+
+    const user = userEvent.setup();
+    render(
+      <ThemeProvider theme={createTheme()}>
+        <SnackbarProvider>
+          <App />
+        </SnackbarProvider>
+      </ThemeProvider>
+    );
+
+    const viewTypeContainer = await screen.findByLabelText('뷰 타입 선택');
+    const viewTypeSelect = await within(viewTypeContainer).findByRole('combobox');
+    await user.click(viewTypeSelect);
+    await user.click(screen.getByRole('option', { name: 'week-option' }));
+
+    expect(await screen.findByTestId('week-view')).toBeInTheDocument();
+
+    await waitFor(() => expect(screen.getByText('검색 결과가 없습니다.')).toBeInTheDocument());
+  });
 
   it('주별 뷰 선택 후 해당 일자에 일정이 존재한다면 해당 일정이 정확히 표시된다', async () => {});
 
