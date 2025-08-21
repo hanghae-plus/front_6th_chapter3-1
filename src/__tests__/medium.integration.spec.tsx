@@ -178,7 +178,41 @@ describe('일정 CRUD 및 기본 기능', () => {
     expect(within(eventList).getByText('알림: 1시간 전')).toBeInTheDocument();
   });
 
-  it('일정을 삭제하고 더 이상 조회되지 않는지 확인한다', async () => {});
+  it('일정을 삭제하고 더 이상 조회되지 않는지 확인한다', async () => {
+    const prevEvent = {
+      id: '1',
+      title: '발제 모임',
+      date: '2025-08-24',
+      startTime: '13:00',
+      endTime: '11:00',
+      description: '발제 시청',
+      location: '아이콘 빌딩',
+      category: '업무',
+      repeat: { type: 'none', interval: 0 },
+      notificationTime: 10,
+    } as Event;
+
+    server.use(...setupMockHandlerUpdating([prevEvent]));
+    const user = userEvent.setup();
+
+    render(
+      <ThemeProvider theme={createTheme()}>
+        <SnackbarProvider>
+          <App />
+        </SnackbarProvider>
+      </ThemeProvider>
+    );
+
+    const list = await screen.findByTestId('event-list');
+    expect(await within(list).findByText('발제 모임')).toBeInTheDocument();
+
+    await user.click(within(list).getByRole('button', { name: 'Delete event' }));
+
+    await screen.findByText('일정이 삭제되었습니다.');
+    await waitFor(() =>
+      expect(screen.queryByText('검색 결과가 없습니다.')).not.toBeInTheDocument()
+    );
+  });
 });
 
 describe('일정 뷰', () => {
