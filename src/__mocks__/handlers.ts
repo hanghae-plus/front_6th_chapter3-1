@@ -1,4 +1,3 @@
-import { randomUUID } from 'crypto';
 import { http, HttpResponse, HttpHandler } from 'msw';
 
 import { events } from '../__mocks__/response/events.json' assert { type: 'json' };
@@ -18,7 +17,7 @@ export const createHandler = (initialEvents: Event[] = []) => {
   
     http.post('/api/events', async ({ request }) => {
       const eventData = (await request.json()) as EventForm;
-      const newEvent = { id: randomUUID(), ...eventData };
+      const newEvent = { id: crypto.randomUUID(), ...eventData };
       data.events.push(newEvent);
   
       return HttpResponse.json({ events: data.events }, { status: 201 });

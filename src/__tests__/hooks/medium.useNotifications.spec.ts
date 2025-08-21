@@ -1,9 +1,6 @@
 import { act, renderHook } from '@testing-library/react';
 
 import { useNotifications } from '../../hooks/useNotifications.ts';
-import { Event } from '../../types.ts';
-import { formatDate } from '../../utils/dateUtils.ts';
-import { parseHM } from '../utils.ts';
 import { createEvents } from '../eventFactory.ts';
 
 beforeEach(() => {

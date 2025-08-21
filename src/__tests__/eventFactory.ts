@@ -1,4 +1,3 @@
-import { randomUUID } from 'crypto';
 import { Event, EventForm } from '../types';
 import { generateEndTimeAfterStart, getRandomDate, getRandomTime } from './utils';
 
@@ -8,7 +7,7 @@ export const createEventForm = (override: Partial<EventForm> = {}): EventForm =>
   const endTime = generateEndTimeAfterStart(startTime);
 
   const defaults: EventForm = {
-    title: `테스트 이벤트 ${randomUUID()}`,
+    title: `테스트 이벤트 ${crypto.randomUUID()}`,
     date: getRandomDate(),
     startTime,
     endTime,
@@ -26,7 +25,7 @@ export const createEventForm = (override: Partial<EventForm> = {}): EventForm =>
 export const createEvent = (override: Partial<Event> = {}): Event => {
   const eventFormDefaults = createEventForm();
   const defaults: Event = {
-    id: override.id || randomUUID(),
+    id: override.id || crypto.randomUUID(),
     ...eventFormDefaults,
   };
 

@@ -1,4 +1,3 @@
-import { randomUUID } from 'crypto';
 import fs from 'fs';
 import { readFile } from 'fs/promises';
 import path from 'path';
@@ -24,7 +23,7 @@ app.get('/api/events', async (_, res) => {
 
 app.post('/api/events', async (req, res) => {
   const events = await getEvents();
-  const newEvent = { id: randomUUID(), ...req.body };
+  const newEvent = { id: crypto.randomUUID(), ...req.body };
 
   fs.writeFileSync(
     `${__dirname}/src/__mocks__/response/realEvents.json`,

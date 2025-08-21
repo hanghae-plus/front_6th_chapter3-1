@@ -62,7 +62,7 @@ it("주간 뷰에서 다음으로 navigate시 7일 후 '2025-10-08' 날짜로 �
   expect(result.current.currentDate).toEqual(expected);
 });
 
-it("주간 뷰에서 이전으로 navigate시 7일 후 '2025-09-24' 날짜로 지정이 된다", () => {
+it("주간 뷰에서 이전으로 navigate시 7일 전 '2025-09-24' 날짜로 지정이 된다", () => {
   const { result } = renderHook(() => useCalendarView());
 
   act(() => {
