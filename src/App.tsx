@@ -1,7 +1,4 @@
-import Close from '@mui/icons-material/Close';
 import {
-  Alert,
-  AlertTitle,
   Box,
   Button,
   Dialog,
@@ -9,7 +6,6 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
-  IconButton,
   Stack,
   Typography,
 } from '@mui/material';
@@ -19,6 +15,7 @@ import { useState } from 'react';
 import { CalendarView } from './components/calendar';
 import { EventFormComponent } from './components/EventForm';
 import { EventList } from './components/EventList';
+import { NotificationToast } from './components/NotificationToast';
 import { useCalendarView } from './hooks/useCalendarView.ts';
 import { useEventForm } from './hooks/useEventForm.ts';
 import { useEventOperations } from './hooks/useEventOperations.ts';
@@ -213,27 +210,7 @@ function App() {
         </DialogActions>
       </Dialog>
 
-      {notifications.length > 0 && (
-        <Stack position="fixed" top={16} right={16} spacing={2} alignItems="flex-end">
-          {notifications.map((notification, index) => (
-            <Alert
-              key={index}
-              severity="info"
-              sx={{ width: 'auto' }}
-              action={
-                <IconButton
-                  size="small"
-                  onClick={() => setNotifications((prev) => prev.filter((_, i) => i !== index))}
-                >
-                  <Close />
-                </IconButton>
-              }
-            >
-              <AlertTitle>{notification.message}</AlertTitle>
-            </Alert>
-          ))}
-        </Stack>
-      )}
+      <NotificationToast notifications={notifications} setNotifications={setNotifications} />
     </Box>
   );
 }
