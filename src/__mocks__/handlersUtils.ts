@@ -107,3 +107,87 @@ export const setupMockHandlerUpdatingFailure = () => {
 export const setupMockHandlerDeletionFailure = () => {
   server.use(http.delete('/api/events/:id', () => new HttpResponse(null, { status: 404 })));
 };
+
+// 일정뷰 확인 케이스
+export const setupMockHandlerWeeklyView = () => {
+  const mockEvents: Event[] = [
+    {
+      id: '1',
+      title: '첫 주 일정',
+      date: '2025-10-01',
+      startTime: '09:00',
+      endTime: '10:00',
+      description: '기존 팀 미팅',
+      location: '회의실 B',
+      category: '업무',
+      repeat: { type: 'none', interval: 0 },
+      notificationTime: 10,
+    },
+    {
+      id: '2',
+      title: '다른 주 일정',
+      date: '2025-10-15',
+      startTime: '11:00',
+      endTime: '12:00',
+      description: '기존 팀 미팅 2',
+      location: '회의실 C',
+      category: '업무',
+      repeat: { type: 'none', interval: 0 },
+      notificationTime: 10,
+    },
+    {
+      id: '3',
+      title: '11월 일정',
+      date: '2025-11-01',
+      startTime: '11:00',
+      endTime: '12:00',
+      description: '기존 팀 미팅 2',
+      location: '회의실 C',
+      category: '업무',
+      repeat: { type: 'none', interval: 0 },
+      notificationTime: 10,
+    },
+  ];
+
+  server.use(
+    http.get('/api/events', () => {
+      return HttpResponse.json({ events: mockEvents });
+    })
+  );
+};
+
+// 검색 기능 테스트 케이스
+export const setupMockHandlerSearch = () => {
+  const mockEvents: Event[] = [
+    {
+      id: '1',
+      title: '기존 회의',
+      date: '2025-10-01',
+      startTime: '09:00',
+      endTime: '10:00',
+      description: '기존 팀 미팅',
+      location: '회의실 B',
+      category: '업무',
+      repeat: { type: 'none', interval: 0 },
+      notificationTime: 10,
+    },
+    {
+      id: '2',
+      title: '팀 회의',
+      date: '2025-10-15',
+      startTime: '11:00',
+      endTime: '12:00',
+      description: '기존 팀 미팅 2',
+      location: '회의실 C',
+      category: '업무',
+      repeat: { type: 'none', interval: 0 },
+      notificationTime: 10,
+    },
+  ];
+
+  server.use(
+    http.get('/api/events', () => {
+      return HttpResponse.json({ events: mockEvents });
+    })
+  );
+};
