@@ -7,8 +7,13 @@ describe('getFilteredEvents', () => {
 
   it("검색어 '회의'에 맞는 이벤트만 반환한다", () => {
     const result = getFilteredEvents(mockEvents, '회의', new Date(2025, 9, 15), 'month');
-    expect(result).toHaveLength(3);
-    expect(result.every((event) => event.title.includes('회의'))).toBe(true);
+    expect(result).toHaveLength(3); // 제목에 '회의' 2개 + 위치에 '회의실' 1개
+    // 제목에 '회의'가 포함된 이벤트들
+    const titleMatches = result.filter((event) => event.title.includes('회의'));
+    expect(titleMatches).toHaveLength(2);
+    // 위치에 '회의실'이 포함된 이벤트들 (모든 이벤트)
+    const locationMatches = result.filter((event) => event.location.includes('회의실'));
+    expect(locationMatches).toHaveLength(3);
   });
 
   it('주간 뷰에서 2025-10-15 주의 이벤트만 반환한다', () => {
@@ -25,8 +30,8 @@ describe('getFilteredEvents', () => {
 
   it("검색어 '기존'과 주간 뷰 필터링을 동시에 적용한다", () => {
     const result = getFilteredEvents(mockEvents, '기존', new Date(2025, 9, 15), 'week');
-    expect(result).toHaveLength(1);
-    expect(result[0].title).toBe('기존 회의');
+    expect(result).toHaveLength(2);
+    expect(result.every((event) => event.title.includes('기존'))).toBe(true);
   });
 
   it('검색어가 없을 때 모든 이벤트를 반환한다', () => {

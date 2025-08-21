@@ -4,7 +4,8 @@ export function parseDateTime(date: string, time: string) {
   return new Date(`${date}T${time}`);
 }
 
-export function convertEventToDateRange({ date, startTime, endTime }: Event | EventForm) {
+export function convertEventToDateRange(event: Event | EventForm) {
+  const { date, startTime, endTime } = event;
   return {
     start: parseDateTime(date, startTime),
     end: parseDateTime(date, endTime),
@@ -20,6 +21,9 @@ export function isOverlapping(event1: Event | EventForm, event2: Event | EventFo
 
 export function findOverlappingEvents(newEvent: Event | EventForm, events: Event[]) {
   return events.filter(
-    (event) => event.id !== (newEvent as Event).id && isOverlapping(event, newEvent)
+    (event) => {
+      const newEventId = (newEvent as Event).id;
+      return (!newEventId || event.id !== newEventId) && isOverlapping(event, newEvent);
+    }
   );
 }
