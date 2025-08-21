@@ -4,7 +4,6 @@ import { render, screen, within } from '@testing-library/react';
 import { UserEvent, userEvent } from '@testing-library/user-event';
 import { SnackbarProvider } from 'notistack';
 import { ReactElement } from 'react';
-import { debug } from 'vitest-preview';
 
 import {
   setupMockHandlerCreation,
@@ -99,26 +98,22 @@ describe('일정 CRUD 및 기본 기능', () => {
     const eventList = await screen.findByTestId('event-list');
     const editButtons = within(eventList).getAllByLabelText('Edit event');
     await user.click(editButtons[0]);
-    debug();
 
     // 폼이 편집 모드로 전환되었는지 확인 (버튼으로 찾기)
     expect(screen.getByRole('button', { name: '일정 수정' })).toBeInTheDocument();
 
     // 기존 값이 폼에 로드되었는지 확인
     expect(screen.getByDisplayValue('기존 회의')).toBeInTheDocument();
-    debug();
 
     // 제목 수정
     const titleInput = screen.getByLabelText('제목');
     await user.clear(titleInput);
     await user.type(titleInput, '수정된 팀 회의');
-    debug();
 
     // 시간 수정
     const startTimeInput = screen.getByLabelText('시작 시간');
     await user.clear(startTimeInput);
     await user.type(startTimeInput, '14:00');
-    debug();
 
     // 설명 수정
     const descriptionInput = screen.getByLabelText('설명');
