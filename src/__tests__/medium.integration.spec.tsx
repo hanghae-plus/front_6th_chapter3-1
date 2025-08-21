@@ -1,17 +1,13 @@
-import CssBaseline from '@mui/material/CssBaseline';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import { render, screen, within, act, renderHook, waitFor } from '@testing-library/react';
-import { UserEvent, userEvent } from '@testing-library/user-event';
-import { http, HttpResponse } from 'msw';
+import { render, screen, within, act, waitFor } from '@testing-library/react';
+import { userEvent } from '@testing-library/user-event';
 import { SnackbarProvider } from 'notistack';
-import { ReactElement } from 'react';
 
 import { setupMockHandlerCreation, setupMockHandlerUpdating } from '../__mocks__/handlersUtils';
 import App from '../App';
-import { useEventOperations } from '../hooks/useEventOperations';
 import { server } from '../setupTests';
 import { Event } from '../types';
-import { makeEvent, makeEvents } from './factories/eventFactory';
+import { makeEvent } from './factories/eventFactory';
 
 describe('일정 CRUD 및 기본 기능', () => {
   it('입력한 새로운 일정 정보에 맞춰 모든 필드가 이벤트 리스트에 정확히 저장된다.', async () => {
@@ -501,4 +497,43 @@ describe('일정 충돌', () => {
   });
 });
 
-it('notificationTime을 10으로 하면 지정 시간 10분 전 알람 텍스트가 노출된다', async () => {});
+it('notificationTime=10이면 10분 전 실제 알림 토스트가 뜬다', async () => {
+  server.use(
+    ...setupMockHandlerCreation([
+      makeEvent({
+        id: 'n1',
+        title: '알림 이벤트',
+        date: '2025-09-01',
+        startTime: '09:00',
+        endTime: '10:00',
+        notificationTime: 10,
+      }),
+    ])
+  );
+
+  vi.useFakeTimers({ shouldAdvanceTime: true });
+  vi.setSystemTime(new Date('2025-09-01T08:49:00'));
+
+  render(
+    <ThemeProvider theme={createTheme()}>
+      <SnackbarProvider>
+        <App />
+      </SnackbarProvider>
+    </ThemeProvider>
+  );
+
+  const list = within(screen.getByTestId('event-list'));
+  await list.findByText('알림 이벤트');
+
+  await act(async () => {
+    vi.advanceTimersByTime(60000);
+  });
+
+  const alert = await screen.findByRole('alert');
+  expect(alert).toHaveTextContent('10분 후 알림 이벤트 일정이 시작됩니다.');
+
+  expect(list.getByText('알림: 10분 전')).toBeInTheDocument();
+
+  vi.clearAllTimers();
+  vi.useRealTimers();
+});
