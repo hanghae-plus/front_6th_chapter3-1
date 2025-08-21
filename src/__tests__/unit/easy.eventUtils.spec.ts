@@ -103,9 +103,7 @@ describe('getFilteredEvents', () => {
 
     const result = getFilteredEvents(allEvents, '', new Date(2025, 6, 15), 'month');
 
-    expect(result).toContain(boundaryEvent1);
-    expect(result).toContain(boundaryEvent2);
-    expect(result).toHaveLength(6);
+    expect(result).toEqual(allEvents);
   });
 
   it('빈 이벤트 리스트에 대해 빈 배열을 반환한다', () => {
