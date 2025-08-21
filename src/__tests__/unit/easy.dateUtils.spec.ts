@@ -261,17 +261,58 @@ describe('formatMonth', () => {
 });
 
 describe('isDateInRange', () => {
-  it('범위 내의 날짜 2025-07-10에 대해 true를 반환한다', () => {});
+  it('범위의 시작일과 종료일 사이에 있는 날짜를 입력했을 때 true를 반환한다', () => {
+    const startDate = new Date(2025, 6, 9); // 2025-07-09
+    const endDate = new Date(2025, 6, 11); // 2025-07-11
 
-  it('범위의 시작일 2025-07-01에 대해 true를 반환한다', () => {});
+    const middleDate = new Date(2025, 6, 10); // 2025-07-10
+    expect(isDateInRange(middleDate, startDate, endDate)).toBe(true);
+  });
 
-  it('범위의 종료일 2025-07-31에 대해 true를 반환한다', () => {});
+  it('범위의 시작일 2025-07-01에 대해 true를 반환한다', () => {
+    const startDate = new Date(2025, 6, 1); // 2025-07-09
+    const endDate = new Date(2025, 6, 30); // 2025-07-30
 
-  it('범위 이전의 날짜 2025-06-30에 대해 false를 반환한다', () => {});
+    expect(isDateInRange(startDate, startDate, endDate)).toBe(true);
+  });
 
-  it('범위 이후의 날짜 2025-08-01에 대해 false를 반환한다', () => {});
+  it('범위의 종료일 2025-07-31에 대해 true를 반환한다', () => {
+    const startDate = new Date(2025, 6, 1); // 2025-07-09
+    const endDate = new Date(2025, 6, 30); // 2025-07-30
 
-  it('시작일이 종료일보다 늦은 경우 모든 날짜에 대해 false를 반환한다', () => {});
+    expect(isDateInRange(endDate, startDate, endDate)).toBe(true);
+  });
+
+  it('범위 이전의 날짜 2025-06-30에 대해 false를 반환한다', () => {
+    const startDate = new Date(2025, 6, 1); // 2025-07-09
+    const endDate = new Date(2025, 6, 30); // 2025-07-30
+
+    const beforeStartDate = new Date(2025, 5, 30); // 2025-06-30
+
+    expect(isDateInRange(beforeStartDate, startDate, endDate)).toBe(false);
+  });
+
+  it('범위 이후의 날짜 2025-08-01에 대해 false를 반환한다', () => {
+    const startDate = new Date(2025, 6, 1); // 2025-07-09
+    const endDate = new Date(2025, 6, 30); // 2025-07-30
+
+    const afterEndDate = new Date(2025, 7, 1); // 2025-08-01
+
+    expect(isDateInRange(afterEndDate, startDate, endDate)).toBe(false);
+  });
+
+  it('시작일이 종료일보다 늦은 경우 모든 날짜에 대해 false를 반환한다', () => {
+    const startDate = new Date(2025, 6, 30); // 2025-07-09
+    const endDate = new Date(2025, 6, 1); // 2025-07-30
+
+    const middleDate = new Date(2025, 6, 10); // 2025-07-10
+    const beforeEndDate = new Date(2025, 5, 30); // 2025-06-30
+    const afterStartDate = new Date(2025, 7, 1); // 2025-08-01
+
+    const dates = [beforeEndDate, middleDate, afterStartDate];
+
+    dates.every((date) => expect(isDateInRange(date, startDate, endDate)).toBe(false));
+  });
 });
 
 describe('fillZero', () => {
