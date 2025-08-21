@@ -192,7 +192,7 @@ describe('isOverlapping', () => {
   });
 });
 
-describe.only('findOverlappingEvents', () => {
+describe('findOverlappingEvents', () => {
   it('새 이벤트와 겹치는 모든 이벤트를 반환한다', () => {
     const newEvent: Event = {
       id: 'da3ca408-836a-4d98-b67a-ca389d07552aa',
