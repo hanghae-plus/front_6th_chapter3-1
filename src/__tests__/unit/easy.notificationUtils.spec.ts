@@ -51,6 +51,6 @@ describe('createNotificationMessage', () => {
     const [mockEvent] = mockEvents;
     const notificationMessage = createNotificationMessage(mockEvent);
 
-    expect(notificationMessage).toBe('10분 후 팀 회의 일정이 시작됩니다');
+    expect(notificationMessage).toBe('10분 후 팀 회의 일정이 시작됩니다.');
   });
 });
