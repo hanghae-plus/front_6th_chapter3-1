@@ -168,13 +168,51 @@ describe('getWeeksAtMonth', () => {
 });
 
 describe('getEventsForDay', () => {
-  it('특정 날짜(1일)에 해당하는 이벤트만 정확히 반환한다', () => {});
+  it('특정 날짜(1일)를 입력했을 때 그 날짜에 해당하는 이벤트만 반환한다.', () => {
+    const firstDay = new Date(2025, 7, 1); // 2025-08-01
+    const firstDayEvent = { date: '2025-08-01' } as Event;
+    const secondDayEvent = { date: '2025-08-02' } as Event;
+    const events: Event[] = [firstDayEvent, secondDayEvent];
 
-  it('해당 날짜에 이벤트가 없을 경우 빈 배열을 반환한다', () => {});
+    const result = getEventsForDay(events, firstDay.getDate());
+    expect(result).toEqual([firstDayEvent]);
+    expect(result).toHaveLength(1);
+  });
 
-  it('날짜가 0일 경우 빈 배열을 반환한다', () => {});
+  it('해당 날짜에 이벤트가 없을 경우 빈 배열을 반환한다', () => {
+    const secondDayEvent = { date: '2025-08-02' } as Event;
+    const thirdDayEvent = { date: '2025-08-03' } as Event;
+    const events: Event[] = [secondDayEvent, thirdDayEvent];
 
-  it('날짜가 32일 이상인 경우 빈 배열을 반환한다', () => {});
+    const firstDay = new Date(2025, 7, 1); // 2025-08-01
+    const result = getEventsForDay(events, firstDay.getDate());
+
+    expect(result).toEqual([]);
+    expect(result).toHaveLength(0);
+  });
+
+  //날짜에 0라는 숫자를 넣는 것은 기본적으로 배열에 요구되는 인자를 넣는 것이 아니라서 테스트 의미가 없다
+  it('날짜가 0일 경우 빈 배열을 반환한다', () => {
+    const secondDayEvent = { date: '2025-08-02' } as Event;
+    const thirdDayEvent = { date: '2025-08-03' } as Event;
+    const events: Event[] = [secondDayEvent, thirdDayEvent];
+
+    const result = getEventsForDay(events, 0);
+
+    expect(result).toEqual([]);
+    expect(result).toHaveLength(0);
+  });
+
+  //날짜에 32라는 숫자를 넣는 것은 기본적으로 배열에 요구되는 인자를 넣는 것이 아니라서 테스트 의미가 없다
+  it('날짜가 32일 이상인 경우 빈 배열을 반환한다', () => {
+    const firstDayEvent = { date: '2025-08-01' } as Event;
+    const secondDayEvent = { date: '2025-08-02' } as Event;
+    const events: Event[] = [firstDayEvent, secondDayEvent];
+
+    const result = getEventsForDay(events, 32);
+    expect(result).toEqual([]);
+    expect(result).toHaveLength(0);
+  });
 });
 
 describe('formatWeek', () => {
