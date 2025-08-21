@@ -3,7 +3,7 @@ import { Box, Stack } from '@mui/material';
 import { CalendarViewComponent } from './components/CalendarView';
 import { EventFormComponent } from './components/EventForm';
 import { EventListComponent } from './components/EventList';
-import { Notification } from './components/Notification';
+import { Notifications } from './components/Notifications';
 import { useEventForm } from './hooks/useEventForm';
 import { useEventOperations } from './hooks/useEventOperations';
 import { useNotifications } from './hooks/useNotifications';
@@ -34,7 +34,7 @@ function App() {
         />
       </Stack>
 
-      <Notification
+      <Notifications
         notifications={notifications}
         onRemoveNotification={(index) =>
           setNotifications((prev) => prev.filter((_, i) => i !== index))

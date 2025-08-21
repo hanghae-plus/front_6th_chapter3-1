@@ -5,12 +5,12 @@ interface Notification {
   message: string;
 }
 
-interface NotificationProps {
+interface NotificationsProps {
   notifications: Notification[];
   onRemoveNotification: (index: number) => void;
 }
 
-export function Notification({ notifications, onRemoveNotification }: NotificationProps) {
+export function Notifications({ notifications, onRemoveNotification }: NotificationsProps) {
   if (notifications.length === 0) {
     return null;
   }
