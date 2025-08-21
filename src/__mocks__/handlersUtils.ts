@@ -58,6 +58,10 @@ export const setupMockHandlerUpdating = () => {
       const updatedEvent = (await request.json()) as Event;
       const index = events.findIndex((event) => event.id === params.id);
 
+      if (index === -1) {
+        return new HttpResponse(null, { status: 404 });
+      }
+
       events[index] = { ...events[index], ...updatedEvent };
       return HttpResponse.json(events[index]);
     })
@@ -97,6 +101,10 @@ export const setupMockHandlerDeletion = () => {
     }),
     http.delete('/api/events/:id', ({ params }) => {
       const index = events.findIndex((event) => event.id === params.id);
+
+      if (index === -1) {
+        return new HttpResponse(null, { status: 404 });
+      }
 
       events.splice(index, 1);
       return new HttpResponse(null, { status: 204 });
