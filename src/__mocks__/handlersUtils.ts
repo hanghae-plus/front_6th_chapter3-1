@@ -35,6 +35,7 @@ export const setupMockHandlerCreation = (
         id: randomUUID(),
         ...requestJson,
       };
+      store.current.push(newEvent);
       if (postIsSuccess) return HttpResponse.json(newEvent, { status: 201 });
       return HttpResponse.json({ message: 'not found' }, { status: 404 });
     }),
