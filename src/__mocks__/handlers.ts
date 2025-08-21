@@ -2,21 +2,24 @@ import { http, HttpResponse } from 'msw';
 
 import { events } from '../__mocks__/response/events.json' assert { type: 'json' };
 import { Event, EventForm } from '../types';
+import { defaultMockEvents } from './mockData';
+
+// 테스트용 에러 핸들러 생성 헬퍼 함수
+export const createErrorHandler = (method: string, endpoint: string, statusCode: number = 500) => {
+  return http[method as keyof typeof http](endpoint, () => {
+    return HttpResponse.json(
+      { error: 'Server Error' },
+      { status: statusCode }
+    );
+  });
+};
 
 // ! HARD
 // ! 각 응답에 대한 MSW 핸들러를 작성해주세요. GET 요청은 이미 작성되어 있는 events json을 활용해주세요.
 export const handlers = [
   http.get('/api/events', () => {
     return HttpResponse.json({
-      events: [
-        {
-          id: 1,
-          title: '모각코',
-          date: '2025-08-21',
-          startTime: '10:00',
-          endTime: '11:00',
-        },
-      ],
+      events: defaultMockEvents,
     });
   }),
 
