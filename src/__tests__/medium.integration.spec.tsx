@@ -1,6 +1,6 @@
 import CssBaseline from '@mui/material/CssBaseline';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import { render, screen, within, act } from '@testing-library/react';
+import { render, screen, within, act, waitFor } from '@testing-library/react';
 import { UserEvent, userEvent } from '@testing-library/user-event';
 import { http, HttpResponse } from 'msw';
 import { SnackbarProvider } from 'notistack';
@@ -55,15 +55,89 @@ const saveSchedule = async (
   await user.click(screen.getByTestId('event-submit-button'));
 };
 
+const updateSchedule = async (
+  user: UserEvent,
+  form: Omit<Event, 'id' | 'notificationTime' | 'repeat'>
+) => {
+  const { title, date, startTime, endTime, location, description, category } = form;
+
+  // 기존 값 초기화
+  await user.clear(screen.getByLabelText('제목'));
+  await user.clear(screen.getByLabelText('설명'));
+  await user.clear(screen.getByLabelText('위치'));
+  await user.clear(screen.getByLabelText('날짜'));
+  await user.clear(screen.getByLabelText('시작 시간'));
+  await user.clear(screen.getByLabelText('종료 시간'));
+
+  // 재작성
+  await user.type(screen.getByLabelText('제목'), title);
+  await user.type(screen.getByLabelText('날짜'), date);
+  await user.type(screen.getByLabelText('시작 시간'), startTime);
+  await user.type(screen.getByLabelText('종료 시간'), endTime);
+  await user.type(screen.getByLabelText('설명'), description);
+  await user.type(screen.getByLabelText('위치'), location);
+  await user.click(screen.getByLabelText('카테고리'));
+  await user.click(within(screen.getByLabelText('카테고리')).getByRole('combobox'));
+  await user.click(screen.getByRole('option', { name: `${category}-option` }));
+
+  await user.click(screen.getByTestId('event-submit-button'));
+};
+
 // ! HINT. "검색 결과가 없습니다"는 초기에 노출되는데요. 그럼 검증하고자 하는 액션이 실행되기 전에 검증해버리지 않을까요? 이 테스트를 신뢰성있게 만드려면 어떻게 할까요?
 describe('일정 CRUD 및 기본 기능', () => {
   it('입력한 새로운 일정 정보에 맞춰 모든 필드가 이벤트 리스트에 정확히 저장된다.', async () => {
     // ! HINT. event를 추가 제거하고 저장하는 로직을 잘 살펴보고, 만약 그대로 구현한다면 어떤 문제가 있을 지 고민해보세요.
+    setupMockHandlerCreation();
+
+    const { user } = setup(<App />);
+
+    await saveSchedule(user, {
+      title: '항해 주간 회의',
+      date: '2025-10-04',
+      startTime: '14:00',
+      endTime: '15:00',
+      location: 'A104',
+      description: '회의합니다.',
+      category: '업무',
+    });
+
+    await screen.findByText('일정이 추가되었습니다.');
+
+    const eventListBox = screen.getByTestId('event-list');
+    expect(within(eventListBox).getByText('항해 주간 회의')).toBeInTheDocument();
   });
 
-  it('기존 일정의 세부 정보를 수정하고 변경사항이 정확히 반영된다', async () => {});
+  it('기존 일정의 세부 정보를 수정하고 변경사항이 정확히 반영된다', async () => {
+    const { user } = setup(<App />);
+    setupMockHandlerUpdating(); //Q. 이걸 뒤에 놔야 화면이 로드된 후 데이터가 들어오나?
 
-  it('일정을 삭제하고 더 이상 조회되지 않는지 확인한다', async () => {});
+    await user.click(await screen.findByLabelText('Edit event'));
+
+    await updateSchedule(user, {
+      title: '항해 주간 회의',
+      date: '2025-10-01',
+      startTime: '14:00',
+      endTime: '15:00',
+      location: 'A104',
+      description: '회의합니다.',
+      category: '업무',
+    });
+
+    await screen.findByText('일정이 수정되었습니다.');
+
+    const eventList = within(screen.getByTestId('event-list'));
+    expect(eventList.getByText('항해 주간 회의')).toBeInTheDocument();
+  });
+
+  it('일정을 삭제하고 더 이상 조회되지 않는지 확인한다', async () => {
+    const { user } = setup(<App />);
+    setupMockHandlerDeletion();
+
+    await user.click(await screen.findByLabelText('Delete event'));
+
+    const eventList = within(screen.getByTestId('event-list'));
+    expect(eventList.queryByText('삭제할 이벤트')).not.toBeInTheDocument();
+  });
 });
 
 describe('일정 뷰', () => {
