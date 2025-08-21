@@ -14,6 +14,7 @@ import {
 
 import { Event } from '../types';
 import { getTimeErrorMessage } from '../utils/timeValidation';
+import { ChangeEvent } from 'react';
 
 const categories = ['업무', '개인', '가족', '기타'];
 
@@ -45,8 +46,8 @@ interface EventFormProps {
   startTimeError: string | null;
   endTimeError: string | null;
   editingEvent: Event | null;
-  handleStartTimeChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  handleEndTimeChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  handleStartTimeChange: (e: ChangeEvent<HTMLInputElement>) => void;
+  handleEndTimeChange: (e: ChangeEvent<HTMLInputElement>) => void;
   onSubmit: () => void;
 }
 
