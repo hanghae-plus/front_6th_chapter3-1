@@ -127,7 +127,7 @@ describe('일정 CRUD 및 기본 기능', () => {
     // 수정 전 일정 1건 확인
     expect(await screen.findAllByTestId('event-item')).toHaveLength(1);
 
-    const editButtons = await screen.findAllByRole('button', { name: 'Edit event' });
+    const editButtons = screen.getAllByRole('button', { name: 'Edit event' });
     expect(editButtons).toHaveLength(1);
 
     const user = userEvent.setup();
