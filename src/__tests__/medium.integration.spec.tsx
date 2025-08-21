@@ -1,7 +1,7 @@
 import CssBaseline from '@mui/material/CssBaseline';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { render, screen, within } from '@testing-library/react';
-import { userEvent } from '@testing-library/user-event';
+import { UserEvent, userEvent } from '@testing-library/user-event';
 import { SnackbarProvider } from 'notistack';
 import { ReactElement } from 'react';
 
@@ -11,6 +11,7 @@ import {
   setupMockHandlerUpdating,
 } from '../__mocks__/handlersUtils';
 import App from '../App';
+import { EventForm } from '../types';
 
 const setup = (element: ReactElement) => {
   const theme = createTheme();
@@ -27,9 +28,23 @@ const setup = (element: ReactElement) => {
   };
 };
 
+const fillEventForm = async (user: UserEvent, eventData: Partial<EventForm>) => {
+  if (eventData.title) await user.type(screen.getByLabelText('제목'), eventData.title);
+  if (eventData.date) await user.type(screen.getByLabelText('날짜'), eventData.date);
+  if (eventData.startTime) await user.type(screen.getByLabelText('시작 시간'), eventData.startTime);
+  if (eventData.endTime) await user.type(screen.getByLabelText('종료 시간'), eventData.endTime);
+  if (eventData.description) await user.type(screen.getByLabelText('설명'), eventData.description);
+  if (eventData.location) await user.type(screen.getByLabelText('위치'), eventData.location);
+
+  if (eventData.category) {
+    const selectCategory = screen.getByLabelText('카테고리');
+    await user.click(within(selectCategory).getByRole('combobox'));
+    await user.click(screen.getByRole('option', { name: `${eventData.category}-option` }));
+  }
+};
+
 describe('일정 CRUD 및 기본 기능', () => {
   it('폼 데이터를 입력하고 일정 추가 버튼을 클릭하면 새로운 일정이 리스트에 추가된다.', async () => {
-    // ! HINT. event를 추가 제거하고 저장하는 로직을 잘 살펴보고, 만약 그대로 구현한다면 어떤 문제가 있을 지 고민해보세요.
     setupMockHandlerCreation([
       {
         id: '1',
@@ -47,21 +62,21 @@ describe('일정 CRUD 및 기본 기능', () => {
 
     const { user } = setup(<App />);
 
-    await user.type(screen.getByLabelText('제목'), '새로운 회의');
-    await user.type(screen.getByLabelText('날짜'), '2025-10-16');
-    await user.type(screen.getByLabelText('시작 시간'), '10:00');
-    await user.type(screen.getByLabelText('종료 시간'), '11:00');
-    await user.type(screen.getByLabelText('설명'), '새로운 팀 미팅');
-    await user.type(screen.getByLabelText('위치'), '회의실 A');
+    await fillEventForm(user, {
+      title: '크리스마스 준비',
+      date: '2025-10-25',
+      startTime: '12:00',
+      endTime: '23:00',
+      description: '크리스마스 파티 준비하기',
+      location: '회의실 A',
+      category: '기타',
+    });
 
-    const selectCategory = screen.getByLabelText('카테고리');
-
-    await user.click(within(selectCategory).getByRole('combobox'));
-    await user.click(screen.getByRole('option', { name: `기타-option` }));
     await user.click(screen.getByRole('button', { name: '일정 추가' }));
 
-    expect(await screen.findAllByRole('button', { name: 'Edit event' })).toHaveLength(2);
-    expect(screen.getByText('새로운 팀 미팅')).toBeInTheDocument();
+    const editButtons = await screen.findAllByRole('button', { name: 'Edit event' });
+    expect(editButtons).toHaveLength(2);
+    expect(screen.getByText('크리스마스 파티 준비하기')).toBeInTheDocument();
   });
 
   it('일정을 수정하면 수정된 정보가 이벤트 리스트에 반영된다.', async () => {
@@ -127,8 +142,8 @@ describe('일정 뷰', () => {
     ]);
 
     const { user } = setup(<App />);
-    const viewSelect = screen.getByLabelText('뷰 타입 선택');
 
+    const viewSelect = screen.getByLabelText('뷰 타입 선택');
     await user.click(within(viewSelect).getByRole('combobox'));
     await user.click(screen.getByRole('option', { name: 'week-option' }));
 
@@ -137,7 +152,6 @@ describe('일정 뷰', () => {
   });
 
   it("view가 'month'일 때 해당 월에 일정이 없으면, 일정이 표시되지 않는다.", async () => {
-    // 불필요한 테스트 케이스 월별 뷰는 기본값이기에 문제가 있다면 Create, Edit, Delete 테스트 케이스에서 모두 확인이 가능함
     setupMockHandlerCreation([
       {
         id: '1',
@@ -160,7 +174,6 @@ describe('일정 뷰', () => {
   });
 
   it("view가 'month'일 때 해당 월에 일정이 있다면 리스트, 달력에 표시된다", async () => {
-    // 불필요한 테스트 케이스 월별 뷰는 기본값이기에 문제가 있다면 Create, Edit, Delete 테스트 케이스에서 모두 확인이 가능함
     setup(<App />);
 
     expect(
@@ -276,12 +289,15 @@ describe('일정 충돌', () => {
   it('겹치는 시간에 새 일정을 추가할 때 경고가 표시된다', async () => {
     const { user } = setup(<App />);
 
-    await user.type(screen.getByLabelText('제목'), '새로운 회의');
-    await user.type(screen.getByLabelText('날짜'), '2025-10-15');
-    await user.type(screen.getByLabelText('시작 시간'), '09:30');
-    await user.type(screen.getByLabelText('종료 시간'), '10:30');
-    await user.type(screen.getByLabelText('설명'), '새로운 팀 미팅');
-    await user.type(screen.getByLabelText('위치'), '회의실 A');
+    await fillEventForm(user, {
+      title: '새로운 회의',
+      date: '2025-10-15',
+      startTime: '09:30',
+      endTime: '10:30',
+      description: '새로운 팀 미팅',
+      location: '회의실 K',
+    });
+
     await user.click(screen.getByRole('button', { name: '일정 추가' }));
 
     expect(screen.getByText('일정 겹침 경고')).toBeInTheDocument();
@@ -295,7 +311,6 @@ describe('일정 충돌', () => {
     const editButtons = await screen.findAllByRole('button', { name: 'Edit event' });
 
     await user.click(editButtons[0]);
-
     await user.clear(screen.getByLabelText('시작 시간'));
     await user.type(screen.getByLabelText('시작 시간'), '11:30');
     await user.clear(screen.getByLabelText('종료 시간'));
@@ -306,14 +321,12 @@ describe('일정 충돌', () => {
   });
 });
 
-describe('알림 기능', () => {
-  it('notificationTime을 10으로 하면 지정 시간 10분 전 알람 텍스트가 노출된다', async () => {
-    vi.setSystemTime(new Date('2025-10-15T08:50:00'));
+it('notificationTime을 10으로 하면 지정 시간 10분 전 알람 텍스트가 노출된다', async () => {
+  vi.setSystemTime(new Date('2025-10-15T08:50:00'));
 
-    setup(<App />);
+  setup(<App />);
 
-    await screen.findByText('기존 팀 미팅');
+  await screen.findByText('기존 팀 미팅');
 
-    expect(await screen.findByText('10분 후 기존 회의 일정이 시작됩니다.')).toBeInTheDocument();
-  });
+  expect(await screen.findByText('10분 후 기존 회의 일정이 시작됩니다.')).toBeInTheDocument();
 });
