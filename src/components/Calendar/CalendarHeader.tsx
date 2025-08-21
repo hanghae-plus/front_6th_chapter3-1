@@ -9,7 +9,7 @@ interface CalendarHeaderProps {
 
 export const CalendarHeader = ({ view, setView, onNavigate }: CalendarHeaderProps) => {
   return (
-    <Stack flex={1} spacing={5}>
+    <>
       <Typography variant="h4">일정 보기</Typography>
 
       <Stack direction="row" spacing={2} justifyContent="space-between" alignItems="center">
@@ -33,6 +33,6 @@ export const CalendarHeader = ({ view, setView, onNavigate }: CalendarHeaderProp
           <ChevronRight />
         </IconButton>
       </Stack>
-    </Stack>
+    </>
   );
 };

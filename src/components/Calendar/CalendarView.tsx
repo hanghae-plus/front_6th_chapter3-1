@@ -1,3 +1,4 @@
+import { Stack } from '@mui/material';
 import { Event } from '../../types';
 import { CalendarHeader } from './CalendarHeader';
 import { MonthView } from './MonthView';
@@ -25,7 +26,7 @@ export const CalendarView = ({
   onNavigate,
 }: CalendarViewProps) => {
   return (
-    <>
+    <Stack flex={1} spacing={5}>
       <CalendarHeader view={view} setView={setView} onNavigate={onNavigate} />
 
       {view === 'week' && (
@@ -46,6 +47,6 @@ export const CalendarView = ({
           weekDays={weekDays}
         />
       )}
-    </>
+    </Stack>
   );
 };
