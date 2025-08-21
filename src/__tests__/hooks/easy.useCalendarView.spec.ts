@@ -4,16 +4,9 @@ import { vi } from 'vitest';
 import { useCalendarView } from '../../hooks/useCalendarView.ts';
 import { assertDate } from '../utils.ts';
 
-vi.useFakeTimers();
-
 describe('초기 상태', () => {
   beforeEach(() => {
-    vi.clearAllTimers();
     vi.setSystemTime(new Date('2025-10-01T00:00:00'));
-  });
-
-  afterEach(() => {
-    vi.useRealTimers();
   });
 
   it('view는 "month"이어야 한다', () => {
