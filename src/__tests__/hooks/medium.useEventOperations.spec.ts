@@ -10,7 +10,7 @@ import { useEventOperations } from '../../hooks/useEventOperations.ts';
 import { server } from '../../setupTests.ts';
 import { Event } from '../../types.ts';
 import realEvents from '../../__mocks__/response/realEvents.json';
-import newEvents from '../../__mocks__/response/events.json';
+// import newEvents from '../../__mocks__/response/events.json';
 
 const enqueueSnackbarFn = vi.fn();
 
@@ -56,7 +56,7 @@ it('정의된 이벤트 정보를 기준으로 적절하게 저장이 된다', a
   } as Event;
 
   await act(async () => {
-    await result.current.saveEvent(newEvent);
+    result.current.saveEvent(newEvent);
   });
 
   const savedEvent = result.current.events.find((event) => event.title === newEvent.title);
@@ -114,8 +114,63 @@ it('존재하는 이벤트 삭제 시 에러없이 아이템이 삭제된다.', 
   expect(result.current.events).toEqual([]);
 });
 
-it("이벤트 로딩 실패 시 '이벤트 로딩 실패'라는 텍스트와 함께 에러 토스트가 표시되어야 한다", async () => {});
+it("이벤트 로딩 실패 시 '이벤트 로딩 실패'라는 텍스트와 함께 에러 토스트가 표시되어야 한다", async () => {
+  server.use(
+    http.get('/api/events', () => {
+      return HttpResponse.error();
+    })
+  );
 
-it("존재하지 않는 이벤트 수정 시 '일정 저장 실패'라는 토스트가 노출되며 에러 처리가 되어야 한다", async () => {});
+  const { result } = renderHook(() => useEventOperations(false));
 
-it("네트워크 오류 시 '일정 삭제 실패'라는 텍스트가 노출되며 이벤트 삭제가 실패해야 한다", async () => {});
+  await act(async () => {
+    result.current.fetchEvents();
+  });
+
+  expect(enqueueSnackbarFn).toHaveBeenCalledWith('이벤트 로딩 실패', { variant: 'error' });
+});
+
+it("존재하지 않는 이벤트 수정 시 '일정 저장 실패'라는 토스트가 노출되며 에러 처리가 되어야 한다", async () => {
+  setupMockHandlerUpdating();
+
+  // editing = true
+  const { result } = renderHook(() => useEventOperations(true));
+  // 존재하지 않는 이벤트
+  const newEvent: Event = {
+    id: '3',
+    title: '기존 회의3',
+    date: '2025-10-15',
+    startTime: '09:00',
+    endTime: '15:00',
+    description: '기존 팀 미팅3',
+    location: '회의실 B',
+    category: '업무',
+    repeat: { type: 'none', interval: 0 },
+    notificationTime: 10,
+  };
+
+  await act(async () => {
+    result.current.saveEvent(newEvent);
+  });
+
+  expect(enqueueSnackbarFn).toHaveBeenCalledWith('일정 저장 실패', { variant: 'error' });
+});
+
+it("네트워크 오류 시 '일정 삭제 실패'라는 텍스트가 노출되며 이벤트 삭제가 실패해야 한다", async () => {
+  setupMockHandlerDeletion();
+
+  // 삭제 처리가 실패하도록 덮어씀
+  server.use(
+    http.delete('/api/events/:id', () => {
+      return HttpResponse.error();
+    })
+  );
+
+  const { result } = renderHook(() => useEventOperations(true));
+
+  await act(async () => {
+    result.current.deleteEvent('1');
+  });
+
+  expect(enqueueSnackbarFn).toHaveBeenCalledWith('일정 삭제 실패', { variant: 'error' });
+});
