@@ -28,12 +28,12 @@ describe('WeekView', () => {
 
   describe('이벤트 날짜별 표시', () => {
     test('이벤트가 해당하는 날짜에만 표시되어야 한다', () => {
-      // Given & When: 월요일과 수요일에 이벤트가 있는 상태로 렌더링하면
+      // Given & When: 일요일에 이벤트가 있는 상태로 렌더링하면
       render(
         <WeekView currentDate={currentDate} filteredEvents={mockEvents} notifiedEvents={[]} />
       );
 
-      // Then: 모든 이벤트가 표시되어야 한다
+      // Then: 해당 주의 이벤트가 표시되어야 한다
       expect(screen.getByText('면접공부')).toBeInTheDocument();
       expect(screen.getByText('회의')).toBeInTheDocument();
     });
@@ -71,12 +71,12 @@ describe('WeekView', () => {
     });
 
     test('같은 날짜에 여러 이벤트가 있으면 모두 표시되어야 한다', () => {
-      // Given & When: 수요일에 두 개의 이벤트가 있는 상태로 렌더링하면
+      // Given & When: 일요일에 두 개의 이벤트가 있는 상태로 렌더링하면
       render(
         <WeekView currentDate={currentDate} filteredEvents={mockEvents} notifiedEvents={[]} />
       );
 
-      // Then: 같은 날(수요일)의 두 이벤트가 모두 보여야 한다
+      // Then: 같은 날(일요일)의 두 이벤트가 모두 보여야 한다
       expect(screen.getByText('면접공부')).toBeInTheDocument();
       expect(screen.getByText('회의')).toBeInTheDocument();
     });
