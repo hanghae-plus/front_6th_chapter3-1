@@ -1,10 +1,68 @@
+import { http, HttpResponse } from 'msw';
+import { randomUUID } from 'crypto';
+
+import { server } from '../setupTests';
 import { Event } from '../types';
+import { events } from '../__mocks__/response/events.json' assert { type: 'json' };
 
-// ! Hard
-// ! 이벤트는 생성, 수정 되면 fetch를 다시 해 상태를 업데이트 합니다. 이를 위한 제어가 필요할 것 같은데요. 어떻게 작성해야 테스트가 병렬로 돌아도 안정적이게 동작할까요?
-// ! 아래 이름을 사용하지 않아도 되니, 독립적이게 테스트를 구동할 수 있는 방법을 찾아보세요. 그리고 이 로직을 PR에 설명해주세요.
-export const setupMockHandlerCreation = (initEvents = [] as Event[]) => {};
+export const setupMockHandlerCreation = (initEvents = [] as Event[]) => {
+  const testEvents = initEvents;
 
-export const setupMockHandlerUpdating = () => {};
+  server.use(
+    http.get('/api/events', () => {
+      return HttpResponse.json({ events: testEvents });
+    }),
+    http.post<{ id: string }, Event, Event>('/api/events', async ({ request }) => {
+      const newEvent = await request.json();
+      const eventWithId: Event = {
+        ...newEvent,
+        id: randomUUID(),
+      };
+      testEvents.push(eventWithId);
+      return new HttpResponse(eventWithId, { status: 201 });
+    })
+  );
+};
 
-export const setupMockHandlerDeletion = () => {};
+export const setupMockHandlerUpdating = () => {
+  const testEvents = [...events];
+
+  server.use(
+    http.get('/api/events', () => {
+      return HttpResponse.json({ events: testEvents });
+    }),
+    http.put<{ id: string }, Event, Event>('/api/events/:id', async ({ params, request }) => {
+      const { id } = params;
+      const response = (await request.json()) as Event;
+
+      const index = testEvents.findIndex((event) => event.id === id);
+      if (index !== -1) {
+        const updatedEvent: Event = { ...response, id };
+        testEvents[index] = updatedEvent;
+        return HttpResponse.json(updatedEvent);
+      }
+      return new HttpResponse(null, { status: 404 });
+    })
+  );
+};
+
+export const setupMockHandlerDeletion = () => {
+  const testEvents = [...events];
+
+  server.use(
+    http.get('/api/events', () => {
+      return HttpResponse.json({ events: testEvents });
+    }),
+    http.delete<{ id: string }>('/api/events/:id', async ({ params }) => {
+      const { id } = params;
+      const index = testEvents.findIndex((event) => event.id === id);
+
+      if (index !== -1) {
+        testEvents.splice(index, 1);
+        return HttpResponse.json(null, { status: 204 });
+      }
+
+      return HttpResponse.json(null, { status: 404 });
+    })
+  );
+};

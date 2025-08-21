@@ -1,5 +1,6 @@
 import { act, renderHook } from '@testing-library/react';
 import { http, HttpResponse } from 'msw';
+import { randomUUID } from 'crypto';
 
 import {
   setupMockHandlerCreation,
@@ -52,6 +53,8 @@ describe('useEventOperations', () => {
   });
 
   it('정의된 이벤트 정보를 기준으로 적절하게 저장이 된다', async () => {
+    setupMockHandlerCreation();
+
     const { result } = renderHook(() => useEventOperations(false));
     const newEvent: EventForm = {
       title: '추가 안건 회의',
@@ -79,25 +82,7 @@ describe('useEventOperations', () => {
   });
 
   it("새로 정의된 'title', 'endTime' 기준으로 적절하게 일정이 업데이트 된다", async () => {
-    const testEvents = [...events];
-
-    server.use(
-      http.get('/api/events', () => {
-        return HttpResponse.json({ events: testEvents });
-      }),
-      http.put<{ id: string }, Event, Event>('/api/events/:id', async ({ params, request }) => {
-        const { id } = params;
-        const response = (await request.json()) as Event;
-        const updatedEvent: Event = { ...response, id };
-
-        const index = testEvents.findIndex((event) => event.id === id);
-        if (index !== -1) {
-          testEvents[index] = updatedEvent;
-          return HttpResponse.json(updatedEvent);
-        }
-        return new HttpResponse(null, { status: 404 });
-      })
-    );
+    setupMockHandlerUpdating();
     const { result } = renderHook(() => useEventOperations(true));
 
     await act(async () => {
@@ -124,23 +109,7 @@ describe('useEventOperations', () => {
   });
 
   it('존재하는 이벤트 삭제 시 에러없이 아이템이 삭제된다.', async () => {
-    let testEvents = [...events];
-
-    server.use(
-      http.get('/api/events', () => {
-        return HttpResponse.json({ events: testEvents });
-      }),
-      http.delete<{ id: string }>('/api/events/:id', async ({ params, request }) => {
-        const { id } = params;
-        testEvents = testEvents.filter((event) => event.id !== id);
-        const index = testEvents.findIndex((event) => event.id === id);
-        if (index == -1) {
-          return HttpResponse.json(null, { status: 204 });
-        }
-
-        return HttpResponse.json(null, { status: 404 });
-      })
-    );
+    setupMockHandlerDeletion();
 
     const { result } = renderHook(() => useEventOperations(false));
     await act(async () => {
@@ -181,26 +150,7 @@ describe('useEventOperations', () => {
   });
 
   it("존재하지 않는 이벤트 수정 시 '일정 저장 실패'라는 토스트가 노출되며 에러 처리가 되어야 한다", async () => {
-    const testEvents = [...events];
-
-    server.use(
-      http.get('/api/events', () => {
-        return HttpResponse.json({ events: testEvents });
-      }),
-      http.put<{ id: string }, Event, Event>('/api/events/:id', async ({ params, request }) => {
-        const { id } = params;
-        const response = (await request.json()) as Event;
-        const updatedEvent: Event = { ...response, id };
-
-        const index = testEvents.findIndex((event) => event.id === id);
-        if (index !== -1) {
-          testEvents[index] = updatedEvent;
-          return HttpResponse.json(updatedEvent);
-        }
-
-        return new HttpResponse(null, { status: 404 });
-      })
-    );
+    setupMockHandlerUpdating();
 
     const { result } = renderHook(() => useEventOperations(true));
 
