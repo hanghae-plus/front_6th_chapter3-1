@@ -1,15 +1,11 @@
 import CssBaseline from '@mui/material/CssBaseline';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import { render, screen, within, act, waitFor, fireEvent } from '@testing-library/react';
-import { UserEvent, userEvent } from '@testing-library/user-event';
-import { http, HttpResponse } from 'msw';
+import { render, screen, within, fireEvent } from '@testing-library/react';
+import { userEvent } from '@testing-library/user-event';
 import { SnackbarProvider } from 'notistack';
-import { ReactElement } from 'react';
-import { debug } from 'vitest-preview';
+import { vi } from 'vitest';
 
 import App from '../App';
-import { server } from '../setupTests';
-import { Event } from '../types';
 import { createDefaultEvents, setupMockHandler } from '../__mocks__/handlersUtils';
 
 function renderWithProviders() {
@@ -331,4 +327,17 @@ describe('일정 충돌', () => {
   });
 });
 
-it('notificationTime을 10으로 하면 지정 시간 10분 전 알람 텍스트가 노출된다', async () => {});
+it('notificationTime을 10으로 하면 지정 시간 10분 전 알람 텍스트가 노출된다', async () => {
+  const testTime = new Date('2025-10-15T08:50:00');
+  vi.setSystemTime(testTime);
+  renderWithProviders();
+
+  await expect(screen.findByText('일정 로딩 완료!')).resolves.toBeInTheDocument();
+
+  const eventList = await screen.findByTestId('event-list');
+  expect(within(eventList).getByText('기존 회의')).toBeInTheDocument();
+
+  await expect(
+    screen.findByText('10분 후 기존 회의 일정이 시작됩니다.')
+  ).resolves.toBeInTheDocument();
+});

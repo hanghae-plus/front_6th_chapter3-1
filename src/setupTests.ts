@@ -1,5 +1,6 @@
 import { setupServer } from 'msw/node';
 import '@testing-library/jest-dom';
+import { vi } from 'vitest';
 
 import { handlers } from './__mocks__/handlers';
 import { setupMockHandler } from './__mocks__/handlersUtils';
@@ -9,6 +10,7 @@ export const server = setupServer(...handlers);
 
 beforeAll(() => {
   server.listen();
+  vi.useFakeTimers({ shouldAdvanceTime: true });
 });
 
 beforeEach(() => {
@@ -23,5 +25,6 @@ afterEach(() => {
 
 afterAll(() => {
   vi.resetAllMocks();
+  vi.useRealTimers();
   server.close();
 });

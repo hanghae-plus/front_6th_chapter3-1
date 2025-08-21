@@ -92,5 +92,5 @@ export const createDefaultEvents = (date: Date = new Date()) => {
       repeat: { type: 'none', interval: 0 },
       notificationTime: 10,
     },
-  ];
+  ] as Event[];
 };
