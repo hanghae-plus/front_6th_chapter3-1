@@ -1,5 +1,6 @@
-import { getTimeErrorMessage } from '../../utils/timeValidation';
 import { expect } from 'vitest';
+
+import { getTimeErrorMessage } from '../../utils/timeValidation';
 
 describe('getTimeErrorMessage >', () => {
   it('시작 시간이 종료 시간보다 늦을 때 에러 메시지를 반환한다', () => {

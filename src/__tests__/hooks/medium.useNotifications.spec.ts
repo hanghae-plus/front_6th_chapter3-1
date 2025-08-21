@@ -1,9 +1,9 @@
 import { act, renderHook } from '@testing-library/react';
+import { expect } from 'vitest';
 
+import { defaultMockEvents } from '../../__mocks__/mockData.ts';
 import { useNotifications } from '../../hooks/useNotifications.ts';
 import { Event } from '../../types.ts';
-import { expect } from 'vitest';
-import { defaultMockEvents } from '../../__mocks__/mockData.ts';
 
 it('이벤트 데이터가 빈 배열일 때 알림 배열과 알람된 이벤트 배열이 비어있어야 한다.', () => {
   const events: Event[] = [];

@@ -4,10 +4,10 @@ import { render, screen, within, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { SnackbarProvider } from 'notistack';
 
+import { createMockEventHandler } from '../__mocks__/handlersUtils.ts';
 import App from '../App';
 import { server } from '../setupTests';
 import { Event } from '../types';
-import { createMockEventHandler } from '../__mocks__/handlersUtils.ts';
 
 const renderApp = () => {
   const theme = createTheme();

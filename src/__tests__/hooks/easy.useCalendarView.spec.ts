@@ -1,7 +1,7 @@
 import { act, renderHook } from '@testing-library/react';
+import { expect } from 'vitest';
 
 import { useCalendarView } from '../../hooks/useCalendarView.ts';
-import { expect } from 'vitest';
 
 describe('초기 상태', () => {
   it('view는 "month"이어야 한다', () => {

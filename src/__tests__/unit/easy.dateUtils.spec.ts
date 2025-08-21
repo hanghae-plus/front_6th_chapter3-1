@@ -1,3 +1,5 @@
+import { expect } from 'vitest';
+
 import { Event } from '../../types';
 import {
   fillZero,
@@ -10,7 +12,6 @@ import {
   getWeeksAtMonth,
   isDateInRange,
 } from '../../utils/dateUtils';
-import { expect } from 'vitest';
 
 describe('getDaysInMonth', () => {
   it('1월은 31일 수를 반환한다', () => {

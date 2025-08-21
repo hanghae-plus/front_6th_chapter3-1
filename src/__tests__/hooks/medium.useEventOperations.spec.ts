@@ -1,10 +1,10 @@
 import { renderHook, waitFor, act } from '@testing-library/react';
+import { expect } from 'vitest';
 
 import { createErrorHandler } from '../../__mocks__/handlers.ts';
 import { createMockEventHandler } from '../../__mocks__/handlersUtils.ts';
 import { useEventOperations } from '../../hooks/useEventOperations.ts';
 import { server } from '../../setupTests.ts';
-import { expect } from 'vitest';
 
 const enqueueSnackbarFn = vi.fn();
 

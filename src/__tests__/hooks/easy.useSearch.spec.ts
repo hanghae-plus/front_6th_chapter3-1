@@ -1,8 +1,8 @@
 import { act, renderHook } from '@testing-library/react';
+import { expect } from 'vitest';
 
 import { useSearch } from '../../hooks/useSearch.ts';
 import { Event } from '../../types.ts';
-import { expect } from 'vitest';
 
 it('검색어가 비어있을 때 현재 주간 view 범위의 모든 이벤트를 반환해야 한다', () => {
   const events: Event[] = [

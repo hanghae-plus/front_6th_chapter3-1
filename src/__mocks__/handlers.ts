@@ -7,10 +7,7 @@ import { defaultMockEvents } from './mockData';
 // 테스트용 에러 핸들러 생성 헬퍼 함수
 export const createErrorHandler = (method: string, endpoint: string, statusCode: number = 500) => {
   return http[method as keyof typeof http](endpoint, () => {
-    return HttpResponse.json(
-      { error: 'Server Error' },
-      { status: statusCode }
-    );
+    return HttpResponse.json({ error: 'Server Error' }, { status: statusCode });
   });
 };
 

@@ -1,6 +1,7 @@
+import { expect } from 'vitest';
+
 import { Event } from '../../types';
 import { getFilteredEvents } from '../../utils/eventUtils';
-import { expect } from 'vitest';
 
 describe('getFilteredEvents', () => {
   it("검색어 '이벤트 2'에 맞는 이벤트만 반환한다", () => {
@@ -220,7 +221,7 @@ describe('getFilteredEvents', () => {
         location: '회사',
       },
       {
-        id: '2', 
+        id: '2',
         title: '7월 첫날',
         date: '2025-07-01',
         description: '이벤트',
@@ -246,7 +247,7 @@ describe('getFilteredEvents', () => {
         location: '회사',
       },
       {
-        id: '2', 
+        id: '2',
         title: '7월 첫날',
         date: '2025-07-01',
         description: '이벤트',

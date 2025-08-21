@@ -1,15 +1,16 @@
+import { expect } from 'vitest';
+
+import { Event } from '../../types.ts';
 import {
   convertEventToDateRange,
   findOverlappingEvents,
   isOverlapping,
   parseDateTime,
 } from '../../utils/eventOverlap';
-import { expect } from 'vitest';
-import { Event } from '../../types.ts';
 describe('parseDateTime', () => {
   it('2025-07-01 14:30을 정확한 Date 객체로 변환한다', () => {
     const parsedDate = parseDateTime('2025-07-01', '14:30');
-    console.log('parsedDate', parsedDate);
+
     expect(parsedDate).toEqual(new Date('2025-07-01T05:30:00.000Z'));
   });
 

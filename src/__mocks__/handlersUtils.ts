@@ -1,5 +1,6 @@
-import { Event, EventForm } from '../types';
 import { http, HttpResponse } from 'msw';
+
+import { Event, EventForm } from '../types';
 import { defaultMockEvents } from './mockData';
 
 // ! Hard
