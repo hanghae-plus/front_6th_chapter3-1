@@ -2,8 +2,8 @@ import ChevronLeft from '@mui/icons-material/ChevronLeft';
 import ChevronRight from '@mui/icons-material/ChevronRight';
 import { Stack, Typography, IconButton, Select, MenuItem } from '@mui/material';
 
-import MonthView from '../views/MonthView';
-import WeekView from '../views/WeekView';
+import MonthView from './MonthView';
+import WeekView from './WeekView';
 
 const Calendar = ({
   currentDate,

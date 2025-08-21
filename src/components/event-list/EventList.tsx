@@ -1,15 +1,9 @@
 import Delete from '@mui/icons-material/Delete';
 import Edit from '@mui/icons-material/Edit';
 import Notifications from '@mui/icons-material/Notifications';
-import {
-  Stack,
-  FormControl,
-  FormLabel,
-  TextField,
-  Typography,
-  Box,
-  IconButton,
-} from '@mui/material';
+import { Stack, Typography, Box, IconButton } from '@mui/material';
+
+import SearchBar from './SearchBar';
 
 const EventList = ({
   searchTerm,
@@ -26,16 +20,7 @@ const EventList = ({
       spacing={2}
       sx={{ width: '30%', height: '100%', overflowY: 'auto' }}
     >
-      <FormControl fullWidth>
-        <FormLabel htmlFor="search">일정 검색</FormLabel>
-        <TextField
-          id="search"
-          size="small"
-          placeholder="검색어를 입력하세요"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
-      </FormControl>
+      <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
 
       {filteredEvents.length === 0 ? (
         <Typography>검색 결과가 없습니다.</Typography>

@@ -8,7 +8,7 @@ import {
   Button,
 } from '@mui/material';
 
-const CustomDialog = ({
+const OverlapDialog = ({
   isOverlapDialogOpen,
   setIsOverlapDialogOpen,
   overlappingEvents,
@@ -45,4 +45,4 @@ const CustomDialog = ({
   );
 };
 
-export default CustomDialog;
+export default OverlapDialog;

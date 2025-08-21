@@ -1,11 +1,11 @@
 import { Box, Stack } from '@mui/material';
 import { useState } from 'react';
 
-import Calendar from './components/section/Calendar.tsx';
-import CustomDialog from './components/section/CustomDialog.tsx';
-import EventEditForm from './components/section/EventEditForm.tsx';
-import EventList from './components/section/EventList.tsx';
-import NotificationList from './components/section/NotificationList.tsx';
+import Calendar from './components/calendar/Calendar.tsx';
+import OverlapDialog from './components/dialog/OverlapDialog.tsx';
+import EventEditForm from './components/event-form/EventEditForm.tsx';
+import EventList from './components/event-list/EventList.tsx';
+import NotificationList from './components/notification/NotificationList.tsx';
 import { useCalendarView } from './hooks/useCalendarView.ts';
 import { useEventOperations } from './hooks/useEventOperations.ts';
 import { useNotifications } from './hooks/useNotifications.ts';
@@ -72,7 +72,7 @@ function App() {
         />
       </Stack>
 
-      <CustomDialog
+      <OverlapDialog
         isOverlapDialogOpen={isOverlapDialogOpen}
         setIsOverlapDialogOpen={setIsOverlapDialogOpen}
         overlappingEvents={overlappingEvents}
