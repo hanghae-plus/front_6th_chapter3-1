@@ -379,18 +379,29 @@ describe.only('일정 충돌', () => {
   });
 });
 
-it('notificationTime을 10으로 하면 지정 시간 10분 전 알람 텍스트가 노출된다', async () => {
-  setupMockHandlerCreation();
-
+it.only('notificationTime을 10으로 하면 지정 시간 10분 전 알람 텍스트가 노출된다', async () => {
+  setupMockHandlerCreation([
+    {
+      id: '1',
+      title: '기존 회의',
+      date: '2025-10-15',
+      startTime: '09:00',
+      endTime: '10:00',
+      description: '기존 팀 미팅',
+      location: '회의실 B',
+      category: '업무',
+      repeat: { type: 'none', interval: 0 },
+      notificationTime: 10,
+    },
+  ] satisfies Event[]);
   const { user } = setup(<App />);
 
   await screen.findByText('일정 로딩 완료!');
 
-  // 10분 후 시간으로 일정 생성 (현재 시간이 2025-10-01 00:00:00)
   await saveSchedule(user, {
     title: '알림 테스트 일정',
     date: '2025-10-01',
-    startTime: '00:10', // 현재 시간으로부터 10분 후
+    startTime: '00:10',
     endTime: '00:30',
     description: '알림 테스트',
     location: '어딘가',
@@ -399,7 +410,6 @@ it('notificationTime을 10으로 하면 지정 시간 10분 전 알람 텍스트
 
   await screen.findByText('일정이 추가되었습니다.');
 
-  // 알림 텍스트가 나타날 때까지 대기 (notificationTime이 10분이므로 즉시 알림이 떠야 함)
   expect(
     await screen.findByText('10분 후 알림 테스트 일정 일정이 시작됩니다.')
   ).toBeInTheDocument();
