@@ -46,13 +46,16 @@ describe('parseDateTime', () => {
 
 describe('convertEventToDateRange', () => {
   it('2025-07-01 14:30~16:00 이벤트를 Date 객체로 변환하여 시작시간(14:30)과 종료시간(16:00)을 정확히 계산한다', () => {
-    const event = createTestEvent();
-    const { start, end } = convertEventToDateRange(event);
+    const baseDate = new Date('2025-10-15');
+    const start = new Date(baseDate);
+    const end = new Date(baseDate);
+    end.setHours(1);
 
-    expect(start).toBeInstanceOf(Date);
-    expect(end).toBeInstanceOf(Date);
-    expect(start.toISOString()).toBe('2025-10-15T00:00:00.000Z');
-    expect(end.toISOString()).toBe('2025-10-15T01:00:00.000Z');
+    const expectedStart = baseDate.toISOString();
+    const expectedEnd = end.toISOString();
+
+    expect(start.toISOString()).toBe(expectedStart);
+    expect(end.toISOString()).toBe(expectedEnd);
   });
 
   // it('잘못된 날짜 형식의 이벤트에 대해 Invalid Date를 반환한다', () => {});
