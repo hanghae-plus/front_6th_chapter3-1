@@ -1,6 +1,5 @@
 import { render, screen, within, act } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
-import { debug } from 'jest-preview';
 import { SnackbarProvider } from 'notistack';
 import { ReactElement } from 'react';
 
@@ -146,7 +145,6 @@ describe('일정 뷰', () => {
     ]);
     setup(<App />);
     await screen.findByText('일정 로딩 완료!');
-    debug();
 
     // When: 월별 뷰를 확인
     // Then: 해당 일정이 월별 뷰에 표시되어야 함
