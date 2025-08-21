@@ -18,6 +18,11 @@ const HOLIDAY_RECORD = {
 type HolidayRecord = typeof HOLIDAY_RECORD;
 type HolidayKeys = keyof HolidayRecord;
 
+/**
+ * 주어진 날짜가 속한 월의 모든 공휴일을 반환합니다.
+ * @param date - 조회할 월이 포함된 Date 객체
+ * @returns 해당 월의 공휴일 객체 (키: YYYY-MM-DD 형식의 날짜, 값: 공휴일명)
+ */
 export function fetchHolidays(date: Date) {
   const y = date.getFullYear();
   const m = String(date.getMonth() + 1).padStart(2, '0');

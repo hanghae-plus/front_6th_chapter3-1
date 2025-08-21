@@ -1,7 +1,7 @@
 import { Event } from '../../types';
 import { getFilteredEvents } from '../../utils/eventUtils';
 
-describe.only('getFilteredEvents', () => {
+describe('getFilteredEvents', () => {
   const mockEvents: Event[] = [
     {
       id: '1',
