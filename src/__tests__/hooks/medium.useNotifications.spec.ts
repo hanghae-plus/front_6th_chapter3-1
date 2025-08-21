@@ -1,10 +1,11 @@
 import { act, renderHook } from '@testing-library/react';
 
 import { useNotifications } from '../../hooks/useNotifications.ts';
-import { createNotificationMessage, getUpcomingEvents } from '../../utils/notificationUtils.ts';
+import { getUpcomingEvents } from '../../utils/notificationUtils.ts';
 import { createMockEvent } from '../utils.ts';
 
 // import가 되어있었지만 사용은 안하는 것
+// import {createNotificationMessage} from '../../utils/notificationUtils.ts';
 // import { Event } from '../../types.ts';
 // import { formatDate } from '../../utils/dateUtils.ts';
 // import { parseHM } from '../utils.ts';
