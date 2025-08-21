@@ -47,5 +47,10 @@ describe('getUpcomingEvents', () => {
 });
 
 describe('createNotificationMessage', () => {
-  it('올바른 알림 메시지를 생성해야 한다', () => {});
+  it.only('올바른 알림 메시지를 생성해야 한다', () => {
+    const [mockEvent] = mockEvents;
+    const notificationMessage = createNotificationMessage(mockEvent);
+
+    expect(notificationMessage).toBe('10분 후 팀 회의 일정이 시작됩니다.');
+  });
 });
