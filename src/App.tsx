@@ -22,9 +22,10 @@ import { useCalendarView } from './hooks/useCalendarView.ts';
 import { useEventForm } from './hooks/useEventForm.ts';
 import { useEventOperations } from './hooks/useEventOperations.ts';
 import { useNotifications } from './hooks/useNotifications.ts';
-import { useOverlapGuard } from './hooks/useOverlapGuard';
+import { useOverlapGuard } from './hooks/useOverlapGuard.ts';
 import { useSearch } from './hooks/useSearch.ts';
 // import { Event, EventForm, RepeatType } from './types';
+import { getNotificationLabel } from './lib/notification';
 import { Event, EventForm } from './types';
 import {
   formatDate,
@@ -34,8 +35,6 @@ import {
   getWeekDates,
   getWeeksAtMonth,
 } from './utils/dateUtils';
-import { buildEventData } from './utils/eventPayload';
-import { getNotificationLabel } from './utils/notificationUtils';
 // keep getTimeErrorMessage only used inside form panel
 
 const weekDays = ['일', '월', '화', '수', '목', '금', '토'];
@@ -102,8 +101,8 @@ function App() {
       return;
     }
 
-    const eventData: Event | EventForm = buildEventData({
-      editingEvent,
+    const eventData: Event | EventForm = {
+      id: editingEvent ? editingEvent.id : undefined,
       title,
       date,
       startTime,
@@ -111,12 +110,13 @@ function App() {
       description,
       location,
       category,
-      isRepeating,
-      repeatType,
-      repeatInterval,
-      repeatEndDate,
+      repeat: {
+        type: isRepeating ? repeatType : 'none',
+        interval: repeatInterval,
+        endDate: repeatEndDate || undefined,
+      },
       notificationTime,
-    });
+    };
 
     const blocked = checkAndOpen(eventData);
     if (!blocked) {
@@ -189,9 +189,9 @@ function App() {
         <DialogContent>
           <DialogContentText>
             다음 일정과 겹칩니다:
-            {overlappingEvents.map((event) => (
-              <Typography key={event.id}>
-                {event.title} ({event.date} {event.startTime}-{event.endTime})
+            {overlappingEvents.map((ev: Event) => (
+              <Typography key={ev.id}>
+                {ev.title} ({ev.date} {ev.startTime}-{ev.endTime})
               </Typography>
             ))}
             계속 진행하시겠습니까?
@@ -203,8 +203,8 @@ function App() {
             color="error"
             onClick={() => {
               close();
-              const payload = buildEventData({
-                editingEvent,
+              saveEvent({
+                id: editingEvent ? editingEvent.id : undefined,
                 title,
                 date,
                 startTime,
@@ -212,13 +212,13 @@ function App() {
                 description,
                 location,
                 category,
-                isRepeating,
-                repeatType,
-                repeatInterval,
-                repeatEndDate,
+                repeat: {
+                  type: isRepeating ? repeatType : 'none',
+                  interval: repeatInterval,
+                  endDate: repeatEndDate || undefined,
+                },
                 notificationTime,
               });
-              saveEvent(payload);
             }}
           >
             계속 진행
