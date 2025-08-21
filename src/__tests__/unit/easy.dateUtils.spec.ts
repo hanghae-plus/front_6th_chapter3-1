@@ -1,4 +1,7 @@
+import { test } from 'vitest';
+
 import { Event } from '../../types';
+import { createEventData } from './factories/eventFactory';
 import {
   fillZero,
   formatDate,
@@ -10,7 +13,6 @@ import {
   getWeeksAtMonth,
   isDateInRange,
 } from '../../utils/dateUtils';
-import { createEventData } from './factories/eventFactory';
 
 describe('getDaysInMonth 주어진 월의 일수를 반환한다.', () => {
   // 변경전: 1월은 31일 수를 반환한다

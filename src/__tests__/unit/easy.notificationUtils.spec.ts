@@ -1,6 +1,5 @@
-import { Event } from '../../types';
-import { createNotificationMessage, getUpcomingEvents } from '../../utils/notificationUtils';
 import { createEventData } from './factories/eventFactory';
+import { createNotificationMessage, getUpcomingEvents } from '../../utils/notificationUtils';
 
 describe('getUpcomingEvents', () => {
   it('알림 시간이 정확히 도래한 이벤트를 반환한다', () => {

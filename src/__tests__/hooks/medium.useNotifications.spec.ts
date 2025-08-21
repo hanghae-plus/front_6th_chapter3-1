@@ -1,9 +1,7 @@
-import { act, renderHook, waitFor } from '@testing-library/react';
+import { act, renderHook } from '@testing-library/react';
 
 import { useNotifications } from '../../hooks/useNotifications.ts';
 import { Event } from '../../types.ts';
-import { formatDate } from '../../utils/dateUtils.ts';
-import { parseHM } from '../utils.ts';
 
 beforeAll(() => {
   vi.useFakeTimers();
@@ -45,6 +43,7 @@ it('지정된 시간이 된 경우 알림이 새롭게 생성되어 추가된다
   expect(result.current.notifications).toEqual([
     { id: '1', message: '60분 후 테스트 이벤트 일정이 시작됩니다.' },
   ]);
+  console.log(result.current);
   expect(result.current.notifiedEvents).toEqual(['1']);
 });
 

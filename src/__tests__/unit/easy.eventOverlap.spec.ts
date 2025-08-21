@@ -1,11 +1,10 @@
-import { Event } from '../../types';
+import { createEventData } from './factories/eventFactory';
 import {
   convertEventToDateRange,
   findOverlappingEvents,
   isOverlapping,
   parseDateTime,
 } from '../../utils/eventOverlap';
-import { createEventData } from './factories/eventFactory';
 
 describe('parseDateTime', () => {
   it('2025-07-01 14:30을 정확한 Date 객체로 변환한다', () => {
