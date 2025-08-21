@@ -317,7 +317,7 @@ it('notificationTime을 10으로 하면 지정 시간 10분 전 알람 텍스트
 
   setupMockHandlerCreation([TEST_EVENTS.EXISTING_MEETING, TEST_EVENTS.EXISTING_MEETING2]);
 
-  const { user } = setup(<App />);
+  setup(<App />);
 
   await act(async () => {
     vi.advanceTimersByTime(1000);

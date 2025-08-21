@@ -21,22 +21,19 @@ const notificationOptions = [
 
 interface EventListProps {
   searchTerm: string;
-  setSearchTerm: (term: string) => void;
+  setSearchTerm: (_term: string) => void;
   filteredEvents: Event[];
   notifiedEvents: string[];
-  onEditEvent: (event: Event) => void;
-  onDeleteEvent: (eventId: string) => void;
+  onEditEvent: (_event: Event) => void;
+  onDeleteEvent: (_eventId: string) => void;
 }
 
 export function EventList({
-  // eslint-disable-next-line no-unused-vars
   searchTerm,
   setSearchTerm,
   filteredEvents,
   notifiedEvents,
-  // eslint-disable-next-line no-unused-vars
   onEditEvent,
-  // eslint-disable-next-line no-unused-vars
   onDeleteEvent,
 }: EventListProps) {
   return (
