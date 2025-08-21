@@ -6,13 +6,33 @@ import {
   parseDateTime,
 } from '../../utils/eventOverlap';
 describe('parseDateTime', () => {
-  it('2025-07-01 14:30을 정확한 Date 객체로 변환한다', () => {});
+  it.only('2025-07-01 14:30을 정확한 Date 객체로 변환한다', () => {
+    const result = parseDateTime('2025-07-01', '14:30');
 
-  it('잘못된 날짜 형식에 대해 Invalid Date를 반환한다', () => {});
+    expect(result).toBeInstanceOf(Date);
+    expect(result).toEqual(new Date('2025-07-01T14:30'));
+  });
 
-  it('잘못된 시간 형식에 대해 Invalid Date를 반환한다', () => {});
+  it.only('잘못된 날짜 형식에 대해 Invalid Date를 반환한다', () => {
+    const result = parseDateTime('20250701', '14:30');
 
-  it('날짜 문자열이 비어있을 때 Invalid Date를 반환한다', () => {});
+    expect(result.getTime()).toBeNaN();
+    expect(result.toString()).toBe('Invalid Date');
+  });
+
+  it.only('잘못된 시간 형식에 대해 Invalid Date를 반환한다', () => {
+    const result = parseDateTime('2025-07-01', '1430');
+
+    expect(result.getTime()).toBeNaN();
+    expect(result.toString()).toBe('Invalid Date');
+  });
+
+  it.only('날짜 문자열이 비어있을 때 Invalid Date를 반환한다', () => {
+    const result = parseDateTime('', '14:30');
+
+    expect(result.getTime()).toBeNaN();
+    expect(result.toString()).toBe('Invalid Date');
+  });
 });
 
 describe('convertEventToDateRange', () => {
