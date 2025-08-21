@@ -1,10 +1,34 @@
 import { act, renderHook, waitFor } from '@testing-library/react';
 import { http, HttpResponse } from 'msw';
-
+import { createTestEvent } from '../utils.ts';
 import { createMockHandlers } from '../../__mocks__/handlersUtils.ts';
 import { useEventOperations } from '../../hooks/useEventOperations.ts';
 import { server } from '../../setupTests.ts';
 import { Event } from '../../types.ts';
+
+const initialEventData = [
+  createTestEvent({
+    id: '1',
+    title: '테스트 이벤트',
+    date: '2025-08-21',
+    startTime: '10:00',
+    endTime: '11:00',
+  }),
+  createTestEvent({
+    id: '2',
+    title: '테스트 이벤트2',
+    date: '2025-08-22',
+    startTime: '10:00',
+    endTime: '11:00',
+  }),
+  createTestEvent({
+    id: '3',
+    title: '테스트 이벤트3',
+    date: '2025-08-23',
+    startTime: '10:00',
+    endTime: '11:00',
+  }),
+];
 
 const enqueueSnackbarFn = vi.fn();
 
@@ -17,33 +41,6 @@ vi.mock('notistack', async () => {
     }),
   };
 });
-
-const initialEventData = [
-  {
-    id: '1',
-    title: '기존 이벤트',
-    date: '2025-10-15',
-    startTime: '10:00:00',
-    endTime: '11:00:00',
-    description: '기존 팀 미팅',
-    location: '회의실 A',
-    category: '회의',
-    repeat: { type: 'none' as const, interval: 0 },
-    notificationTime: 0,
-  },
-  {
-    id: '2',
-    title: '기존 이벤트 2',
-    date: '2025-10-15',
-    startTime: '10:00:00',
-    endTime: '11:00:00',
-    description: '기존 팀 미팅',
-    location: '회의실 A',
-    category: '회의',
-    repeat: { type: 'none' as const, interval: 0 },
-    notificationTime: 0,
-  },
-];
 
 beforeEach(() => {
   enqueueSnackbarFn.mockClear();

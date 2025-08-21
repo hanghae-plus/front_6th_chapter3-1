@@ -16,8 +16,9 @@ export const createMockHandlers = (initEvents = [] as Event[]) => {
 
     http.post('/api/events', async ({ request }) => {
       const event = (await request.json()) as Event;
-      testEvents.push(event);
-      return HttpResponse.json(event);
+      const newEvent = { ...event, id: crypto.randomUUID() };
+      testEvents.push(newEvent);
+      return HttpResponse.json(newEvent);
     }),
 
     http.put('/api/events/:id', async ({ request, params }) => {

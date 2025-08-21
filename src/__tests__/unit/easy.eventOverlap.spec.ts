@@ -51,8 +51,8 @@ describe('convertEventToDateRange', () => {
 
     expect(start).toBeInstanceOf(Date);
     expect(end).toBeInstanceOf(Date);
-    expect(start.toISOString()).toBe('2025-07-01T05:30:00.000Z');
-    expect(end.toISOString()).toBe('2025-07-01T07:00:00.000Z');
+    expect(start.toISOString()).toBe('2025-10-15T00:00:00.000Z');
+    expect(end.toISOString()).toBe('2025-10-15T01:00:00.000Z');
   });
 
   // it('잘못된 날짜 형식의 이벤트에 대해 Invalid Date를 반환한다', () => {});
@@ -64,12 +64,12 @@ describe('isOverlapping', () => {
   it.each([
     {
       bool: true,
-      event1: createTestEvent(),
+      event1: createTestEvent({ date: '2025-07-01', startTime: '15:00', endTime: '16:30' }),
       event2: createTestEvent({ date: '2025-07-01', startTime: '15:00', endTime: '16:30' }),
     },
     {
       bool: false,
-      event1: createTestEvent(),
+      event1: createTestEvent({ date: '2025-07-01', startTime: '15:00', endTime: '16:30' }),
       event2: createTestEvent({ date: '2025-07-01', startTime: '16:30', endTime: '18:00' }),
     },
   ])('두 이벤트가 겹치는 경우 $bool를 반환한다.', ({ bool, event1, event2 }) => {
@@ -79,7 +79,7 @@ describe('isOverlapping', () => {
   });
 
   it('두 이벤트가 겹치는 경우 true를 반환한다', () => {
-    const event1 = createTestEvent();
+    const event1 = createTestEvent({ date: '2025-07-01', startTime: '15:00', endTime: '16:30' });
     const event2 = createTestEvent({ date: '2025-07-01', startTime: '15:00', endTime: '16:30' });
 
     const result = isOverlapping(event1, event2);
@@ -117,7 +117,7 @@ describe('findOverlappingEvents', () => {
       expected: [],
     },
   ])('$description', ({ events, expected }) => {
-    const newEvent = createTestEvent();
+    const newEvent = createTestEvent({ date: '2025-07-01', startTime: '15:00', endTime: '16:30' });
     const result = findOverlappingEvents(newEvent, events);
 
     expect(result).toEqual(expected);
