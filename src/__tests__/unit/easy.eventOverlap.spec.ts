@@ -1,4 +1,4 @@
-import { Event } from '../../types';
+import { Event, EventForm } from '../../types';
 import {
   convertEventToDateRange,
   findOverlappingEvents,
@@ -159,7 +159,112 @@ describe('isOverlapping', () => {
 });
 
 describe('findOverlappingEvents', () => {
-  it('새 이벤트와 겹치는 모든 이벤트를 반환한다', () => {});
+  const MOCK_EVENTS: Event[] = [
+    {
+      id: 'new-1',
+      title: '오전 회의',
+      date: '2025-08-01',
+      startTime: '09:00',
+      endTime: '10:00',
+      description: '월초 팀 회의',
+      location: '회의실 A',
+      category: '업무',
+      repeat: { type: 'none', interval: 0 },
+      notificationTime: 1,
+    },
+    {
+      id: '80d85368-b4a4-47b3-b959-25171d49371f',
+      title: '운동',
+      date: '2025-08-01',
+      startTime: '09:59',
+      endTime: '19:00',
+      description: '주간 운동',
+      location: '헬스장',
+      category: '개인',
+      repeat: { type: 'none', interval: 0 },
+      notificationTime: 1,
+    },
+  ];
+  it('새 이벤트와 겹치는 모든 이벤트를 반환한다', () => {
+    expect(
+      findOverlappingEvents(
+        {
+          id: 'newEvent',
+          title: '새이벤트',
+          date: '2025-08-01',
+          startTime: '09:50',
+          endTime: '20:00',
+          description: '주간 운동',
+          location: '헬스장',
+          category: '개인',
+          repeat: { type: 'none', interval: 0 },
+          notificationTime: 1,
+        },
+        MOCK_EVENTS
+      )
+    ).toEqual(MOCK_EVENTS);
 
-  it('겹치는 이벤트가 없으면 빈 배열을 반환한다', () => {});
+    expect(
+      findOverlappingEvents(
+        {
+          id: 'newEvent',
+          title: '새이벤트',
+          date: '2025-08-01',
+          startTime: '09:10',
+          endTime: '09:30',
+          description: '주간 운동',
+          location: '헬스장',
+          category: '개인',
+          repeat: { type: 'none', interval: 0 },
+          notificationTime: 1,
+        },
+        MOCK_EVENTS
+      )
+    ).toEqual([MOCK_EVENTS[0]]);
+  });
+
+  it('겹치는 이벤트가 없으면 빈 배열을 반환한다', () => {
+    const testCases: Event[] = [
+      {
+        id: 'newEvent',
+        title: '새이벤트',
+        date: '2025-08-01',
+        startTime: '08:10',
+        endTime: '08:59',
+        description: '주간 운동',
+        location: '헬스장',
+        category: '개인',
+        repeat: { type: 'none', interval: 0 },
+        notificationTime: 1,
+      },
+      {
+        id: 'newEvent',
+        title: '새이벤트',
+        date: '2025-08-01',
+        startTime: '19:01',
+        endTime: '19:59',
+        description: '주간 운동',
+        location: '헬스장',
+        category: '개인',
+        repeat: { type: 'none', interval: 0 },
+        notificationTime: 1,
+      },
+      {
+        id: 'newEvent',
+        title: '새이벤트',
+        date: '2025-08-03',
+        startTime: '00:10',
+        endTime: '01:30',
+        description: '주간 운동',
+        location: '헬스장',
+        category: '개인',
+        repeat: { type: 'none', interval: 0 },
+        notificationTime: 1,
+      },
+    ];
+
+    testCases.forEach((newEvent) => {
+      expect(findOverlappingEvents(newEvent, MOCK_EVENTS)).toEqual([]);
+    });
+  });
 });
