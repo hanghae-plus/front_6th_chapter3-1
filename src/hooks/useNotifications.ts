@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { Event } from '../types';
 import { createNotificationMessage, getUpcomingEvents } from '../utils/notificationUtils';
 
-export const useNotifications = (events: Event[]) => {
+export const useNotifications = (events: Readonly<Event[]>) => {
   const [notifications, setNotifications] = useState<{ id: string; message: string }[]>([]);
   const [notifiedEvents, setNotifiedEvents] = useState<string[]>([]);
 
