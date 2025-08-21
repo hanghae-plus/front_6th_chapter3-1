@@ -5,13 +5,11 @@ import { userEvent } from '@testing-library/user-event';
 import { SnackbarProvider } from 'notistack';
 import { ReactElement } from 'react';
 import { vi } from 'vitest';
-
 import {
   setupMockHandlerCreation,
   setupMockHandlerDeletion,
   setupMockHandlerUpdating,
 } from '../__mocks__/handlersUtils';
-
 import App from '../App';
 
 // 10월로 시간 모킹
