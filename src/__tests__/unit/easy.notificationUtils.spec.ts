@@ -30,9 +30,9 @@ describe('getUpcomingEvents', () => {
     const notifiedEvents = ['event-1min'];
 
     const expected: Event[] = [];
-    
+
     const result = getUpcomingEvents(events, now, notifiedEvents);
-    
+
     expect(result).toEqual(expected);
     expect(result).toHaveLength(0);
   });
@@ -47,9 +47,9 @@ describe('getUpcomingEvents', () => {
     const notifiedEvents: string[] = [];
 
     const expected: Event[] = [];
-    
+
     const result = getUpcomingEvents(events, now, notifiedEvents);
-    
+
     expect(result).toEqual(expected);
     expect(result).toHaveLength(0);
   });
@@ -64,9 +64,9 @@ describe('getUpcomingEvents', () => {
     const notifiedEvents: string[] = [];
 
     const expected: Event[] = [];
-    
+
     const result = getUpcomingEvents(events, now, notifiedEvents);
-    
+
     expect(result).toEqual(expected);
     expect(result).toHaveLength(0);
   });
@@ -80,9 +80,9 @@ describe('createNotificationMessage', () => {
     });
 
     const expected = '1분 후 알림 이벤트 일정이 시작됩니다.';
-    
+
     const result = createNotificationMessage(event);
-    
+
     expect(result).toBe(expected);
   });
 });

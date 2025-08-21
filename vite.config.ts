@@ -13,8 +13,8 @@ export default mergeConfig(
         },
       },
       watch: {
-        ignored: ['**/node_modules/**', '**/.git/**']
-      }
+        ignored: ['**/node_modules/**', '**/.git/**'],
+      },
     },
   }),
   defineTestConfig({

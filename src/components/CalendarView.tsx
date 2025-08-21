@@ -1,7 +1,6 @@
-import Notifications from '@mui/icons-material/Notifications';
 import ChevronLeft from '@mui/icons-material/ChevronLeft';
 import ChevronRight from '@mui/icons-material/ChevronRight';
-import React from 'react';
+import Notifications from '@mui/icons-material/Notifications';
 import {
   Box,
   IconButton,
@@ -16,6 +15,7 @@ import {
   TableRow,
   Typography,
 } from '@mui/material';
+import React from 'react';
 
 import { Event } from '../types';
 import {
@@ -39,16 +39,15 @@ interface CalendarViewProps {
   navigate: (direction: 'prev' | 'next') => void;
 }
 
-export function CalendarView({ 
-  filteredEvents, 
-  notifiedEvents, 
-  view, 
-  setView, 
-  currentDate, 
-  holidays, 
-  navigate 
+export function CalendarView({
+  filteredEvents,
+  notifiedEvents,
+  view,
+  setView,
+  currentDate,
+  holidays,
+  navigate,
 }: CalendarViewProps) {
-
   const renderEvent = (event: Event) => {
     const isNotified = notifiedEvents.includes(event.id);
     return (
@@ -68,11 +67,7 @@ export function CalendarView({
       >
         <Stack direction="row" spacing={1} alignItems="center">
           {isNotified && <Notifications fontSize="small" />}
-          <Typography
-            variant="caption"
-            noWrap
-            sx={{ fontSize: '0.75rem', lineHeight: 1.2 }}
-          >
+          <Typography variant="caption" noWrap sx={{ fontSize: '0.75rem', lineHeight: 1.2 }}>
             {event.title}
           </Typography>
         </Stack>
@@ -117,9 +112,7 @@ export function CalendarView({
       <TableContainer>
         <Table sx={{ tableLayout: 'fixed', width: '100%' }}>
           {renderTableHeader()}
-          <TableBody>
-            {children}
-          </TableBody>
+          <TableBody>{children}</TableBody>
         </Table>
       </TableContainer>
     </Stack>
@@ -139,7 +132,7 @@ export function CalendarView({
           </TableCell>
         ))}
       </TableRow>,
-      "week-view"
+      'week-view'
     );
   };
 
@@ -180,7 +173,7 @@ export function CalendarView({
           })}
         </TableRow>
       )),
-      "month-view"
+      'month-view'
     );
   };
 

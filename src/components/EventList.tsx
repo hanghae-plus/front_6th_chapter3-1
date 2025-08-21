@@ -1,6 +1,6 @@
-import Notifications from '@mui/icons-material/Notifications';
 import Delete from '@mui/icons-material/Delete';
 import Edit from '@mui/icons-material/Edit';
+import Notifications from '@mui/icons-material/Notifications';
 import {
   Box,
   FormControl,
@@ -99,9 +99,8 @@ export function EventList({
                 <Typography>
                   알림:{' '}
                   {
-                    notificationOptions.find(
-                      (option) => option.value === event.notificationTime
-                    )?.label
+                    notificationOptions.find((option) => option.value === event.notificationTime)
+                      ?.label
                   }
                 </Typography>
               </Stack>

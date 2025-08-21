@@ -95,7 +95,7 @@ describe('convertEventToDateRange', () => {
       start: new Date('Invalid Date'),
       end: new Date('Invalid Date'),
     };
-    
+
     const result = convertEventToDateRange(event);
 
     expect(result).toEqual(expected);

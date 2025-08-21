@@ -8,21 +8,21 @@ import { Event, EventForm } from '../types';
 export const createHandler = (initialEvents: Event[] = []) => {
   const data = {
     events: initialEvents.length > 0 ? initialEvents : [...events],
-  }
+  };
 
   return [
     http.get('/api/events', () => {
       return HttpResponse.json({ events: data.events });
     }),
-  
+
     http.post('/api/events', async ({ request }) => {
       const eventData = (await request.json()) as EventForm;
       const newEvent = { id: crypto.randomUUID(), ...eventData };
       data.events.push(newEvent);
-  
+
       return HttpResponse.json({ events: data.events }, { status: 201 });
     }),
-  
+
     http.put('/api/events/:id', async ({ params, request }) => {
       const { id } = params;
       const eventIndex = data.events.findIndex((event) => event.id === id);
@@ -33,14 +33,14 @@ export const createHandler = (initialEvents: Event[] = []) => {
       }
       return HttpResponse.json({ message: 'Event not found' }, { status: 404 });
     }),
-  
+
     http.delete('/api/events/:id', ({ params }) => {
       const { id } = params;
       data.events = data.events.filter((event) => event.id !== id);
       return HttpResponse.json({ events: null }, { status: 204 });
     }),
   ];
-}
+};
 
 export const createErrorHandler = () => {
   return [
@@ -60,6 +60,6 @@ export const createErrorHandler = () => {
       return HttpResponse.json({ message: 'Error' }, { status: 500 });
     }),
   ];
-}
+};
 
 export const handlers: HttpHandler[] = createHandler();

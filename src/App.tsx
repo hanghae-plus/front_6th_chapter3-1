@@ -36,7 +36,7 @@ function App() {
   };
 
   const handleOverlapConfirm = async (eventData: Event | EventFormType) => {
-      await saveEvent(eventData);
+    await saveEvent(eventData);
     setIsOverlapDialogOpen(false);
     setOverlappingEvents([]);
     setPendingEventData(null);
@@ -68,8 +68,8 @@ function App() {
           setEditingEvent={setEditingEvent}
         />
 
-        <CalendarView 
-          filteredEvents={filteredEvents} 
+        <CalendarView
+          filteredEvents={filteredEvents}
           notifiedEvents={notifiedEvents}
           view={view}
           setView={setView}
@@ -96,10 +96,7 @@ function App() {
         onConfirm={handleOverlapConfirm}
       />
 
-      <NotificationStack
-        notifications={notifications}
-        onRemoveNotification={removeNotification}
-      />
+      <NotificationStack notifications={notifications} onRemoveNotification={removeNotification} />
     </Box>
   );
 }

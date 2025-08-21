@@ -34,7 +34,7 @@ describe('getDaysInMonth', () => {
   });
 
   it('윤년의 2월에 대해 29일을 반환한다', () => {
-    const year = 2024;  // 윤년
+    const year = 2024; // 윤년
     const month = 2;
     const expected = 29;
 
@@ -44,7 +44,7 @@ describe('getDaysInMonth', () => {
   });
 
   it('평년의 2월에 대해 28일을 반환한다', () => {
-    const year = 2025;  // 평년
+    const year = 2025; // 평년
     const month = 2;
     const expected = 28;
 
@@ -55,9 +55,9 @@ describe('getDaysInMonth', () => {
 
   it('유효하지 않은 월에 대해 적절히 처리한다', () => {
     const testCases = [
-      { year: 2025, month: 13, expected: 31 },  // 13 = 1월
-      { year: 2025, month: 0, expected: 31 },  // 0 = 12월
-      { year: 2025, month: -1, expected: 30 },  // -1 = 11월
+      { year: 2025, month: 13, expected: 31 }, // 13 = 1월
+      { year: 2025, month: 0, expected: 31 }, // 0 = 12월
+      { year: 2025, month: -1, expected: 30 }, // -1 = 11월
     ];
 
     testCases.forEach(({ year, month, expected }) => {
@@ -80,7 +80,7 @@ describe('getWeekDates', () => {
   it('월요일에 대해 올바른 주의 날짜들을 반환한다', () => {
     const date = new Date('2025-08-18'); // 2025.08.18 월
     const result = getWeekDates(date).map((date) => date.getDate());
-    
+
     const expected = [17, 18, 19, 20, 21, 22, 23];
 
     expect(result).toEqual(expected);
@@ -89,7 +89,7 @@ describe('getWeekDates', () => {
   it('일요일에 대해 올바른 주의 날짜들을 반환한다', () => {
     const date = new Date('2025-08-17'); // 2025.08.17 일
     const result = getWeekDates(date).map((date) => date.getDate());
-    
+
     const expected = [17, 18, 19, 20, 21, 22, 23];
 
     expect(result).toEqual(expected);
@@ -189,11 +189,8 @@ describe('getWeeksAtMonth', () => {
 
 describe('getEventsForDay', () => {
   it('특정 날짜(1일)에 해당하는 이벤트만 정확히 반환한다', () => {
-    const events: Event[] = createEvents([
-      { date: '2025-08-01' },
-      { date: '2025-08-02' },
-    ]);
-  
+    const events: Event[] = createEvents([{ date: '2025-08-01' }, { date: '2025-08-02' }]);
+
     const date = new Date('2025-08-01');
     const expected: Event[] = events.filter((event) => event.date === '2025-08-01');
 
@@ -204,9 +201,7 @@ describe('getEventsForDay', () => {
   });
 
   it('해당 날짜에 이벤트가 없을 경우 빈 배열을 반환한다', () => {
-    const events: Event[] = createEvents([
-      { date: '2025-08-01' },
-    ]);
+    const events: Event[] = createEvents([{ date: '2025-08-01' }]);
 
     const date = new Date('2025-08-02');
     const expected: Event[] = [];
@@ -218,9 +213,7 @@ describe('getEventsForDay', () => {
   });
 
   it('날짜가 0일 경우 빈 배열을 반환한다', () => {
-    const events: Event[] = createEvents([
-      { date: '2025-08-01' },
-    ]);
+    const events: Event[] = createEvents([{ date: '2025-08-01' }]);
 
     const date = new Date('2025-08-00');
     const expected: Event[] = [];
@@ -232,9 +225,7 @@ describe('getEventsForDay', () => {
   });
 
   it('날짜가 32일 이상인 경우 빈 배열을 반환한다', () => {
-    const events: Event[] = createEvents([
-      { date: '2025-08-01' },
-    ]);
+    const events: Event[] = createEvents([{ date: '2025-08-01' }]);
 
     const date = new Date('2025-08-32');
     const expected: Event[] = [];

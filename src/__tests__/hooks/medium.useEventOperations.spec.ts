@@ -1,9 +1,9 @@
 import { act, renderHook } from '@testing-library/react';
 
 import { setupMockErrorHandler, setupMockHandler } from '../../__mocks__/handlersUtils.ts';
+import { events as initialEvents } from '../../__mocks__/response/events.json' assert { type: 'json' };
 import { useEventOperations } from '../../hooks/useEventOperations.ts';
 import { Event, EventForm } from '../../types.ts';
-import { events as initialEvents } from '../../__mocks__/response/events.json' assert { type: 'json' };
 import { createEvent, createEventForm } from '../eventFactory.ts';
 
 const enqueueSnackbarFn = vi.fn();
@@ -117,11 +117,11 @@ describe('useEventOperations', () => {
     });
 
     const prevEvent = result.current.events[0];
-    
+
     const notExistEvent: Event = createEvent({
       id: 'notExistEvent',
     });
-    
+
     expect(prevEvent.id).not.toBe(notExistEvent.id);
 
     await act(async () => {
@@ -136,7 +136,7 @@ describe('useEventOperations 500 Error', () => {
   beforeEach(() => {
     setupMockErrorHandler();
   });
-  
+
   it("이벤트 로딩 실패 시 '이벤트 로딩 실패'라는 텍스트와 함께 에러 토스트가 표시되어야 한다", async () => {
     const { result } = renderHook(() => useEventOperations(true));
 
@@ -146,7 +146,7 @@ describe('useEventOperations 500 Error', () => {
 
     expect(enqueueSnackbarFn).toHaveBeenCalledWith('이벤트 로딩 실패', { variant: 'error' });
   });
-  
+
   it("네트워크 오류 시 '일정 삭제 실패'라는 텍스트가 노출되며 이벤트 삭제가 실패해야 한다", async () => {
     const { result } = renderHook(() => useEventOperations(true));
 

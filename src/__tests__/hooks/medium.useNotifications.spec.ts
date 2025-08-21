@@ -51,7 +51,7 @@ it('index를 기준으로 알림을 적절하게 제거할 수 있다', () => {
       { id: '1', message: '테스트' },
       { id: '2', message: '테스트' },
     ]);
-  })
+  });
 
   expect(result.current.notifications.length).toEqual(2);
   expect(result.current.notifications[0].id).toEqual('1');
@@ -84,7 +84,7 @@ it('이미 알림이 발생한 이벤트에 대해서는 중복 알림이 발생
   expect(result.current.notifications[0].id).toEqual('1');
 
   const expected = result.current.notifications[0];
-  
+
   // 30초 더 앞당기기
   act(() => {
     vi.advanceTimersByTime(30 * 1000);

@@ -11,10 +11,7 @@ interface NotificationStackProps {
   onRemoveNotification: (index: number) => void;
 }
 
-export function NotificationStack({
-  notifications,
-  onRemoveNotification,
-}: NotificationStackProps) {
+export function NotificationStack({ notifications, onRemoveNotification }: NotificationStackProps) {
   if (notifications.length === 0) {
     return null;
   }

@@ -33,9 +33,7 @@ export const createEvent = (override: Partial<Event> = {}): Event => {
 };
 
 // 목록
-export const createEvents = (
-  overrides: number | Partial<Event>[] = 0
-): Event[] => {
+export const createEvents = (overrides: number | Partial<Event>[] = 0): Event[] => {
   if (typeof overrides === 'number') {
     return Array.from({ length: overrides }, () => {
       return createEvent();

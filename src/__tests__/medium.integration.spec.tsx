@@ -4,7 +4,7 @@ import { act, cleanup, fireEvent, render, screen, within } from '@testing-librar
 import { UserEvent, userEvent } from '@testing-library/user-event';
 import { SnackbarProvider } from 'notistack';
 
-import { createEvents } from './eventFactory'
+import { createEvents } from './eventFactory';
 import { setupMockHandler } from '../__mocks__/handlersUtils';
 import App from '../App';
 import { EventForm } from '../types';
@@ -70,14 +70,12 @@ const inputEvent = async (user: UserEvent, event: Partial<EventForm>) => {
     await user.click(within(notificationSelect).getByRole('combobox'));
     await user.click(screen.getByRole('option', { name: event.notificationTime.toString() }));
   }
-}
+};
 
 describe('일정 CRUD 및 기본 기능', () => {
   // ! HINT. event를 추가 제거하고 저장하는 로직을 잘 살펴보고, 만약 그대로 구현한다면 어떤 문제가 있을 지 고민해 보세요.
   it('입력한 새로운 일정 정보에 맞춰 모든 필드가 이벤트 리스트에 정확히 저장된다.', async () => {
-    const events = createEvents([
-      { title: '기존 회의', date: todayDate },
-    ]);
+    const events = createEvents([{ title: '기존 회의', date: todayDate }]);
 
     setupMockHandler(events);
 
@@ -113,9 +111,7 @@ describe('일정 CRUD 및 기본 기능', () => {
   }, 10000);
 
   it('기존 일정의 세부 정보를 수정하고 변경사항이 정확히 반영된다', async () => {
-    const events = createEvents([
-      { title: '기존 회의', date: todayDate },
-    ]);
+    const events = createEvents([{ title: '기존 회의', date: todayDate }]);
 
     setupMockHandler(events);
 
@@ -152,9 +148,7 @@ describe('일정 CRUD 및 기본 기능', () => {
   });
 
   it('일정을 삭제하고 더 이상 조회되지 않는지 확인한다', async () => {
-    const events = createEvents([
-      { title: '기존 회의', date: todayDate },
-    ]);
+    const events = createEvents([{ title: '기존 회의', date: todayDate }]);
 
     setupMockHandler(events);
 
@@ -190,10 +184,8 @@ describe('일정 뷰', () => {
 
   it('주별 뷰를 선택 후 해당 주에 일정이 없으면, 일정이 표시되지 않는다.', async () => {
     vi.setSystemTime(new Date('2025-07-21'));
-    
-    const events = createEvents([
-      { title: '기존 회의', date: '2025-07-16' },
-    ]);
+
+    const events = createEvents([{ title: '기존 회의', date: '2025-07-16' }]);
 
     setupMockHandler(events);
 
@@ -205,7 +197,7 @@ describe('일정 뷰', () => {
     // 월별 뷰 확인
     const viewSelect = screen.getByLabelText('뷰 타입 선택');
     const viewCombobox = within(viewSelect).getByRole('combobox');
-    
+
     expect(within(viewCombobox).queryByText('Month')).toBeInTheDocument();
     expect(within(viewCombobox).queryByText('Week')).not.toBeInTheDocument();
 
@@ -213,7 +205,7 @@ describe('일정 뷰', () => {
     const listItems = await screen.findAllByTestId('event-item');
     expect(listItems).toHaveLength(1);
     expect(listItems[0]).toHaveTextContent('기존 회의');
-    
+
     // 주별 뷰 선택
     const user = userEvent.setup();
 
@@ -273,9 +265,7 @@ describe('일정 뷰', () => {
   it('월별 뷰에 일정이 없으면, 일정이 표시되지 않아야 한다.', async () => {
     vi.setSystemTime(new Date('2025-07-21'));
 
-    const events = createEvents([
-      { title: '지난 달 회의', date: '2025-06-21' },
-    ]);
+    const events = createEvents([{ title: '지난 달 회의', date: '2025-06-21' }]);
 
     setupMockHandler(events);
 
@@ -326,9 +316,7 @@ describe('일정 뷰', () => {
   it('달력에 1월 1일(신정)이 공휴일로 표시되는지 확인한다', async () => {
     vi.setSystemTime(new Date('2025-01-01'));
 
-    const events = createEvents([
-      { title: '일출 보기', date: '2025-01-01' },
-    ]);
+    const events = createEvents([{ title: '일출 보기', date: '2025-01-01' }]);
 
     setupMockHandler(events);
 
@@ -471,7 +459,7 @@ describe('일정 충돌', () => {
     await expect(screen.getByText('일정 보기')).toBeInTheDocument();
 
     const user = userEvent.setup();
-    
+
     // 일정 수정
     const editButtons = await screen.findAllByRole('button', { name: 'Edit event' });
     await user.click(editButtons[0]);
@@ -501,7 +489,7 @@ it('notificationTime을 10으로 하면 지정 시간 10분 전 알람 텍스트
   setupMockHandler(events);
 
   render(<RenderApp />);
-  
+
   // App 렌더링 테스트
   await expect(screen.getByText('일정 보기')).toBeInTheDocument();
 
@@ -509,7 +497,7 @@ it('notificationTime을 10으로 하면 지정 시간 10분 전 알람 텍스트
   const listItems = await screen.findAllByTestId('event-item');
   expect(listItems).toHaveLength(1);
   expect(listItems[0]).toHaveTextContent('알림 이벤트');
-  
+
   // 1분 앞당기기 -> 08:50
   act(() => {
     vi.advanceTimersByTime(60 * 1000);

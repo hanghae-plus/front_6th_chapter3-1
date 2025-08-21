@@ -62,8 +62,8 @@ it('검색어가 제목, 설명, 위치 중 하나라도 일치하면 해당 이
 
 it('주간 뷰에 해당하는 이벤트만 반환해야 한다', () => {
   const events = createEvents([
-    { date: '2025-07-01', },
-    { date: '2025-07-08', },  // 다른 주
+    { date: '2025-07-01' },
+    { date: '2025-07-08' }, // 다른 주
   ]);
   const { result } = renderHook(() => useSearch(events, new Date('2025-07-01'), 'week'));
 
@@ -76,9 +76,9 @@ it('주간 뷰에 해당하는 이벤트만 반환해야 한다', () => {
 
 it('주간 뷰에 해당하는 이벤트만 반환해야 한다', () => {
   const events = createEvents([
-    { date: '2025-07-01', },
-    { date: '2025-07-08', }, 
-    { date: '2025-08-01', }, 
+    { date: '2025-07-01' },
+    { date: '2025-07-08' },
+    { date: '2025-08-01' },
   ]);
 
   const { result } = renderHook(() => useSearch(events, new Date('2025-07-01'), 'month'));
@@ -93,8 +93,8 @@ it('주간 뷰에 해당하는 이벤트만 반환해야 한다', () => {
 it("검색어를 '회의'에서 '점심'으로 변경하면 필터링된 결과가 즉시 업데이트되어야 한다", () => {
   const events = createEvents([
     { date: '2025-07-01', title: '회의' },
-    { date: '2025-07-01', title: '점심' }, 
-    { date: '2025-07-01', location: '회의실' }, 
+    { date: '2025-07-01', title: '점심' },
+    { date: '2025-07-01', location: '회의실' },
   ]);
 
   const { result } = renderHook(() => useSearch(events, new Date('2025-07-01'), 'month'));

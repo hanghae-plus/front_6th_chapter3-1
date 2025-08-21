@@ -22,14 +22,15 @@ export const timeToMinutes = (timeStr: string) => {
 // 날짜를 'yyyy-mm-dd' 형태로 변환
 export const getDateString = (date: Date) => {
   return date.toISOString().split('T')[0];
-}
+};
 
 // 오늘 날짜에서 한 달 전후로 랜덤한 날짜 반환
 export const getRandomDate = () => {
   const today = new Date();
   const oneMonthAgo = new Date(today.getTime() - 30 * 24 * 60 * 60 * 1000);
   const oneMonthLater = new Date(today.getTime() + 30 * 24 * 60 * 60 * 1000);
-  const randomTime = oneMonthAgo.getTime() + Math.random() * (oneMonthLater.getTime() - oneMonthAgo.getTime());
+  const randomTime =
+    oneMonthAgo.getTime() + Math.random() * (oneMonthLater.getTime() - oneMonthAgo.getTime());
   return getDateString(new Date(randomTime));
 };
 
@@ -44,13 +45,13 @@ export const getRandomTime = () => {
 export function addMinutesToTime(time: string, minutes: number): string {
   const [hours, mins] = time.split(':').map(Number);
   const totalMinutes = (hours * 60 + mins + minutes) % (24 * 60);
-  
+
   // 음수인 경우 다음날로 넘김
-  const finalMinutes = totalMinutes < 0 ? totalMinutes + (24 * 60) : totalMinutes;
-  
+  const finalMinutes = totalMinutes < 0 ? totalMinutes + 24 * 60 : totalMinutes;
+
   const newHours = Math.floor(finalMinutes / 60);
   const newMins = finalMinutes % 60;
-  
+
   return `${newHours.toString().padStart(2, '0')}:${newMins.toString().padStart(2, '0')}`;
 }
 

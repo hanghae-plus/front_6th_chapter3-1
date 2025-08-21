@@ -38,9 +38,9 @@ interface EventFormProps {
   setEditingEvent: (event: Event | null) => void;
 }
 
-export function EventForm({ 
-  events, 
-  onOverlapDetected, 
+export function EventForm({
+  events,
+  onOverlapDetected,
   onEventSaved,
   saveEvent,
   editingEvent,
@@ -89,7 +89,18 @@ export function EventForm({
       setIsRepeating(editingEvent.repeat.type !== 'none');
       setNotificationTime(editingEvent.notificationTime);
     }
-  }, [editingEvent, setTitle, setDate, setStartTime, setEndTime, setDescription, setLocation, setCategory, setIsRepeating, setNotificationTime]);
+  }, [
+    editingEvent,
+    setTitle,
+    setDate,
+    setStartTime,
+    setEndTime,
+    setDescription,
+    setLocation,
+    setCategory,
+    setIsRepeating,
+    setNotificationTime,
+  ]);
 
   const addOrUpdateEvent = async () => {
     if (!title || !date || !startTime || !endTime) {
@@ -227,10 +238,7 @@ export function EventForm({
       <FormControl>
         <FormControlLabel
           control={
-            <Checkbox
-              checked={isRepeating}
-              onChange={(e) => setIsRepeating(e.target.checked)}
-            />
+            <Checkbox checked={isRepeating} onChange={(e) => setIsRepeating(e.target.checked)} />
           }
           label="반복 일정"
         />
