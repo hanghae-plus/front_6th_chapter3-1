@@ -1,7 +1,6 @@
 import { act, renderHook } from '@testing-library/react';
 
 import { useCalendarView } from '../../hooks/useCalendarView.ts';
-import { assertDate } from '../utils.ts';
 
 describe('초기 상태', () => {
   // renderHook으로 감싸면 result.current로 return으로 접근해야 함
