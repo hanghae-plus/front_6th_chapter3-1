@@ -82,9 +82,35 @@ describe('convertEventToDateRange', () => {
 });
 
 describe('isOverlapping', () => {
-  it('두 이벤트가 겹치는 경우 true를 반환한다', () => {});
+  it('두 이벤트가 겹치는 경우 true를 반환한다', () => {
+    const event = {
+      date: '2025-08-22',
+      startTime: '10:00',
+      endTime: '16:00',
+    } as Event;
+    const overlappedEvent = {
+      date: '2025-08-22',
+      startTime: '14:00',
+      endTime: '18:00',
+    } as Event;
 
-  it('두 이벤트가 겹치지 않는 경우 false를 반환한다', () => {});
+    expect(isOverlapping(event, overlappedEvent)).toBe(true);
+  });
+
+  it('두 이벤트가 겹치지 않는 경우 false를 반환한다', () => {
+    const event = {
+      date: '2025-08-22',
+      startTime: '10:00',
+      endTime: '12:00',
+    } as Event;
+    const notOverlappedEvent = {
+      date: '2025-08-22',
+      startTime: '14:00',
+      endTime: '18:00',
+    } as Event;
+
+    expect(isOverlapping(event, notOverlappedEvent)).toBe(false);
+  });
 });
 
 describe('findOverlappingEvents', () => {
