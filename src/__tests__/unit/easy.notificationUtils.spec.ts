@@ -1,13 +1,17 @@
 import { Event } from '../../types';
 import { createNotificationMessage, getUpcomingEvents } from '../../utils/notificationUtils';
 
-const event = {
+const event: Event = {
   id: '1',
   date: '2025-10-01',
   startTime: '10:00:00',
   endTime: '11:00:00',
   title: 'test',
   notificationTime: 10,
+  description: 'test',
+  location: 'test',
+  category: 'test',
+  repeat: { type: 'none', interval: 0 },
 };
 
 describe('getUpcomingEvents', () => {
@@ -38,7 +42,7 @@ describe('getUpcomingEvents', () => {
 
 describe('createNotificationMessage', () => {
   it('올바른 알림 메시지를 생성해야 한다', () => {
-    const result = createNotificationMessage({ notificationTime: 10, title: 'test' });
+    const result = createNotificationMessage(event);
 
     expect(result).toBe('10분 후 test 일정이 시작됩니다.');
   });
