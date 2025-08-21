@@ -2,14 +2,7 @@ import { Delete, Edit, Notifications } from '@mui/icons-material';
 import { Box, IconButton, Stack, Typography } from '@mui/material';
 
 import { Event } from '../types';
-
-const notificationOptions = [
-  { value: 1, label: '1분 전' },
-  { value: 10, label: '10분 전' },
-  { value: 60, label: '1시간 전' },
-  { value: 120, label: '2시간 전' },
-  { value: 1440, label: '1일 전' },
-];
+import { NOTIFICATION_OPTIONS } from '../constants';
 
 interface EventCardProps {
   event: Event;
@@ -52,7 +45,7 @@ export function EventCard({ event, isNotified, onEdit, onDelete }: EventCardProp
           )}
           <Typography>
             알림:{' '}
-            {notificationOptions.find((option) => option.value === event.notificationTime)?.label}
+            {NOTIFICATION_OPTIONS.find((option) => option.value === event.notificationTime)?.label}
           </Typography>
         </Stack>
         <Stack>

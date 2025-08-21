@@ -13,8 +13,7 @@ import {
 
 import { Event } from '../types';
 import { formatDate, formatMonth, getEventsForDay, getWeeksAtMonth } from '../utils/dateUtils';
-
-const weekDays = ['일', '월', '화', '수', '목', '금', '토'];
+import { WEEK_DAYS } from '../constants';
 
 interface CalendarMonthViewProps {
   currentDate: Date;
@@ -38,7 +37,7 @@ export function CalendarMonthView({
         <Table sx={{ tableLayout: 'fixed', width: '100%' }}>
           <TableHead>
             <TableRow>
-              {weekDays.map((day) => (
+              {WEEK_DAYS.map((day) => (
                 <TableCell key={day} sx={{ width: '14.28%', padding: 1, textAlign: 'center' }}>
                   {day}
                 </TableCell>

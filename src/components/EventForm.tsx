@@ -18,16 +18,7 @@ import { OverlapDialog } from './OverlapDialog';
 import { Event, EventForm } from '../types';
 import { findOverlappingEvents } from '../utils/eventOverlap';
 import { getTimeErrorMessage } from '../utils/timeValidation';
-
-const categories = ['업무', '개인', '가족', '기타'];
-
-const notificationOptions = [
-  { value: 1, label: '1분 전' },
-  { value: 10, label: '10분 전' },
-  { value: 60, label: '1시간 전' },
-  { value: 120, label: '2시간 전' },
-  { value: 1440, label: '1일 전' },
-];
+import { CATEGORIES, NOTIFICATION_OPTIONS } from '../constants';
 
 interface EventFormProps {
   events: Event[];
@@ -193,7 +184,7 @@ export function EventFormComponent({ events, eventForm, saveEvent }: EventFormPr
           aria-labelledby="category-label"
           aria-label="카테고리"
         >
-          {categories.map((cat) => (
+          {CATEGORIES.map((cat) => (
             <MenuItem key={cat} value={cat} aria-label={`${cat}-option`}>
               {cat}
             </MenuItem>
@@ -218,7 +209,7 @@ export function EventFormComponent({ events, eventForm, saveEvent }: EventFormPr
           value={notificationTime}
           onChange={(e) => setNotificationTime(Number(e.target.value))}
         >
-          {notificationOptions.map((option) => (
+          {NOTIFICATION_OPTIONS.map((option) => (
             <MenuItem key={option.value} value={option.value}>
               {option.label}
             </MenuItem>

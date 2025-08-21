@@ -19,8 +19,13 @@ function App() {
   return (
     <Box sx={{ width: '100%', height: '100vh', margin: 'auto', p: 5 }}>
       <Stack direction="row" spacing={6} sx={{ height: '100%' }}>
+        {/* 일정 추가 */}
         <EventFormComponent events={events} eventForm={eventForm} saveEvent={saveEvent} />
+
+        {/* 달력 뷰 */}
         <CalendarViewComponent events={events} notifiedEvents={notifiedEvents} />
+
+        {/* 일정 목록 */}
         <EventListComponent
           events={events}
           notifiedEvents={notifiedEvents}
