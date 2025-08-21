@@ -11,7 +11,7 @@ function filterEventsByDateRange(events: Event[], start: Date, end: Date): Event
 
 /** 첫번째 인자(문자열)가 두번째 인자(문자열)를 포함했는지 여부를 boolean값으로 반환 */
 function containsTerm(target: string, term: string) {
-  return target.toLowerCase().includes(term.toLowerCase());
+  return target.toLowerCase().includes(term.toㅅLowerCase());
 }
 
 /** 이벤트의 제목/설명장소에 term이 포함되어 있는 이벤트만 필터링하여 반환 */
