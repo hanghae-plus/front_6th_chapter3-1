@@ -21,13 +21,13 @@ export const caseEvent1 = [
   }),
   createEvent({
     title: '이벤트 4',
-    date: '2025-07-04',
+    date: '2025-05-05',
     startTime: '09:00',
     endTime: '10:00',
   }),
   createEvent({
     title: '이벤트 5',
-    date: '2025-07-05',
+    date: '2025-06-05',
     startTime: '09:00',
     endTime: '10:00',
   }),
