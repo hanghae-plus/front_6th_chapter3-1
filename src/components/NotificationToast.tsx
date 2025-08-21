@@ -1,13 +1,15 @@
-import { Alert, AlertTitle, IconButton, Stack } from '@mui/material';
 import { Close } from '@mui/icons-material';
-import { Dispatch, SetStateAction } from 'react';
+import { Alert, AlertTitle, IconButton, Stack } from '@mui/material';
 
 interface NotificationToastProps {
   notifications: { id: string; message: string }[];
-  setNotifications: Dispatch<SetStateAction<{ id: string; message: string }[]>>;
+  removeNotification: (index: number) => void;
 }
 
-export const NotificationToast = ({ notifications, setNotifications }: NotificationToastProps) => {
+export const NotificationToast = ({
+  notifications,
+  removeNotification,
+}: NotificationToastProps) => {
   return (
     <>
       {notifications.length > 0 && (
@@ -18,10 +20,7 @@ export const NotificationToast = ({ notifications, setNotifications }: Notificat
               severity="info"
               sx={{ width: 'auto' }}
               action={
-                <IconButton
-                  size="small"
-                  onClick={() => setNotifications((prev) => prev.filter((_, i) => i !== index))}
-                >
+                <IconButton size="small" onClick={() => removeNotification(index)}>
                   <Close />
                 </IconButton>
               }

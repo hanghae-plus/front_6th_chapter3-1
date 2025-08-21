@@ -35,7 +35,7 @@ function App() {
     setEditingEvent(null)
   );
 
-  const { notifications, notifiedEvents, setNotifications } = useNotifications(events);
+  const { notifications, notifiedEvents, removeNotification } = useNotifications(events);
   const { view, setView, currentDate, holidays, navigate } = useCalendarView();
   const { searchTerm, filteredEvents, setSearchTerm } = useSearch(events, currentDate, view);
 
@@ -145,7 +145,7 @@ function App() {
         saveEvent={saveEvent}
         resetForm={resetForm}
       />
-      <NotificationToast notifications={notifications} setNotifications={setNotifications} />
+      <NotificationToast notifications={notifications} removeNotification={removeNotification} />
     </Box>
   );
 }
