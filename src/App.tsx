@@ -30,6 +30,7 @@ import {
 import { useSnackbar } from 'notistack';
 import { useState } from 'react';
 
+import { categories, weekDays, notificationOptions } from './constant.ts';
 import { useCalendarView } from './hooks/useCalendarView.ts';
 import { useEventForm } from './hooks/useEventForm.ts';
 import { useEventOperations } from './hooks/useEventOperations.ts';
@@ -47,7 +48,6 @@ import {
 } from './utils/dateUtils';
 import { findOverlappingEvents } from './utils/eventOverlap';
 import { getTimeErrorMessage } from './utils/timeValidation';
-import { categories, weekDays, notificationOptions } from './constant.ts';
 
 function App() {
   const {

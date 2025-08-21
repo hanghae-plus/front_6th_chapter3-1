@@ -3,16 +3,16 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { render, screen, within, getByRole } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { SnackbarProvider } from 'notistack';
-import { notificationOptions } from '../constant';
 
-import App from '../App';
-import { server } from '../setupTests';
-import { EventForm } from '../types';
 import {
   setupMockHandlerCreation,
   setupMockHandlerDeletion,
   setupMockHandlerUpdating,
 } from '../__mocks__/handlersUtils';
+import App from '../App';
+import { notificationOptions } from '../constant';
+import { server } from '../setupTests';
+import { EventForm } from '../types';
 
 const renderApp = () => {
   const theme = createTheme();

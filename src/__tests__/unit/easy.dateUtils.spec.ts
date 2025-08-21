@@ -1,4 +1,3 @@
-import { formatDateList } from './../../utils/testUtils';
 import { Event } from '../../types';
 import {
   fillZero,
@@ -11,6 +10,7 @@ import {
   getWeeksAtMonth,
   isDateInRange,
 } from '../../utils/dateUtils';
+import { formatDateList } from './../../utils/testUtils';
 
 describe('getDaysInMonth', () => {
   it('1월은 31일 수를 반환한다', () => {
@@ -154,6 +154,7 @@ describe('getWeekDates', () => {
 
 describe('getWeeksAtMonth', () => {
   // 테스트 제목과 테스트 하고자 하는 내용이 모호하다고 생각되어 주석처리하고 다른 테스트를 추가하겠습니다.
+  // eslint-disable-next-line
   // it('2025년 7월 1일의 올바른 주 정보를 반환해야 한다', () => {});
 
   it('2025년 7월의 1일부터 31일까지 모든 날짜가 빠짐 없이 출력된다.', () => {
@@ -265,6 +266,7 @@ describe('formatWeek', () => {
   });
 
   // 테스트 케이스가 모호하다는 생각이 들어 2개의 테스트로 쪼갰습니다.
+  // eslint-disable-next-line
   // it('월의 첫 주에 대해 올바른 주 정보를 반환한다', () => {});
 
   it('1일이 금/토이면 해당 주는 이전 달 마지막 주로 귀속된다', () => {
@@ -286,6 +288,7 @@ describe('formatWeek', () => {
   });
 
   // 테스트 케이스를 아래 2개로 쪼갰습니다.
+  // eslint-disable-next-line
   // it('연도가 바뀌는 주에 대해 올바른 주 정보를 반환한다', () => {});
 
   it('연도가 바뀌는 주에 대해서 31일이 일/월/화/수/목이면 다음 해 1월 1주를 반환한다', () => {

@@ -377,6 +377,7 @@ describe('getFilteredEvents', () => {
   });
 
   // 테스트 케이스 문장 수정
+  // eslint-disable-next-line
   // it('검색어가 없을 때 모든 이벤트를 반환한다', () => {})
   it('검색어가 없을 때 조건에 맞는 모든 이벤트를 반환한다', () => {
     expect(getFilteredEvents(events, '', new Date('2025-07-01'), 'month').length).toEqual(2);
