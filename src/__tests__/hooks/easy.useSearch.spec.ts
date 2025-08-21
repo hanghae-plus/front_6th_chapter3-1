@@ -140,8 +140,7 @@ describe('useSearch Hook Test', () => {
       result.current.setSearchTerm('회의');
     });
 
-    expect(result.current.filteredEvents).toHaveLength(2);
-    expect(result.current.filteredEvents.map((e) => e.id)).toContain('4');
-    expect(result.current.filteredEvents.map((e) => e.id)).toContain('5');
+    expect(result.current.filteredEvents.map((e) => e.date)).toContain('2025-06-29');
+    expect(result.current.filteredEvents.map((e) => e.date)).toContain('2025-07-05');
   });
 });

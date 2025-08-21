@@ -497,13 +497,14 @@ function App() {
             <Select
               size="small"
               aria-label="뷰 타입 선택"
+              data-testid="view-selector"
               value={view}
               onChange={(e) => setView(e.target.value as 'week' | 'month')}
             >
-              <MenuItem value="week" aria-label="week-option">
+              <MenuItem value="week" aria-label="week-option" data-testid="week-option">
                 Week
               </MenuItem>
-              <MenuItem value="month" aria-label="month-option">
+              <MenuItem value="month" aria-label="month-option" data-testid="month-option">
                 Month
               </MenuItem>
             </Select>
