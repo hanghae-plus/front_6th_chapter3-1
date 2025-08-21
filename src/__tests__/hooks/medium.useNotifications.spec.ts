@@ -2,8 +2,6 @@ import { act, renderHook } from '@testing-library/react';
 
 import { useNotifications } from '../../hooks/useNotifications.ts';
 import { Event } from '../../types.ts';
-import { formatDate } from '../../utils/dateUtils.ts';
-import { parseHM } from '../utils.ts';
 import { expect } from 'vitest';
 import { defaultMockEvents } from '../../__mocks__/mockData.ts';
 
@@ -70,18 +68,18 @@ it('이미 알림이 발생한 이벤트에 대해서는 중복 알림이 발생
   const events: Event[] = defaultMockEvents;
 
   const { result } = renderHook(() => useNotifications(events));
-  
+
   act(() => {
     vi.advanceTimersByTime(1000);
   });
-  
+
   expect(result.current.notifications).toHaveLength(1);
   expect(result.current.notifiedEvents).toEqual(['1']);
-  
+
   act(() => {
     vi.advanceTimersByTime(1000);
   });
-  
+
   expect(result.current.notifications).toHaveLength(1);
   expect(result.current.notifiedEvents).toEqual(['1']);
 
