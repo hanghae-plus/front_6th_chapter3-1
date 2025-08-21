@@ -428,7 +428,34 @@ describe('검색 기능', () => {
 });
 
 describe('일정 충돌', () => {
-  it('겹치는 시간에 새 일정을 추가할 때 경고가 표시된다', async () => {});
+  it('겹치는 시간에 새 일정을 추가할 때 경고가 표시된다', async () => {
+    const prevEvent = makeEvent({
+      id: 'e1',
+      title: '피티',
+      date: '2025-08-24',
+      startTime: '13:00',
+      endTime: '16:00',
+    });
+    server.use(...setupMockHandlerCreation([prevEvent]));
+
+    const user = userEvent.setup();
+    render(
+      <ThemeProvider theme={createTheme()}>
+        <SnackbarProvider>
+          <App />
+        </SnackbarProvider>
+      </ThemeProvider>
+    );
+
+    await user.type(await screen.findByRole('textbox', { name: '제목' }), '모각코');
+    await user.type(screen.getByLabelText('날짜'), '2025-08-24');
+    await user.type(screen.getByLabelText('시작 시간'), '14:00');
+    await user.type(screen.getByLabelText('종료 시간'), '14:30');
+
+    await user.click(screen.getByTestId('event-submit-button'));
+
+    expect(await screen.findByRole('dialog', { name: '일정 겹침 경고' })).toBeInTheDocument();
+  });
 
   it('기존 일정의 시간을 수정하여 충돌이 발생하면 경고가 노출된다', async () => {});
 });
