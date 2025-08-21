@@ -88,7 +88,7 @@ describe('getUpcomingEvents', () => {
 
   it('이미 알림이 간 이벤트는 제외한다', () => {
     const now = new Date('2025-08-22T17:59:00');
-    const notifiedEvents = ['80d85368-b4a4-47b3-b959-25171d49371f']; // 운동 이벤트는 이미 알림감
+    const notifiedEvents = ['80d85368-b4a4-47b3-b959-25171d49371f']; // 운동 이벤트는 이미 알림이 갔음
 
     const result = getUpcomingEvents(mockEvents, now, notifiedEvents);
 
