@@ -14,8 +14,6 @@ const testEvents = events as Event[];
 
 describe('useSearch', () => {
   describe('초기 상태와 빈 검색어 처리', () => {
-    it.skip('검색어가 비어있을 때 모든 이벤트를 반환해야 한다', () => {});
-
     it('초기화 시 검색어가 비어있으면 모든 이벤트가 반환되어야 한다', () => {
       // Given: 빈 검색어로 훅 초기화
       const { result } = renderHook(() => useSearch(testEvents, currentDate, 'month'));
@@ -29,8 +27,6 @@ describe('useSearch', () => {
       expect(result.current.filteredEvents).toEqual(testEvents);
     });
   });
-
-  describe.skip('검색어에 맞는 이벤트만 필터링해야 한다', () => {});
 
   describe('검색어 기반 필터링', () => {
     it('검색어 "프로젝트"로 검색하면 제목에 프로젝트가 포함된 이벤트만 반환해야 한다', () => {
@@ -62,8 +58,6 @@ describe('useSearch', () => {
     });
   });
 
-  describe.skip('검색어가 제목, 설명, 위치 중 하나라도 일치하면 해당 이벤트를 반환해야 한다', () => {});
-
   describe('다중 필드 검색 기능', () => {
     it('검색어가 제목, 설명, 위치 중 어느 필드에라도 포함되면 해당 이벤트를 반환해야 한다', () => {
       // Given: 월간 뷰로 검색 훅 초기화
@@ -84,8 +78,6 @@ describe('useSearch', () => {
       expect(result.current.filteredEvents).toEqual(expectedEvents);
     });
   });
-
-  describe.skip("검색어를 '회의'에서 '점심'으로 변경하면 필터링된 결과가 즉시 업데이트되어야 한다", () => {});
 
   describe('검색어 실시간 업데이트', () => {
     it('검색어를 변경하면 필터링 결과가 즉시 업데이트되어야 한다', () => {
@@ -138,8 +130,6 @@ describe('useSearch', () => {
       expect(result.current.filteredEvents).toEqual(testEvents);
     });
   });
-
-  describe.skip('현재 뷰(주간/월간)에 해당하는 이벤트만 반환해야 한다', () => {});
 
   describe('뷰 범위 필터링', () => {
     it('주간 뷰에서는 기준일이 속한 주(2025-08-24~2025-08-30)의 이벤트만 반환해야 한다', () => {

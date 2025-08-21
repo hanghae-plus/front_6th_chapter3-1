@@ -10,8 +10,6 @@ beforeEach(() => {
 
 describe('useCalendarView', () => {
   describe('초기 상태 검증', () => {
-    it.skip('view는 "month"이어야 한다', () => {});
-
     it('기본 초기화 시 월간 뷰로 설정되어야 한다', () => {
       // Given: useCalendarView 훅을 매개변수 없이 초기화
       const { result } = renderHook(() => useCalendarView());
@@ -20,8 +18,6 @@ describe('useCalendarView', () => {
       expect(result.current.view).toBe('month');
     });
 
-    it.skip('currentDate는 오늘 날짜인 "2025-10-01"이어야 한다', () => {});
-
     it('초기화 시 현재 시스템 날짜(2025-10-01)로 currentDate가 설정되어야 한다', () => {
       // Given: 시스템 시간이 2025-10-01로 설정된 상태에서 훅 초기화
       const { result } = renderHook(() => useCalendarView());
@@ -29,8 +25,6 @@ describe('useCalendarView', () => {
       // Then: currentDate가 시스템 날짜와 일치해야 함
       assertDate(result.current.currentDate, new Date('2025-10-01'));
     });
-
-    it.skip('holidays는 10월 휴일인 개천절, 한글날, 추석이 지정되어 있어야 한다', () => {});
 
     it('초기화 시 현재 월(10월)의 공휴일이 자동으로 로드되어야 한다', () => {
       // Given: 2025년 10월에 시스템 시간이 설정된 상태에서 훅 초기화
@@ -53,8 +47,6 @@ describe('useCalendarView', () => {
       });
     });
 
-    it.skip("view를 'week'으로 변경 시 적절하게 반영된다", () => {});
-
     it('주간 뷰로 초기화하면 view가 week로 설정되어야 한다', () => {
       // Given: 주간 뷰 매개변수로 훅 초기화
       const { result } = renderHook(() => useCalendarView('week'));
@@ -65,8 +57,6 @@ describe('useCalendarView', () => {
   });
 
   describe('주간 뷰 네비게이션', () => {
-    it.skip("주간 뷰에서 다음으로 navigate시 7일 후 '2025-10-08' 날짜로 지정이 된다", () => {});
-
     it('다음으로 이동 시 현재 날짜에서 7일 후로 이동해야 한다', () => {
       // Given: 2025-10-01에서 주간 뷰로 초기화
       const { result } = renderHook(() => useCalendarView('week'));
@@ -79,8 +69,6 @@ describe('useCalendarView', () => {
       // Then: 7일 후인 2025-10-08로 이동해야 함
       assertDate(result.current.currentDate, new Date('2025-10-08'));
     });
-
-    it.skip("주간 뷰에서 이전으로 navigate시 7일 후 '2025-09-24' 날짜로 지정이 된다", () => {});
 
     it('이전으로 이동 시 현재 날짜에서 7일 전으로 이동해야 한다', () => {
       // Given: 2025-10-01에서 주간 뷰로 초기화
@@ -97,8 +85,6 @@ describe('useCalendarView', () => {
   });
 
   describe('월간 뷰 네비게이션', () => {
-    it.skip("월간 뷰에서 다음으로 navigate시 한 달 후 '2025-11-01' 날짜여야 한다", () => {});
-
     it('다음으로 이동 시 다음 달 같은 일로 이동해야 한다', () => {
       // Given: 2025-10-01에서 월간 뷰로 초기화
       const { result } = renderHook(() => useCalendarView('month'));
@@ -111,8 +97,6 @@ describe('useCalendarView', () => {
       // Then: 다음 달인 2025-11-01로 이동해야 함
       assertDate(result.current.currentDate, new Date('2025-11-01'));
     });
-
-    it.skip("월간 뷰에서 이전으로 navigate시 한 달 전 '2025-09-01' 날짜여야 한다", () => {});
 
     it('이전으로 이동 시 이전 달 같은 일로 이동해야 한다', () => {
       // Given: 2025-10-01에서 월간 뷰로 초기화
@@ -129,8 +113,6 @@ describe('useCalendarView', () => {
   });
 
   describe('날짜 변경과 공휴일 업데이트', () => {
-    it.skip("currentDate가 '2025-03-01' 변경되면 3월 휴일 '삼일절'로 업데이트되어야 한다", async () => {});
-
     it('setCurrentDate로 3월로 이동하면 해당 월의 공휴일로 자동 업데이트되어야 한다', () => {
       // Given: 월간 뷰로 초기화된 상태
       const { result } = renderHook(() => useCalendarView('month'));
