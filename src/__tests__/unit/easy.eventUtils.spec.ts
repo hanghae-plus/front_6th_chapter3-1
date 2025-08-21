@@ -86,12 +86,15 @@ describe('getFilteredEvents', () => {
     const notContainedEvents = [
       { title: '파울로 벤투', description: '', location: '', date: '2025-06-30' } as Event,
       { title: '', description: '아반테', location: '', date: '2025-07-03' } as Event,
+    ];
+
+    const afterDueDate = [
       { title: '', description: '이벤트', location: '', date: '2025-10-15' } as Event,
     ];
 
     const searchView = 'week';
     const filteredEvents = getFilteredEvents(
-      [...containedEvents, ...notContainedEvents],
+      [...containedEvents, ...notContainedEvents, ...afterDueDate],
       '이벤트',
       currentDate,
       searchView
