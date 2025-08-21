@@ -2,9 +2,8 @@ import { renderHook, act } from '@testing-library/react';
 import { vi } from 'vitest';
 
 import { useEventHandlers } from '../../hooks/useEventHandlers.ts';
-import { Event, EventForm } from '../../types.ts';
+import { Event } from '../../types.ts';
 
-// Mock notistack
 vi.mock('notistack', () => ({
   useSnackbar: () => ({
     enqueueSnackbar: vi.fn(),

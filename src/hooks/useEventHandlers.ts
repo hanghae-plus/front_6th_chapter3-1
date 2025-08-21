@@ -1,6 +1,6 @@
 import { useSnackbar } from 'notistack';
 
-import { Event, EventForm } from '../types';
+import { Event, EventForm, RepeatType } from '../types';
 import { findOverlappingEvents } from '../utils/eventOverlap';
 
 interface UseEventHandlersParams {
@@ -12,7 +12,7 @@ interface UseEventHandlersParams {
   location: string;
   category: string;
   isRepeating: boolean;
-  repeatType: any;
+  repeatType: RepeatType;
   repeatInterval: number;
   repeatEndDate: string;
   notificationTime: number;
