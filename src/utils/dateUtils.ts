@@ -76,7 +76,7 @@ export function getWeeksAtMonth(currentDate: Date) {
  * const dayEvents = getEventsForDay(events, 15);
  * // 15일에 해당하는 모든 이벤트 반환
  */
-export function getEventsForDay(events: Event[], date: number): Event[] {
+export function getEventsForDay(events: Readonly<Event[]>, date: number): Readonly<Event[]> {
   return events.filter((event) => new Date(event.date).getDate() === date);
 }
 

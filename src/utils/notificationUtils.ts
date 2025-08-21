@@ -28,7 +28,11 @@ const 분 = 초 * 60;
  * // 30분 > 0 ✓, 30분 ≤ 60분 ✓, 아직 알림 안 보냄 ✓
  * // 결과: 해당 이벤트가 반환됨
  */
-export function getUpcomingEvents(events: Event[], now: Date, notifiedEventIds: string[]) {
+export function getUpcomingEvents(
+  events: Readonly<Event[]>,
+  now: Date,
+  notifiedEventIds: string[]
+): Readonly<Event[]> {
   return events.filter((event) => {
     const eventStart = new Date(`${event.date}T${event.startTime}`);
     const timeDiff = (eventStart.getTime() - now.getTime()) / 분;

@@ -76,11 +76,11 @@ function filterEventsByDateRangeAtMonth(events: Event[], currentDate: Date) {
 }
 
 export function getFilteredEvents(
-  events: Event[],
+  events: Readonly<Event[]>,
   searchTerm: string,
   currentDate: Date,
   view: 'week' | 'month'
-): Event[] {
+): Readonly<Event[]> {
   const copiedEvents = [...events];
 
   const searchedEvents = searchEvents(copiedEvents, searchTerm);
