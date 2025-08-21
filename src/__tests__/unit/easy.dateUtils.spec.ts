@@ -165,7 +165,18 @@ describe('getWeekDates', () => {
 });
 
 describe('getWeeksAtMonth', () => {
-  it('2025년 7월 1일의 올바른 주 정보를 반환해야 한다', () => {});
+  it.only('2025년 8월 1일의 올바른 주 정보를 반환해야 한다', () => {
+    const date = new Date('2025-08-01');
+    const weeks = getWeeksAtMonth(date);
+
+    expect(weeks).toHaveLength(6);
+    expect(weeks[0]).toEqual([null, null, null, null, null, 1, 2]);
+    expect(weeks[1]).toEqual([3, 4, 5, 6, 7, 8, 9]);
+    expect(weeks[2]).toEqual([10, 11, 12, 13, 14, 15, 16]);
+    expect(weeks[3]).toEqual([17, 18, 19, 20, 21, 22, 23]);
+    expect(weeks[4]).toEqual([24, 25, 26, 27, 28, 29, 30]);
+    expect(weeks[5]).toEqual([31, null, null, null, null, null, null]);
+  });
 });
 
 describe('getEventsForDay', () => {
