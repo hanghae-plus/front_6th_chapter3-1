@@ -4,7 +4,7 @@ on:
   pull_request_target:
     types:
       - synchronize
-      - opened
+      - opened 
       - reopened
   workflow_dispatch:
 
