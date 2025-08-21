@@ -76,6 +76,7 @@ export default [
       // React rules
       'react/prop-types': 'off',
       ...reactHooksPlugin.configs.recommended.rules,
+      'react-hooks/exhaustive-deps': 'off',
 
       // Import rules
       'import/order': [
@@ -119,7 +120,6 @@ export default [
         globalThis: 'readonly',
         describe: 'readonly',
         it: 'readonly',
-        test: 'readonly',
         expect: 'readonly',
         beforeEach: 'readonly',
         afterEach: 'readonly',

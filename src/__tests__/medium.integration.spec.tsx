@@ -1,14 +1,15 @@
-import App from '../App';
-import { server } from '../setupTests';
-import { Event } from '../types';
-import { setupMockHandlerCreation, createMockHandlers } from '../__mocks__/handlersUtils';
-import { events } from '../__mocks__/response/events.json' assert { type: 'json' };
 import CssBaseline from '@mui/material/CssBaseline';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { render, screen, within } from '@testing-library/react';
 import { UserEvent, userEvent } from '@testing-library/user-event';
 import { SnackbarProvider } from 'notistack';
 import { vi } from 'vitest';
+
+import { createMockHandlers } from '../__mocks__/handlersUtils';
+import { events } from '../__mocks__/response/events.json' assert { type: 'json' };
+import App from '../App';
+import { server } from '../setupTests';
+import { Event } from '../types';
 
 // 테스트용 테마 설정
 const theme = createTheme();
