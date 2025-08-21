@@ -513,26 +513,35 @@ describe('일정 충돌', () => {
   });
 });
 
-it('notificationTime을 10으로 하면 지정 시간 10분 전 알람 텍스트가 노출된다', async () => {
-  const newEvent: Event = {
-    id: '1',
-    title: '새로운 이벤트',
-    date: '2025-10-01',
-    startTime: '09:00',
-    endTime: '10:00',
-    description: '마지막 테스트..',
-    location: '불꺼진 우리집',
-    category: '항플 과제',
-    repeat: { type: 'none', interval: 0 },
-    notificationTime: 10,
-  };
+describe('알림 기능', () => {
+  it('notificationTime을 10으로 하면 지정 시간 10분 전 알람 텍스트가 노출된다', async () => {
+    const newEvent: Event = {
+      id: '1',
+      title: '새로운 이벤트',
+      date: '2025-10-01',
+      startTime: '09:00',
+      endTime: '10:00',
+      description: '마지막 테스트..',
+      location: '불꺼진 우리집',
+      category: '항플 과제',
+      repeat: { type: 'none', interval: 0 },
+      notificationTime: 10,
+    };
 
-  server.use(...createMockHandlers([newEvent])());
-  render(<AppWrapper />);
+    server.use(...createMockHandlers([newEvent])());
+    render(<AppWrapper />);
 
-  const eventList = await screen.findByTestId('event-list');
-  expect(within(eventList).getByText(newEvent.title)).toBeInTheDocument();
+    // 이벤트가 실제로 렌더링될 때까지 기다림
+    const eventList = await screen.findByTestId('event-list');
 
-  vi.setSystemTime('2025-10-01 09:50');
-  expect(await screen.findByText('10분 전')).toBeInTheDocument();
+    // 일정 목록에서만 이벤트 제목을 찾음
+    const eventTitle = within(eventList).getByText(newEvent.title);
+    expect(eventTitle).toBeInTheDocument();
+
+    // 시스템 시간을 설정하고 알림 텍스트 확인
+    vi.setSystemTime('2025-10-01 09:50');
+
+    // 알림 텍스트가 나타날 때까지 기다림
+    expect(await screen.findByText('10분 전')).toBeInTheDocument();
+  });
 });
