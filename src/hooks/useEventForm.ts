@@ -7,7 +7,7 @@ import { useTimeValidation } from './useTimeValidation';
 
 export const useEventForm = (initialEvent?: Event) => {
   const { formState, updateField, resetForm, loadEvent } = useFormState(initialEvent);
-  const { editingEvent, isEditing, startEditing, stopEditing } = useEditingState();
+  const { editingEvent, isEditing, startEditing, stopEditing, setEditingEvent } = useEditingState();
   const { startTimeError, endTimeError, createStartTimeHandler, createEndTimeHandler } =
     useTimeValidation();
 
@@ -58,7 +58,7 @@ export const useEventForm = (initialEvent?: Event) => {
     handleEndTimeChange,
 
     editingEvent,
-    setEditingEvent: startEditing,
+    setEditingEvent,
     isEditing,
 
     resetForm: handleReset,

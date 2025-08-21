@@ -20,5 +20,6 @@ export const useEditingState = () => {
     isEditing,
     startEditing,
     stopEditing,
+    setEditingEvent,
   };
 };
