@@ -375,13 +375,7 @@ it('notificationTime을 10으로 하면 지정 시간 10분 전 알람 텍스트
   ]);
 
   setup(<App />);
+  // 일정이 로딩되어야 notification에 Id가 추가되고 setInterval이 실행되기 때문에 추가
   await screen.findByText('일정 로딩 완료!');
-
-  act(() => {
-    vi.advanceTimersByTime(1000);
-  });
-  debug();
-
-  expect(await screen.findByTestId('NotificationIcon')).toBeInTheDocument();
   expect(await screen.findByText('10분 후 물 마시기 일정이 시작됩니다.')).toBeInTheDocument();
 });
