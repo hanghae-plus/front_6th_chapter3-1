@@ -1,14 +1,19 @@
 import { Event } from '../types.ts';
 
 /**
- * 주어진 년도와 월의 일수를 반환합니다.
+ * 주어진 년도의 월에 해당하는 일수를 반환
+ * @param year 년도
+ * @param month 월
+ * @returns 일수
  */
 export function getDaysInMonth(year: number, month: number): number {
   return new Date(year, month, 0).getDate();
 }
 
 /**
- * 주어진 날짜가 속한 주의 모든 날짜를 반환합니다.
+ * 주어진 날짜가 속한 주의 모든 날짜를 반환
+ * @param date 날짜
+ * @returns 주의 모든 날짜 배열
  */
 export function getWeekDates(date: Date): Date[] {
   const day = date.getDay();
@@ -23,6 +28,11 @@ export function getWeekDates(date: Date): Date[] {
   return weekDates;
 }
 
+/**
+ * 주어진 날짜의 월 정보를 주 단위 배열로 반환
+ * @param currentDate 날짜
+ * @returns 주 단위 배열 (빈 요일은 null 처리)
+ */
 export function getWeeksAtMonth(currentDate: Date) {
   const year = currentDate.getFullYear();
   const month = currentDate.getMonth();
@@ -51,10 +61,21 @@ export function getWeeksAtMonth(currentDate: Date) {
   return weeks;
 }
 
+/**
+ * 주어진 날짜에 해당하는 이벤트를 반환
+ * @param events 이벤트 배열
+ * @param date 날짜(일)
+ * @returns 날짜에 해당하는 이벤트 배열
+ */
 export function getEventsForDay(events: Event[], date: number): Event[] {
   return events.filter((event) => new Date(event.date).getDate() === date);
 }
 
+/**
+ * 주어진 날짜에 해당하는 주차를 목요일 기준으로 년, 월, 주차 형식으로 반환합니다.
+ * @param targetDate 날짜
+ * @returns 년, 월, 주차 형식의 문자열(YYYY년 MM월 W주)
+ */
 export function formatWeek(targetDate: Date) {
   const dayOfWeek = targetDate.getDay();
   const diffToThursday = 4 - dayOfWeek;
@@ -76,7 +97,9 @@ export function formatWeek(targetDate: Date) {
 }
 
 /**
- * 주어진 날짜의 월 정보를 "YYYY년 M월" 형식으로 반환합니다.
+ * 주어진 날짜의 월 정보를 "YYYY년 M월" 형식으로 반환
+ * @param date 날짜
+ * @returns 년, 월 형식의 문자열(YYYY년 M월)
  */
 export function formatMonth(date: Date): string {
   const year = date.getFullYear();
@@ -87,7 +110,11 @@ export function formatMonth(date: Date): string {
 const stripTime = (d: Date) => new Date(d.getFullYear(), d.getMonth(), d.getDate());
 
 /**
- * 주어진 날짜가 특정 범위 내에 있는지 확인합니다.
+ * 주어진 날짜가 특정 범위 내에 있는지 확인
+ * @param date 날짜
+ * @param rangeStart 범위 시작 날짜
+ * @param rangeEnd 범위 끝 날짜
+ * @returns 날짜가 범위 내에 있는지 여부
  */
 export function isDateInRange(date: Date, rangeStart: Date, rangeEnd: Date): boolean {
   const normalizedDate = stripTime(date);
@@ -97,10 +124,22 @@ export function isDateInRange(date: Date, rangeStart: Date, rangeEnd: Date): boo
   return normalizedDate >= normalizedStart && normalizedDate <= normalizedEnd;
 }
 
+/**
+ * 주어진 숫자를 지정된 자릿수로 변환
+ * @param value 숫자
+ * @param size 자릿수
+ * @returns 자릿수만큼 0으로 채워진 문자열
+ */
 export function fillZero(value: number, size = 2) {
   return String(value).padStart(size, '0');
 }
 
+/**
+ * 주어진 날짜를 "YYYY-MM-DD" 형식으로 반환
+ * @param currentDate 날짜
+ * @param day 일
+ * @returns 년, 월, 일 형식의 문자열(YYYY-MM-DD)
+ */
 export function formatDate(currentDate: Date, day?: number) {
   return [
     currentDate.getFullYear(),

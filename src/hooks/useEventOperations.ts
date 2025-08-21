@@ -3,6 +3,15 @@ import { useEffect, useState } from 'react';
 
 import { Event, EventForm } from '../types';
 
+/** 이벤트 관리
+ * @param editing 수정 여부
+ * @param onSave 저장 콜백
+ * @returns 이벤트 목록, 이벤트 조회, 이벤트 저장, 이벤트 삭제
+ * @description event: 이벤트 데이터
+ * @description fetchEvents: 이벤트 조회
+ * @description saveEvent: 이벤트 저장
+ * @description deleteEvent: 이벤트 삭제
+ */
 export const useEventOperations = (editing: boolean, onSave?: () => void) => {
   const [events, setEvents] = useState<Event[]>([]);
   const { enqueueSnackbar } = useSnackbar();

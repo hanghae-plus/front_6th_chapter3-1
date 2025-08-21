@@ -69,15 +69,14 @@ export const useEventForm = (initialEvent?: Event) => {
     setNotificationTime(event.notificationTime);
   };
 
-  return {
+  // EventEditor에 필요한 props 객체 생성
+  const eventEditorProps = {
     title,
     setTitle,
     date,
     setDate,
     startTime,
-    setStartTime,
     endTime,
-    setEndTime,
     description,
     setDescription,
     location,
@@ -86,21 +85,37 @@ export const useEventForm = (initialEvent?: Event) => {
     setCategory,
     isRepeating,
     setIsRepeating,
-    repeatType,
-    setRepeatType,
-    repeatInterval,
-    setRepeatInterval,
-    repeatEndDate,
-    setRepeatEndDate,
     notificationTime,
     setNotificationTime,
+    handleStartTimeChange,
+    handleEndTimeChange,
+    startTimeError,
+    endTimeError,
+    editingEvent,
+  };
+
+  return {
+    // 기존 개별 상태들 (App.tsx에서 직접 사용)
+    title,
+    date,
+    startTime,
+    endTime,
+    description,
+    location,
+    category,
+    isRepeating,
+    repeatType,
+    repeatInterval,
+    repeatEndDate,
+    notificationTime,
     startTimeError,
     endTimeError,
     editingEvent,
     setEditingEvent,
-    handleStartTimeChange,
-    handleEndTimeChange,
     resetForm,
     editEvent,
+
+    // 컴포넌트용 props 객체
+    eventEditorProps,
   };
 };
