@@ -10,11 +10,19 @@ import {
 } from '../__mocks__/handlersUtils';
 import App from '../App';
 import { server } from '../setupTests';
+import { OverlayProvider } from 'overlay-kit';
 
 const setup = (element: ReactElement) => {
   const user = userEvent.setup();
 
-  return { ...render(<SnackbarProvider>{element}</SnackbarProvider>), user };
+  return {
+    ...render(
+      <SnackbarProvider>
+        <OverlayProvider>{element}</OverlayProvider>
+      </SnackbarProvider>
+    ),
+    user,
+  };
 };
 
 describe('일정 CRUD 및 기본 기능', () => {
