@@ -92,3 +92,18 @@ export const setupMockHandlerDeletion = () => {
     })
   );
 };
+
+// 이벤트 로딩 실패 케이스
+export const setupMockHandlerLoadingFailure = () => {
+  server.use(http.get('/api/events', () => new HttpResponse(null, { status: 500 })));
+};
+
+// 이벤트 수정 실패 케이스
+export const setupMockHandlerUpdatingFailure = () => {
+  server.use(http.put('/api/events/:id', () => new HttpResponse(null, { status: 404 })));
+};
+
+// 이벤트 삭제 실패 케이스
+export const setupMockHandlerDeletionFailure = () => {
+  server.use(http.delete('/api/events/:id', () => new HttpResponse(null, { status: 404 })));
+};
