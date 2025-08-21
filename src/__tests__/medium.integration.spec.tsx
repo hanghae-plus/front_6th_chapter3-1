@@ -238,7 +238,43 @@ describe('일정 뷰', () => {
     await waitFor(() => expect(screen.getByText('검색 결과가 없습니다.')).toBeInTheDocument());
   });
 
-  it('주별 뷰 선택 후 해당 일자에 일정이 존재한다면 해당 일정이 정확히 표시된다', async () => {});
+  it('주별 뷰 선택 후 해당 일자에 일정이 존재한다면 해당 일정이 정확히 표시된다', async () => {
+    const user = userEvent.setup();
+
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date(2025, 7, 22));
+    vi.useRealTimers();
+
+    const weekEvent: Event = {
+      id: '1',
+      title: '발제',
+      date: '2025-08-23',
+      startTime: '13:00',
+      endTime: '18:00',
+      description: '듣기',
+      location: '이쁘게 말하는 방',
+      category: '업무',
+      repeat: { type: 'none', interval: 0 },
+      notificationTime: 10,
+    };
+    server.use(...setupMockHandlerCreation([weekEvent]));
+
+    render(
+      <ThemeProvider theme={createTheme()}>
+        <SnackbarProvider>
+          <App />
+        </SnackbarProvider>
+      </ThemeProvider>
+    );
+
+    const viewTypeContainer = await screen.findByLabelText('뷰 타입 선택');
+    const viewTypeSelect = await within(viewTypeContainer).findByRole('combobox');
+    await user.click(viewTypeSelect);
+    await user.click(screen.getByRole('option', { name: 'week-option' }));
+
+    const weekView = await screen.findByTestId('week-view');
+    expect(await within(weekView).findByText('발제')).toBeInTheDocument();
+  });
 
   it('월별 뷰에 일정이 없으면, 일정이 표시되지 않아야 한다.', async () => {});
 
