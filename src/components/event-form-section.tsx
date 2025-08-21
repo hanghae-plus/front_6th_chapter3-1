@@ -11,66 +11,63 @@ import {
   Checkbox,
   Button,
 } from '@mui/material';
-import { Dispatch, SetStateAction, ChangeEventHandler } from 'react';
+import { useSnackbar } from 'notistack';
 
-import { Event } from '../types';
+import { useEventForm, useEventOperations } from '../hooks';
+import { openOverlappingDialog } from './overlapping-dialog';
+import { findOverlappingEvents } from '../utils/eventOverlap';
 import { getTimeErrorMessage } from '../utils/timeValidation';
 
 type NotificationOption = { value: number; label: string };
 
 type Props = {
-  editingEvent: Event | null;
-  title: string;
-  setTitle: Dispatch<SetStateAction<string>>;
-  date: string;
-  setDate: Dispatch<SetStateAction<string>>;
-  startTime: string;
-  endTime: string;
-  handleStartTimeChange: ChangeEventHandler<HTMLInputElement>;
-  handleEndTimeChange: ChangeEventHandler<HTMLInputElement>;
-  startTimeError: string | null;
-  endTimeError: string | null;
-  description: string;
-  setDescription: Dispatch<SetStateAction<string>>;
-  location: string;
-  setLocation: Dispatch<SetStateAction<string>>;
-  category: string;
-  setCategory: Dispatch<SetStateAction<string>>;
   categories: string[];
-  isRepeating: boolean;
-  setIsRepeating: Dispatch<SetStateAction<boolean>>;
-  notificationTime: number;
-  setNotificationTime: Dispatch<SetStateAction<number>>;
   notificationOptions: NotificationOption[];
-  addOrUpdateEvent: () => void | Promise<void>;
 };
 
-export const EventFormSection = ({
-  editingEvent,
-  title,
-  setTitle,
-  date,
-  setDate,
-  startTime,
-  endTime,
-  handleStartTimeChange,
-  handleEndTimeChange,
-  startTimeError,
-  endTimeError,
-  description,
-  setDescription,
-  location,
-  setLocation,
-  category,
-  setCategory,
-  categories,
-  isRepeating,
-  setIsRepeating,
-  notificationTime,
-  setNotificationTime,
-  notificationOptions,
-  addOrUpdateEvent,
-}: Props) => {
+export const EventFormSection = ({ categories, notificationOptions }: Props) => {
+  const { enqueueSnackbar } = useSnackbar();
+  const {
+    form,
+    errors,
+    editingEvent,
+    onChangeStartTime,
+    onChangeEndTime,
+    resetForm,
+    getEventFormData,
+
+    updateField,
+  } = useEventForm();
+  const { events, saveEvent } = useEventOperations(Boolean(editingEvent));
+
+  const addOrUpdateEvent = async () => {
+    if (!form.title || !form.date || !form.startTime || !form.endTime) {
+      enqueueSnackbar('필수 정보를 모두 입력해주세요.', { variant: 'error' });
+      return;
+    }
+
+    if (errors.startTimeError || errors.endTimeError) {
+      enqueueSnackbar('시간 설정을 확인해주세요.', { variant: 'error' });
+      return;
+    }
+
+    const eventData = getEventFormData();
+    const overlapping = findOverlappingEvents(eventData, events);
+
+    if (overlapping.length > 0) {
+      openOverlappingDialog({
+        events: overlapping,
+        onSubmit: () => {
+          saveEvent(eventData);
+          resetForm();
+        },
+      });
+    } else {
+      await saveEvent(eventData);
+      resetForm();
+    }
+  };
+
   return (
     <Stack spacing={2} sx={{ width: '20%' }}>
       <Typography variant="h4">{editingEvent ? '일정 수정' : '일정 추가'}</Typography>
@@ -80,8 +77,8 @@ export const EventFormSection = ({
         <TextField
           id="title"
           size="small"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
+          value={form.title}
+          onChange={(e) => updateField('title', e.target.value)}
         />
       </FormControl>
 
@@ -91,37 +88,41 @@ export const EventFormSection = ({
           id="date"
           size="small"
           type="date"
-          value={date}
-          onChange={(e) => setDate(e.target.value)}
+          value={form.date}
+          onChange={(e) => updateField('date', e.target.value)}
         />
       </FormControl>
 
       <Stack direction="row" spacing={2}>
         <FormControl fullWidth>
           <FormLabel htmlFor="start-time">시작 시간</FormLabel>
-          <Tooltip title={startTimeError || ''} open={!!startTimeError} placement="top">
+          <Tooltip
+            title={errors.startTimeError || ''}
+            open={!!errors.startTimeError}
+            placement="top"
+          >
             <TextField
               id="start-time"
               size="small"
               type="time"
-              value={startTime}
-              onChange={handleStartTimeChange}
-              onBlur={() => getTimeErrorMessage(startTime, endTime)}
-              error={!!startTimeError}
+              value={form.startTime}
+              onChange={(e) => onChangeStartTime(e.target.value)}
+              onBlur={() => getTimeErrorMessage(form.startTime, form.endTime)}
+              error={!!errors.startTimeError}
             />
           </Tooltip>
         </FormControl>
         <FormControl fullWidth>
           <FormLabel htmlFor="end-time">종료 시간</FormLabel>
-          <Tooltip title={endTimeError || ''} open={!!endTimeError} placement="top">
+          <Tooltip title={errors.endTimeError || ''} open={!!errors.endTimeError} placement="top">
             <TextField
               id="end-time"
               size="small"
               type="time"
-              value={endTime}
-              onChange={handleEndTimeChange}
-              onBlur={() => getTimeErrorMessage(startTime, endTime)}
-              error={!!endTimeError}
+              value={form.endTime}
+              onChange={(e) => onChangeEndTime(e.target.value)}
+              onBlur={() => getTimeErrorMessage(form.startTime, form.endTime)}
+              error={!!errors.endTimeError}
             />
           </Tooltip>
         </FormControl>
@@ -132,8 +133,8 @@ export const EventFormSection = ({
         <TextField
           id="description"
           size="small"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
+          value={form.description}
+          onChange={(e) => updateField('description', e.target.value)}
         />
       </FormControl>
 
@@ -142,8 +143,8 @@ export const EventFormSection = ({
         <TextField
           id="location"
           size="small"
-          value={location}
-          onChange={(e) => setLocation(e.target.value)}
+          value={form.location}
+          onChange={(e) => updateField('location', e.target.value)}
         />
       </FormControl>
 
@@ -152,8 +153,8 @@ export const EventFormSection = ({
         <Select
           id="category"
           size="small"
-          value={category}
-          onChange={(e) => setCategory(e.target.value)}
+          value={form.category}
+          onChange={(e) => updateField('category', e.target.value)}
           aria-labelledby="category-label"
           aria-label="카테고리"
         >
@@ -168,7 +169,10 @@ export const EventFormSection = ({
       <FormControl>
         <FormControlLabel
           control={
-            <Checkbox checked={isRepeating} onChange={(e) => setIsRepeating(e.target.checked)} />
+            <Checkbox
+              checked={form.isRepeating}
+              onChange={(e) => updateField('isRepeating', e.target.checked)}
+            />
           }
           label="반복 일정"
         />
@@ -181,10 +185,10 @@ export const EventFormSection = ({
         <Select
           id="notification"
           size="small"
-          value={notificationTime}
+          value={form.notificationTime}
           aria-labelledby="notification-label"
           aria-label="알림 설정"
-          onChange={(e) => setNotificationTime(Number(e.target.value))}
+          onChange={(e) => updateField('notificationTime', Number(e.target.value))}
         >
           {notificationOptions.map((option) => (
             <MenuItem key={option.value} value={option.value} aria-label={`${option.label}-option`}>

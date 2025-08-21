@@ -9,6 +9,7 @@ import {
   Typography,
 } from '@mui/material';
 
+import { useEventOperations, useEventForm } from '../hooks';
 import { Event } from '../types';
 
 type NotificationOption = { value: number; label: string };
@@ -16,11 +17,9 @@ type NotificationOption = { value: number; label: string };
 type Props = {
   searchTerm: string;
   setSearchTerm: (value: string) => void;
-  filteredEvents: Event[];
+  filteredEvents: Readonly<Event[]>;
   notificationOptions: NotificationOption[];
   notifiedEvents: string[];
-  editEvent: (event: Event) => void;
-  deleteEvent: (id: string) => void;
 };
 
 export const EventListSection = ({
@@ -29,9 +28,9 @@ export const EventListSection = ({
   filteredEvents,
   notificationOptions,
   notifiedEvents,
-  editEvent,
-  deleteEvent,
 }: Props) => {
+  const { editEvent } = useEventForm();
+  const { deleteEvent } = useEventOperations(Boolean(editEvent));
   return (
     <Stack
       data-testid="event-list"
