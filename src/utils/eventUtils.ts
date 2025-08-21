@@ -1,3 +1,4 @@
+import { NOTIFICATION_OPTIONS } from '../constants/notification';
 import { Event } from '../types';
 import { getWeekDates, isDateInRange } from './dateUtils';
 
@@ -64,3 +65,33 @@ export function getFilteredEvents(
 
   return searchedEvents;
 }
+
+/**
+ * 반복 타입 텍스트 반환
+ * @param type 반복 타입(daily, weekly, monthly, yearly)
+ * @returns 반복 타입 텍스트
+ */
+export const getRepeatTypeText = (type: Event['repeat']['type']) => {
+  const typeMap = { daily: '일', weekly: '주', monthly: '월', yearly: '년' };
+  return typeMap[type as keyof typeof typeMap] || '';
+};
+
+/**
+ * 반복 정보 텍스트 반환
+ * @param repeat 반복 정보
+ * @returns 반복 정보 텍스트
+ */
+export const formatRepeatInfo = (repeat: Event['repeat']) => {
+  if (repeat.type === 'none') return null;
+
+  const baseText = `반복: ${repeat.interval}${getRepeatTypeText(repeat.type)}마다`;
+  return repeat.endDate ? `${baseText} (종료: ${repeat.endDate})` : baseText;
+};
+
+/**
+ * 알림 텍스트 반환
+ * @param notificationTime 알림 시간
+ * @returns 알림 텍스트
+ */
+export const getNotificationLabel = (notificationTime: number) =>
+  NOTIFICATION_OPTIONS.find((option) => option.value === notificationTime)?.label || '';

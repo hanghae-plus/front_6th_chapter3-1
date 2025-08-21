@@ -17,12 +17,12 @@ interface OverlapDialogProps {
   onConfirm: () => void;
 }
 
-export function OverlapDialog({
+export const OverlapDialog = ({
   isOpen,
   overlappingEvents,
   onClose,
   onConfirm,
-}: OverlapDialogProps) {
+}: OverlapDialogProps) => {
   return (
     <Dialog open={isOpen} onClose={onClose}>
       <DialogTitle>일정 겹침 경고</DialogTitle>
@@ -45,4 +45,4 @@ export function OverlapDialog({
       </DialogActions>
     </Dialog>
   );
-}
+};
