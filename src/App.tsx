@@ -2,24 +2,23 @@ import { Box, Stack } from '@mui/material';
 import { useSnackbar } from 'notistack';
 import { useState } from 'react';
 
+import { CalendarView } from './components/Calendar/CalendarView';
+import OverlapDialog from './components/Dialog/OverlapDialog.tsx';
+import { EventForm } from './components/EventForm/EventForm';
+import { EventList } from './components/EventList/EventList';
+import NotificationContainer from './components/Notification/NotificationContainer.tsx';
+import { notificationOptions } from './constants/notificationOptions';
+import { weekDays } from './constants/weekDays';
 import { useCalendarView } from './hooks/useCalendarView.ts';
 import { useEventForm } from './hooks/useEventForm.ts';
 import { useEventOperations } from './hooks/useEventOperations.ts';
 import { useNotifications } from './hooks/useNotifications.ts';
 import { useSearch } from './hooks/useSearch.ts';
 import { Event } from './types';
-
-import { findOverlappingEvents } from './utils/eventOverlap';
-import { getTimeErrorMessage } from './utils/timeValidation';
-import { validateEventForm } from './utils/eventValidation';
 import { createEventData } from './utils/eventFormUtils';
-import { weekDays } from './constants/weekDays';
-import { notificationOptions } from './constants/notificationOptions';
-import { EventForm } from './components/EventForm/EventForm';
-import { CalendarView } from './components/Calendar/CalendarView';
-import { EventList } from './components/EventList/EventList';
-import NotificationContainer from './components/Notification/NotificationContainer.tsx';
-import OverlapDialog from './components/Dialog/OverlapDialog.tsx';
+import { findOverlappingEvents } from './utils/eventOverlap';
+import { validateEventForm } from './utils/eventValidation';
+import { getTimeErrorMessage } from './utils/timeValidation';
 
 function App() {
   const {

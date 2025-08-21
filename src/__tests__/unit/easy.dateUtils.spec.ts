@@ -1,4 +1,3 @@
-import { setupMockHandlerUpdating } from '../../__mocks__/handlersUtils';
 import { Event } from '../../types';
 import {
   fillZero,
@@ -29,16 +28,16 @@ describe('getDaysInMonth', () => {
     expect(getDaysInMonth(2025, 2)).toEqual(28);
   });
 
-  // 적절하지 않은 테스트 케이스라고 판단되어 주석 처리
-  // Why : JS의 date객체가 스스로 보정함, 즉 이 함수에 대한 테스트가 아니라 JS의 내부 동작에 대한 테스트이기 때문에 주석 처리
-  // it('유효하지 않은 월에 대해 적절히 처리한다', () => {
-  //   const unValidMonth = [0, 13, -1];
-  //   // 0월은 이전 해의 12월로 처리 (31일)
-  //   // 13월은 다음 해의 1월로 처리 (31일)
-  //   // -1월은 이전 해의 11월로 처리 (30일)
-  //   const result = unValidMonth.map((month) => getDaysInMonth(2025, month));
-  //   expect(result).toEqual([31, 31, 30]);
-  // });
+  // 적절하지 않은 테스트 케이스라고 판단되어 skip 처리
+  // Why : JS의 date객체가 스스로 보정함, 즉 이 함수에 대한 테스트가 아니라 JS의 내부 동작에 대한 테스트이기 때문에 skip 처리
+  it.skip('유효하지 않은 월에 대해 적절히 처리한다', () => {
+    const unValidMonth = [0, 13, -1];
+    // 0월은 이전 해의 12월로 처리 (31일)
+    // 13월은 다음 해의 1월로 처리 (31일)
+    // -1월은 이전 해의 11월로 처리 (30일)
+    const result = unValidMonth.map((month) => getDaysInMonth(2025, month));
+    expect(result).toEqual([31, 31, 30]);
+  });
 
   // TO BE : 위 대신 유효하지 않은 월에 대해 직접 올바른 케이스를 추가
   it('0월은 이전 해의 12월로 처리한다.', () => {

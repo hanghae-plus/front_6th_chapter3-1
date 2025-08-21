@@ -1,5 +1,5 @@
-import { createEventData, CreateEventDataParams } from '../../utils/eventFormUtils';
 import { Event } from '../../types';
+import { createEventData, CreateEventDataParams } from '../../utils/eventFormUtils';
 
 describe('createEventData', () => {
   it('새로운 이벤트 데이터를 생성할 때 올바른 데이터를 반환한다', () => {

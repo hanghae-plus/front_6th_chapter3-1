@@ -1,4 +1,5 @@
 import { Stack } from '@mui/material';
+
 import NotificationItem from './NotificationItem';
 
 interface NotificationContainerProps {
