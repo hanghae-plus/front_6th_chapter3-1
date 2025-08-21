@@ -1,9 +1,11 @@
 import { Box, Stack } from '@mui/material';
-import { EventForm } from './components/EventForm';
-import { EventList } from './components/EventList';
-import { OverlapDialog } from './components/OverlapDialog';
-import { NotificationStack } from './components/NotificationStack';
-import { CalendarLayout } from './components/CalendarLayout';
+import {
+  EventForm,
+  EventList,
+  OverlapDialog,
+  NotificationStack,
+  CalendarLayout,
+} from './components';
 
 import { useCalendarView } from './hooks/useCalendarView.ts';
 import { useEventForm } from './hooks/useEventForm.ts';

@@ -1,5 +1,5 @@
 import { Stack, TextField, Typography } from '@mui/material';
-import { Event } from '../types';
+import { Event } from '../../types';
 import { EventCard } from './EventCard';
 
 interface EventListProps {

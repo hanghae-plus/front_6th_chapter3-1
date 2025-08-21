@@ -1,8 +1,6 @@
 import { Stack, Typography } from '@mui/material';
-import { WeekView } from './WeekView';
-import { MonthView } from './MonthView';
-import { CalendarNavigation } from './CalendarNavigation';
-import { Event } from '../types';
+import { WeekView, MonthView, CalendarNavigation } from './index';
+import { Event } from '../../types';
 
 interface CalendarLayoutProps {
   view: 'week' | 'month';
