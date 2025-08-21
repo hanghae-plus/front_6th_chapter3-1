@@ -72,6 +72,30 @@ const LUNCH_0904: Event = {
   repeat: { type: 'none', interval: 0 },
   notificationTime: 30,
 };
+const LUNCH_0901: Event = {
+  id: '7',
+  title: '9월 1일 점심 약속',
+  date: '2025-09-01',
+  startTime: '12:00',
+  endTime: '13:00',
+  description: '9월 점심 약속~',
+  location: '야외 카페',
+  category: '개인',
+  repeat: { type: 'none', interval: 0 },
+  notificationTime: 30,
+};
+const DINNER_0901: Event = {
+  id: '8',
+  title: '9월 1일 저녁 약속',
+  date: '2025-09-01',
+  startTime: '12:00',
+  endTime: '13:00',
+  description: '9월 점심 약속~',
+  location: '야외 카페',
+  category: '개인',
+  repeat: { type: 'none', interval: 0 },
+  notificationTime: 30,
+};
 const MOCK_EVENTS: Event[] = [
   METTING_0823,
   LUNCH_0822,
@@ -89,4 +113,6 @@ export {
   LUNCH_0828,
   MEETING_0926,
   LUNCH_0904,
+  LUNCH_0901,
+  DINNER_0901,
 };
