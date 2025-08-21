@@ -1,18 +1,18 @@
+import { ReactElement } from 'react';
+
 import CssBaseline from '@mui/material/CssBaseline';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { render, screen, within, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { SnackbarProvider } from 'notistack';
-
-import { ReactElement } from 'react';
 import { vi } from 'vitest';
 
+import App from '../App';
 import {
   setupMockHandlerCreation,
   setupMockHandlerDeletion,
   setupMockHandlerUpdating,
 } from '../__mocks__/handlersUtils';
-import App from '../App';
 
 // 10월로 시간 모킹
 beforeAll(() => {
