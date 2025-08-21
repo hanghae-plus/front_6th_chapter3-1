@@ -1,8 +1,5 @@
 import ChevronLeft from '@mui/icons-material/ChevronLeft';
 import ChevronRight from '@mui/icons-material/ChevronRight';
-import Delete from '@mui/icons-material/Delete';
-import Edit from '@mui/icons-material/Edit';
-import Notifications from '@mui/icons-material/Notifications';
 import {
   Box,
   Button,
@@ -26,6 +23,7 @@ import {
 } from '@mui/material';
 import { useSnackbar } from 'notistack';
 
+import { CalendarEventItem } from './components/CalendarEventItem.tsx';
 import { EventCard } from './components/EventCard.tsx';
 import { OverlapDialog } from './components/OverlapDialog.tsx';
 import { CATEGORIES, WEEK_DAYS } from './constants/events.ts';
@@ -191,31 +189,7 @@ function App() {
                       .map((event) => {
                         const isNotified = notifiedEvents.includes(event.id);
                         return (
-                          <Box
-                            key={event.id}
-                            sx={{
-                              p: 0.5,
-                              my: 0.5,
-                              backgroundColor: isNotified ? '#ffebee' : '#f5f5f5',
-                              borderRadius: 1,
-                              fontWeight: isNotified ? 'bold' : 'normal',
-                              color: isNotified ? '#d32f2f' : 'inherit',
-                              minHeight: '18px',
-                              width: '100%',
-                              overflow: 'hidden',
-                            }}
-                          >
-                            <Stack direction="row" spacing={1} alignItems="center">
-                              {isNotified && <Notifications fontSize="small" />}
-                              <Typography
-                                variant="caption"
-                                noWrap
-                                sx={{ fontSize: '0.75rem', lineHeight: 1.2 }}
-                              >
-                                {event.title}
-                              </Typography>
-                            </Stack>
-                          </Box>
+                          <CalendarEventItem key={event.id} event={event} isNotified={isNotified} />
                         );
                       })}
                   </TableCell>
@@ -278,31 +252,11 @@ function App() {
                             {getEventsForDay(filteredEvents, day).map((event) => {
                               const isNotified = notifiedEvents.includes(event.id);
                               return (
-                                <Box
+                                <CalendarEventItem
                                   key={event.id}
-                                  sx={{
-                                    p: 0.5,
-                                    my: 0.5,
-                                    backgroundColor: isNotified ? '#ffebee' : '#f5f5f5',
-                                    borderRadius: 1,
-                                    fontWeight: isNotified ? 'bold' : 'normal',
-                                    color: isNotified ? '#d32f2f' : 'inherit',
-                                    minHeight: '18px',
-                                    width: '100%',
-                                    overflow: 'hidden',
-                                  }}
-                                >
-                                  <Stack direction="row" spacing={1} alignItems="center">
-                                    {isNotified && <Notifications fontSize="small" />}
-                                    <Typography
-                                      variant="caption"
-                                      noWrap
-                                      sx={{ fontSize: '0.75rem', lineHeight: 1.2 }}
-                                    >
-                                      {event.title}
-                                    </Typography>
-                                  </Stack>
-                                </Box>
+                                  event={event}
+                                  isNotified={isNotified}
+                                />
                               );
                             })}
                           </>
@@ -498,6 +452,7 @@ function App() {
             />
           </FormControl>
 
+          {/* 검색 필터링된 이벤트 목록 렌더링 */}
           {filteredEvents.length === 0 ? (
             <Typography>검색 결과가 없습니다.</Typography>
           ) : (
