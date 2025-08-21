@@ -106,7 +106,7 @@ test("새로 정의된 'title', 'endTime' 기준으로 적절하게 일정이 �
     endTime: '11:00',
     description: '수정하기~',
     location: '항해 젭',
-    category: '몰랑',
+    category: '개인',
     repeat: { type: 'none' as const, interval: 0 },
     notificationTime: 10,
   };
