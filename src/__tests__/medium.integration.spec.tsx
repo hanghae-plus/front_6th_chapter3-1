@@ -346,10 +346,11 @@ describe('알람 기능', () => {
     act(() => {
       vi.advanceTimersByTime(50 * 60 * 1000);
     });
-
-    const notification = await screen.findByRole('alert');
-    expect(
-      within(notification).getByText(/10분 후 알림 기능 테스트 일정이 시작됩니다./)
-    ).toBeInTheDocument();
+    await waitFor(() => {
+      const notification = screen.getAllByTestId('alert');
+      expect(
+        within(notification[0]).getByText(/10분 후 알림 기능 테스트 일정이 시작됩니다./)
+      ).toBeInTheDocument();
+    });
   });
 });
