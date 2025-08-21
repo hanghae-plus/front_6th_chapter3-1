@@ -437,6 +437,8 @@ describe('일정 충돌', () => {
 });
 
 it('notificationTime을 10으로 하면 지정 시간 10분 전 알람 텍스트가 노출된다', async () => {
+  process.env.TZ = 'Asia/Seoul';
+
   vi.useFakeTimers();
   vi.setSystemTime(new Date('2025-10-14T23:59:49Z'));
   renderApp();
