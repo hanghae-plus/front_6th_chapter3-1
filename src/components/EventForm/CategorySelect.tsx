@@ -1,6 +1,5 @@
 import { FormControl, FormLabel, MenuItem, Select } from '@mui/material';
-
-const categories = ['업무', '개인', '가족', '기타'];
+import { categories } from '../../constants/categories';
 
 interface CategorySelectProps {
   value: string;

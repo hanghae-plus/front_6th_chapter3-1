@@ -7,25 +7,19 @@ import { useEventForm } from './hooks/useEventForm.ts';
 import { useEventOperations } from './hooks/useEventOperations.ts';
 import { useNotifications } from './hooks/useNotifications.ts';
 import { useSearch } from './hooks/useSearch.ts';
-import { Event, EventForm as EventFormType } from './types';
+import { Event } from './types';
 
 import { findOverlappingEvents } from './utils/eventOverlap';
 import { getTimeErrorMessage } from './utils/timeValidation';
+import { validateEventForm } from './utils/eventValidation';
+import { createEventData } from './utils/eventFormUtils';
+import { weekDays } from './constants/weekDays';
+import { notificationOptions } from './constants/notificationOptions';
 import { EventForm } from './components/EventForm/EventForm';
 import { CalendarView } from './components/Calendar/CalendarView';
 import { EventList } from './components/EventList/EventList';
 import NotificationContainer from './components/Notification/NotificationContainer.tsx';
 import OverlapDialog from './components/Dialog/OverlapDialog.tsx';
-
-const weekDays = ['일', '월', '화', '수', '목', '금', '토'];
-
-const notificationOptions = [
-  { value: 1, label: '1분 전' },
-  { value: 10, label: '10분 전' },
-  { value: 60, label: '1시간 전' },
-  { value: 120, label: '2시간 전' },
-  { value: 1440, label: '1일 전' },
-];
 
 function App() {
   const {
@@ -75,18 +69,22 @@ function App() {
   const { enqueueSnackbar } = useSnackbar();
 
   const addOrUpdateEvent = async () => {
-    if (!title || !date || !startTime || !endTime) {
-      enqueueSnackbar('필수 정보를 모두 입력해주세요.', { variant: 'error' });
+    const validation = validateEventForm(
+      title,
+      date,
+      startTime,
+      endTime,
+      startTimeError,
+      endTimeError
+    );
+
+    if (!validation.isValid) {
+      enqueueSnackbar(validation.message!, { variant: 'error' });
       return;
     }
 
-    if (startTimeError || endTimeError) {
-      enqueueSnackbar('시간 설정을 확인해주세요.', { variant: 'error' });
-      return;
-    }
-
-    const eventData: Event | EventFormType = {
-      id: editingEvent ? editingEvent.id : undefined,
+    const eventData = createEventData({
+      editingEvent,
       title,
       date,
       startTime,
@@ -94,13 +92,12 @@ function App() {
       description,
       location,
       category,
-      repeat: {
-        type: isRepeating ? repeatType : 'none',
-        interval: repeatInterval,
-        endDate: repeatEndDate || undefined,
-      },
+      isRepeating,
+      repeatType,
+      repeatInterval,
+      repeatEndDate,
       notificationTime,
-    };
+    });
 
     const overlapping = findOverlappingEvents(eventData, events);
     if (overlapping.length > 0) {
@@ -169,8 +166,8 @@ function App() {
         onClose={() => setIsOverlapDialogOpen(false)}
         onConfirm={() => {
           setIsOverlapDialogOpen(false);
-          saveEvent({
-            id: editingEvent ? editingEvent.id : undefined,
+          const eventData = createEventData({
+            editingEvent,
             title,
             date,
             startTime,
@@ -178,13 +175,13 @@ function App() {
             description,
             location,
             category,
-            repeat: {
-              type: isRepeating ? repeatType : 'none',
-              interval: repeatInterval,
-              endDate: repeatEndDate || undefined,
-            },
+            isRepeating,
+            repeatType,
+            repeatInterval,
+            repeatEndDate,
             notificationTime,
           });
+          saveEvent(eventData);
         }}
       />
 
