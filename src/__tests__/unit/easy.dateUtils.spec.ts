@@ -191,11 +191,11 @@ describe('getWeeksAtMonth', () => {
 
   it('윤년 2월을 올바르게 처리한다', () => {
     const expected: Array<Array<number | null>> = [
-      [null, null, null, 1, 2, 3, 4],
-      [5, 6, 7, 8, 9, 10, 11],
-      [12, 13, 14, 15, 16, 17, 18],
-      [19, 20, 21, 22, 23, 24, 25],
-      [26, 27, 28, 29, null, null, null],
+      [null, null, null, null, 1, 2, 3],
+      [4, 5, 6, 7, 8, 9, 10],
+      [11, 12, 13, 14, 15, 16, 17],
+      [18, 19, 20, 21, 22, 23, 24],
+      [25, 26, 27, 28, 29, null, null],
     ];
 
     expect(getWeeksAtMonth(new Date(2024, 1, 1))).toEqual(expected);
@@ -203,18 +203,18 @@ describe('getWeeksAtMonth', () => {
 
   it('평년 2월을 올바르게 처리한다', () => {
     const expected: Array<Array<number | null>> = [
-      [null, null, null, null, null, 1, 2],
-      [3, 4, 5, 6, 7, 8, 9],
-      [10, 11, 12, 13, 14, 15, 16],
-      [17, 18, 19, 20, 21, 22, 23],
-      [24, 25, 26, 27, 28, null, null],
+      [null, null, null, null, null, null, 1],
+      [2, 3, 4, 5, 6, 7, 8],
+      [9, 10, 11, 12, 13, 14, 15],
+      [16, 17, 18, 19, 20, 21, 22],
+      [23, 24, 25, 26, 27, 28, null],
     ];
 
     expect(getWeeksAtMonth(new Date(2025, 1, 1))).toEqual(expected);
   });
 
   // ! 제거: 첫번째 목요일을 1주로 치는 경우 6주가 필요한 월은 존재하지 않음
-  // it('6주가 필요한 월을 올바르게 처리한다', () => {
+  // it.skip('6주가 필요한 월을 올바르게 처리한다', () => {
   //   const expected: Array<Array<number | null>> = [
   //     [null, null, null, null, 1, 2, 3],
   //     [4, 5, 6, 7, 8, 9, 10],
