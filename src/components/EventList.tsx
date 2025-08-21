@@ -90,9 +90,8 @@ export const EventList = ({
                 <Typography>
                   알림:{' '}
                   {
-                    notificationOptions.find(
-                      (option) => option.value === event.notificationTime
-                    )?.label
+                    notificationOptions.find((option) => option.value === event.notificationTime)
+                      ?.label
                   }
                 </Typography>
               </Stack>

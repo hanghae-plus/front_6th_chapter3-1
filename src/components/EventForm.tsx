@@ -171,10 +171,7 @@ export const EventForm = ({
       <FormControl>
         <FormControlLabel
           control={
-            <Checkbox
-              checked={isRepeating}
-              onChange={(e) => setIsRepeating(e.target.checked)}
-            />
+            <Checkbox checked={isRepeating} onChange={(e) => setIsRepeating(e.target.checked)} />
           }
           label="반복 일정"
         />

@@ -15,7 +15,6 @@ import { useSearch } from './hooks/useSearch.ts';
 import { Event, EventForm as EventFormType } from './types';
 import { findOverlappingEvents } from './utils/eventOverlap';
 
-
 function App() {
   const {
     title,
@@ -121,7 +120,6 @@ function App() {
     });
     resetForm();
   };
-
 
   return (
     <Box sx={{ width: '100%', height: '100vh', margin: 'auto', p: 5 }}>
