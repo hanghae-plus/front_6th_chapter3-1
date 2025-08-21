@@ -1,5 +1,6 @@
 import { Close } from '@mui/icons-material';
 import { Alert, AlertTitle, IconButton, Stack } from '@mui/material';
+import React from 'react';
 
 interface Notification {
   id: string;
