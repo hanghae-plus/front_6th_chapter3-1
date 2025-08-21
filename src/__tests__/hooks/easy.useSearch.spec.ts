@@ -1,7 +1,8 @@
 import { act, renderHook } from '@testing-library/react';
+
+import realEvents from '../../__mocks__/response/realEvents.json';
 import { useSearch } from '../../hooks/useSearch.ts';
 import { Event } from '../../types.ts';
-import realEvents from '../../__mocks__/response/realEvents.json';
 
 const events = realEvents.events as Event[];
 

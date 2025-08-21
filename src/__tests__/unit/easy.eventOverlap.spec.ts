@@ -1,5 +1,5 @@
-import { Event } from '../../types';
 import realEvents from '../../__mocks__/response/realEvents.json';
+import { Event } from '../../types';
 import {
   convertEventToDateRange,
   findOverlappingEvents,

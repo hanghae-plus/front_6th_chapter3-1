@@ -1,8 +1,9 @@
-import { vi } from 'vitest';
 import { act, renderHook } from '@testing-library/react';
+import { vi } from 'vitest';
+
+import realEvents from '../../__mocks__/response/realEvents.json';
 import { useNotifications } from '../../hooks/useNotifications.ts';
 import { Event } from '../../types.ts';
-import realEvents from '../../__mocks__/response/realEvents.json';
 // import { formatDate } from '../../utils/dateUtils.ts';
 // import { parseHM } from '../utils.ts';
 
