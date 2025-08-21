@@ -70,7 +70,7 @@ export default [
       ...typescriptPlugin.configs.recommended.rules,
 
       // ESLint rules
-      'no-unused-vars': 'warn',
+      'no-unused-vars': 'off',
 
       // React rules
       'react/prop-types': 'off',

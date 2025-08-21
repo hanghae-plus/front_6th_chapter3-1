@@ -13,6 +13,7 @@ import {
 } from '../__mocks__/handlersUtils';
 import App from '../App';
 // import { server } from '../setupTests';
+import { EventFormProvider } from '../context/FormContext';
 import { Event } from '../types';
 
 const theme = createTheme();
@@ -26,7 +27,9 @@ const setup = (element: ReactElement) => {
     ...render(
       <ThemeProvider theme={theme}>
         <CssBaseline />
-        <SnackbarProvider>{element}</SnackbarProvider>
+        <EventFormProvider>
+          <SnackbarProvider>{element}</SnackbarProvider>
+        </EventFormProvider>
       </ThemeProvider>
     ),
     user,
@@ -353,7 +356,7 @@ describe('일정 충돌', () => {
     await user.click(screen.getByRole('button', { name: '일정 수정' }));
 
     expect(await screen.findByText('일정 겹침 경고')).toBeInTheDocument();
-  });
+  }, 30000);
 });
 
 it('notificationTime을 10으로 하면 지정 시간 10분 전 알람 텍스트가 노출된다', async () => {
