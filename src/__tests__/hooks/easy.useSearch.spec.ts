@@ -73,7 +73,7 @@ it('주간 뷰에 해당하는 이벤트만 반환해야 한다', () => {
   expect(result.current.filteredEvents).toEqual(expected);
 });
 
-it('주간 뷰에 해당하는 이벤트만 반환해야 한다', () => {
+it('월간 뷰에 해당하는 이벤트만 반환해야 한다', () => {
   const events = createEvents([
     { date: '2025-07-01' },
     { date: '2025-07-08' },

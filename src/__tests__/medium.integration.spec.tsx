@@ -466,7 +466,7 @@ describe('일정 충돌', () => {
     await inputEvent(user, {
       title: '점심 식사',
       date: todayDate,
-      startTime: '12:30', 
+      startTime: '12:30',
       endTime: '13:30',
     });
 
