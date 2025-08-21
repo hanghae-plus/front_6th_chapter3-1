@@ -59,7 +59,6 @@ describe('일정 CRUD 및 기본 기능', () => {
 
     await expect(screen.findByText('일정 로딩 완료!')).resolves.toBeInTheDocument();
 
-    debug();
     const editButton = screen.getAllByLabelText('Edit event');
 
     await user.click(editButton[0]);
@@ -115,15 +114,79 @@ describe('일정 CRUD 및 기본 기능', () => {
 });
 
 describe('일정 뷰', () => {
-  it('주별 뷰를 선택 후 해당 주에 일정이 없으면, 일정이 표시되지 않는다.', async () => {});
+  it('주별 뷰를 선택 후 해당 주에 일정이 없으면, 일정이 표시되지 않는다.', async () => {
+    setupMockHandler(createDefaultEvents(new Date('2025-08-01')));
 
-  it('주별 뷰 선택 후 해당 일자에 일정이 존재한다면 해당 일정이 정확히 표시된다', async () => {});
+    const user = userEvent.setup();
+    renderWithProviders();
 
-  it('월별 뷰에 일정이 없으면, 일정이 표시되지 않아야 한다.', async () => {});
+    const selectViewType = screen.getByLabelText('뷰 타입 선택');
+    const selectElement = within(selectViewType).getByRole('combobox');
+    await user.click(selectElement);
+    await user.click(screen.getByRole('option', { name: /week/i }));
 
-  it('월별 뷰에 일정이 정확히 표시되는지 확인한다', async () => {});
+    const eventList = screen.getByTestId('event-list');
+    expect(within(eventList).getByText('검색 결과가 없습니다.')).toBeInTheDocument();
+  });
 
-  it('달력에 1월 1일(신정)이 공휴일로 표시되는지 확인한다', async () => {});
+  it('주별 뷰 선택 후 해당 일자에 일정이 존재한다면 해당 일정이 정확히 표시된다', async () => {
+    const mockData = createDefaultEvents(new Date());
+    setupMockHandler(mockData);
+
+    const user = userEvent.setup();
+    renderWithProviders();
+
+    const selectViewType = screen.getByLabelText('뷰 타입 선택');
+    const selectElement = within(selectViewType).getByRole('combobox');
+    await user.click(selectElement);
+    await user.click(screen.getByRole('option', { name: /week/i }));
+
+    const eventList = screen.getByTestId('event-list');
+    expect(within(eventList).getByText(mockData[0].title)).toBeInTheDocument();
+  });
+
+  it('월별 뷰에 일정이 없으면, 일정이 표시되지 않아야 한다.', async () => {
+    setupMockHandler(createDefaultEvents(new Date('2024-08-15')));
+
+    const user = userEvent.setup();
+    renderWithProviders();
+
+    const selectViewType = screen.getByLabelText('뷰 타입 선택');
+    const selectElement = within(selectViewType).getByRole('combobox');
+    await user.click(selectElement);
+    await user.click(screen.getByRole('option', { name: /month/i }));
+
+    const eventList = screen.getByTestId('event-list');
+    expect(within(eventList).getByText('검색 결과가 없습니다.')).toBeInTheDocument();
+  });
+
+  it('월별 뷰에 일정이 정확히 표시되는지 확인한다', async () => {
+    const mockData = createDefaultEvents(new Date());
+    setupMockHandler(mockData);
+
+    const user = userEvent.setup();
+    renderWithProviders();
+
+    const selectViewType = screen.getByLabelText('뷰 타입 선택');
+    const selectElement = within(selectViewType).getByRole('combobox');
+    await user.click(selectElement);
+    await user.click(screen.getByRole('option', { name: /month/i }));
+
+    const eventList = screen.getByTestId('event-list');
+    expect(within(eventList).getByText(mockData[0].title)).toBeInTheDocument();
+  });
+
+  it('달력에 1월 1일(신정)이 공휴일로 표시되는지 확인한다', async () => {
+    vitest.useFakeTimers();
+    vitest.setSystemTime(new Date('2025-01-01'));
+
+    renderWithProviders();
+
+    const day = screen.getByText('신정');
+    expect(day).toHaveStyle({ color: '#d32f2f' });
+
+    vitest.useRealTimers();
+  });
 });
 
 describe('검색 기능', () => {
