@@ -1,5 +1,6 @@
-import { http, HttpResponse } from 'msw';
 import { randomUUID } from 'crypto';
+
+import { http, HttpResponse } from 'msw';
 
 import { events } from '../__mocks__/response/events.json' assert { type: 'json' };
 import { Event, EventForm } from '../types';
@@ -30,8 +31,7 @@ export const handlers = [
     return HttpResponse.json(updatedEvent);
   }),
 
-  http.delete<{ id: string }>('/api/events/:id', ({ params }) => {
-    const { id: _id } = params;
+  http.delete('/api/events/:id', () => {
     return new HttpResponse(null, { status: 204 });
   }),
 ];

@@ -5,8 +5,8 @@ import { userEvent } from '@testing-library/user-event';
 import { SnackbarProvider } from 'notistack';
 import { vi } from 'vitest';
 
-import App from '../App';
 import { createDefaultEvents, setupMockHandler } from '../__mocks__/handlersUtils';
+import App from '../App';
 
 function renderWithProviders() {
   const theme = createTheme();

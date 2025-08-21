@@ -1,9 +1,10 @@
-import { http, HttpResponse } from 'msw';
 import { randomUUID } from 'crypto';
 
+import { http, HttpResponse } from 'msw';
+
+import { events } from '../__mocks__/response/events.json' assert { type: 'json' };
 import { server } from '../setupTests';
 import { Event, EventForm } from '../types';
-import { events } from '../__mocks__/response/events.json' assert { type: 'json' };
 
 export const setupMockHandler = (initEvents = events) => {
   const testEvents = [...initEvents] as Event[];

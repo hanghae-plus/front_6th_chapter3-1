@@ -1,9 +1,8 @@
 import { act, renderHook } from '@testing-library/react';
+import { vi } from 'vitest';
 
 import { useNotifications } from '../../hooks/useNotifications.ts';
 import { Event } from '../../types.ts';
-import { formatDate } from '../../utils/dateUtils.ts';
-import { parseHM } from '../utils.ts';
 
 describe('useNotification', () => {
   const events: Event[] = [
@@ -65,13 +64,13 @@ describe('useNotification', () => {
   });
 
   it('index를 기준으로 알림을 적절하게 제거할 수 있다', () => {
-    vitest.setSystemTime(new Date('2025-08-20T09:59:00'));
+    vi.setSystemTime(new Date('2025-08-20T09:59:00'));
 
     const { result } = renderHook(() => useNotifications(events));
     expect(result.current.notifications).toHaveLength(0);
 
     act(() => {
-      vitest.advanceTimersByTime(1000);
+      vi.advanceTimersByTime(1000);
     });
 
     expect(result.current.notifications).toHaveLength(1);
@@ -84,19 +83,19 @@ describe('useNotification', () => {
   });
 
   it('이미 알림이 발생한 이벤트에 대해서는 중복 알림이 발생하지 않아야 한다', () => {
-    vitest.setSystemTime(new Date('2025-08-20T09:59:00'));
+    vi.setSystemTime(new Date('2025-08-20T09:59:00'));
 
     const { result } = renderHook(() => useNotifications(events));
     expect(result.current.notifications).toHaveLength(0);
 
     act(() => {
-      vitest.advanceTimersByTime(1000);
+      vi.advanceTimersByTime(1000);
     });
 
     expect(result.current.notifications).toHaveLength(1);
 
     act(() => {
-      vitest.advanceTimersByTime(1000);
+      vi.advanceTimersByTime(1000);
     });
 
     expect(result.current.notifications).toHaveLength(1);

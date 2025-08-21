@@ -32,7 +32,7 @@ describe('useCalendarView : 초기 상태', () => {
 
 describe('useCalendarView : 액션일 일어날 경우', () => {
   beforeEach(() => {
-    vitest.setSystemTime(new Date('2025-10-01'));
+    vi.setSystemTime(new Date('2025-10-01'));
   });
 
   it("view를 'week'으로 변경 시 적절하게 반영된다", () => {
