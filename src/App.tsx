@@ -14,7 +14,6 @@ import {
   Typography,
 } from '@mui/material';
 import { useSnackbar } from 'notistack';
-import { useState } from 'react';
 
 import CalendarViewPanel from './components/CalendarViewPanel';
 import EventFormPanel from './components/EventFormPanel';
@@ -23,6 +22,7 @@ import { useCalendarView } from './hooks/useCalendarView.ts';
 import { useEventForm } from './hooks/useEventForm.ts';
 import { useEventOperations } from './hooks/useEventOperations.ts';
 import { useNotifications } from './hooks/useNotifications.ts';
+import { useOverlapGuard } from './hooks/useOverlapGuard';
 import { useSearch } from './hooks/useSearch.ts';
 // import { Event, EventForm, RepeatType } from './types';
 import { Event, EventForm } from './types';
@@ -34,7 +34,6 @@ import {
   getWeekDates,
   getWeeksAtMonth,
 } from './utils/dateUtils';
-import { findOverlappingEvents } from './utils/eventOverlap';
 // keep getTimeErrorMessage only used inside form panel
 
 const weekDays = ['일', '월', '화', '수', '목', '금', '토'];
@@ -89,8 +88,12 @@ function App() {
   const { view, setView, currentDate, holidays, navigate } = useCalendarView();
   const { searchTerm, filteredEvents, setSearchTerm } = useSearch(events, currentDate, view);
 
-  const [isOverlapDialogOpen, setIsOverlapDialogOpen] = useState(false);
-  const [overlappingEvents, setOverlappingEvents] = useState<Event[]>([]);
+  const {
+    isOpen: isOverlapDialogOpen,
+    overlappingEvents,
+    checkAndOpen,
+    close,
+  } = useOverlapGuard(events);
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -122,11 +125,8 @@ function App() {
       notificationTime,
     };
 
-    const overlapping = findOverlappingEvents(eventData, events);
-    if (overlapping.length > 0) {
-      setOverlappingEvents(overlapping);
-      setIsOverlapDialogOpen(true);
-    } else {
+    const blocked = checkAndOpen(eventData);
+    if (!blocked) {
       await saveEvent(eventData);
       resetForm();
     }
@@ -191,7 +191,7 @@ function App() {
         />
       </Stack>
 
-      <Dialog open={isOverlapDialogOpen} onClose={() => setIsOverlapDialogOpen(false)}>
+      <Dialog open={isOverlapDialogOpen} onClose={close}>
         <DialogTitle>일정 겹침 경고</DialogTitle>
         <DialogContent>
           <DialogContentText>
@@ -205,11 +205,11 @@ function App() {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setIsOverlapDialogOpen(false)}>취소</Button>
+          <Button onClick={close}>취소</Button>
           <Button
             color="error"
             onClick={() => {
-              setIsOverlapDialogOpen(false);
+              close();
               saveEvent({
                 id: editingEvent ? editingEvent.id : undefined,
                 title,
