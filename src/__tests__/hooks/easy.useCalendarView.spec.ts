@@ -3,17 +3,6 @@ import { act, renderHook } from '@testing-library/react';
 import { useCalendarView } from '../../hooks/useCalendarView.ts';
 import { assertDate } from '../utils.ts';
 
-const TEST_TODAY = new Date('2025-10-01');
-
-beforeAll(() => {
-  vi.useFakeTimers();
-  vi.setSystemTime(TEST_TODAY); //가짜 시간 설정해서 오늘을 TEST_TODAY로 고정
-});
-
-afterAll(() => {
-  vi.useRealTimers(); // 테스트 후 원상복구 해주기
-});
-
 describe('초기 상태', () => {
   it('view는 "month"이어야 한다', () => {
     const { result } = renderHook(() => useCalendarView()); //훅이 반환하는 값을 result.current 객체 통해서 사용할 수 있다!
