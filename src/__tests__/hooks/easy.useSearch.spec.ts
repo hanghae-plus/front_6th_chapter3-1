@@ -52,6 +52,18 @@ const mockEvents: Event[] = [
     repeat: { type: 'none', interval: 0 },
     notificationTime: 30,
   },
+  {
+    id: '5',
+    title: '노래방',
+    date: '2025-01-17',
+    startTime: '18:00',
+    endTime: '19:00',
+    description: '노래방에서 노래하기',
+    location: '팀즈 노래방',
+    category: '팀활동',
+    repeat: { type: 'none', interval: 0 },
+    notificationTime: 30,
+  },
 ];
 
 const currentDate = new Date('2025-01-15');
@@ -60,7 +72,6 @@ it('검색어가 비어있을 때 모든 이벤트를 반환해야 한다', () =
   const { result } = renderHook(() => useSearch(mockEvents, currentDate, 'month'));
 
   expect(result.current.searchTerm).toBe('');
-  expect(result.current.filteredEvents).toHaveLength(4);
   expect(result.current.filteredEvents).toEqual(mockEvents);
 });
 
@@ -72,7 +83,6 @@ it('검색어에 맞는 이벤트만 필터링해야 한다', () => {
   });
 
   expect(result.current.searchTerm).toBe('회의');
-  expect(result.current.filteredEvents).toHaveLength(1);
   expect(result.current.filteredEvents).toEqual([
     {
       id: '1',
@@ -92,12 +102,11 @@ it('검색어에 맞는 이벤트만 필터링해야 한다', () => {
 it('검색어가 제목, 설명, 위치 중 하나라도 일치하면 해당 이벤트를 반환해야 한다', () => {
   const { result } = renderHook(() => useSearch(mockEvents, currentDate, 'month'));
 
-  // 제목으로 검색
   act(() => {
     result.current.setSearchTerm('팀');
   });
 
-  expect(result.current.filteredEvents).toHaveLength(2);
+  expect(result.current.searchTerm).toBe('팀');
   expect(result.current.filteredEvents).toEqual([
     {
       id: '1',
@@ -123,57 +132,17 @@ it('검색어가 제목, 설명, 위치 중 하나라도 일치하면 해당 이
       repeat: { type: 'none', interval: 0 },
       notificationTime: 15,
     },
-  ]);
-
-  // 설명으로 검색
-  act(() => {
-    result.current.setSearchTerm('프로젝트');
-  });
-  expect(result.current.filteredEvents).toHaveLength(2);
-  expect(result.current.filteredEvents).toEqual([
     {
-      id: '1',
-      title: '팀 회의',
-      date: '2025-01-15',
-      startTime: '09:00',
-      endTime: '10:00',
-      description: '주간 프로젝트 진행상황 공유',
-      location: '회의실 A',
-      category: '업무',
+      id: '5',
+      title: '노래방',
+      date: '2025-01-17',
+      startTime: '18:00',
+      endTime: '19:00',
+      description: '노래방에서 노래하기',
+      location: '팀즈 노래방',
+      category: '팀활동',
       repeat: { type: 'none', interval: 0 },
-      notificationTime: 10,
-    },
-    {
-      id: '3',
-      title: '고객 미팅',
-      date: '2025-01-16',
-      startTime: '14:00',
-      endTime: '15:00',
-      description: '신규 프로젝트 제안',
-      location: '온라인',
-      category: '업무',
-      repeat: { type: 'none', interval: 0 },
-      notificationTime: 20,
-    },
-  ]);
-
-  // 위치로 검색
-  act(() => {
-    result.current.setSearchTerm('온라인');
-  });
-  expect(result.current.filteredEvents).toHaveLength(1);
-  expect(result.current.filteredEvents).toEqual([
-    {
-      id: '3',
-      title: '고객 미팅',
-      date: '2025-01-16',
-      startTime: '14:00',
-      endTime: '15:00',
-      description: '신규 프로젝트 제안',
-      location: '온라인',
-      category: '업무',
-      repeat: { type: 'none', interval: 0 },
-      notificationTime: 20,
+      notificationTime: 30,
     },
   ]);
 });
@@ -181,8 +150,6 @@ it('검색어가 제목, 설명, 위치 중 하나라도 일치하면 해당 이
 it('현재 뷰(주간/월간)에 해당하는 이벤트만 반환해야 한다', () => {
   const { result: weekResult } = renderHook(() => useSearch(mockEvents, currentDate, 'week'));
 
-  // 주간 뷰에서는 1월 15일과 16일 이벤트만 표시되어야 함
-  expect(weekResult.current.filteredEvents).toHaveLength(3);
   expect(weekResult.current.filteredEvents).toEqual([
     {
       id: '1',
@@ -220,24 +187,33 @@ it('현재 뷰(주간/월간)에 해당하는 이벤트만 반환해야 한다',
       repeat: { type: 'none', interval: 0 },
       notificationTime: 20,
     },
+    {
+      id: '5',
+      title: '노래방',
+      date: '2025-01-17',
+      startTime: '18:00',
+      endTime: '19:00',
+      description: '노래방에서 노래하기',
+      location: '팀즈 노래방',
+      category: '팀활동',
+      repeat: { type: 'none', interval: 0 },
+      notificationTime: 30,
+    },
   ]);
 
-  // 월간 뷰로 설정
   const { result: monthResult } = renderHook(() => useSearch(mockEvents, currentDate, 'month'));
 
-  // 월간 뷰에서는 모든 이벤트가 표시되어야 함
-  expect(monthResult.current.filteredEvents).toHaveLength(4);
   expect(monthResult.current.filteredEvents).toEqual(mockEvents);
 });
 
 it("검색어를 '회의'에서 '점심'으로 변경하면 필터링된 결과가 즉시 업데이트되어야 한다", () => {
   const { result } = renderHook(() => useSearch(mockEvents, currentDate, 'month'));
 
-  // '회의'로 검색
   act(() => {
     result.current.setSearchTerm('회의');
   });
-  expect(result.current.filteredEvents).toHaveLength(1);
+
+  expect(result.current.searchTerm).toBe('회의');
   expect(result.current.filteredEvents).toEqual([
     {
       id: '1',
@@ -253,12 +229,11 @@ it("검색어를 '회의'에서 '점심'으로 변경하면 필터링된 결과�
     },
   ]);
 
-  // '점심'으로 검색어 변경
   act(() => {
     result.current.setSearchTerm('점심');
   });
+
   expect(result.current.searchTerm).toBe('점심');
-  expect(result.current.filteredEvents).toHaveLength(1);
   expect(result.current.filteredEvents).toEqual([
     {
       id: '2',
