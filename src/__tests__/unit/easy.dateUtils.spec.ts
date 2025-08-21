@@ -283,7 +283,11 @@ describe('formatMonth', () => {
 });
 
 describe('isDateInRange', () => {
-  it('범위 내의 날짜 2025-07-10에 대해 true를 반환한다', () => {});
+  it('범위 내의 날짜 2025-07-10에 대해 true를 반환한다', () => {
+    expect(
+      isDateInRange(new Date('2025-07-10'), new Date('2025-07-05'), new Date('2025-07-15'))
+    ).toBe(true);
+  });
 
   it('범위의 시작일 2025-07-01에 대해 true를 반환한다', () => {});
 
