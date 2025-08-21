@@ -32,12 +32,12 @@ export const setupMockHandlerUpdating = () => {
     {
       id: '1',
       title: '테스트 이벤트',
-      date: '2025-01-01',
+      date: '2025-10-15',
       startTime: '09:00',
       endTime: '10:00',
       description: '테스트',
       location: '테스트 장소',
-      category: '테스트',
+      category: '업무',
       repeat: { type: 'none', interval: 0 },
       notificationTime: 10,
     },
@@ -72,12 +72,12 @@ export const setupMockHandlerDeletion = () => {
     {
       id: '1',
       title: '테스트 이벤트',
-      date: '2025-01-01',
+      date: '2025-10-15',
       startTime: '09:00',
       endTime: '10:00',
       description: '테스트',
       location: '테스트 장소',
-      category: '테스트',
+      category: '업무',
       repeat: { type: 'none', interval: 0 },
       notificationTime: 10,
     },
@@ -90,9 +90,13 @@ export const setupMockHandlerDeletion = () => {
 
     http.delete('/api/events/:id', ({ params }) => {
       const { id } = params;
-      const deleteEvent = mockEvents.findIndex((event) => event.id !== id);
+      const eventIndex = mockEvents.findIndex((event) => event.id === id);
 
-      return HttpResponse.json(deleteEvent, { status: 204 });
+      if (eventIndex > -1) {
+        mockEvents.splice(eventIndex, 1);
+      }
+
+      return HttpResponse.json({}, { status: 204 });
     })
   );
 };

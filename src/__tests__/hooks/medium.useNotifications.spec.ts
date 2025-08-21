@@ -16,12 +16,12 @@ it('초기 상태에서는 알림이 없어야 한다', () => {
 
 it('지정된 시간이 된 경우 알림이 새롭게 생성되어 추가된다', async () => {
   vi.useFakeTimers();
-  vi.setSystemTime(new Date('2025-08-21T09:00:00'));
+  vi.setSystemTime(new Date('2025-10-15T09:00:00'));
 
   const mockEvent = createEvent({
     id: '1',
     title: '이벤트',
-    date: '2025-08-21',
+    date: '2025-10-15',
     startTime: '09:10',
     endTime: '10:00',
     notificationTime: 10,
@@ -38,13 +38,13 @@ it('지정된 시간이 된 경우 알림이 새롭게 생성되어 추가된다
 });
 
 it('index를 기준으로 알림을 적절하게 제거할 수 있다', async () => {
-  vi.setSystemTime(new Date('2025-08-21T09:00:00'));
+  vi.setSystemTime(new Date('2025-10-15T09:00:00'));
 
   const mockEvents = [
     createEvent({
       id: '1',
       title: '이벤트',
-      date: '2025-08-21',
+      date: '2025-10-15',
       startTime: '09:10',
       endTime: '10:00',
       notificationTime: 10,
@@ -52,7 +52,7 @@ it('index를 기준으로 알림을 적절하게 제거할 수 있다', async ()
     createEvent({
       id: '2',
       title: '이벤트2',
-      date: '2025-08-21',
+      date: '2025-10-15',
       startTime: '09:05',
       endTime: '10:00',
       notificationTime: 5,
@@ -77,12 +77,12 @@ it('index를 기준으로 알림을 적절하게 제거할 수 있다', async ()
 });
 
 it('이미 알림이 발생한 이벤트에 대해서는 중복 알림이 발생하지 않아야 한다', async () => {
-  vi.setSystemTime(new Date('2025-08-21T09:00:00'));
+  vi.setSystemTime(new Date('2025-10-15T09:00:00'));
 
   const mockEvent = createEvent({
     id: '1',
     title: '이벤트',
-    date: '2025-08-21',
+    date: '2025-10-15',
     startTime: '09:10',
     endTime: '10:00',
     notificationTime: 10,
