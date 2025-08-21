@@ -34,17 +34,11 @@ import {
   getWeekDates,
   getWeeksAtMonth,
 } from './utils/dateUtils';
+import { buildEventData } from './utils/eventPayload';
+import { getNotificationLabel } from './utils/notificationUtils';
 // keep getTimeErrorMessage only used inside form panel
 
 const weekDays = ['일', '월', '화', '수', '목', '금', '토'];
-
-const notificationOptions = [
-  { value: 1, label: '1분 전' },
-  { value: 10, label: '10분 전' },
-  { value: 60, label: '1시간 전' },
-  { value: 120, label: '2시간 전' },
-  { value: 1440, label: '1일 전' },
-];
 
 function App() {
   const {
@@ -108,8 +102,8 @@ function App() {
       return;
     }
 
-    const eventData: Event | EventForm = {
-      id: editingEvent ? editingEvent.id : undefined,
+    const eventData: Event | EventForm = buildEventData({
+      editingEvent,
       title,
       date,
       startTime,
@@ -117,13 +111,12 @@ function App() {
       description,
       location,
       category,
-      repeat: {
-        type: isRepeating ? repeatType : 'none',
-        interval: repeatInterval,
-        endDate: repeatEndDate || undefined,
-      },
+      isRepeating,
+      repeatType,
+      repeatInterval,
+      repeatEndDate,
       notificationTime,
-    };
+    });
 
     const blocked = checkAndOpen(eventData);
     if (!blocked) {
@@ -185,7 +178,7 @@ function App() {
           setSearchTerm={setSearchTerm}
           events={filteredEvents}
           notifiedEvents={notifiedEvents}
-          notificationLabelFor={(m) => notificationOptions.find((o) => o.value === m)?.label}
+          notificationLabelFor={(m) => getNotificationLabel(m)}
           onEdit={editEvent}
           onDelete={deleteEvent}
         />
@@ -210,8 +203,8 @@ function App() {
             color="error"
             onClick={() => {
               close();
-              saveEvent({
-                id: editingEvent ? editingEvent.id : undefined,
+              const payload = buildEventData({
+                editingEvent,
                 title,
                 date,
                 startTime,
@@ -219,13 +212,13 @@ function App() {
                 description,
                 location,
                 category,
-                repeat: {
-                  type: isRepeating ? repeatType : 'none',
-                  interval: repeatInterval,
-                  endDate: repeatEndDate || undefined,
-                },
+                isRepeating,
+                repeatType,
+                repeatInterval,
+                repeatEndDate,
                 notificationTime,
               });
+              saveEvent(payload);
             }}
           >
             계속 진행
