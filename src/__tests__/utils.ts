@@ -4,6 +4,10 @@ export const assertDate = (date1: Date, date2: Date) => {
   expect(date1.toISOString()).toBe(date2.toISOString());
 };
 
+export const assertDateOnly = (date1: Date, date2: Date) => {
+  expect(date1.toDateString()).toBe(date2.toDateString());
+};
+
 export const parseHM = (timestamp: number) => {
   const date = new Date(timestamp);
   const h = fillZero(date.getHours());
