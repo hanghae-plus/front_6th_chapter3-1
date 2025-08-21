@@ -1,5 +1,4 @@
 import { Event } from '../../types';
-
 import {
   convertEventToDateRange,
   findOverlappingEvents,
