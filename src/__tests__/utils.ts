@@ -1,4 +1,4 @@
-import { Event, RepeatType } from '../types';
+import { Event } from '../types';
 import { fillZero } from '../utils/dateUtils';
 
 export const assertDate = (date1: Date, date2: Date) => {
