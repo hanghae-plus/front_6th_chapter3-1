@@ -4,6 +4,8 @@ import { Event } from '../types.ts';
  * 주어진 년도와 월의 일수를 반환합니다.
  */
 export function getDaysInMonth(year: number, month: number): number {
+  // 1월보다 작고 12월보다 큰 달은 없기에 0으로 통일
+  if (month < 1 || month > 12) return 0;
   return new Date(year, month, 0).getDate();
 }
 
@@ -52,6 +54,8 @@ export function getWeeksAtMonth(currentDate: Date) {
 }
 
 export function getEventsForDay(events: Event[], date: number): Event[] {
+  // 1일보다 작거나 31보다 큰 날짜는 없기 대문에 빈 배열 반환
+  if (date < 1 || date > 31) return [];
   return events.filter((event) => new Date(event.date).getDate() === date);
 }
 
