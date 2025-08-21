@@ -337,7 +337,22 @@ describe('일정 뷰', () => {
     expect(await within(monthView).findByText('모각코')).toBeInTheDocument();
   });
 
-  it('달력에 1월 1일(신정)이 공휴일로 표시되는지 확인한다', async () => {});
+  it('달력에 1월 1일(신정)이 공휴일로 표시되는지 확인한다', async () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date(2025, 0, 1));
+    render(
+      <ThemeProvider theme={createTheme()}>
+        <SnackbarProvider>
+          <App />
+        </SnackbarProvider>
+      </ThemeProvider>
+    );
+    vi.useRealTimers();
+    server.use(...setupMockHandlerCreation([]));
+
+    const monthView = await screen.findByTestId('month-view');
+    expect(await within(monthView).findByText('신정')).toBeInTheDocument();
+  });
 });
 
 describe('검색 기능', () => {
