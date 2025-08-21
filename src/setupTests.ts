@@ -1,10 +1,8 @@
 import { setupServer } from 'msw/node';
 import '@testing-library/jest-dom';
-
 import { handlers } from './__mocks__/handlers';
 
-/* msw */
-export const server = setupServer();
+export const server = setupServer(...handlers);
 
 beforeAll(() => {
   server.listen();
@@ -13,8 +11,6 @@ beforeAll(() => {
 
 beforeEach(() => {
   expect.hasAssertions();
-  // 기본 핸들러를 먼저 설정
-  server.use(...handlers);
   vi.setSystemTime('2025-10-01');
 });
 
