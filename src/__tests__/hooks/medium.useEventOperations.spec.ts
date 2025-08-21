@@ -1,16 +1,12 @@
 import { act, renderHook } from '@testing-library/react';
-import { http, HttpResponse } from 'msw';
-import { randomUUID } from 'crypto';
 
 import {
-  setupMockHandlerCreation,
-  setupMockHandlerDeletion,
-  setupMockHandlerUpdating,
+  setupDeleteErrorHandler,
+  setupGetErrorHandler,
+  setupMockHandler,
 } from '../../__mocks__/handlersUtils.ts';
 import { useEventOperations } from '../../hooks/useEventOperations.ts';
-import { server } from '../../setupTests.ts';
 import { Event, EventForm } from '../../types.ts';
-import { events } from '../../__mocks__/response/events.json' assert { type: 'json' };
 
 const enqueueSnackbarFn = vi.fn();
 
@@ -30,6 +26,7 @@ describe('useEventOperations', () => {
   });
 
   it('저장되어있는 초기 이벤트 데이터를 적절하게 불러온다', async () => {
+    setupMockHandler();
     const { result } = renderHook(() => useEventOperations(false));
     await act(async () => {
       await result.current.fetchEvents();
@@ -53,7 +50,7 @@ describe('useEventOperations', () => {
   });
 
   it('정의된 이벤트 정보를 기준으로 적절하게 저장이 된다', async () => {
-    setupMockHandlerCreation();
+    setupMockHandler();
 
     const { result } = renderHook(() => useEventOperations(false));
     const newEvent: EventForm = {
@@ -67,6 +64,10 @@ describe('useEventOperations', () => {
       repeat: { type: 'none', interval: 0 },
       notificationTime: 10,
     };
+
+    await act(async () => {
+      await result.current.fetchEvents();
+    });
 
     const initialCount = result.current.events.length;
 
@@ -82,7 +83,7 @@ describe('useEventOperations', () => {
   });
 
   it("새로 정의된 'title', 'endTime' 기준으로 적절하게 일정이 업데이트 된다", async () => {
-    setupMockHandlerUpdating();
+    setupMockHandler();
     const { result } = renderHook(() => useEventOperations(true));
 
     await act(async () => {
@@ -109,7 +110,7 @@ describe('useEventOperations', () => {
   });
 
   it('존재하는 이벤트 삭제 시 에러없이 아이템이 삭제된다.', async () => {
-    setupMockHandlerDeletion();
+    setupMockHandler();
 
     const { result } = renderHook(() => useEventOperations(false));
     await act(async () => {
@@ -133,11 +134,7 @@ describe('useEventOperations', () => {
   });
 
   it("이벤트 로딩 실패 시 '이벤트 로딩 실패'라는 텍스트와 함께 에러 토스트가 표시되어야 한다", async () => {
-    server.use(
-      http.get('/api/events', () => {
-        return HttpResponse.error();
-      })
-    );
+    setupGetErrorHandler();
 
     const { result } = renderHook(() => useEventOperations(false));
 
@@ -150,7 +147,7 @@ describe('useEventOperations', () => {
   });
 
   it("존재하지 않는 이벤트 수정 시 '일정 저장 실패'라는 토스트가 노출되며 에러 처리가 되어야 한다", async () => {
-    setupMockHandlerUpdating();
+    setupMockHandler();
 
     const { result } = renderHook(() => useEventOperations(true));
 
@@ -181,17 +178,7 @@ describe('useEventOperations', () => {
   });
 
   it("네트워크 오류 시 '일정 삭제 실패'라는 텍스트가 노출되며 이벤트 삭제가 실패해야 한다", async () => {
-    let testEvents = [...events];
-
-    server.use(
-      http.get('/api/events', () => {
-        return HttpResponse.json({ events: testEvents });
-      }),
-      http.delete<{ id: string }>('/api/events/:id', async ({ params }) => {
-        const { id: _id } = params;
-        return HttpResponse.error();
-      })
-    );
+    setupDeleteErrorHandler();
 
     const { result } = renderHook(() => useEventOperations(false));
     await act(async () => {
