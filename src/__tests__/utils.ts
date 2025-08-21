@@ -1,6 +1,7 @@
 import { fillZero } from '../utils/dateUtils';
 
 export const assertDate = (date1: Date, date2: Date) => {
+  console.log(date1, date2);
   expect(date1.toISOString()).toBe(date2.toISOString());
 };
 
