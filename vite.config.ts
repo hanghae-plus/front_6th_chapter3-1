@@ -12,6 +12,9 @@ export default mergeConfig(
           changeOrigin: true,
         },
       },
+      watch: {
+        ignored: ['**/node_modules/**', '**/.git/**']
+      }
     },
   }),
   defineTestConfig({
