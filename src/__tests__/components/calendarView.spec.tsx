@@ -1,9 +1,9 @@
 import { render, renderHook, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
 import { CalendarViewComponent } from '../../components/CalendarView';
-import { createEvent } from '../utils';
-import userEvent from '@testing-library/user-event';
 import { useCalendarView } from '../../hooks/useCalendarView';
+import { createEvent } from '../utils';
 
 const events = [
   createEvent({

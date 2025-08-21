@@ -1,6 +1,7 @@
 import { render, screen, waitFor } from '@testing-library/react';
-import { Notifications } from '../../components/Notifications';
 import userEvent from '@testing-library/user-event';
+
+import { Notifications } from '../../components/Notifications';
 
 describe('Notifications', () => {
   it('notifications 메시지 닫기 버튼 클릭 시 메시지가 사라진다', async () => {

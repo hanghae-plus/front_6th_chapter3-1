@@ -1,9 +1,10 @@
 import { render, screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { SnackbarProvider } from 'notistack';
+
 import { EventFormComponent } from '../../components/EventForm';
 import { useEventForm } from '../../hooks/useEventForm';
 import { Event } from '../../types';
-import userEvent from '@testing-library/user-event';
-import { SnackbarProvider } from 'notistack';
 
 function EventFormWrapper({
   events,
