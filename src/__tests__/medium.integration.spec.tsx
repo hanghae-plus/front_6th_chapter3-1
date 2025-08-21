@@ -300,7 +300,42 @@ describe('일정 뷰', () => {
     await waitFor(() => expect(screen.getByText('검색 결과가 없습니다.')).toBeInTheDocument());
   });
 
-  it('월별 뷰에 일정이 정확히 표시되는지 확인한다', async () => {});
+  it('월별 뷰에 일정이 정확히 표시되는지 확인한다', async () => {
+    const user = userEvent.setup();
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date(2025, 7, 22));
+    vi.useRealTimers();
+
+    const monthEvent: Event = {
+      id: '1',
+      title: '모각코',
+      date: '2025-08-25',
+      startTime: '13:00',
+      endTime: '18:00',
+      description: '코딩',
+      location: '카페이루',
+      category: '개인',
+      repeat: { type: 'none', interval: 0 },
+      notificationTime: 10,
+    };
+    server.use(...setupMockHandlerCreation([monthEvent]));
+
+    render(
+      <ThemeProvider theme={createTheme()}>
+        <SnackbarProvider>
+          <App />
+        </SnackbarProvider>
+      </ThemeProvider>
+    );
+
+    const viewTypeContainer = await screen.findByLabelText('뷰 타입 선택');
+    const viewTypeSelect = await within(viewTypeContainer).findByRole('combobox');
+    await user.click(viewTypeSelect);
+    await user.click(screen.getByRole('option', { name: 'month-option' }));
+
+    const monthView = screen.getByTestId('month-view');
+    expect(await within(monthView).findByText('모각코')).toBeInTheDocument();
+  });
 
   it('달력에 1월 1일(신정)이 공휴일로 표시되는지 확인한다', async () => {});
 });
