@@ -1,3 +1,5 @@
+import { expect } from 'vitest';
+
 import { Event } from '../../types';
 import {
   fillZero,
@@ -10,7 +12,6 @@ import {
   getWeeksAtMonth,
   isDateInRange,
 } from '../../utils/dateUtils';
-import { expect } from 'vitest';
 import { factoriesEvents } from '../__fixture__/eventFactory.ts';
 
 describe('getDaysInMonth', () => {

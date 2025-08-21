@@ -1,5 +1,7 @@
-import { fetchHolidays } from '../../apis/fetchHolidays';
 import { expect } from 'vitest';
+
+import { fetchHolidays } from '../../apis/fetchHolidays';
+
 describe('fetchHolidays', () => {
   it('주어진 월의 공휴일만 반환한다', () => {
     expect(fetchHolidays(new Date('2025-06-01'))).toEqual({ '2025-06-06': '현충일' });

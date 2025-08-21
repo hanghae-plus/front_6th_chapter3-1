@@ -1,5 +1,5 @@
-import { createNotificationMessage, getUpcomingEvents } from '../../utils/notificationUtils';
 import { caseEvent3 } from './dummies.ts';
+import { createNotificationMessage, getUpcomingEvents } from '../../utils/notificationUtils';
 import { createEvent } from '../__fixture__/eventFactory.ts';
 
 describe('getUpcomingEvents', () => {

@@ -1,7 +1,7 @@
 import { act, renderHook } from '@testing-library/react';
+import { expect } from 'vitest';
 
 import { useSearch } from '../../hooks/useSearch.ts';
-import { expect } from 'vitest';
 import { createEvent } from '../__fixture__/eventFactory.ts';
 
 it('검색어가 비어있을 때 모든 이벤트를 반환해야 한다', () => {

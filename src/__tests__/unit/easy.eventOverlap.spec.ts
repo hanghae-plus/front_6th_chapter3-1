@@ -1,3 +1,5 @@
+import { expect } from 'vitest';
+
 import { Event } from '../../types';
 import {
   convertEventToDateRange,
@@ -5,7 +7,6 @@ import {
   isOverlapping,
   parseDateTime,
 } from '../../utils/eventOverlap';
-import { expect } from 'vitest';
 import { factoriesEvents, overlapingEvents } from '../__fixture__/eventFactory.ts';
 describe('parseDateTime', () => {
   it('2025-07-01 14:30을 정확한 Date 객체로 변환한다', () => {

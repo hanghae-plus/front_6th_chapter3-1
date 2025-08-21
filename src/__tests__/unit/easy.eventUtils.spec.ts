@@ -1,8 +1,8 @@
-import { getFilteredEvents } from '../../utils/eventUtils';
+import { expect } from 'vitest';
 
 import { caseEvent1, caseEvent2 } from './dummies.ts';
+import { getFilteredEvents } from '../../utils/eventUtils';
 import { createEvent } from '../__fixture__/eventFactory.ts';
-import { expect } from 'vitest';
 
 describe('getFilteredEvents', () => {
   it("검색어 '이벤트 2'에 맞는 이벤트만 반환한다", () => {

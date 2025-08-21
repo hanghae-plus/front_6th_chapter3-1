@@ -1,5 +1,6 @@
 import { act, renderHook, waitFor } from '@testing-library/react';
 import { http, HttpResponse } from 'msw';
+import { expect } from 'vitest';
 
 import {
   setupMockHandlerCreation,
@@ -10,7 +11,6 @@ import { useEventOperations } from '../../hooks/useEventOperations.ts';
 import { server } from '../../setupTests.ts';
 import { EventForm } from '../../types.ts';
 import { createEvent } from '../__fixture__/eventFactory.ts';
-import { expect } from 'vitest';
 
 const enqueueSnackbarFn = vi.fn();
 
