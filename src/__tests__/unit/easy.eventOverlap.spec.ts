@@ -5,6 +5,11 @@ import {
   isOverlapping,
   parseDateTime,
 } from '../../utils/eventOverlap';
+
+beforeEach(() => {
+  process.env.TZ = 'Asia/Seoul';
+});
+
 describe('parseDateTime', () => {
   it('2025-07-01 14:30을 정확한 Date 객체로 변환한다', () => {
     expect(parseDateTime('2025-07-01', '14:30') instanceof Date).toBe(true);
