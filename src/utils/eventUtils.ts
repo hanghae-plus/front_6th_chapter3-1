@@ -95,3 +95,30 @@ export const formatRepeatInfo = (repeat: Event['repeat']) => {
  */
 export const getNotificationLabel = (notificationTime: number) =>
   NOTIFICATION_OPTIONS.find((option) => option.value === notificationTime)?.label || '';
+
+/**
+ * 이벤트 데이터 유효성 검사
+ * @param title 제목
+ * @param date 날짜
+ * @param startTime 시작 시간
+ * @param endTime 종료 시간
+ * @param startTimeError 시작 시간 에러 메시지
+ * @param endTimeError 종료 시간 에러 메시지
+ * @returns 유효성 검사 결과
+ */
+export const validateEventData = (
+  title: string,
+  date: string,
+  startTime: string,
+  endTime: string,
+  startTimeError: string | null,
+  endTimeError: string | null
+): string | null => {
+  if (!title || !date || !startTime || !endTime) {
+    return '필수 정보를 모두 입력해주세요.';
+  }
+  if (startTimeError || endTimeError) {
+    return '시간 설정을 확인해주세요.';
+  }
+  return null;
+};

@@ -14,6 +14,7 @@ import { useOverlapDialog } from './hooks/useOverlapDialog.ts';
 import { useSearch } from './hooks/useSearch.ts';
 import { Event, EventForm } from './types';
 import { findOverlappingEvents } from './utils/eventOverlap';
+import { validateEventData } from './utils/eventUtils.ts';
 
 function App() {
   const {
@@ -54,13 +55,10 @@ function App() {
 
   /** 일정 추가 또는 수정 */
   const addOrUpdateEvent = async () => {
-    if (!title || !date || !startTime || !endTime) {
-      enqueueSnackbar('필수 정보를 모두 입력해주세요.', { variant: 'error' });
-      return;
-    }
+    const error = validateEventData(title, date, startTime, endTime, startTimeError, endTimeError);
 
-    if (startTimeError || endTimeError) {
-      enqueueSnackbar('시간 설정을 확인해주세요.', { variant: 'error' });
+    if (error) {
+      enqueueSnackbar(error, { variant: 'error' });
       return;
     }
 

@@ -37,18 +37,14 @@ interface EventEditorProps {
   notificationTime: number;
   setNotificationTime: (value: number) => void;
 
-  // Time handlers
   handleStartTimeChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleEndTimeChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 
-  // Validation
   startTimeError?: string | null;
   endTimeError?: string | null;
 
-  // State
   editingEvent: Event | null;
 
-  // Actions
   onSubmit: () => Promise<void>;
 }
 
