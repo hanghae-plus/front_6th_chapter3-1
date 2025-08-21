@@ -5,7 +5,6 @@ import { userEvent } from '@testing-library/user-event';
 import { SnackbarProvider } from 'notistack';
 
 import { ReactElement } from 'react';
-
 import { vi } from 'vitest';
 
 import {
