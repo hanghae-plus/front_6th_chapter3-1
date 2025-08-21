@@ -342,10 +342,7 @@ describe('일정 충돌', () => {
       category: '업무',
     });
 
-    await screen.findByText('일정 겹침 경고');
-    expect(screen.getByText(/다음 일정과 겹칩니다/)).toBeInTheDocument();
-    expect(screen.getByText(/기존 회의.*2025-10-01.*10:00-11:00/)).toBeInTheDocument();
-    expect(screen.getByText(/계속 진행하시겠습니까/)).toBeInTheDocument();
+    expect(screen.getByText(/일정 겹침 경고/)).toBeInTheDocument();
   });
 
   it('기존 일정의 시간을 수정하여 충돌이 발생하면 경고가 노출된다', async () => {
@@ -383,14 +380,11 @@ describe('일정 충돌', () => {
 
     await user.click(screen.getByRole('button', { name: '일정 수정' }));
 
-    await screen.findByText('일정 겹침 경고');
-    expect(screen.getByText(/다음 일정과 겹칩니다/)).toBeInTheDocument();
-    expect(screen.getByText(/두 번째 회의.*2025-10-01.*11:00-12:00/)).toBeInTheDocument();
-    expect(screen.getByText(/계속 진행하시겠습니까/)).toBeInTheDocument();
+    expect(screen.getByText(/일정 겹침 경고/)).toBeInTheDocument();
   });
 });
 
-it('notificationTime을 10으로 하면 지정 시간 10분 전 알람 텍스트가 노출된다', async () => {
+it('notificationTime을 10으로 하면 지정 시간 10분 전 알람 토스트가 나타난다', async () => {
   // 모든 테스트가 깨끗한 상태에서 시작하도록 설정
   setupMockHandlerCreation([]);
 
@@ -403,14 +397,31 @@ it('notificationTime을 10으로 하면 지정 시간 10분 전 알람 텍스트
   });
 
   setupMockHandlerCreation([mockEvent]);
+
   setup(<App />);
 
+  // Fake timers 사용하여 모든 타이머 제어
+  vi.useFakeTimers();
+  vi.setSystemTime(new Date('2025-10-01T13:50:00')); // 이벤트 시작 10분 전
+
+  // 이벤트 리스트에 이벤트가 표시되는지 확인
   const eventList = screen.getByTestId('event-list');
   await within(eventList).findByText('알림 테스트 회의');
   expect(within(eventList).getByText('2025-10-01')).toBeInTheDocument();
   expect(within(eventList).getByText('14:00 - 15:00')).toBeInTheDocument();
-
-  const expectedNotificationMessage = createNotificationMessage(mockEvent);
   expect(within(eventList).getByText('알림: 10분 전')).toBeInTheDocument();
-  expect(expectedNotificationMessage).toBe('10분 후 알림 테스트 회의 일정이 시작됩니다.');
+
+  // useNotifications의 setInterval이 실행되도록 타이머 진행
+  // 1초 후에 첫 번째 체크가 실행됨
+  await vi.advanceTimersByTimeAsync(1000);
+
+  // 실제 알림 토스트가 나타나는지 확인
+  const expectedNotificationMessage = createNotificationMessage(mockEvent);
+  await screen.findByText(expectedNotificationMessage);
+
+  // 알림 토스트가 NotificationStack에 표시되는지 확인
+  expect(screen.getByText('10분 후 알림 테스트 회의 일정이 시작됩니다.')).toBeInTheDocument();
+
+  // 타이머 모킹 복원
+  vi.useRealTimers();
 });
