@@ -2,7 +2,6 @@ import CssBaseline from '@mui/material/CssBaseline';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { render, screen, within, waitFor } from '@testing-library/react';
 import { UserEvent, userEvent } from '@testing-library/user-event';
-import { http, HttpResponse } from 'msw';
 import { SnackbarProvider } from 'notistack';
 import { ReactElement } from 'react';
 import { debug } from 'vitest-preview';
@@ -13,7 +12,6 @@ import {
   setupMockHandlerUpdating,
 } from '../__mocks__/handlersUtils';
 import App from '../App';
-import { server } from '../setupTests';
 import { Event } from '../types';
 
 const theme = createTheme();
@@ -127,26 +125,20 @@ describe('일정 CRUD 및 기본 기능', () => {
 
 describe('일정 뷰', () => {
   it('주별 뷰를 선택 후 해당 주에 일정이 없으면, 일정이 표시되지 않는다.', async () => {
-    server.use(
-      http.get('/api/events', () => {
-        return HttpResponse.json({
-          events: [
-            {
-              id: '1',
-              title: '기존 회의',
-              date: '2025-10-15',
-              startTime: '09:00',
-              endTime: '10:00',
-              description: '기존 팀 미팅',
-              location: '회의실 B',
-              category: '업무',
-              repeat: { type: 'none', interval: 0 },
-              notificationTime: 10,
-            },
-          ] satisfies Event[],
-        });
-      })
-    );
+    setupMockHandlerCreation([
+      {
+        id: '1',
+        title: '기존 회의',
+        date: '2025-10-15',
+        startTime: '09:00',
+        endTime: '10:00',
+        description: '기존 팀 미팅',
+        location: '회의실 B',
+        category: '업무',
+        repeat: { type: 'none', interval: 0 },
+        notificationTime: 10,
+      },
+    ]);
 
     const { user } = setup(<App />);
 
@@ -164,26 +156,20 @@ describe('일정 뷰', () => {
   });
 
   it('주별 뷰 선택 후 해당 일자에 일정이 존재한다면 해당 일정이 정확히 표시된다', async () => {
-    server.use(
-      http.get('/api/events', () => {
-        return HttpResponse.json({
-          events: [
-            {
-              id: '1',
-              title: '기존 회의',
-              date: '2025-10-01',
-              startTime: '09:00',
-              endTime: '10:00',
-              description: '기존 팀 미팅',
-              location: '회의실 B',
-              category: '업무',
-              repeat: { type: 'none', interval: 0 },
-              notificationTime: 10,
-            },
-          ] satisfies Event[],
-        });
-      })
-    );
+    setupMockHandlerCreation([
+      {
+        id: '1',
+        title: '기존 회의',
+        date: '2025-10-01',
+        startTime: '09:00',
+        endTime: '10:00',
+        description: '기존 팀 미팅',
+        location: '회의실 B',
+        category: '업무',
+        repeat: { type: 'none', interval: 0 },
+        notificationTime: 10,
+      },
+    ]);
 
     const { user } = setup(<App />);
 
@@ -205,26 +191,20 @@ describe('일정 뷰', () => {
   });
 
   it('월별 뷰에 일정이 없으면, 일정이 표시되지 않아야 한다.', async () => {
-    server.use(
-      http.get('/api/events', () => {
-        return HttpResponse.json({
-          events: [
-            {
-              id: '1',
-              title: '기존 회의',
-              date: '2025-11-15',
-              startTime: '09:00',
-              endTime: '10:00',
-              description: '기존 팀 미팅',
-              location: '회의실 B',
-              category: '업무',
-              repeat: { type: 'none', interval: 0 },
-              notificationTime: 10,
-            },
-          ] satisfies Event[],
-        });
-      })
-    );
+    setupMockHandlerCreation([
+      {
+        id: '1',
+        title: '기존 회의',
+        date: '2025-11-15',
+        startTime: '09:00',
+        endTime: '10:00',
+        description: '기존 팀 미팅',
+        location: '회의실 B',
+        category: '업무',
+        repeat: { type: 'none', interval: 0 },
+        notificationTime: 10,
+      },
+    ]);
 
     const { user } = setup(<App />);
 
@@ -240,26 +220,20 @@ describe('일정 뷰', () => {
   });
 
   it('월별 뷰에 일정이 정확히 표시되는지 확인한다', async () => {
-    server.use(
-      http.get('/api/events', () => {
-        return HttpResponse.json({
-          events: [
-            {
-              id: '1',
-              title: '기존 회의',
-              date: '2025-10-01',
-              startTime: '09:00',
-              endTime: '10:00',
-              description: '기존 팀 미팅',
-              location: '회의실 B',
-              category: '업무',
-              repeat: { type: 'none', interval: 0 },
-              notificationTime: 10,
-            },
-          ] satisfies Event[],
-        });
-      })
-    );
+    setupMockHandlerCreation([
+      {
+        id: '1',
+        title: '기존 회의',
+        date: '2025-10-01',
+        startTime: '09:00',
+        endTime: '10:00',
+        description: '기존 팀 미팅',
+        location: '회의실 B',
+        category: '업무',
+        repeat: { type: 'none', interval: 0 },
+        notificationTime: 10,
+      },
+    ]);
 
     const { user } = setup(<App />);
 
@@ -294,13 +268,7 @@ describe('일정 뷰', () => {
 
 describe('검색 기능', () => {
   it('검색 결과가 없으면, "검색 결과가 없습니다."가 표시되어야 한다.', async () => {
-    server.use(
-      http.get('/api/events', () => {
-        return HttpResponse.json({
-          events: [],
-        });
-      })
-    );
+    setupMockHandlerCreation();
 
     const { user } = setup(<App />);
 
@@ -314,38 +282,32 @@ describe('검색 기능', () => {
   });
 
   it("'팀 회의'를 검색하면 해당 제목을 가진 일정이 리스트에 노출된다", async () => {
-    server.use(
-      http.get('/api/events', () => {
-        return HttpResponse.json({
-          events: [
-            {
-              id: '1',
-              title: '팀 회의',
-              date: '2025-10-01',
-              startTime: '09:00',
-              endTime: '10:00',
-              description: '팀 회의 설명',
-              location: '회의실 B',
-              category: '업무',
-              repeat: { type: 'none', interval: 0 },
-              notificationTime: 10,
-            },
-            {
-              id: '2',
-              title: '회의',
-              date: '2025-10-01',
-              startTime: '09:00',
-              endTime: '10:00',
-              description: '팀 회의 설명',
-              location: '회의실 B',
-              category: '업무',
-              repeat: { type: 'none', interval: 0 },
-              notificationTime: 10,
-            },
-          ] satisfies Event[],
-        });
-      })
-    );
+    setupMockHandlerCreation([
+      {
+        id: '1',
+        title: '팀 회의',
+        date: '2025-10-01',
+        startTime: '09:00',
+        endTime: '10:00',
+        description: '팀 회의 설명',
+        location: '회의실 B',
+        category: '업무',
+        repeat: { type: 'none', interval: 0 },
+        notificationTime: 10,
+      },
+      {
+        id: '2',
+        title: '회의',
+        date: '2025-10-01',
+        startTime: '09:00',
+        endTime: '10:00',
+        description: '팀 회의 설명',
+        location: '회의실 B',
+        category: '업무',
+        repeat: { type: 'none', interval: 0 },
+        notificationTime: 10,
+      },
+    ]);
 
     const { user } = setup(<App />);
 
@@ -363,38 +325,32 @@ describe('검색 기능', () => {
   });
 
   it('검색어를 지우면 모든 일정이 다시 표시되어야 한다', async () => {
-    server.use(
-      http.get('/api/events', () => {
-        return HttpResponse.json({
-          events: [
-            {
-              id: '1',
-              title: '팀 회의',
-              date: '2025-10-01',
-              startTime: '09:00',
-              endTime: '10:00',
-              description: '팀 회의 설명',
-              location: '회의실 B',
-              category: '업무',
-              repeat: { type: 'none', interval: 0 },
-              notificationTime: 10,
-            },
-            {
-              id: '2',
-              title: '회의',
-              date: '2025-10-01',
-              startTime: '09:00',
-              endTime: '10:00',
-              description: '팀 회의 설명',
-              location: '회의실 B',
-              category: '업무',
-              repeat: { type: 'none', interval: 0 },
-              notificationTime: 10,
-            },
-          ] satisfies Event[],
-        });
-      })
-    );
+    setupMockHandlerCreation([
+      {
+        id: '1',
+        title: '팀 회의',
+        date: '2025-10-01',
+        startTime: '09:00',
+        endTime: '10:00',
+        description: '팀 회의 설명',
+        location: '회의실 B',
+        category: '업무',
+        repeat: { type: 'none', interval: 0 },
+        notificationTime: 10,
+      },
+      {
+        id: '2',
+        title: '회의',
+        date: '2025-10-01',
+        startTime: '09:00',
+        endTime: '10:00',
+        description: '팀 회의 설명',
+        location: '회의실 B',
+        category: '업무',
+        repeat: { type: 'none', interval: 0 },
+        notificationTime: 10,
+      },
+    ]);
 
     const { user } = setup(<App />);
 
