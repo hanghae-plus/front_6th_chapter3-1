@@ -1,5 +1,5 @@
+import { ChangeEvent } from 'react';
 import {
-  Box,
   Button,
   Checkbox,
   FormControl,
@@ -51,12 +51,11 @@ interface EventFormProps {
   startTimeError: string | null;
   endTimeError: string | null;
   editingEvent: Event | null;
-  handleStartTimeChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  handleEndTimeChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  handleStartTimeChange: (e: ChangeEvent<HTMLInputElement>) => void;
+  handleEndTimeChange: (e: ChangeEvent<HTMLInputElement>) => void;
   resetForm: () => void;
   onSaveEvent: (eventData: Event | EventFormType) => Promise<void>;
   onOverlapDetected: (overlappingEvents: Event[]) => void;
-  onEditEvent: (event: Event) => void;
 }
 
 export function EventForm({
@@ -88,7 +87,6 @@ export function EventForm({
   resetForm,
   onSaveEvent,
   onOverlapDetected,
-  onEditEvent,
 }: EventFormProps) {
   const { enqueueSnackbar } = useSnackbar();
 

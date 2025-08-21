@@ -105,7 +105,6 @@ function App() {
           resetForm={resetForm}
           onSaveEvent={handleSaveEvent}
           onOverlapDetected={handleOverlapDetected}
-          onEditEvent={editEvent}
         />
 
         <Stack flex={1} spacing={5}>

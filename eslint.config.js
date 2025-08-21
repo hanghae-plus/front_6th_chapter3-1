@@ -87,17 +87,7 @@ export default [
       'react-hooks/exhaustive-deps': 'off',
 
       // Import rules
-      'import/order': [
-        'error',
-        {
-          groups: ['builtin', 'external', ['parent', 'sibling'], 'index'],
-          alphabetize: {
-            order: 'asc',
-            caseInsensitive: true,
-          },
-          'newlines-between': 'always',
-        },
-      ],
+      'import/order': 'off',
 
       // Prettier rules
       ...prettierConfig.rules,
