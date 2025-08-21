@@ -13,31 +13,11 @@ export const parseHM = (timestamp: number) => {
   return `${h}:${m}`;
 };
 
-export const createTestEvent = (overrides: Partial<Event> = {}) => {
-  const {
-    id,
-    title,
-    date,
-    startTime,
-    endTime,
-    description,
-    location,
-    category,
-    repeat,
-    notificationTime,
-  } = events.events[0];
+export const createTestEvent = (overrides: Partial<Event> = {}): Event => {
+  const baseEvent = events.events[0];
 
   return {
-    id,
-    title,
-    date,
-    startTime,
-    endTime,
-    description,
-    location,
-    category,
-    repeat,
-    notificationTime,
+    ...baseEvent,
     ...overrides,
   } as Event;
 };
