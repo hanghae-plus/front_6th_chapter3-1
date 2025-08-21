@@ -2,7 +2,7 @@ import { Box, Stack } from '@mui/material';
 import { useSnackbar } from 'notistack';
 import { useState } from 'react';
 
-import { CalendarView, EventForm, EventList, NotificationStack, OverlapDialog } from './components';
+import { CalendarView, Form, EventList, NotificationStack, OverlapDialog } from './components';
 import { useCalendarView } from './hooks/useCalendarView';
 import { useEventForm } from './hooks/useEventForm';
 import { useEventOperations } from './hooks/useEventOperations';
@@ -60,7 +60,7 @@ function App() {
   return (
     <Box sx={{ width: '100%', height: '100vh', margin: 'auto', p: 5 }}>
       <Stack direction="row" spacing={6} sx={{ height: '100%' }}>
-        <EventForm
+        <Form
           onSave={handleSaveEvent}
           editingEvent={editingEvent}
           onEditingEventChange={setEditingEvent}

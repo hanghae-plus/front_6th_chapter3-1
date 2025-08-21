@@ -1,5 +1,5 @@
 export { CalendarView } from './CalendarView';
-export { EventForm } from './EventForm';
+export { Form } from './Form.tsx';
 export { EventList } from './EventList';
 export { NotificationStack } from './NotificationStack';
 export { OverlapDialog } from './OverlapDialog';

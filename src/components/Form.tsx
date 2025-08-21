@@ -32,7 +32,7 @@ interface EventFormProps {
   onEditingEventChange: (event: Event | null) => void;
 }
 
-export function EventForm({ onSave, editingEvent, onEditingEventChange }: EventFormProps) {
+export function Form({ onSave, editingEvent, onEditingEventChange }: EventFormProps) {
   const {
     title,
     setTitle,
@@ -189,7 +189,11 @@ export function EventForm({ onSave, editingEvent, onEditingEventChange }: EventF
       <FormControl>
         <FormControlLabel
           control={
-            <Checkbox checked={isRepeating} onChange={(e) => setIsRepeating(e.target.checked)} />
+            <Checkbox
+              aria-label={'check-box'}
+              checked={isRepeating}
+              onChange={(e) => setIsRepeating(e.target.checked)}
+            />
           }
           label="반복 일정"
         />
@@ -200,6 +204,7 @@ export function EventForm({ onSave, editingEvent, onEditingEventChange }: EventF
         <Select
           id="notification"
           size="small"
+          aria-label={'alarm-setting'}
           value={notificationTime}
           onChange={(e) => setNotificationTime(Number(e.target.value))}
         >
