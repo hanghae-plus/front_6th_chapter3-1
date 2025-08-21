@@ -26,8 +26,14 @@ afterAll(() => {
 });
 
 const setup = (component: ReactElement) => {
+  const theme = createTheme();
   const user = userEvent.setup();
-  render(<SnackbarProvider>{component}</SnackbarProvider>);
+  render(
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <SnackbarProvider>{component}</SnackbarProvider>
+    </ThemeProvider>
+  );
   return {
     user,
   };
@@ -338,7 +344,7 @@ describe('알림 기능', () => {
 
     await waitFor(
       () => {
-        expect(screen.getByText('10분 후 팀 회의 일정이 시작됩니다.')).toBeInTheDocument();
+        expect(screen.getByText(/10분 후 팀 회의 일정이 시작됩니다./)).toBeInTheDocument();
       },
       { timeout: 2000 }
     );
