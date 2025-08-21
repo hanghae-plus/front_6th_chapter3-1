@@ -12,7 +12,6 @@ export const setupMockHandlerUpdating = (initEvents = [] as Event[]) => {};
 
 export const setupMockHandlerDeletion = (initEvents = [] as Event[]) => {};
 
-// 기존 함수는 호환성을 위해 유지하되 개선
 export const createMockHandlers = (initialEvents: Event[] = []) => {
   return () => {
     let mockEvents: Event[] = structuredClone(initialEvents);
