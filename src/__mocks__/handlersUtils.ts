@@ -1,4 +1,5 @@
 import { http, HttpResponse } from 'msw';
+
 import { createMockEvent } from '../__tests__/utils';
 import { server } from '../setupTests';
 import { Event } from '../types';
@@ -26,7 +27,7 @@ export const setupMockHandlerCreation = (initEvents = [] as Event[]) => {
 
   server.use(
     // 기존 이벤트 목록 채워주기
-    http.get('/events', () => {
+    http.get('/api/events', () => {
       return HttpResponse.json({ events });
     }),
 
@@ -84,7 +85,7 @@ export const setupMockHandlerUpdating = () => {
 /** 이벤트 삭제 */
 export const setupMockHandlerDeletion = () => {
   //삭제할 이벤트
-  const events = [createMockEvent(1, { title: '개발 공부' })];
+  let events = [createMockEvent(1, { title: '개발 공부' })];
 
   // 기존 핸들러 초기화
   server.resetHandlers();
@@ -104,6 +105,7 @@ export const setupMockHandlerDeletion = () => {
 
       if (index !== -1) {
         // 기존 이벤트가 있다면 삭제
+        events = events.filter((event) => event.id !== id);
         return new HttpResponse(null, { status: 204 });
       }
 
