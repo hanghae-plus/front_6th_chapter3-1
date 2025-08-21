@@ -1,3 +1,5 @@
+import { ChangeEvent } from 'react';
+
 import {
   Button,
   Checkbox,
@@ -14,7 +16,6 @@ import {
 
 import { Event } from '../types';
 import { getTimeErrorMessage } from '../utils/timeValidation';
-import { ChangeEvent } from 'react';
 
 const categories = ['업무', '개인', '가족', '기타'];
 
