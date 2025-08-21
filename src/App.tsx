@@ -1,13 +1,9 @@
-import { ChevronLeft, ChevronRight, Close, Delete, Edit, Notifications } from '@mui/icons-material';
+import { Delete, Edit, Notifications } from '@mui/icons-material';
 import {
-  Alert,
-  AlertTitle,
   Box,
   FormControl,
   FormLabel,
   IconButton,
-  MenuItem,
-  Select,
   Stack,
   TextField,
   Typography,
@@ -15,10 +11,13 @@ import {
 import { useSnackbar } from 'notistack';
 import { useState } from 'react';
 
+import { CalendarNavigation } from './components/CalendarNavigation.tsx';
 import { EventFormPanel } from './components/EventFormPanel.tsx';
 import { EventOverlapDialog } from './components/EventOverlapDialog.tsx';
 import { MonthCalendar } from './components/MonthCalendar.tsx';
+import { NotificationToast } from './components/NotificationToast.tsx';
 import { WeekCalendar } from './components/WeekCalendar.tsx';
+import { NOTIFICATION_OPTIONS } from './constant/calendar.ts';
 import { useCalendarView } from './hooks/useCalendarView.ts';
 import { useEventForm } from './hooks/useEventForm.ts';
 import { useEventOperations } from './hooks/useEventOperations.ts';
@@ -26,8 +25,6 @@ import { useNotifications } from './hooks/useNotifications.ts';
 import { useSearch } from './hooks/useSearch.ts';
 import { Event, EventForm } from './types';
 import { findOverlappingEvents } from './utils/eventOverlap';
-import { NOTIFICATION_OPTIONS } from './constant/calendar.ts';
-import { CalendarNavigation } from './components/CalendarNavigation.tsx';
 
 function App() {
   const {
@@ -210,27 +207,7 @@ function App() {
         resetForm={resetForm}
       />
 
-      {notifications.length > 0 && (
-        <Stack position="fixed" top={16} right={16} spacing={2} alignItems="flex-end">
-          {notifications.map((notification, index) => (
-            <Alert
-              key={index}
-              severity="info"
-              sx={{ width: 'auto' }}
-              action={
-                <IconButton
-                  size="small"
-                  onClick={() => setNotifications((prev) => prev.filter((_, i) => i !== index))}
-                >
-                  <Close />
-                </IconButton>
-              }
-            >
-              <AlertTitle>{notification.message}</AlertTitle>
-            </Alert>
-          ))}
-        </Stack>
-      )}
+      <NotificationToast notifications={notifications} setNotifications={setNotifications} />
     </Box>
   );
 }
