@@ -55,9 +55,9 @@ describe('getDaysInMonth', () => {
 
 describe('getWeekDates', () => {
   it('주중의 날짜(수요일)에 대해 올바른 주의 날짜들이 담긴 배열을 반환한다', () => {
-    const wednesdayData = new Date(2025, 8, 20); // 2025-09-20
+    const wednesday = new Date(2025, 8, 20); // 2025-09-20
 
-    expect(getWeekDates(new Date(wednesdayData))).toEqual([
+    expect(getWeekDates(wednesday)).toEqual([
       new Date(2025, 8, 14), // 2025-09-14
       new Date(2025, 8, 15), // 2025-09-15
       new Date(2025, 8, 16), // 2025-09-16
@@ -69,9 +69,9 @@ describe('getWeekDates', () => {
   });
 
   it('주의 시작(월요일)에 대해 올바른 주의 날짜들이 담긴 배열을 반환한다', () => {
-    const mondayDate = new Date(2025, 8, 17); // 2025-09-17
+    const monday = new Date(2025, 8, 17); // 2025-09-17
 
-    expect(getWeekDates(new Date(mondayDate))).toEqual([
+    expect(getWeekDates(monday)).toEqual([
       new Date(2025, 8, 14), // 2025-09-14
       new Date(2025, 8, 15), // 2025-09-15
       new Date(2025, 8, 16), // 2025-09-16
@@ -85,7 +85,7 @@ describe('getWeekDates', () => {
   it('주의 끝(일요일)에 대해 올바른 주의 날짜들이 담긴 배열을 반환한다', () => {
     const sunDay = new Date(2025, 8, 20); // 2025-09-20
 
-    expect(getWeekDates(new Date(sunDay))).toEqual([
+    expect(getWeekDates(sunDay)).toEqual([
       new Date(2025, 8, 14), // 2025-09-14
       new Date(2025, 8, 15), // 2025-09-15
       new Date(2025, 8, 16), // 2025-09-16
@@ -99,7 +99,7 @@ describe('getWeekDates', () => {
   it('연도의 마지막 날짜에 대하여 연도를 넘어가는 주의 날짜 배열을 반환한다', () => {
     const yearLastday = new Date(2025, 11, 31); // 2025-12-31
 
-    expect(getWeekDates(new Date(yearLastday))).toEqual([
+    expect(getWeekDates(yearLastday)).toEqual([
       new Date(2025, 11, 28), // 2025-12-28
       new Date(2025, 11, 29), // 2025-12-29
       new Date(2025, 11, 30), // 2025-12-30
@@ -113,7 +113,7 @@ describe('getWeekDates', () => {
   it('연도의 첫날짜에 대하여 연도를 넘어가는 주의 날짜 배열을 반환한다', () => {
     const yearFirstday = new Date(2026, 0, 1); // 2026-01-01
 
-    expect(getWeekDates(new Date(yearFirstday))).toEqual([
+    expect(getWeekDates(yearFirstday)).toEqual([
       new Date(2025, 11, 28), // 2025-12-28
       new Date(2025, 11, 29), // 2025-12-29
       new Date(2025, 11, 30), // 2025-12-30
@@ -127,7 +127,7 @@ describe('getWeekDates', () => {
   it('윤년의 2월 29일에 대하여 포함한 주의 날짜 배열을 반환한다.', () => {
     const leapYearFebLastDay = new Date(2000, 1, 29); // 2000-02-29
 
-    expect(getWeekDates(new Date(leapYearFebLastDay))).toEqual([
+    expect(getWeekDates(leapYearFebLastDay)).toEqual([
       new Date(2000, 1, 27), // 2000-02-27
       new Date(2000, 1, 28), // 2000-02-28
       new Date(2000, 1, 29), // 2000-02-29
@@ -141,7 +141,7 @@ describe('getWeekDates', () => {
   it('월의 마지막 날짜에 대하여 포함한 주의 날짜 배열을 반환한다.', () => {
     const monthLastDay = new Date(2025, 5, 30); // 2025-06-30
 
-    expect(getWeekDates(new Date(monthLastDay))).toEqual([
+    expect(getWeekDates(monthLastDay)).toEqual([
       new Date(2025, 5, 29), // 2025-06-29
       new Date(2025, 5, 30), // 2025-06-30
       new Date(2025, 6, 1), // 2025-07-01
@@ -154,7 +154,17 @@ describe('getWeekDates', () => {
 });
 
 describe('getWeeksAtMonth', () => {
-  it('2025년 7월 1일의 올바른 주 정보를 반환해야 한다', () => {});
+  it('2025년 7월 1일을 입력했을 떄 2025년 7월의 주별 날짜 정보를 2차원 배열로 반환해야 한다', () => {
+    const date = new Date(2025, 6, 1); // 2025-07-01
+
+    expect(getWeeksAtMonth(date)).toEqual([
+      [null, null, 1, 2, 3, 4, 5],
+      [6, 7, 8, 9, 10, 11, 12],
+      [13, 14, 15, 16, 17, 18, 19],
+      [20, 21, 22, 23, 24, 25, 26],
+      [27, 28, 29, 30, 31, null, null],
+    ]);
+  });
 });
 
 describe('getEventsForDay', () => {
