@@ -295,17 +295,64 @@ describe('formatMonth', () => {
 });
 
 describe('isDateInRange', () => {
-  it('범위 내의 날짜 2025-07-10에 대해 true를 반환한다', () => {});
+  // it('7월 범위 내의 날짜 2025-07-10에 대해 true를 반환한다', () => {});
+  it('7월 내에 2025-07-10이 있으면 true를 반환한다', () => {
+    const targetDate = new Date('2025-07-10');
+    const startDate = new Date('2025-07-01');
+    const endDate = new Date('2025-07-31');
 
-  it('범위의 시작일 2025-07-01에 대해 true를 반환한다', () => {});
+    const result = isDateInRange(targetDate, startDate, endDate);
+    expect(result).toBeTruthy();
+  });
 
-  it('범위의 종료일 2025-07-31에 대해 true를 반환한다', () => {});
+  // it('7월 범위의 시작일 2025-07-01에 대해 true를 반환한다', () => {});
+  it('7월 내에 시작일 2025-07-01이 있으면 true를 반환한다', () => {
+    const targetDate = new Date('2025-07-01');
+    const startDate = new Date('2025-07-01');
+    const endDate = new Date('2025-07-31');
 
-  it('범위 이전의 날짜 2025-06-30에 대해 false를 반환한다', () => {});
+    const result = isDateInRange(targetDate, startDate, endDate);
+    expect(result).toBeTruthy();
+  });
 
-  it('범위 이후의 날짜 2025-08-01에 대해 false를 반환한다', () => {});
+  // it('범위의 종료일 2025-07-31에 대해 true를 반환한다', () => {});
+  it('7월 내에 종료일 2025-07-31이 있으면 true를 반환한다', () => {
+    const targetDate = new Date('2025-07-31');
+    const startDate = new Date('2025-07-01');
+    const endDate = new Date('2025-07-31');
 
-  it('시작일이 종료일보다 늦은 경우 모든 날짜에 대해 false를 반환한다', () => {});
+    const result = isDateInRange(targetDate, startDate, endDate);
+    expect(result).toBeTruthy();
+  });
+
+  // it('범위 이전의 날짜 2025-06-30에 대해 false를 반환한다', () => {});
+  it('7월 내에 7월 이전의 날짜 2025-06-30이 있으면 false를 반환한다', () => {
+    const targetDate = new Date('2025-06-30');
+    const startDate = new Date('2025-07-01');
+    const endDate = new Date('2025-07-31');
+
+    const result = isDateInRange(targetDate, startDate, endDate);
+    expect(result).toBeFalsy();
+  });
+
+  // it('범위 이후의 날짜 2025-08-01에 대해 false를 반환한다', () => {});
+  it('7월 내에 7월 이후의 날짜 2025-08-01이 있으면 false를 반환한다', () => {
+    const targetDate = new Date('2025-06-30');
+    const startDate = new Date('2025-07-01');
+    const endDate = new Date('2025-08-01');
+
+    const result = isDateInRange(targetDate, startDate, endDate);
+    expect(result).toBeFalsy();
+  });
+
+  it('시작일이 종료일보다 늦은 경우 모든 날짜에 대해 false를 반환한다', () => {
+    const targetDate = new Date('2025-06-30');
+    const startDate = new Date('2025-07-31');
+    const endDate = new Date('2025-07-01');
+
+    const result = isDateInRange(targetDate, startDate, endDate);
+    expect(result).toBeFalsy();
+  });
 });
 
 describe('fillZero', () => {
