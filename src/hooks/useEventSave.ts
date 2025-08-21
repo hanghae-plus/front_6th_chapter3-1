@@ -29,6 +29,11 @@ interface UseEventSaveParams {
   openOverlapDialog: (events: Event[]) => void;
 }
 
+/**
+ * 이벤트 저장 훅
+ * @param params - 이벤트 저장 파라미터
+ * @returns 이벤트 저장 함수
+ */
 export const useEventSave = ({
   title,
   date,
