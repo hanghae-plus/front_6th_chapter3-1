@@ -134,7 +134,9 @@ function App() {
 
       <NotificationStack
         notifications={notifications}
-        onDismiss={(index: number) => setNotifications((prev) => prev.filter((_, i) => i !== index))}
+        onDismiss={(index: number) =>
+          setNotifications((prev) => prev.filter((_, i) => i !== index))
+        }
       />
     </Box>
   );
