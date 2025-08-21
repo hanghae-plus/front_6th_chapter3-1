@@ -1,4 +1,4 @@
-import { Notifications, ChevronLeft, ChevronRight, Delete, Edit, Close } from '@mui/icons-material';
+import { ChevronLeft, ChevronRight, Close, Delete, Edit, Notifications } from '@mui/icons-material';
 import {
   Alert,
   AlertTitle,
@@ -93,6 +93,21 @@ function App() {
     resetForm,
     editEvent,
   } = useEventForm();
+
+  // test
+  const TEST_YEAR = 2025;
+  const TEST_MONTH = 8;
+  const TEST_DATES = {
+    SUNDAY: new Date(TEST_YEAR, TEST_MONTH - 1, 17),
+    MONDAY: new Date(TEST_YEAR, TEST_MONTH - 1, 18),
+    TUESDAY: new Date(TEST_YEAR, TEST_MONTH - 1, 19),
+    WEDNESDAY: new Date(TEST_YEAR, TEST_MONTH - 1, 20),
+    THURSDAY: new Date(TEST_YEAR, TEST_MONTH - 1, 21),
+    FRIDAY: new Date(TEST_YEAR, TEST_MONTH - 1, 22),
+    SATURDAY: new Date(TEST_YEAR, TEST_MONTH - 1, 23),
+  };
+
+  console.log(getWeekDates(TEST_DATES.WEDNESDAY));
 
   const { events, saveEvent, deleteEvent } = useEventOperations(Boolean(editingEvent), () =>
     setEditingEvent(null)
