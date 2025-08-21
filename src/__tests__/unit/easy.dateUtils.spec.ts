@@ -1,22 +1,15 @@
 import { Event } from '../../types';
 import {
+  fillZero,
+  formatDate,
+  formatMonth,
   formatWeek,
   getDaysInMonth,
   getEventsForDay,
   getWeekDates,
   getWeeksAtMonth,
+  isDateInRange,
 } from '../../utils/dateUtils';
-// import { Event } from '../../types';
-// import {
-//   fillZero,
-//   formatDate,
-//   formatMonth,
-//   formatWeek,
-//   getDaysInMonth,
-//   getEventsForDay,
-//   getWeekDates,
-//   getWeeksAtMonth,
-//   isDateInRange,
 
 const TEST_YEAR = 2025;
 const TEST_MONTH = 8;
@@ -284,49 +277,150 @@ describe('formatWeek', () => {
 });
 
 describe('formatMonth', () => {
-  it("2025년 7월 10일을 '2025년 7월'로 반환한다", () => {});
+  it("2025년 7월 10일을 '2025년 7월'로 반환한다", () => {
+    const testDate = new Date(2025, 6, 10);
+    const expected = '2025년 7월';
+
+    const result = formatMonth(testDate);
+
+    expect(result).toBe(expected);
+  });
 });
 
 describe('isDateInRange', () => {
-  it('범위 내의 날짜 2025-07-10에 대해 true를 반환한다', () => {});
+  let rangeStart: Date;
+  let rangeEnd: Date;
 
-  it('범위의 시작일 2025-07-01에 대해 true를 반환한다', () => {});
+  beforeEach(() => {
+    rangeStart = new Date(2025, 6, 1);
+    rangeEnd = new Date(2025, 6, 31);
+  });
 
-  it('범위의 종료일 2025-07-31에 대해 true를 반환한다', () => {});
+  it('범위 내의 날짜 2025-07-10에 대해 true를 반환한다', () => {
+    const testDate = new Date(2025, 6, 10);
+    const result = isDateInRange(testDate, rangeStart, rangeEnd);
 
-  it('범위 이전의 날짜 2025-06-30에 대해 false를 반환한다', () => {});
+    expect(result).toBe(true);
+  });
 
-  it('범위 이후의 날짜 2025-08-01에 대해 false를 반환한다', () => {});
+  it('범위의 시작일 2025-07-01에 대해 true를 반환한다', () => {
+    const testDate = new Date(2025, 6, 1);
+    const result = isDateInRange(testDate, rangeStart, rangeEnd);
 
-  it('시작일이 종료일보다 늦은 경우 모든 날짜에 대해 false를 반환한다', () => {});
+    expect(result).toBe(true);
+  });
+
+  it('범위의 종료일 2025-07-31에 대해 true를 반환한다', () => {
+    const testDate = new Date(2025, 6, 31);
+    const result = isDateInRange(testDate, rangeStart, rangeEnd);
+
+    expect(result).toBe(true);
+  });
+
+  it('범위 이전의 날짜 2025-06-30에 대해 false를 반환한다', () => {
+    const testDate = new Date(2025, 5, 30);
+    const result = isDateInRange(testDate, rangeStart, rangeEnd);
+
+    expect(result).toBe(false);
+  });
+
+  it('범위 이후의 날짜 2025-08-01에 대해 false를 반환한다', () => {
+    const testDate = new Date(2025, 7, 1);
+    const result = isDateInRange(testDate, rangeStart, rangeEnd);
+
+    expect(result).toBe(false);
+  });
+
+  it('시작일이 종료일보다 늦은 경우 모든 날짜에 대해 false를 반환한다', () => {
+    const testDate = new Date(2025, 6, 31);
+    const result = isDateInRange(testDate, rangeEnd, rangeStart);
+
+    expect(result).toBe(false);
+  });
 });
 
 describe('fillZero', () => {
-  it("5를 2자리로 변환하면 '05'를 반환한다", () => {});
+  it("5를 2자리로 변환하면 '05'를 반환한다", () => {
+    const result = fillZero(5, 2);
 
-  it("10을 2자리로 변환하면 '10'을 반환한다", () => {});
+    expect(result).toBe('05');
+  });
 
-  it("3을 3자리로 변환하면 '003'을 반환한다", () => {});
+  it("10을 2자리로 변환하면 '10'을 반환한다", () => {
+    const result = fillZero(10, 2);
 
-  it("100을 2자리로 변환하면 '100'을 반환한다", () => {});
+    expect(result).toBe('10');
+  });
 
-  it("0을 2자리로 변환하면 '00'을 반환한다", () => {});
+  it("3을 3자리로 변환하면 '003'을 반환한다", () => {
+    const result = fillZero(3, 3);
 
-  it("1을 5자리로 변환하면 '00001'을 반환한다", () => {});
+    expect(result).toBe('003');
+  });
 
-  it("소수점이 있는 3.14를 5자리로 변환하면 '03.14'를 반환한다", () => {});
+  it("100을 2자리로 변환하면 '100'을 반환한다", () => {
+    const result = fillZero(100, 2);
 
-  it('size 파라미터를 생략하면 기본값 2를 사용한다', () => {});
+    expect(result).toBe('100');
+  });
 
-  it('value가 지정된 size보다 큰 자릿수를 가지면 원래 값을 그대로 반환한다', () => {});
+  it("0을 2자리로 변환하면 '00'을 반환한다", () => {
+    const result = fillZero(0, 2);
+
+    expect(result).toBe('00');
+  });
+
+  it("1을 5자리로 변환하면 '00001'을 반환한다", () => {
+    const result = fillZero(1, 5);
+
+    expect(result).toBe('00001');
+  });
+
+  it("소수점이 있는 3.14를 5자리로 변환하면 '03.14'를 반환한다", () => {
+    const result = fillZero(3.14, 5);
+
+    expect(result).toBe('03.14');
+  });
+
+  it('size 파라미터를 생략하면 기본값 2를 사용한다', () => {
+    const result = fillZero(123);
+
+    expect(result).toBe('123');
+  });
+
+  it('value가 지정된 size보다 큰 자릿수를 가지면 원래 값을 그대로 반환한다', () => {
+    const result = fillZero(1234, 3);
+
+    expect(result).toBe('1234');
+  });
 });
 
 describe('formatDate', () => {
-  it('날짜를 YYYY-MM-DD 형식으로 포맷팅한다', () => {});
+  it('날짜를 YYYY-MM-DD 형식으로 포맷팅한다', () => {
+    const testDate = new Date(2025, 7, 21);
+    const result = formatDate(testDate);
 
-  it('day 파라미터가 제공되면 해당 일자로 포맷팅한다', () => {});
+    expect(result).toBe('2025-08-21');
+  });
 
-  it('월이 한 자리 수일 때 앞에 0을 붙여 포맷팅한다', () => {});
+  it('day 파라미터가 제공되면 해당 일자로 포맷팅한다', () => {
+    const testDate = new Date(2025, 7, 21);
+    const result = formatDate(testDate, 1);
 
-  it('일이 한 자리 수일 때 앞에 0을 붙여 포맷팅한다', () => {});
+    expect(result).toBe('2025-08-01');
+  });
+
+  it('월이 한 자리 수일 때 앞에 0을 붙여 포맷팅한다', () => {
+    const testDate = new Date(2025, 0, 1);
+    const result = formatDate(testDate);
+
+    expect(result).toBe('2025-01-01');
+  });
+
+  it('일이 한 자리 수일 때 앞에 0을 붙여 포맷팅한다', () => {
+    const testDate = new Date(2025, 0, 1);
+    const result = formatDate(testDate);
+
+    expect(result).toBe('2025-01-01');
+  });
 });
