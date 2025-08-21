@@ -52,17 +52,17 @@ describe('convertEventToDateRange', () => {
       notificationTime: 10,
     };
 
-    const result = convertEventToDateRange(event);
+    const { start, end } = convertEventToDateRange(event);
 
-    expect(result.start).toBeInstanceOf(Date);
-    expect(result.end).toBeInstanceOf(Date);
-    expect(result.start.getFullYear()).toBe(2025);
-    expect(result.start.getMonth()).toBe(6);
-    expect(result.start.getDate()).toBe(1);
-    expect(result.start.getHours()).toBe(9);
-    expect(result.start.getMinutes()).toBe(0);
-    expect(result.end.getHours()).toBe(10);
-    expect(result.end.getMinutes()).toBe(0);
+    expect(start).toBeInstanceOf(Date);
+    expect(end).toBeInstanceOf(Date);
+    expect(start.getFullYear()).toBe(2025);
+    expect(start.getMonth()).toBe(6);
+    expect(start.getDate()).toBe(1);
+    expect(start.getHours()).toBe(9);
+    expect(start.getMinutes()).toBe(0);
+    expect(end.getHours()).toBe(10);
+    expect(end.getMinutes()).toBe(0);
   });
 
   it('잘못된 날짜 형식의 이벤트에 대해 Invalid Date를 반환한다', () => {
@@ -79,10 +79,10 @@ describe('convertEventToDateRange', () => {
       notificationTime: 10,
     };
 
-    const result = convertEventToDateRange(event);
+    const { start, end } = convertEventToDateRange(event);
 
-    expect(isNaN(result.start.getTime())).toBeTruthy();
-    expect(isNaN(result.end.getTime())).toBeTruthy();
+    expect(isNaN(start.getTime())).toBe(true);
+    expect(isNaN(end.getTime())).toBe(true);
   });
 
   it('잘못된 시간 형식의 이벤트에 대해 Invalid Date를 반환한다', () => {
@@ -99,10 +99,10 @@ describe('convertEventToDateRange', () => {
       notificationTime: 10,
     };
 
-    const result = convertEventToDateRange(event);
+    const { start, end } = convertEventToDateRange(event);
 
-    expect(isNaN(result.start.getTime())).toBeTruthy();
-    expect(isNaN(result.end.getTime())).toBeTruthy();
+    expect(isNaN(start.getTime())).toBe(true);
+    expect(isNaN(end.getTime())).toBe(true);
   });
 });
 
@@ -134,8 +134,8 @@ describe('isOverlapping', () => {
       notificationTime: 10,
     };
 
-    const result = isOverlapping(event1, event2);
-    expect(result).toBeTruthy();
+    const isOverlapped = isOverlapping(event1, event2);
+    expect(isOverlapped).toBe(true);
   });
 
   it('두 이벤트가 겹치지 않는 경우 false를 반환한다', () => {
@@ -165,8 +165,8 @@ describe('isOverlapping', () => {
       notificationTime: 10,
     };
 
-    const result = isOverlapping(event1, event2);
-    expect(result).toBeFalsy();
+    const isOverlapped = isOverlapping(event1, event2);
+    expect(isOverlapped).toBe(false);
   });
 });
 

@@ -249,7 +249,7 @@ describe('isDateInRange', () => {
     const start = new Date('2025-07-01');
     const end = new Date('2025-07-31');
     const testDate = new Date('2025-07-10');
-    expect(isDateInRange(testDate, start, end)).toBeTruthy();
+    expect(isDateInRange(testDate, start, end)).toBe(true);
   });
 
   // it('범위의 시작일 2025-07-01에 대해 true를 반환한다', () => {
@@ -270,7 +270,7 @@ describe('isDateInRange', () => {
     const start = new Date('2025-07-01');
     const end = new Date('2025-07-31');
     const testDate = new Date('2025-06-30');
-    expect(isDateInRange(testDate, start, end)).toBeFalsy();
+    expect(isDateInRange(testDate, start, end)).toBe(false);
   });
 
   it('범위 이후의 날짜 2025-08-01에 대해 false를 반환한다', () => {
