@@ -325,12 +325,13 @@ describe('일정 충돌', () => {
 
 describe('알림 기능', () => {
   it('notificationTime을 10으로 하면 지정 시간 10분 전 알람 텍스트가 노출된다', async () => {
+    vi.setSystemTime(new Date('2025-10-15T08:50'));
     setupMockHandlerCreation([
       {
         id: '1',
         title: '팀 회의',
         date: '2025-10-15',
-        startTime: '09:10',
+        startTime: '09:00',
         endTime: '10:00',
         description: '테스트',
         location: '회의실',
@@ -341,6 +342,10 @@ describe('알림 기능', () => {
     ]);
 
     setup(<App />);
+
+    await waitFor(() => {
+      expect(screen.getByTestId('event-list')).toHaveTextContent('팀 회의');
+    });
 
     await waitFor(
       () => {
