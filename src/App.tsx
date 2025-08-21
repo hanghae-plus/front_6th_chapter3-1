@@ -1,30 +1,18 @@
-import {
-  Box,
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-  Stack,
-  Typography,
-} from '@mui/material';
+import { Box, Stack } from '@mui/material';
 import { useSnackbar } from 'notistack';
 import { useState } from 'react';
-
+import { CalendarView } from './components/calendar';
+import { OverlapDialog } from './components/dialog';
+import { EventForm as EventFormComponent } from './components/eventForm';
+import { EventList } from './components/eventList';
+import { NotificationToast } from './components/notification';
 import { useCalendarView } from './hooks/useCalendarView.ts';
 import { useEventForm } from './hooks/useEventForm.ts';
 import { useEventOperations } from './hooks/useEventOperations.ts';
 import { useNotifications } from './hooks/useNotifications.ts';
 import { useSearch } from './hooks/useSearch.ts';
-import { CalendarView } from './components/calendar';
-import { EventForm as EventFormComponent } from './components/eventForm';
-import { NotificationToast } from './components/notification';
-import { EventList } from './components/eventList';
 import { Event, EventForm } from './types';
-
 import { findOverlappingEvents } from './utils/eventOverlap';
-import { OverlapDialog } from './components/dialog';
 
 function App() {
   const {
