@@ -29,9 +29,9 @@ describe('getDaysInMonth', () => {
   });
 
   // 불필요한 테스트 : 월이 13월인 경우는 없음 (라이브러리에서 13월은 선택할수 없음)
-  // it('유효하지 않은 월에 대해 적절히 처리한다', () => {
-  //   expect(getDaysInMonth(2025, 13)).toBe(31);
-  // });
+  it.skip('유효하지 않은 월에 대해 적절히 처리한다', () => {
+    expect(getDaysInMonth(2025, 13)).toBe(31);
+  });
 });
 
 describe('getWeekDates', () => {
@@ -188,22 +188,22 @@ describe('getEventsForDay', () => {
   });
 
   // 불필요한 테스트 : 날짜가 0일 경우는 없음 (라이브러리에서 0일은 선택할수 없음)
-  // it('날짜가 0일 경우 빈 배열을 반환한다', () => {
-  //   const events = [{ date: '2025-08-01' }] as Event[];
-  //   const eventsForDay = getEventsForDay(events, 0);
-  //   expect(eventsForDay).toEqual([]);
-  // });
+  it.skip('날짜가 0일 경우 빈 배열을 반환한다', () => {
+    const events = [{ date: '2025-08-01' }] as Event[];
+    const eventsForDay = getEventsForDay(events, 0);
+    expect(eventsForDay).toEqual([]);
+  });
 
   // 불필요한 테스트 : 날짜가 32일 이상인 경우는 없음 (라이브러리에서 32일은 선택할수 없음)
-  // it('날짜가 32일 이상인 경우 빈 배열을 반환한다', () => {
-  //   const events = [
-  //     {
-  //       date: '2025-08-01',
-  //     },
-  //   ] as Event[];
-  //   const eventsForDay = getEventsForDay(events, 32);
-  //   expect(eventsForDay).toEqual([]);
-  // });
+  it.skip('날짜가 32일 이상인 경우 빈 배열을 반환한다', () => {
+    const events = [
+      {
+        date: '2025-08-01',
+      },
+    ] as Event[];
+    const eventsForDay = getEventsForDay(events, 32);
+    expect(eventsForDay).toEqual([]);
+  });
 });
 
 describe('formatWeek', () => {
@@ -322,14 +322,14 @@ describe('fillZero', () => {
   });
 
   // 불필요한 테스트 : fillZero 의 기본 동작은 불필요한 테스트
-  // it('size 파라미터를 생략하면 기본값 2를 사용한다', () => {
-  //   expect(fillZero(1)).toBe('01');
-  // });
+  it.skip('size 파라미터를 생략하면 기본값 2를 사용한다', () => {
+    expect(fillZero(1)).toBe('01');
+  });
 
   // 불필요한 테스트 : padStart 의 기본 동작은 불필요한 테스트
-  // it('value가 지정된 size보다 큰 자릿수를 가지면 원래 값을 그대로 반환한다', () => {
-  //   expect(fillZero(100, 2)).toBe('100');
-  // });
+  it.skip('value가 지정된 size보다 큰 자릿수를 가지면 원래 값을 그대로 반환한다', () => {
+    expect(fillZero(100, 2)).toBe('100');
+  });
 });
 
 describe('formatDate', () => {

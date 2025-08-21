@@ -1,6 +1,6 @@
 import CssBaseline from '@mui/material/CssBaseline';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import { render, screen, within, act } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
 import { UserEvent, userEvent } from '@testing-library/user-event';
 import { SnackbarProvider } from 'notistack';
 import { ReactElement } from 'react';
@@ -12,7 +12,6 @@ import {
 } from '../__mocks__/handlersUtils';
 import App from '../App';
 import { Event } from '../types';
-import { debug } from 'vitest-preview';
 
 const theme = createTheme();
 

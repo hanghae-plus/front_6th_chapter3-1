@@ -18,13 +18,13 @@ describe('getTimeErrorMessage >', () => {
   });
 
   // 불필요한 테스트: 시작 시간이 종료 시간보다 빠른 것은 당연하다. 에러를 반환할 필요가 없다.
-  // it('시작 시간이 종료 시간보다 빠를 때 null을 반환한다', () => {
-  //   const result = getTimeErrorMessage('09:00', '10:00');
-  //   expect(result).toEqual({
-  //     startTimeError: null,
-  //     endTimeError: null,
-  //   });
-  // });
+  it.skip('시작 시간이 종료 시간보다 빠를 때 null을 반환한다', () => {
+    const result = getTimeErrorMessage('09:00', '10:00');
+    expect(result).toEqual({
+      startTimeError: null,
+      endTimeError: null,
+    });
+  });
 
   it('시작 시간이 비어있을 때 null을 반환한다', () => {
     const result = getTimeErrorMessage('', '10:00');
