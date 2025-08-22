@@ -70,7 +70,7 @@ export default [
       ...typescriptPlugin.configs.recommended.rules,
 
       // ESLint rules
-      'no-unused-vars': 'warn',
+      'no-unused-vars': 'off',
 
       // React rules
       'react/prop-types': 'off',
@@ -112,6 +112,7 @@ export default [
     rules: {
       ...vitestPlugin.configs.recommended.rules,
       'vitest/expect-expect': 'off',
+      'vitest/no-commented-out-tests': 'off',
     },
     languageOptions: {
       globals: {

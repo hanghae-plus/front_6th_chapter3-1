@@ -4,6 +4,7 @@ import { Event } from '../types.ts';
  * 주어진 년도와 월의 일수를 반환합니다.
  */
 export function getDaysInMonth(year: number, month: number): number {
+  if (month <= 0 || month > 12) return 0;
   return new Date(year, month, 0).getDate();
 }
 
@@ -13,13 +14,15 @@ export function getDaysInMonth(year: number, month: number): number {
 export function getWeekDates(date: Date): Date[] {
   const day = date.getDay();
   const diff = date.getDate() - day;
-  const sunday = new Date(date.setDate(diff));
+  const sunday = new Date(date.getFullYear(), date.getMonth(), diff);
   const weekDates = [];
+
   for (let i = 0; i < 7; i++) {
     const nextDate = new Date(sunday);
     nextDate.setDate(sunday.getDate() + i);
     weekDates.push(nextDate);
   }
+
   return weekDates;
 }
 
