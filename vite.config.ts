@@ -12,12 +12,20 @@ export default mergeConfig(
           changeOrigin: true,
         },
       },
+      watch: {
+        ignored: ['**/node_modules/**', '**/.git/**'],
+      },
     },
   }),
   defineTestConfig({
     test: {
       globals: true,
       environment: 'jsdom',
+      environmentOptions: {
+        jsdom: {
+          url: 'http://localhost/',
+        },
+      },
       setupFiles: './src/setupTests.ts',
       coverage: {
         reportsDirectory: './.coverage',
