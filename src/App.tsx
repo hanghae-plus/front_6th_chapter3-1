@@ -35,7 +35,6 @@ import { useEventForm } from './hooks/useEventForm.ts';
 import { useEventOperations } from './hooks/useEventOperations.ts';
 import { useNotifications } from './hooks/useNotifications.ts';
 import { useSearch } from './hooks/useSearch.ts';
-// import { Event, EventForm, RepeatType } from './types';
 import { Event, EventForm } from './types';
 import {
   formatDate,
@@ -77,11 +76,8 @@ function App() {
     isRepeating,
     setIsRepeating,
     repeatType,
-    // setRepeatType,
     repeatInterval,
-    // setRepeatInterval,
     repeatEndDate,
-    // setRepeatEndDate,
     notificationTime,
     setNotificationTime,
     startTimeError,
@@ -224,7 +220,6 @@ function App() {
 
   const renderMonthView = () => {
     const weeks = getWeeksAtMonth(currentDate);
-
     return (
       <Stack data-testid="month-view" spacing={4} sx={{ width: '100%' }}>
         <Typography variant="h5">{formatMonth(currentDate)}</Typography>
@@ -245,7 +240,6 @@ function App() {
                   {week.map((day, dayIndex) => {
                     const dateString = day ? formatDate(currentDate, day) : '';
                     const holiday = holidays[dateString];
-
                     return (
                       <TableCell
                         key={dayIndex}
@@ -318,7 +312,6 @@ function App() {
       <Stack direction="row" spacing={6} sx={{ height: '100%' }}>
         <Stack spacing={2} sx={{ width: '20%' }}>
           <Typography variant="h4">{editingEvent ? '일정 수정' : '일정 추가'}</Typography>
-
           <FormControl fullWidth>
             <FormLabel htmlFor="title">제목</FormLabel>
             <TextField
@@ -328,7 +321,6 @@ function App() {
               onChange={(e) => setTitle(e.target.value)}
             />
           </FormControl>
-
           <FormControl fullWidth>
             <FormLabel htmlFor="date">날짜</FormLabel>
             <TextField
@@ -339,7 +331,6 @@ function App() {
               onChange={(e) => setDate(e.target.value)}
             />
           </FormControl>
-
           <Stack direction="row" spacing={2}>
             <FormControl fullWidth>
               <FormLabel htmlFor="start-time">시작 시간</FormLabel>
@@ -370,7 +361,6 @@ function App() {
               </Tooltip>
             </FormControl>
           </Stack>
-
           <FormControl fullWidth>
             <FormLabel htmlFor="description">설명</FormLabel>
             <TextField
@@ -380,7 +370,6 @@ function App() {
               onChange={(e) => setDescription(e.target.value)}
             />
           </FormControl>
-
           <FormControl fullWidth>
             <FormLabel htmlFor="location">위치</FormLabel>
             <TextField
@@ -390,7 +379,6 @@ function App() {
               onChange={(e) => setLocation(e.target.value)}
             />
           </FormControl>
-
           <FormControl fullWidth>
             <FormLabel id="category-label">카테고리</FormLabel>
             <Select
@@ -408,7 +396,6 @@ function App() {
               ))}
             </Select>
           </FormControl>
-
           <FormControl>
             <FormControlLabel
               control={
@@ -420,7 +407,6 @@ function App() {
               label="반복 일정"
             />
           </FormControl>
-
           <FormControl fullWidth>
             <FormLabel htmlFor="notification">알림 설정</FormLabel>
             <Select
@@ -436,47 +422,6 @@ function App() {
               ))}
             </Select>
           </FormControl>
-
-          {/* ! 반복은 8주차 과제에 포함됩니다. 구현하고 싶어도 참아주세요~ */}
-          {/* {isRepeating && (
-            <Stack spacing={2}>
-              <FormControl fullWidth>
-                <FormLabel>반복 유형</FormLabel>
-                <Select
-                  size="small"
-                  value={repeatType}
-                  onChange={(e) => setRepeatType(e.target.value as RepeatType)}
-                >
-                  <MenuItem value="daily">매일</MenuItem>
-                  <MenuItem value="weekly">매주</MenuItem>
-                  <MenuItem value="monthly">매월</MenuItem>
-                  <MenuItem value="yearly">매년</MenuItem>
-                </Select>
-              </FormControl>
-              <Stack direction="row" spacing={2}>
-                <FormControl fullWidth>
-                  <FormLabel>반복 간격</FormLabel>
-                  <TextField
-                    size="small"
-                    type="number"
-                    value={repeatInterval}
-                    onChange={(e) => setRepeatInterval(Number(e.target.value))}
-                    slotProps={{ htmlInput: { min: 1 } }}
-                  />
-                </FormControl>
-                <FormControl fullWidth>
-                  <FormLabel>반복 종료일</FormLabel>
-                  <TextField
-                    size="small"
-                    type="date"
-                    value={repeatEndDate}
-                    onChange={(e) => setRepeatEndDate(e.target.value)}
-                  />
-                </FormControl>
-              </Stack>
-            </Stack>
-          )} */}
-
           <Button
             data-testid="event-submit-button"
             onClick={addOrUpdateEvent}
@@ -486,19 +431,17 @@ function App() {
             {editingEvent ? '일정 수정' : '일정 추가'}
           </Button>
         </Stack>
-
         <Stack flex={1} spacing={5}>
           <Typography variant="h4">일정 보기</Typography>
-
           <Stack direction="row" spacing={2} justifyContent="space-between" alignItems="center">
             <IconButton aria-label="Previous" onClick={() => navigate('prev')}>
               <ChevronLeft />
             </IconButton>
             <Select
               size="small"
-              aria-label="뷰 타입 선택"
               value={view}
               onChange={(e) => setView(e.target.value as 'week' | 'month')}
+              aria-label="뷰 타입 선택"
             >
               <MenuItem value="week" aria-label="week-option">
                 Week
@@ -511,11 +454,9 @@ function App() {
               <ChevronRight />
             </IconButton>
           </Stack>
-
           {view === 'week' && renderWeekView()}
           {view === 'month' && renderMonthView()}
         </Stack>
-
         <Stack
           data-testid="event-list"
           spacing={2}
@@ -531,7 +472,6 @@ function App() {
               onChange={(e) => setSearchTerm(e.target.value)}
             />
           </FormControl>
-
           {filteredEvents.length === 0 ? (
             <Typography>검색 결과가 없습니다.</Typography>
           ) : (
@@ -589,14 +529,13 @@ function App() {
           )}
         </Stack>
       </Stack>
-
       <Dialog open={isOverlapDialogOpen} onClose={() => setIsOverlapDialogOpen(false)}>
         <DialogTitle>일정 겹침 경고</DialogTitle>
         <DialogContent>
           <DialogContentText>
             다음 일정과 겹칩니다:
             {overlappingEvents.map((event) => (
-              <Typography key={event.id}>
+              <Typography key={event.id} component="div">
                 {event.title} ({event.date} {event.startTime}-{event.endTime})
               </Typography>
             ))}
@@ -631,7 +570,6 @@ function App() {
           </Button>
         </DialogActions>
       </Dialog>
-
       {notifications.length > 0 && (
         <Stack position="fixed" top={16} right={16} spacing={2} alignItems="flex-end">
           {notifications.map((notification, index) => (
