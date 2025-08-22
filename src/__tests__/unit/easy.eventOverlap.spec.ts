@@ -70,11 +70,11 @@ describe('isOverlapping', () => {
     createEvent({ id: '3', date: '2025-08-28' }),
   ];
   it('두 이벤트가 겹치는 경우 true를 반환한다', () => {
-    expect(isOverlapping(events[0], events[1])).toBeTruthy();
+    expect(isOverlapping(events[0], events[1])).toBe(true);
   });
 
   it('두 이벤트가 겹치지 않는 경우 false를 반환한다', () => {
-    expect(isOverlapping(events[0], events[2])).toBeFalsy();
+    expect(isOverlapping(events[0], events[2])).toBe(false);
   });
 });
 
