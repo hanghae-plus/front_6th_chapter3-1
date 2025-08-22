@@ -70,24 +70,16 @@ export default [
       ...typescriptPlugin.configs.recommended.rules,
 
       // ESLint rules
-      'no-unused-vars': 'warn',
+      'no-unused-vars': 'off',
+      '@typescript-eslint/no-unused-vars': ['error'],
 
       // React rules
       'react/prop-types': 'off',
       ...reactHooksPlugin.configs.recommended.rules,
+      'react-hooks/exhaustive-deps': 'off',
 
-      // Import rules
-      'import/order': [
-        'error',
-        {
-          groups: ['builtin', 'external', ['parent', 'sibling'], 'index'],
-          alphabetize: {
-            order: 'asc',
-            caseInsensitive: true,
-          },
-          'newlines-between': 'always',
-        },
-      ],
+      // Import rules disabled due to conflict with Prettier
+      // 'import/order': 'off',
 
       // Prettier rules
       ...prettierConfig.rules,

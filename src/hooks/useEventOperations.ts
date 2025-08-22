@@ -1,3 +1,4 @@
+// test push
 import { useSnackbar } from 'notistack';
 import { useEffect, useState } from 'react';
 
@@ -76,7 +77,6 @@ export const useEventOperations = (editing: boolean, onSave?: () => void) => {
 
   useEffect(() => {
     init();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return { events, fetchEvents, saveEvent, deleteEvent };
