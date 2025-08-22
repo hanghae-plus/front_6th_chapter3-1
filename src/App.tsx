@@ -23,6 +23,8 @@ import { useEventForm } from './hooks/useEventForm.ts';
 import { useEventOperations } from './hooks/useEventOperations.ts';
 import { useEventSubmit } from './hooks/useEventSubmit.ts';
 import { useNotifications } from './hooks/useNotifications.ts';
+import { useOverlapDialog } from './hooks/useOverlapDialog.ts';
+import { validateEvent } from './utils/eventValidation.ts';
 import { getTimeErrorMessage } from './utils/timeValidation';
 
 const categories = ['업무', '개인', '가족', '기타'];
@@ -67,35 +69,40 @@ function App() {
     handleEndTimeChange,
     resetForm,
     editEvent,
+    eventData,
   } = useEventForm();
 
   const { events, saveEvent, deleteEvent } = useEventOperations(Boolean(editingEvent), () =>
     setEditingEvent(null)
   );
+  const {
+    isOverlapDialogOpen,
+    overlappingEvents,
+    isOverlap,
+    closeOverlapDialog,
+    openOverlapDialog,
+  } = useOverlapDialog();
 
   const { notifications, notifiedEvents, removeNotification } = useNotifications(events);
 
-  const { addOrUpdateEvent, isOverlapDialogOpen, overlappingEvents, closeOverlapDialog } =
-    useEventSubmit({
-      title,
-      date,
-      startTime,
-      endTime,
-      editingEvent,
-      startTimeError,
-      endTimeError,
-      description,
-      location,
-      category,
-      isRepeating,
-      repeatType,
-      repeatInterval,
-      repeatEndDate,
-      notificationTime,
-      saveEvent,
-      resetForm,
-      events,
-    });
+  const eventFormValidation = validateEvent({
+    title,
+    date,
+    startTime,
+    endTime,
+    startTimeError,
+    endTimeError,
+  });
+
+  const { addOrUpdateEvent } = useEventSubmit({
+    eventData,
+    eventFormValidation,
+    events,
+    saveEvent,
+    resetForm,
+    openOverlapDialog,
+    isOverlap,
+  });
 
   return (
     <Box sx={{ width: '100%', height: '100vh', margin: 'auto', p: 5 }}>
