@@ -1,5 +1,3 @@
-import ChevronLeft from '@mui/icons-material/ChevronLeft';
-import ChevronRight from '@mui/icons-material/ChevronRight';
 import Close from '@mui/icons-material/Close';
 import {
   Alert,
@@ -21,15 +19,11 @@ import {
 import { useSnackbar } from 'notistack';
 import { useState } from 'react';
 
-import EventItem from './components/EventItem';
-import MonthView from './components/MonthView';
+import CalenderContainer from './components/CalenderContainer';
 import OverlapDialog from './components/OverlapDialog';
-import WeekView from './components/WeekView';
-import { useCalendarView } from './hooks/useCalendarView.ts';
 import { useEventForm } from './hooks/useEventForm.ts';
 import { useEventOperations } from './hooks/useEventOperations.ts';
 import { useNotifications } from './hooks/useNotifications.ts';
-import { useSearch } from './hooks/useSearch.ts';
 // import { Event, EventForm, RepeatType } from './types';
 import { Event, EventForm } from './types';
 import { findOverlappingEvents } from './utils/eventOverlap';
@@ -84,8 +78,6 @@ function App() {
   );
 
   const { notifications, notifiedEvents, removeNotification } = useNotifications(events);
-  const { view, setView, currentDate, holidays, navigate } = useCalendarView();
-  const { searchTerm, filteredEvents, setSearchTerm } = useSearch(events, currentDate, view);
 
   const [isOverlapDialogOpen, setIsOverlapDialogOpen] = useState(false);
   const [overlappingEvents, setOverlappingEvents] = useState<Event[]>([]);
@@ -121,6 +113,7 @@ function App() {
     };
 
     const overlapping = findOverlappingEvents(eventData, events);
+
     if (overlapping.length > 0) {
       setOverlappingEvents(overlapping);
       setIsOverlapDialogOpen(true);
@@ -306,79 +299,13 @@ function App() {
         </Stack>
 
         {/* 일정 보기 달력 섹션 */}
-        <Stack flex={1} spacing={5}>
-          <Typography variant="h4">일정 보기</Typography>
-
-          <Stack direction="row" spacing={2} justifyContent="space-between" alignItems="center">
-            <IconButton aria-label="Previous" onClick={() => navigate('prev')}>
-              <ChevronLeft />
-            </IconButton>
-            <Select
-              size="small"
-              aria-label="뷰 타입 선택"
-              value={view}
-              onChange={(e) => setView(e.target.value as 'week' | 'month')}
-            >
-              <MenuItem value="week" aria-label="week-option">
-                Week
-              </MenuItem>
-              <MenuItem value="month" aria-label="month-option">
-                Month
-              </MenuItem>
-            </Select>
-            <IconButton aria-label="Next" onClick={() => navigate('next')}>
-              <ChevronRight />
-            </IconButton>
-          </Stack>
-
-          {view === 'week' && (
-            <WeekView
-              currentDate={currentDate}
-              filteredEvents={filteredEvents}
-              notifiedEvents={notifiedEvents}
-            />
-          )}
-          {view === 'month' && (
-            <MonthView
-              currentDate={currentDate}
-              filteredEvents={filteredEvents}
-              notifiedEvents={notifiedEvents}
-              holidays={holidays}
-            />
-          )}
-        </Stack>
-        {/* 일정 목록&검색 섹션 */}
-        <Stack
-          data-testid="event-list"
-          spacing={2}
-          sx={{ width: '30%', height: '100%', overflowY: 'auto' }}
-        >
-          <FormControl fullWidth>
-            <FormLabel htmlFor="search">일정 검색</FormLabel>
-            <TextField
-              id="search"
-              size="small"
-              placeholder="검색어를 입력하세요"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-          </FormControl>
-
-          {filteredEvents.length === 0 ? (
-            <Typography>검색 결과가 없습니다.</Typography>
-          ) : (
-            filteredEvents.map((event) => (
-              <EventItem
-                key={event.id}
-                event={event}
-                notifiedEvents={notifiedEvents}
-                notificationOptions={notificationOptions}
-                editEvent={editEvent}
-                deleteEvent={deleteEvent}
-              />
-            ))
-          )}
-        </Stack>
+        <CalenderContainer
+          events={events}
+          notifiedEvents={notifiedEvents}
+          notificationOptions={notificationOptions}
+          editEvent={editEvent}
+          deleteEvent={deleteEvent}
+        />
       </Stack>
       {/* 일정 겹침 경고 모달  */}
       <OverlapDialog
