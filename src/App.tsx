@@ -16,18 +16,15 @@ import {
   Tooltip,
   Typography,
 } from '@mui/material';
-import { useSnackbar } from 'notistack';
-import { useState } from 'react';
 
 import CalenderContainer from './components/CalenderContainer';
 import OverlapDialog from './components/OverlapDialog';
 import { useEventForm } from './hooks/useEventForm.ts';
 import { useEventOperations } from './hooks/useEventOperations.ts';
+import { useEventSubmit } from './hooks/useEventSubmit.ts';
 import { useNotifications } from './hooks/useNotifications.ts';
-// import { Event, EventForm, RepeatType } from './types';
-import { Event, EventForm } from './types';
-import { findOverlappingEvents } from './utils/eventOverlap';
 import { getTimeErrorMessage } from './utils/timeValidation';
+import { useState } from 'react';
 
 const categories = ['업무', '개인', '가족', '기타'];
 
@@ -40,6 +37,7 @@ const notificationOptions = [
 ];
 
 function App() {
+  const [isEditEvent, setIsEditEvent] = useState(false);
   const {
     title,
     setTitle,
@@ -79,49 +77,27 @@ function App() {
 
   const { notifications, notifiedEvents, removeNotification } = useNotifications(events);
 
-  const [isOverlapDialogOpen, setIsOverlapDialogOpen] = useState(false);
-  const [overlappingEvents, setOverlappingEvents] = useState<Event[]>([]);
-
-  const { enqueueSnackbar } = useSnackbar();
-
-  const addOrUpdateEvent = async () => {
-    if (!title || !date || !startTime || !endTime) {
-      enqueueSnackbar('필수 정보를 모두 입력해주세요.', { variant: 'error' });
-      return;
-    }
-
-    if (startTimeError || endTimeError) {
-      enqueueSnackbar('시간 설정을 확인해주세요.', { variant: 'error' });
-      return;
-    }
-
-    const eventData: Event | EventForm = {
-      id: editingEvent ? editingEvent.id : undefined,
+  const { addOrUpdateEvent, isOverlapDialogOpen, overlappingEvents, closeOverlapDialog } =
+    useEventSubmit({
       title,
       date,
       startTime,
       endTime,
+      editingEvent,
+      startTimeError,
+      endTimeError,
       description,
       location,
       category,
-      repeat: {
-        type: isRepeating ? repeatType : 'none',
-        interval: repeatInterval,
-        endDate: repeatEndDate || undefined,
-      },
+      isRepeating,
+      repeatType,
+      repeatInterval,
+      repeatEndDate,
       notificationTime,
-    };
-
-    const overlapping = findOverlappingEvents(eventData, events);
-
-    if (overlapping.length > 0) {
-      setOverlappingEvents(overlapping);
-      setIsOverlapDialogOpen(true);
-    } else {
-      await saveEvent(eventData);
-      resetForm();
-    }
-  };
+      saveEvent,
+      resetForm,
+      events,
+    });
 
   return (
     <Box sx={{ width: '100%', height: '100vh', margin: 'auto', p: 5 }}>
@@ -311,8 +287,26 @@ function App() {
       <OverlapDialog
         open={isOverlapDialogOpen}
         overlappingEvents={overlappingEvents}
-        onClose={() => setIsOverlapDialogOpen(false)}
-        onConfirm={() => {}}
+        onClose={closeOverlapDialog}
+        onConfirm={() => {
+          closeOverlapDialog();
+          saveEvent({
+            id: editingEvent ? editingEvent.id : undefined,
+            title,
+            date,
+            startTime,
+            endTime,
+            description,
+            location,
+            category,
+            repeat: {
+              type: isRepeating ? repeatType : 'none',
+              interval: repeatInterval,
+              endDate: repeatEndDate || undefined,
+            },
+            notificationTime,
+          });
+        }}
       />
       {/* 알림 토스트*/}
       {notifications.length > 0 && (
