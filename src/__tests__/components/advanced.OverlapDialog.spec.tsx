@@ -1,3 +1,4 @@
+import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { vi } from 'vitest';
@@ -7,22 +8,60 @@ import { Event } from '../../types';
 
 // Mock Material-UI components if needed
 vi.mock('@mui/material', () => ({
-  Button: ({ children, onClick, ...props }: any) => (
+  Button: ({
+    children,
+    onClick,
+    ...props
+  }: {
+    children: React.ReactNode;
+    onClick?: () => void;
+    [key: string]: unknown;
+  }) => (
     <button onClick={onClick} {...props}>
       {children}
     </button>
   ),
-  Dialog: ({ children, open, onClose, ...props }: any) =>
+  Dialog: ({
+    children,
+    open,
+    ...props
+  }: {
+    children: React.ReactNode;
+    open: boolean;
+    [key: string]: unknown;
+  }) =>
     open ? (
       <div role="dialog" {...props}>
         {children}
       </div>
     ) : null,
-  DialogActions: ({ children, ...props }: any) => <div {...props}>{children}</div>,
-  DialogContent: ({ children, ...props }: any) => <div {...props}>{children}</div>,
-  DialogContentText: ({ children, ...props }: any) => <div {...props}>{children}</div>,
-  DialogTitle: ({ children, ...props }: any) => <div {...props}>{children}</div>,
-  Typography: ({ children, ...props }: any) => <div {...props}>{children}</div>,
+  DialogActions: ({
+    children,
+    ...props
+  }: {
+    children: React.ReactNode;
+    [key: string]: unknown;
+  }) => <div {...props}>{children}</div>,
+  DialogContent: ({
+    children,
+    ...props
+  }: {
+    children: React.ReactNode;
+    [key: string]: unknown;
+  }) => <div {...props}>{children}</div>,
+  DialogContentText: ({
+    children,
+    ...props
+  }: {
+    children: React.ReactNode;
+    [key: string]: unknown;
+  }) => <div {...props}>{children}</div>,
+  DialogTitle: ({ children, ...props }: { children: React.ReactNode; [key: string]: unknown }) => (
+    <div {...props}>{children}</div>
+  ),
+  Typography: ({ children, ...props }: { children: React.ReactNode; [key: string]: unknown }) => (
+    <div {...props}>{children}</div>
+  ),
 }));
 
 describe('OverlapDialog', () => {
