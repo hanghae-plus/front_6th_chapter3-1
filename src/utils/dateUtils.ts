@@ -108,3 +108,27 @@ export function formatDate(currentDate: Date, day?: number) {
     fillZero(day ?? currentDate.getDate()),
   ].join('-');
 }
+// ========== 추가 유틸 ==========
+/**
+ * 주어진 년도가 윤년인지 판단합니다.
+ */
+export function isLeapYear(year: number) {
+  return (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;
+}
+/**
+ * 현재 연도에서 가장 가까운 미래의 윤년을 반환합니다.
+ */
+export function findNextLeapYear(currentYear: number) {
+  const isLeap = isLeapYear(currentYear);
+
+  if (isLeap) {
+    return currentYear;
+  }
+
+  let nextYear = currentYear + 1;
+  while (!isLeapYear(nextYear)) {
+    nextYear++;
+  }
+
+  return nextYear;
+}

@@ -42,7 +42,7 @@ export function getFilteredEvents(
   events: Event[],
   searchTerm: string,
   currentDate: Date,
-  view: 'week' | 'month'
+  view: 'week' | 'month' | '' // '' 일 때는 모든 이벤트를 반환 하도록 함
 ): Event[] {
   const searchedEvents = searchEvents(events, searchTerm);
 
