@@ -93,7 +93,7 @@ export function isDateInRange(date: Date, rangeStart: Date, rangeEnd: Date): boo
   const normalizedDate = stripTime(date);
   const normalizedStart = stripTime(rangeStart);
   const normalizedEnd = stripTime(rangeEnd);
-
+  console.log(normalizedDate, normalizedStart, normalizedEnd);
   return normalizedDate >= normalizedStart && normalizedDate <= normalizedEnd;
 }
 
