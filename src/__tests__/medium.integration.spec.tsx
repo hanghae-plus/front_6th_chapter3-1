@@ -534,8 +534,8 @@ describe('알림 기능', () => {
     // 이벤트가 실제로 렌더링될 때까지 기다림
     const eventList = await screen.findByTestId('event-list');
 
-    // 일정 목록에서만 이벤트 제목을 찾음
-    const eventTitle = within(eventList).getByText(newEvent.title);
+    // 이벤트 제목이 실제로 렌더링될 때까지 기다림
+    const eventTitle = await within(eventList).findByText(newEvent.title);
     expect(eventTitle).toBeInTheDocument();
 
     // 시스템 시간을 설정하고 알림 텍스트 확인
