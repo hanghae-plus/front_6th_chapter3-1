@@ -1,4 +1,4 @@
-import { Event } from '../types.ts';
+import { Event } from '../types';
 
 /**
  * 주어진 년도와 월의 일수를 반환합니다.
@@ -11,9 +11,10 @@ export function getDaysInMonth(year: number, month: number): number {
  * 주어진 날짜가 속한 주의 모든 날짜를 반환합니다.
  */
 export function getWeekDates(date: Date): Date[] {
-  const day = date.getDay();
-  const diff = date.getDate() - day;
-  const sunday = new Date(date.setDate(diff));
+  const newDate = new Date(date);
+  const day = newDate.getDay();
+  const diff = newDate.getDate() - day;
+  const sunday = new Date(newDate.setDate(diff));
   const weekDates = [];
   for (let i = 0; i < 7; i++) {
     const nextDate = new Date(sunday);
