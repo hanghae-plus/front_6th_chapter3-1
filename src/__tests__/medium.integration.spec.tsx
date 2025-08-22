@@ -6,7 +6,6 @@ import { SnackbarProvider } from 'notistack';
 import { vi } from 'vitest';
 
 import { createMockHandlers } from '../__mocks__/handlersUtils';
-import { events } from '../__mocks__/response/events.json' assert { type: 'json' };
 import App from '../App';
 import { server } from '../setupTests';
 import { Event } from '../types';
