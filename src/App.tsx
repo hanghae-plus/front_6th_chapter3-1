@@ -13,11 +13,15 @@ import {
 import { useSnackbar } from 'notistack';
 import { useState } from 'react';
 
+import { BasicInfoForm } from './components/BasicInfoForm.tsx';
+import { DetailForm } from './components/DetailForm.tsx';
 import { EventForm as EventFormItem } from './components/EventForm.tsx';
 import { FilteredEventList } from './components/FilteredEventList.tsx';
 import { MonthView } from './components/MonthView.tsx';
 import { Notifications } from './components/Notifications.tsx';
 import { OverlapDialog } from './components/OverlapDialog.tsx';
+import { SettingForm } from './components/SettingForm.tsx';
+import { TimeForm } from './components/TimeForm.tsx';
 import { WeekView } from './components/WeeokView.tsx';
 import { useCalendarView } from './hooks/useCalendarView.ts';
 import { useEventForm } from './hooks/useEventForm.ts';
@@ -116,31 +120,41 @@ function App() {
   return (
     <Box sx={{ width: '100%', height: '100vh', margin: 'auto', p: 5 }}>
       <Stack direction="row" spacing={6} sx={{ height: '100%' }}>
-        <EventFormItem
-          editingEvent={editingEvent}
-          title={title}
-          date={date}
-          startTime={startTime}
-          endTime={endTime}
-          description={description}
-          location={location}
-          category={category}
-          isRepeating={isRepeating}
-          repeatEndDate={repeatEndDate}
-          notificationTime={notificationTime}
-          startTimeError={startTimeError}
-          endTimeError={endTimeError}
-          setDate={setDate}
-          setTitle={setTitle}
-          setDescription={setDescription}
-          setIsRepeating={setIsRepeating}
-          setNotificationTime={setNotificationTime}
-          setLocation={setLocation}
-          setCategory={setCategory}
-          handleStartTimeChange={handleStartTimeChange}
-          handleEndTimeChange={handleEndTimeChange}
-          addOrUpdateEvent={addOrUpdateEvent}
-        />
+        <Stack spacing={2} sx={{ width: '20%' }}>
+          <EventFormItem editingEvent={editingEvent} addOrUpdateEvent={addOrUpdateEvent}>
+            <BasicInfoForm
+              title={title}
+              date={date}
+              startTime={startTime}
+              endTime={endTime}
+              setDate={setDate}
+              setTitle={setTitle}
+            />
+            <DetailForm
+              description={description}
+              location={location}
+              category={category}
+              setDescription={setDescription}
+              setLocation={setLocation}
+              setCategory={setCategory}
+            />
+            <SettingForm
+              isRepeating={isRepeating}
+              repeatEndDate={repeatEndDate}
+              notificationTime={notificationTime}
+              setIsRepeating={setIsRepeating}
+              setNotificationTime={setNotificationTime}
+            />
+            <TimeForm
+              startTime={startTime}
+              endTime={endTime}
+              startTimeError={startTimeError}
+              endTimeError={endTimeError}
+              handleStartTimeChange={handleStartTimeChange}
+              handleEndTimeChange={handleEndTimeChange}
+            />
+          </EventFormItem>
+        </Stack>
 
         <Stack flex={1} spacing={5}>
           <Typography variant="h4">일정 보기</Typography>
