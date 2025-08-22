@@ -58,6 +58,7 @@ export function getFilteredEvents(
   return searchedEvents;
 }
 
+// 심화과제
 // 알림 라벨 가져오기
 export const getNotificationLabel = (notificationTime: number) => {
   return notificationOptions.find((option) => option.value === notificationTime)?.label;
