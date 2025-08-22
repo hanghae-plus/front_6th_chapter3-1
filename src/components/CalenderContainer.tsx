@@ -33,8 +33,8 @@ export default function CalenderContainer({
   deleteEvent,
 }: CalenderContainerProps) {
   const { view, setView, currentDate, holidays, navigate } = useCalendarView();
-
   const { searchTerm, filteredEvents, setSearchTerm } = useSearch(events, currentDate, view);
+
   return (
     <>
       <Stack flex={1} spacing={5}>
