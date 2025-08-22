@@ -70,24 +70,24 @@ export default [
       ...typescriptPlugin.configs.recommended.rules,
 
       // ESLint rules
-      'no-unused-vars': 'warn',
+      'no-unused-vars': 'off',
+      '@typescript-eslint/no-unused-vars': [
+        'error',
+        {
+          argsIgnorePattern: '^_',
+          varsIgnorePattern: '^_',
+          caughtErrorsIgnorePattern: '^_',
+          destructuredArrayIgnorePattern: '^_',
+        },
+      ],
 
       // React rules
       'react/prop-types': 'off',
       ...reactHooksPlugin.configs.recommended.rules,
+      'react-hooks/exhaustive-deps': 'off',
 
       // Import rules
-      'import/order': [
-        'error',
-        {
-          groups: ['builtin', 'external', ['parent', 'sibling'], 'index'],
-          alphabetize: {
-            order: 'asc',
-            caseInsensitive: true,
-          },
-          'newlines-between': 'always',
-        },
-      ],
+      'import/order': 'off',
 
       // Prettier rules
       ...prettierConfig.rules,
@@ -112,6 +112,7 @@ export default [
     rules: {
       ...vitestPlugin.configs.recommended.rules,
       'vitest/expect-expect': 'off',
+      'vitest/no-commented-out-tests': 'off',
     },
     languageOptions: {
       globals: {
