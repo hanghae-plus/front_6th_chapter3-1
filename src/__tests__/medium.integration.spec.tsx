@@ -1,8 +1,7 @@
 import CssBaseline from '@mui/material/CssBaseline';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import { render, screen, within, act, waitFor } from '@testing-library/react';
+import { render, screen, within, act } from '@testing-library/react';
 import { UserEvent, userEvent } from '@testing-library/user-event';
-import { http, HttpResponse } from 'msw';
 import { SnackbarProvider } from 'notistack';
 import { ReactElement } from 'react';
 
@@ -12,7 +11,6 @@ import {
   setupMockHandlerUpdating,
 } from '../__mocks__/handlersUtils';
 import App from '../App';
-import { server } from '../setupTests';
 import { Event } from '../types';
 
 const theme = createTheme();
@@ -145,7 +143,7 @@ describe('일정 뷰', () => {
   it('월별 뷰에 일정이 없으면, 일정이 표시되지 않아야 한다.', async () => {
     setupMockHandlerCreation();
 
-    const { user } = setup(<App />);
+    setup(<App />);
 
     const eventList = within(screen.getByTestId('event-list'));
     expect(eventList.getByText('검색 결과가 없습니다.')).toBeInTheDocument();
