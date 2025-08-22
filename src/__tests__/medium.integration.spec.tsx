@@ -5,7 +5,14 @@ import { userEvent } from '@testing-library/user-event';
 import { SnackbarProvider } from 'notistack';
 import { vi } from 'vitest';
 
-import { createDefaultEvents, setupMockHandler } from '../__mocks__/handlersUtils';
+import {
+  createTestEventManager,
+  createDefaultEvents,
+  setupGetHandler,
+  setupPostHandler,
+  setupPutHandler,
+  setupDeleteHandler,
+} from '../__mocks__/handlersUtils';
 import App from '../App';
 
 function renderWithProviders() {
@@ -21,7 +28,16 @@ function renderWithProviders() {
 }
 
 describe('일정 CRUD 및 기본 기능', () => {
+  let eventManager: ReturnType<typeof createTestEventManager>;
+
+  beforeEach(() => {
+    eventManager = createTestEventManager();
+  });
+
   it('입력한 새로운 일정 정보에 맞춰 모든 필드가 이벤트 리스트에 정확히 저장된다.', async () => {
+    setupGetHandler(eventManager);
+    setupPostHandler(eventManager);
+
     const user = userEvent.setup();
     renderWithProviders();
 
@@ -48,7 +64,10 @@ describe('일정 CRUD 및 기본 기능', () => {
   });
 
   it('기존 일정의 세부 정보를 수정하고 변경사항이 정확히 반영된다', async () => {
-    setupMockHandler(createDefaultEvents(new Date('2025-08-15')));
+    const defaultEvents = createDefaultEvents(new Date('2025-08-15'));
+    eventManager = createTestEventManager(defaultEvents);
+    setupGetHandler(eventManager);
+    setupPutHandler(eventManager);
 
     const user = userEvent.setup();
     renderWithProviders();
@@ -83,7 +102,10 @@ describe('일정 CRUD 및 기본 기능', () => {
   });
 
   it('일정을 삭제하고 더 이상 조회되지 않는지 확인한다', async () => {
-    setupMockHandler(createDefaultEvents(new Date('2025-08-15')));
+    const defaultEvents = createDefaultEvents(new Date('2025-08-15'));
+    eventManager = createTestEventManager(defaultEvents);
+    setupGetHandler(eventManager);
+    setupDeleteHandler(eventManager);
 
     const user = userEvent.setup();
     renderWithProviders();
@@ -108,8 +130,16 @@ describe('일정 CRUD 및 기본 기능', () => {
 });
 
 describe('일정 뷰', () => {
+  let eventManager: ReturnType<typeof createTestEventManager>;
+
+  beforeEach(() => {
+    eventManager = createTestEventManager();
+  });
+
   it('주별 뷰를 선택 후 해당 주에 일정이 없으면, 일정이 표시되지 않는다.', async () => {
-    setupMockHandler(createDefaultEvents(new Date('2025-08-01')));
+    const defaultEvents = createDefaultEvents(new Date('2025-08-01'));
+    eventManager = createTestEventManager(defaultEvents);
+    setupGetHandler(eventManager);
 
     const user = userEvent.setup();
     renderWithProviders();
@@ -125,7 +155,8 @@ describe('일정 뷰', () => {
 
   it('주별 뷰 선택 후 해당 일자에 일정이 존재한다면 해당 일정이 정확히 표시된다', async () => {
     const mockData = createDefaultEvents(new Date());
-    setupMockHandler(mockData);
+    eventManager = createTestEventManager(mockData);
+    setupGetHandler(eventManager);
 
     const user = userEvent.setup();
     renderWithProviders();
@@ -140,7 +171,9 @@ describe('일정 뷰', () => {
   });
 
   it('월별 뷰에 일정이 없으면, 일정이 표시되지 않아야 한다.', async () => {
-    setupMockHandler(createDefaultEvents(new Date('2024-08-15')));
+    const defaultEvents = createDefaultEvents(new Date('2024-08-15'));
+    eventManager = createTestEventManager(defaultEvents);
+    setupGetHandler(eventManager);
 
     const user = userEvent.setup();
     renderWithProviders();
@@ -156,7 +189,8 @@ describe('일정 뷰', () => {
 
   it('월별 뷰에 일정이 정확히 표시되는지 확인한다', async () => {
     const mockData = createDefaultEvents(new Date());
-    setupMockHandler(mockData);
+    eventManager = createTestEventManager(mockData);
+    setupGetHandler(eventManager);
 
     const user = userEvent.setup();
     renderWithProviders();
@@ -181,9 +215,11 @@ describe('일정 뷰', () => {
 });
 
 describe('검색 기능', () => {
+  let eventManager: ReturnType<typeof createTestEventManager>;
+
   beforeEach(() => {
     vi.setSystemTime(new Date('2025-08-15'));
-    setupMockHandler([
+    eventManager = createTestEventManager([
       {
         id: 'mock-1',
         title: '팀 회의',
@@ -209,6 +245,7 @@ describe('검색 기능', () => {
         notificationTime: 10,
       },
     ]);
+    setupGetHandler(eventManager);
   });
 
   it('검색 결과가 없으면, "검색 결과가 없습니다."가 표시되어야 한다.', async () => {
@@ -248,8 +285,17 @@ describe('검색 기능', () => {
 });
 
 describe('일정 충돌', () => {
+  let eventManager: ReturnType<typeof createTestEventManager>;
+
+  beforeEach(() => {
+    eventManager = createTestEventManager();
+  });
+
   it('겹치는 시간에 새 일정을 추가할 때 경고가 표시된다', async () => {
-    setupMockHandler(createDefaultEvents(new Date('2025-08-15')));
+    const defaultEvents = createDefaultEvents(new Date('2025-08-15'));
+    eventManager = createTestEventManager(defaultEvents);
+    setupGetHandler(eventManager);
+    setupPostHandler(eventManager);
 
     const user = userEvent.setup();
     renderWithProviders();
@@ -276,32 +322,11 @@ describe('일정 충돌', () => {
   });
 
   it('기존 일정의 시간을 수정하여 충돌이 발생하면 경고가 노출된다', async () => {
-    setupMockHandler([
-      {
-        id: 'mock-1',
-        title: '팀 회의',
-        date: '2025-08-15',
-        startTime: '09:00',
-        endTime: '10:00',
-        description: '팀 미팅',
-        location: '회의실 B',
-        category: '업무',
-        repeat: { type: 'none', interval: 0 },
-        notificationTime: 10,
-      },
-      {
-        id: 'mock-2',
-        title: '숙면',
-        date: '2025-08-16',
-        startTime: '09:00',
-        endTime: '10:00',
-        description: '숙면을 위한 휴가',
-        location: '침대',
-        category: '개인',
-        repeat: { type: 'none', interval: 0 },
-        notificationTime: 10,
-      },
-    ]);
+    const defaultEvents = createDefaultEvents(new Date('2025-08-15'));
+    eventManager = createTestEventManager(defaultEvents);
+    setupGetHandler(eventManager);
+    setupPutHandler(eventManager);
+
     const user = userEvent.setup();
     renderWithProviders();
 
@@ -318,24 +343,34 @@ describe('일정 충돌', () => {
     const endTimeInput = screen.getByLabelText('종료 시간');
 
     await user.clear(dateInput);
-    await user.type(dateInput, '2025-08-16');
+    await user.type(dateInput, '2025-08-15'); // 같은 날짜로 설정
     await user.clear(startTimeInput);
-    await user.type(startTimeInput, '09:00');
+    await user.type(startTimeInput, '12:00'); // 점심 약속(12:00-13:00)과 충돌하도록 설정
     await user.clear(endTimeInput);
-    await user.type(endTimeInput, '10:00');
+    await user.type(endTimeInput, '13:00');
 
     await user.click(submitButton);
 
+    // 충돌 다이얼로그가 나타나는지 확인
     await expect(screen.findByText('일정 겹침 경고')).resolves.toBeInTheDocument();
 
-    const eventList = screen.getByTestId('event-list');
-    expect(eventList.textContent).not.toContain('과제 하고 잠들기');
+    // 계속하기 버튼 클릭
+    const continueButton = screen.getByText('계속 진행');
+    await user.click(continueButton);
+
+    // 일정이 수정되었다는 토스트 확인
+    await expect(screen.findByText('일정이 수정되었습니다.')).resolves.toBeInTheDocument();
   });
 });
 
 it('notificationTime을 10으로 하면 지정 시간 10분 전 알람 텍스트가 노출된다', async () => {
   const testTime = new Date('2025-10-15T08:50:00');
   vi.setSystemTime(testTime);
+
+  // 이 테스트를 위한 이벤트 매니저 설정
+  const eventManager = createTestEventManager();
+  setupGetHandler(eventManager);
+
   renderWithProviders();
 
   await expect(screen.findByText('일정 로딩 완료!')).resolves.toBeInTheDocument();

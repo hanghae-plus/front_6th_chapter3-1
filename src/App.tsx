@@ -177,9 +177,9 @@ function App() {
         open={isOverlapDialogOpen}
         overlappingEvents={overlappingEvents}
         onClose={() => setIsOverlapDialogOpen(false)}
-        onContinue={() => {
+        onContinue={async () => {
           setIsOverlapDialogOpen(false);
-          saveEvent({
+          await saveEvent({
             id: editingEvent ? editingEvent.id : undefined,
             title,
             date,
@@ -195,6 +195,7 @@ function App() {
             },
             notificationTime,
           });
+          resetForm();
         }}
       />
 
