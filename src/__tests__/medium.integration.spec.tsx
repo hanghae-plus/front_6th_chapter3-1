@@ -85,37 +85,30 @@ describe('일정 CRUD 및 기본 기능', () => {
 
     const user = userEvent.setup();
 
-    // 기존 일정이 표시되는지 확인 (일정 목록 내에서만 검색)
-
     const eventList = await screen.findByTestId('event-list');
     expect(within(eventList).getByText('기존 회의')).toBeInTheDocument();
 
     // 일정 수정 버튼 클릭 (첫 번째 일정의 Edit 버튼)
     const editButton = screen.getByRole('button', { name: 'Edit event' });
-    await user.click(editButton); // 첫 번째 Edit 버튼 클릭
+    await user.click(editButton);
 
-    // 제목 수정
     const titleInput = screen.getByDisplayValue('기존 회의');
     await user.clear(titleInput);
     await user.type(titleInput, '수정된 회의');
 
-    // 설명 수정
     const descriptionInput = screen.getByDisplayValue('기존 팀 미팅');
     await user.clear(descriptionInput);
     await user.type(descriptionInput, '수정된 팀 미팅');
 
-    // 저장 버튼 클릭 (data-testid 사용)
     const saveButton = screen.getByTestId('event-submit-button');
     await user.click(saveButton);
 
-    // 수정된 내용이 반영되었는지 확인 (일정 목록 내에서만 검색)
     const eventEditList = await screen.findByTestId('event-list');
     expect(within(eventEditList).getByText('수정된 회의')).toBeInTheDocument();
     expect(within(eventEditList).getByText('수정된 팀 미팅')).toBeInTheDocument();
   });
 
   it('일정을 삭제하고 더 이상 조회되지 않는지 확인한다', async () => {
-    // MSW Mock Server 설정 (삭제용 - 내장된 mock 데이터 사용)
     const customEvents: Event[] = [
       {
         id: '1',
@@ -136,11 +129,9 @@ describe('일정 CRUD 및 기본 기능', () => {
 
     const user = userEvent.setup();
 
-    // 기존 일정이 표시되는지 확인
     const eventList = await screen.findByTestId('event-list');
     expect(within(eventList).getByText('삭제할 이벤트')).toBeInTheDocument();
 
-    // 삭제 버튼 클릭 (
     const deleteButton = within(eventList).getByRole('button', { name: /Delete event/i });
     await user.click(deleteButton);
 
@@ -471,9 +462,9 @@ describe('일정 충돌', () => {
     await user.click(addButton);
 
     await user.type(screen.getByLabelText('제목'), '충돌하는 일정');
-    await user.type(screen.getByLabelText('날짜'), '2025-10-15'); // 기존 일정과 같은 날짜
-    await user.type(screen.getByLabelText('시작 시간'), '09:30'); // 기존 일정과 겹치는 시간
-    await user.type(screen.getByLabelText('종료 시간'), '10:30'); // 기존 일정과 겹치는 시간
+    await user.type(screen.getByLabelText('날짜'), '2025-10-15');
+    await user.type(screen.getByLabelText('시작 시간'), '09:30');
+    await user.type(screen.getByLabelText('종료 시간'), '10:30');
     await user.type(screen.getByLabelText('설명'), '충돌 테스트');
     await user.type(screen.getByLabelText('위치'), '회의실 A');
 
@@ -558,17 +549,13 @@ describe('알림 기능', () => {
     server.use(...createMockHandlers([newEvent])());
     render(<AppWrapper />);
 
-    // 이벤트가 실제로 렌더링될 때까지 기다림
     const eventList = await screen.findByTestId('event-list');
 
-    // 이벤트 제목이 실제로 렌더링될 때까지 기다림
     const eventTitle = await within(eventList).findByText(newEvent.title);
     expect(eventTitle).toBeInTheDocument();
 
-    // 시스템 시간을 설정하고 알림 텍스트 확인
     vi.setSystemTime('2025-10-01 09:50');
 
-    // 알림 텍스트가 나타날 때까지 기다림
     expect(await screen.findByText('10분 전')).toBeInTheDocument();
   });
 });
