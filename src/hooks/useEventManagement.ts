@@ -1,5 +1,6 @@
-import { useState } from 'react';
 import { useSnackbar } from 'notistack';
+import { useState } from 'react';
+
 import { Event, EventForm as EventFormType, RepeatType } from '../types';
 import { findOverlappingEvents } from '../utils/eventOverlap';
 
