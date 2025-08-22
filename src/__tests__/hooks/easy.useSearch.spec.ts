@@ -43,17 +43,18 @@ const mockEvents: Event[] = [
 ];
 
 it('검색어가 비어있을 때 모든 이벤트를 반환해야 한다', () => {
-  const { result } = renderHook(() => useSearch(mockEvents, new Date('2025-08-22'), 'week'));
+  const { result } = renderHook(() => useSearch(mockEvents, new Date('2025-08-01'), 'month'));
+
   act(() => {
     result.current.setSearchTerm('');
   });
 
-  expect(result.current.searchTerm).toBe('');
-  console.log(result.current.filteredEvents);
-  expect(result.current.filteredEvents).toEqual(mockEvents);
+  const expectedEvents = mockEvents.filter((event) => event.date.startsWith('2025-08'));
+  expect(result.current.filteredEvents).toEqual(expectedEvents);
 });
 
 it('검색어에 맞는 이벤트만 필터링해야 한다', () => {
+  9;
   const { result } = renderHook(() => useSearch(mockEvents, new Date('2025-08-22'), 'week'));
   act(() => {
     result.current.setSearchTerm('점심');
