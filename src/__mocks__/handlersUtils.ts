@@ -19,7 +19,7 @@ export const createMockHandlers = (initialEvents: Event[] = []) => {
         const newEvent = (await request.json()) as Omit<Event, 'id'>;
         const eventWithId: Event = {
           ...newEvent,
-          id: Date.now().toString(),
+          id: Math.random().toString(36).substring(2, 15),
         };
         mockEvents.push(eventWithId);
         return HttpResponse.json(
