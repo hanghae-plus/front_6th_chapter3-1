@@ -1,4 +1,4 @@
-import { ChangeEvent, useState } from 'react';
+import { useState } from 'react';
 
 import { Event, RepeatType } from '../types';
 import { getTimeErrorMessage } from '../utils/timeValidation';
@@ -26,16 +26,14 @@ export const useEventForm = (initialEvent?: Event) => {
     endTimeError: null,
   });
 
-  const handleStartTimeChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const newStartTime = e.target.value;
-    setStartTime(newStartTime);
-    setTimeError(getTimeErrorMessage(newStartTime, endTime));
+  const handleStartTimeChange = (value: string) => {
+    setStartTime(value);
+    setTimeError(getTimeErrorMessage(value, endTime));
   };
 
-  const handleEndTimeChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const newEndTime = e.target.value;
-    setEndTime(newEndTime);
-    setTimeError(getTimeErrorMessage(startTime, newEndTime));
+  const handleEndTimeChange = (value: string) => {
+    setEndTime(value);
+    setTimeError(getTimeErrorMessage(startTime, value));
   };
 
   const resetForm = () => {
