@@ -1,4 +1,5 @@
 import { Box, Stack } from '@mui/material';
+
 import {
   EventForm,
   EventList,
@@ -9,10 +10,10 @@ import {
 
 import { useCalendarView } from './hooks/useCalendarView.ts';
 import { useEventForm } from './hooks/useEventForm.ts';
+import { useEventManagement } from './hooks/useEventManagement.ts';
 import { useEventOperations } from './hooks/useEventOperations.ts';
 import { useNotifications } from './hooks/useNotifications.ts';
 import { useSearch } from './hooks/useSearch.ts';
-import { useEventManagement } from './hooks/useEventManagement.ts';
 
 function App() {
   const {

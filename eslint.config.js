@@ -78,18 +78,8 @@ export default [
       ...reactHooksPlugin.configs.recommended.rules,
       'react-hooks/exhaustive-deps': 'off',
 
-      // Import rules
-      'import/order': [
-        'error',
-        {
-          groups: ['builtin', 'external', ['parent', 'sibling'], 'index'],
-          alphabetize: {
-            order: 'asc',
-            caseInsensitive: true,
-          },
-          'newlines-between': 'always',
-        },
-      ],
+      // Import rules disabled due to conflict with Prettier
+      // 'import/order': 'off',
 
       // Prettier rules
       ...prettierConfig.rules,

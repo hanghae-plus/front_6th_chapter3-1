@@ -10,6 +10,9 @@ import {
   Tooltip,
   Typography,
 } from '@mui/material';
+
+import React from 'react';
+
 import { EventForm as EventFormType } from '../../types';
 import { getTimeErrorMessage } from '../../utils/timeValidation';
 

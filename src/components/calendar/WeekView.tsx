@@ -10,7 +10,9 @@ import {
   TableRow,
   Typography,
 } from '@mui/material';
+
 import { Event } from '../../types';
+
 import { formatWeek, getWeekDates } from '../../utils/dateUtils';
 
 const weekDays = ['일', '월', '화', '수', '목', '금', '토'];
