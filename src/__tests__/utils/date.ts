@@ -1,4 +1,6 @@
-import { fillZero } from '../utils/dateUtils';
+import { expect } from 'vitest';
+
+import { fillZero } from '../../utils/dateUtils';
 
 export const assertDate = (date1: Date, date2: Date) => {
   expect(date1.toISOString()).toBe(date2.toISOString());
@@ -9,4 +11,8 @@ export const parseHM = (timestamp: number) => {
   const h = fillZero(date.getHours());
   const m = fillZero(date.getMinutes());
   return `${h}:${m}`;
+};
+
+export const minutesBefore = (date: Date, minutes: number): Date => {
+  return new Date(date.getTime() - minutes * 60 * 1000);
 };

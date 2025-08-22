@@ -1,7 +1,8 @@
 import { setupServer } from 'msw/node';
 import '@testing-library/jest-dom';
+import { vi } from 'vitest';
 
-import { handlers } from './__mocks__/handlers';
+import { handlers, resetEvents } from './__mocks__/handlers';
 
 /* msw */
 export const server = setupServer(...handlers);
@@ -17,6 +18,7 @@ beforeEach(() => {
 afterEach(() => {
   server.resetHandlers();
   vi.clearAllMocks();
+  resetEvents(); // Reset the mock data after each test
 });
 
 afterAll(() => {
