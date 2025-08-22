@@ -99,6 +99,9 @@ export const setupMockHandlerDeletion = () => {
 
 export const setupMockHandlerCreationFailure = () => {
   server.use(
+    http.get('/api/events', () => {
+      return HttpResponse.json(null, { status: 500 });
+    }),
     http.post('/api/events', async () => {
       return HttpResponse.json(null, { status: 500 });
     })
@@ -125,8 +128,8 @@ export const setupMockHandlerDeletionFailure = () => {
     http.get('/api/events', () => {
       return HttpResponse.json({ events: mockEvents });
     }),
-    http.delete('/api/events/:id', ({ params }) => {
-      return new HttpResponse({ error: 'Network error' }, { status: 500 });
+    http.delete('/api/events/:id', () => {
+      return new HttpResponse(null, { status: 500 });
     })
   );
 };
