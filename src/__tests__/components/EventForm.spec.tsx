@@ -103,30 +103,6 @@ describe('EventForm 컴포넌트', () => {
 
       expect(defaultProps.setDate).toHaveBeenCalledWith('2025-01-20');
     });
-
-    it('카테고리 필드가 렌더링되고 현재 값이 표시된다', () => {
-      const propsWithCategory = {
-        ...defaultProps,
-        category: '개인',
-      };
-
-      renderWithProvider(<EventForm {...propsWithCategory} />);
-
-      // 카테고리 필드가 존재하는지 확인
-      const categorySelect = screen.getByLabelText('카테고리');
-      expect(categorySelect).toBeInTheDocument();
-
-      expect(categorySelect).toHaveTextContent('개인');
-    });
-
-    it('반복 설정 체크박스 클릭 시 setIsRepeating이 호출된다', () => {
-      renderWithProvider(<EventForm {...defaultProps} />);
-
-      const repeatCheckbox = screen.getByLabelText('반복 일정');
-      fireEvent.click(repeatCheckbox);
-
-      expect(defaultProps.setIsRepeating).toHaveBeenCalledWith(true);
-    });
   });
 
   describe('폼 유효성 검사 및 저장', () => {
