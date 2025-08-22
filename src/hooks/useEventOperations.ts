@@ -24,7 +24,9 @@ export const useEventOperations = (editing: boolean, onSave?: () => void) => {
   const saveEvent = async (eventData: Event | EventForm) => {
     try {
       let response;
-      if (editing) {
+      const isEditing = editing || !!(eventData as Event).id;
+
+      if (isEditing) {
         response = await fetch(`/api/events/${(eventData as Event).id}`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
@@ -44,7 +46,7 @@ export const useEventOperations = (editing: boolean, onSave?: () => void) => {
 
       await fetchEvents();
       onSave?.();
-      enqueueSnackbar(editing ? '일정이 수정되었습니다.' : '일정이 추가되었습니다.', {
+      enqueueSnackbar(isEditing ? '일정이 수정되었습니다.' : '일정이 추가되었습니다.', {
         variant: 'success',
       });
     } catch (error) {
