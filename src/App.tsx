@@ -89,7 +89,7 @@ function App() {
     setEditingEvent(null)
   );
 
-  const { notifications, notifiedEvents, setNotifications } = useNotifications(events);
+  const { notifications, notifiedEvents, removeNotification } = useNotifications(events);
   const { view, setView, currentDate, holidays, navigate } = useCalendarView();
   const { searchTerm, filteredEvents, setSearchTerm } = useSearch(events, currentDate, view);
 
@@ -478,14 +478,7 @@ function App() {
               severity="info"
               sx={{ width: 'auto' }}
               action={
-                <IconButton
-                  size="small"
-                  onClick={() => {
-                    // 리팩토링 TODO: 여기 removeNotification 쓰면 됨
-                    console.log('여기 removeNotification 쓰면 됨');
-                    setNotifications((prev) => prev.filter((_, i) => i !== index));
-                  }}
-                >
+                <IconButton size="small" onClick={() => removeNotification(index)}>
                   <Close />
                 </IconButton>
               }
