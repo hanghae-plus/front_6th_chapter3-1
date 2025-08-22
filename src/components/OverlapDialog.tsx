@@ -5,7 +5,6 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
-  Typography,
 } from '@mui/material';
 
 import type { Event } from '../types';
@@ -23,23 +22,31 @@ export function OverlapDialog({
   onConfirm,
   onCancel,
 }: OverlapDialogProps) {
+  const handleCancel = () => {
+    onCancel();
+  };
+
+  const handleConfirm = () => {
+    onConfirm();
+  };
+
   return (
-    <Dialog open={isOpen} onClose={onCancel}>
+    <Dialog open={isOpen} onClose={handleCancel}>
       <DialogTitle>일정 겹침 경고</DialogTitle>
       <DialogContent>
         <DialogContentText>
           다음 일정과 겹칩니다:
-          {overlappingEvents.map((event) => (
-            <Typography key={event.id}>
-              {event.title} ({event.date} {event.startTime}-{event.endTime})
-            </Typography>
+          {overlappingEvents.map(({ date, endTime, id, startTime, title }) => (
+            <span key={id} style={{ display: 'block' }}>
+              {title} ({date} {startTime}-{endTime})
+            </span>
           ))}
           계속 진행하시겠습니까?
         </DialogContentText>
       </DialogContent>
       <DialogActions>
-        <Button onClick={onCancel}>취소</Button>
-        <Button color="error" onClick={onConfirm}>
+        <Button onClick={handleCancel}>취소</Button>
+        <Button color="error" onClick={handleConfirm}>
           계속 진행
         </Button>
       </DialogActions>

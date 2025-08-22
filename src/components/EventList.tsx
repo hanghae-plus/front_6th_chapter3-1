@@ -10,6 +10,7 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
+import type { ChangeEvent } from 'react';
 
 import type { Event } from '../types';
 
@@ -38,6 +39,18 @@ export function EventList({
   onDelete,
   onSearchChange,
 }: EventListProps) {
+  const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
+    onSearchChange(e.target.value);
+  };
+
+  const handleEditEvent = (event: Event) => {
+    onEdit(event);
+  };
+
+  const handleDeleteEvent = (eventId: string) => {
+    onDelete(eventId);
+  };
+
   return (
     <Stack
       data-testid="event-list"
@@ -51,7 +64,7 @@ export function EventList({
           size="small"
           placeholder="검색어를 입력하세요"
           value={searchTerm}
-          onChange={(e) => onSearchChange(e.target.value)}
+          onChange={handleSearchChange}
         />
       </FormControl>
 
@@ -98,10 +111,10 @@ export function EventList({
                 </Typography>
               </Stack>
               <Stack>
-                <IconButton aria-label="Edit event" onClick={() => onEdit(event)}>
+                <IconButton aria-label="Edit event" onClick={() => handleEditEvent(event)}>
                   <Edit />
                 </IconButton>
-                <IconButton aria-label="Delete event" onClick={() => onDelete(event.id)}>
+                <IconButton aria-label="Delete event" onClick={() => handleDeleteEvent(event.id)}>
                   <Delete />
                 </IconButton>
               </Stack>

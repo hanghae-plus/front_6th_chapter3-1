@@ -1,12 +1,11 @@
-import Close from '@mui/icons-material/Close';
-import { Alert, AlertTitle, Box, IconButton, Stack, Typography } from '@mui/material';
+import { Box, Stack } from '@mui/material';
 import { useSnackbar } from 'notistack';
 import { useState } from 'react';
 
-import { CalendarGrid } from './components/CalendarGrid';
-import { CalendarNavigation } from './components/CalendarNavigation';
+import { CalendarContainer } from './components/CalendarContainer';
 import { EventForm } from './components/EventForm';
 import { EventList } from './components/EventList';
+import { NotificationPanel } from './components/NotificationPanel';
 import { OverlapDialog } from './components/OverlapDialog';
 import { useCalendarView } from './hooks/useCalendarView';
 import { useEventForm } from './hooks/useEventForm';
@@ -123,6 +122,10 @@ function App() {
     setIsOverlapDialogOpen(false);
   };
 
+  const handleNotificationRemove = (index: number) => {
+    setNotifications((prev) => prev.filter((_, i) => i !== index));
+  };
+
   return (
     <Box sx={{ width: '100%', height: '100vh', margin: 'auto', p: 5 }}>
       <Stack direction="row" spacing={6} sx={{ height: '100%' }}>
@@ -151,24 +154,15 @@ function App() {
           onSubmit={addOrUpdateEvent}
         />
 
-        <Stack flex={1} spacing={5}>
-          <Typography variant="h4">일정 보기</Typography>
-
-          <CalendarNavigation
-            currentDate={currentDate}
-            view={view}
-            onNavigate={navigate}
-            onViewChange={setView}
-          />
-
-          <CalendarGrid
-            events={filteredEvents}
-            currentDate={currentDate}
-            view={view}
-            holidays={holidays}
-            notifiedEvents={notifiedEvents}
-          />
-        </Stack>
+        <CalendarContainer
+          view={view}
+          currentDate={currentDate}
+          holidays={holidays}
+          events={filteredEvents}
+          notifiedEvents={notifiedEvents}
+          onNavigate={navigate}
+          onViewChange={setView}
+        />
 
         <EventList
           events={filteredEvents}
@@ -187,27 +181,7 @@ function App() {
         onCancel={handleOverlapCancel}
       />
 
-      {notifications.length > 0 && (
-        <Stack position="fixed" top={16} right={16} spacing={2} alignItems="flex-end">
-          {notifications.map((notification, index) => (
-            <Alert
-              key={index}
-              severity="info"
-              sx={{ width: 'auto' }}
-              action={
-                <IconButton
-                  size="small"
-                  onClick={() => setNotifications((prev) => prev.filter((_, i) => i !== index))}
-                >
-                  <Close />
-                </IconButton>
-              }
-            >
-              <AlertTitle>{notification.message}</AlertTitle>
-            </Alert>
-          ))}
-        </Stack>
-      )}
+      <NotificationPanel notifications={notifications} onRemove={handleNotificationRemove} />
     </Box>
   );
 }
