@@ -21,10 +21,7 @@ describe('NotificationStack', () => {
 
   it('알림 목록이 비어있을 때 아무것도 렌더링하지 않는다', () => {
     const { container } = render(
-      <NotificationStack
-        notifications={[]}
-        onRemoveNotification={handleRemoveNotification}
-      />
+      <NotificationStack notifications={[]} onRemoveNotification={handleRemoveNotification} />
     );
 
     expect(container.firstChild).toBeNull();
@@ -67,7 +64,7 @@ describe('NotificationStack', () => {
 
     // IconButton으로 닫기 버튼 찾기
     const closeButtons = screen.getAllByRole('button');
-    
+
     // 첫 번째 알림의 닫기 버튼 클릭
     await user.click(closeButtons[0]);
     expect(removedIndexes).toContain(0);
@@ -90,7 +87,7 @@ describe('NotificationStack', () => {
     );
 
     expect(screen.getByText('단일 알림')).toBeInTheDocument();
-    
+
     const closeButton = screen.getByRole('button');
     await user.click(closeButton);
     expect(removedIndexes).toContain(0);
