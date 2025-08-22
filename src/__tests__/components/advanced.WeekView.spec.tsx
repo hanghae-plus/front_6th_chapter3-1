@@ -74,7 +74,7 @@ describe('WeekView', () => {
     });
   });
 
-  describe('경계값 테스트', () => {
+  describe('엣지 케이스 테스트', () => {
     it('빈 일정 배열로 렌더링해도 오류가 발생하지 않아야 한다', () => {
       const emptyProps = { ...mockProps, filteredEvents: [] };
 
