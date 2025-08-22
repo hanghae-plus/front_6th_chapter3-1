@@ -1,12 +1,5 @@
 import { render, screen } from '@testing-library/react';
 
-// MUI Icons 간단 모킹
-vi.mock('@mui/icons-material', () => ({
-  ChevronLeft: () => null,
-  ChevronRight: () => null,
-  Notifications: () => null,
-}));
-
 import { CalendarView } from '../../components/calendar/CalendarView';
 import { createMockEvents } from '../utils';
 

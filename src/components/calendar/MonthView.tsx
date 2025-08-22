@@ -1,4 +1,4 @@
-import { Notifications } from '@mui/icons-material';
+import Notifications from '@mui/icons-material/Notifications';
 import {
   Box,
   Stack,

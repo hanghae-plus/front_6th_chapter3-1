@@ -1,12 +1,5 @@
 import { render, screen } from '@testing-library/react';
 
-// MUI Icons 모킹 (파일 디스크립터 한계 방지)
-vi.mock('@mui/icons-material', () => ({
-  Notifications: () => null,
-  Edit: () => null,
-  Delete: () => null,
-}));
-
 import { EventList } from '../../components/event/EventList';
 import { createMockEvents } from '../utils';
 
