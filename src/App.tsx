@@ -37,6 +37,7 @@ import { useNotifications } from './hooks/useNotifications.ts';
 import { useSearch } from './hooks/useSearch.ts';
 // import { Event, EventForm, RepeatType } from './types';
 import { Event, EventForm } from './types';
+import { categories, weekDays, notificationOptions } from './utils/constants';
 import {
   formatDate,
   formatMonth,
@@ -46,19 +47,8 @@ import {
   getWeeksAtMonth,
 } from './utils/dateUtils';
 import { findOverlappingEvents } from './utils/eventOverlap';
+import { getNotificationLabel, formatRepeatInfo } from './utils/eventUtils.ts';
 import { getTimeErrorMessage } from './utils/timeValidation';
-
-const categories = ['업무', '개인', '가족', '기타'];
-
-const weekDays = ['일', '월', '화', '수', '목', '금', '토'];
-
-const notificationOptions = [
-  { value: 1, label: '1분 전' },
-  { value: 10, label: '10분 전' },
-  { value: 60, label: '1시간 전' },
-  { value: 120, label: '2시간 전' },
-  { value: 1440, label: '1일 전' },
-];
 
 function App() {
   const {
@@ -557,23 +547,10 @@ function App() {
                     <Typography>카테고리: {event.category}</Typography>
                     {event.repeat.type !== 'none' && (
                       <Typography>
-                        반복: {event.repeat.interval}
-                        {event.repeat.type === 'daily' && '일'}
-                        {event.repeat.type === 'weekly' && '주'}
-                        {event.repeat.type === 'monthly' && '월'}
-                        {event.repeat.type === 'yearly' && '년'}
-                        마다
-                        {event.repeat.endDate && ` (종료: ${event.repeat.endDate})`}
+                        반복: {event.repeat.endDate && ` (종료: ${event.repeat.endDate})`}
                       </Typography>
                     )}
-                    <Typography>
-                      알림:{' '}
-                      {
-                        notificationOptions.find(
-                          (option) => option.value === event.notificationTime
-                        )?.label
-                      }
-                    </Typography>
+                    <Typography>알림: {getNotificationLabel(event.notificationTime)}</Typography>
                   </Stack>
                   <Stack>
                     <IconButton aria-label="Edit event" onClick={() => editEvent(event)}>

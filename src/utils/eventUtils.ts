@@ -1,4 +1,5 @@
 import { Event } from '../types';
+import { notificationOptions } from './constants';
 import { getWeekDates, isDateInRange } from './dateUtils';
 
 function filterEventsByDateRange(events: Event[], start: Date, end: Date): Event[] {
@@ -56,3 +57,25 @@ export function getFilteredEvents(
 
   return searchedEvents;
 }
+
+// 알림 라벨 가져오기
+export const getNotificationLabel = (notificationTime: number) => {
+  return notificationOptions.find((option) => option.value === notificationTime)?.label;
+};
+
+// 반복 정보 포맷팅
+export const formatRepeatInfo = (repeat: { type: string; interval: number; endDate?: string }) => {
+  if (repeat.type === 'none') return '';
+
+  const typeLabels = {
+    daily: '일',
+    weekly: '주',
+    monthly: '월',
+    yearly: '년',
+  };
+
+  const typeLabel = typeLabels[repeat.type as keyof typeof typeLabels] || '';
+  const endDateInfo = repeat.endDate ? ` (종료: ${repeat.endDate})` : '';
+
+  return `${repeat.interval}${typeLabel}마다${endDateInfo}`;
+};
