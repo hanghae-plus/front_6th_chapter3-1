@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+
 import { Event } from '../types';
 import { getFilteredEvents } from '../utils/eventUtils';
 
