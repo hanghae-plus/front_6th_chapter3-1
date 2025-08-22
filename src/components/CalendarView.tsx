@@ -13,6 +13,7 @@ import {
   TableRow,
   Typography,
 } from '@mui/material';
+import React from 'react';
 
 import { weekDays } from '../constants';
 import { Event } from '../types';
@@ -31,8 +32,8 @@ interface CalendarViewProps {
   holidays: Record<string, string>;
   filteredEvents: Event[];
   notifiedEvents: string[];
-  onViewChange: (view: 'week' | 'month') => void;
-  onNavigate: (direction: 'prev' | 'next') => void;
+  onViewChange: (_view: 'week' | 'month') => void;
+  onNavigate: (_direction: 'prev' | 'next') => void;
 }
 
 const CalendarView: React.FC<CalendarViewProps> = ({

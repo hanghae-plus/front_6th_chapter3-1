@@ -7,8 +7,8 @@ import { Event } from '../types';
 interface EventCardProps {
   event: Event;
   isNotified: boolean;
-  onEdit: (event: Event) => void;
-  onDelete: (eventId: string) => void;
+  onEdit: (_event: Event) => void;
+  onDelete: (_eventId: string) => void;
 }
 
 export default function EventCard({ event, isNotified, onEdit, onDelete }: EventCardProps) {
@@ -25,12 +25,12 @@ export default function EventCard({ event, isNotified, onEdit, onDelete }: Event
       repeat.type === 'daily'
         ? '일'
         : repeat.type === 'weekly'
-        ? '주'
-        : repeat.type === 'monthly'
-        ? '월'
-        : repeat.type === 'yearly'
-        ? '년'
-        : '';
+          ? '주'
+          : repeat.type === 'monthly'
+            ? '월'
+            : repeat.type === 'yearly'
+              ? '년'
+              : '';
 
     const endDateText = repeat.endDate ? ` (종료: ${repeat.endDate})` : '';
 

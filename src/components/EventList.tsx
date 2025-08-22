@@ -7,9 +7,9 @@ interface EventListProps {
   events: Event[];
   searchTerm: string;
   notifiedEvents: string[];
-  onSearchChange: (searchTerm: string) => void;
-  onEdit: (event: Event) => void;
-  onDelete: (eventId: string) => void;
+  onSearchChange: (_searchTerm: string) => void;
+  onEdit: (_event: Event) => void;
+  onDelete: (_eventId: string) => void;
 }
 
 export default function EventList({
