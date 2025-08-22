@@ -13,7 +13,9 @@ import {
 
 import { weekDays } from '../data';
 import { Event } from '../types';
-import { formatDate, formatMonth, getEventsForDay, getWeeksAtMonth } from '../utils/dateUtils';
+import { getWeeksAtMonth } from '../utils/date/calculations';
+import { getEventsForDay } from '../utils/date/events';
+import { formatMonth, formatDate } from '../utils/date/formatting';
 
 export const MonthView = ({
   currentDate,

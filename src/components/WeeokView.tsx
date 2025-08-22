@@ -13,7 +13,8 @@ import {
 
 import { weekDays } from '../data';
 import { Event } from '../types';
-import { formatWeek, getWeekDates } from '../utils/dateUtils';
+import { getWeekDates } from '../utils/date/calculations';
+import { formatWeek } from '../utils/date/formatting';
 
 export const WeekView = ({
   currentDate,
