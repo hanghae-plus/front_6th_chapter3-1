@@ -66,7 +66,21 @@ describe('일정 CRUD 및 기본 기능', () => {
   });
 
   it('기존 일정의 세부 정보를 수정하고 변경사항이 정확히 반영된다', async () => {
-    server.use(...createMockHandlers(events as Event[])());
+    const mockEvents: Event[] = [
+      {
+        id: '1',
+        title: '기존 회의',
+        date: '2025-10-15',
+        startTime: '09:00',
+        endTime: '10:00',
+        description: '기존 팀 미팅',
+        location: '회의실 B',
+        category: '업무',
+        repeat: { type: 'none' as const, interval: 0 },
+        notificationTime: 10,
+      },
+    ];
+    server.use(...createMockHandlers(mockEvents)());
 
     render(<AppWrapper />);
 
@@ -434,7 +448,21 @@ describe('검색 기능', () => {
 
 describe('일정 충돌', () => {
   it('겹치는 시간에 새 일정을 추가할 때 경고가 표시된다', async () => {
-    server.use(...createMockHandlers(events as Event[])());
+    const mockEvents: Event[] = [
+      {
+        id: '1',
+        title: '기존 회의',
+        date: '2025-10-15',
+        startTime: '09:00',
+        endTime: '10:00',
+        description: '기존 팀 미팅',
+        location: '회의실 B',
+        category: '업무',
+        repeat: { type: 'none' as const, interval: 0 },
+        notificationTime: 10,
+      },
+    ];
+    server.use(...createMockHandlers(mockEvents)());
 
     render(<AppWrapper />);
 
