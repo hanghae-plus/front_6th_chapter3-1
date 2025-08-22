@@ -1,6 +1,5 @@
 import { Box, Stack } from '@mui/material';
 import { useSnackbar } from 'notistack';
-import { useState } from 'react';
 
 import { CalendarView } from './components/CalendarView.tsx';
 import { EventFormView } from './components/EventFormView.tsx';
@@ -11,6 +10,7 @@ import { useCalendarView } from './hooks/useCalendarView.ts';
 import { useEventForm } from './hooks/useEventForm.ts';
 import { useEventOperations } from './hooks/useEventOperations.ts';
 import { useNotifications } from './hooks/useNotifications.ts';
+import { useOverlapDialog } from './hooks/useOverlapDialog';
 import { useSearch } from './hooks/useSearch.ts';
 // import { Event, EventForm, RepeatType } from './types';
 import { Event, EventForm } from './types';
@@ -58,8 +58,8 @@ function App() {
   const { view, setView, currentDate, holidays, navigate } = useCalendarView();
   const { searchTerm, filteredEvents, setSearchTerm } = useSearch(events, currentDate, view);
 
-  const [isOverlapDialogOpen, setIsOverlapDialogOpen] = useState(false);
-  const [overlappingEvents, setOverlappingEvents] = useState<Event[]>([]);
+  const { isOverlapDialogOpen, overlappingEvents, openOverlapDialog, closeOverlapDialog } =
+    useOverlapDialog();
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -93,8 +93,7 @@ function App() {
 
     const overlapping = findOverlappingEvents(eventData, events);
     if (overlapping.length > 0) {
-      setOverlappingEvents(overlapping);
-      setIsOverlapDialogOpen(true);
+      openOverlapDialog(overlapping);
     } else {
       await saveEvent(eventData);
       resetForm();
@@ -154,7 +153,7 @@ function App() {
 
       <OverlapDialog
         isOverlapDialogOpen={isOverlapDialogOpen}
-        setIsOverlapDialogOpen={setIsOverlapDialogOpen}
+        setIsOverlapDialogOpen={closeOverlapDialog}
         overlappingEvents={overlappingEvents}
         editingEvent={editingEvent}
         title={title}
@@ -169,7 +168,10 @@ function App() {
         repeatInterval={repeatInterval}
         repeatEndDate={repeatEndDate}
         notificationTime={notificationTime}
-        saveEvent={saveEvent}
+        saveEvent={async (data) => {
+          await saveEvent(data);
+          resetForm();
+        }}
       />
 
       <NotificationList notifications={notifications} setNotifications={setNotifications} />

@@ -1,5 +1,6 @@
 import { Close } from '@mui/icons-material';
 import { Alert, AlertTitle, IconButton, Stack } from '@mui/material';
+import React from 'react';
 
 interface NotificationListProps {
   notifications: {
@@ -16,10 +17,7 @@ interface NotificationListProps {
   ) => void;
 }
 
-export const NotificationList = ({
-    notifications,
-    setNotifications,
-                                 }: NotificationListProps) => {
+export const NotificationList = ({ notifications, setNotifications }: NotificationListProps) => {
   return (
     <>
       {notifications.length > 0 && (
