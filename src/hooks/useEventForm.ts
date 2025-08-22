@@ -1,8 +1,8 @@
 import { Event } from '../types';
+import { useEventEditor } from './useEventEditor';
 import { useEventFormData } from './useEventFormData';
 import { useEventRepeatSettings } from './useEventRepeatSettings';
 import { useEventTimeManagement } from './useEventTimeManagement';
-import { useEventEditor } from './useEventEditor';
 
 export const useEventForm = (initialEvent?: Event) => {
   const {

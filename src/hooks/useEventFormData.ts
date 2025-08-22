@@ -1,4 +1,5 @@
 import { useState } from 'react';
+
 import { Event } from '../types';
 
 export const useEventFormData = (initialEvent?: Event) => {
