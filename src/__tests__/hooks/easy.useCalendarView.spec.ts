@@ -9,11 +9,12 @@ describe('초기 상태', () => {
     expect(result.current.view).toBe('month');
   });
 
-  // 수정전 : currentDate는 오늘 날짜인 "2025-10-01"이어야 한다
-  // -> 기본 설정이 2025-10-01로 되어 있지만
-  // 업무에서는 "2025-10-01"가 아닌 new Date()으로 불러오는 현재 오늘이어도 될거 같다
-  // 수정후
-  it('currentDate는 현재 날짜 이어야 한다', () => {
+  // AS IS : currentDate는 오늘 날짜인 "2025-10-01"이어야 한다
+  // -> 기본 설정이 2025-10-01로 되어 있는데
+  // 검색해보니 시간을 고정하면 일관된 환경에서 테스트 가능하게 하려면
+  // vi.setSystemTime(new Date('2025-10-01'));가 있어야 한다고 한다.
+  // TO BE
+  it('currentDate는 설정한 날짜인 2025-10-01 이어야 한다', () => {
     const { result } = renderHook(() => useCalendarView());
     assertDate(result.current.currentDate, new Date());
   });
