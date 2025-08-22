@@ -24,7 +24,6 @@ import { useEventOperations } from './hooks/useEventOperations.ts';
 import { useEventSubmit } from './hooks/useEventSubmit.ts';
 import { useNotifications } from './hooks/useNotifications.ts';
 import { getTimeErrorMessage } from './utils/timeValidation';
-import { useState } from 'react';
 
 const categories = ['업무', '개인', '가족', '기타'];
 
@@ -37,7 +36,6 @@ const notificationOptions = [
 ];
 
 function App() {
-  const [isEditEvent, setIsEditEvent] = useState(false);
   const {
     title,
     setTitle,
