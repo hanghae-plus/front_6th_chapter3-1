@@ -38,7 +38,9 @@ describe('단위 테스트: 날짜 및 시간 관리', () => {
         new Date('2025-07-18'),
         new Date('2025-07-19'), // Saturday
       ];
-      expect(weekDates.map(d => d.toDateString())).toEqual(expectedDates.map(d => d.toDateString()));
+      expect(weekDates.map((d) => d.toDateString())).toEqual(
+        expectedDates.map((d) => d.toDateString())
+      );
     });
 
     test('연도를 넘어가는 주(2024년 연말)의 날짜를 정확히 처리한다', () => {
@@ -53,7 +55,9 @@ describe('단위 테스트: 날짜 및 시간 관리', () => {
         new Date('2025-01-03'),
         new Date('2025-01-04'),
       ];
-      expect(weekDates.map(d => d.toDateString())).toEqual(expectedDates.map(d => d.toDateString()));
+      expect(weekDates.map((d) => d.toDateString())).toEqual(
+        expectedDates.map((d) => d.toDateString())
+      );
     });
   });
 
@@ -86,13 +90,13 @@ describe('단위 테스트: 날짜 및 시간 관리', () => {
     });
 
     test('주어진 날짜가 범위의 시작일과 같으면 true를 반환한다', () => {
-        const date = new Date('2025-07-01');
-        expect(isDateInRange(date, rangeStart, rangeEnd)).toBe(true);
+      const date = new Date('2025-07-01');
+      expect(isDateInRange(date, rangeStart, rangeEnd)).toBe(true);
     });
 
     test('주어진 날짜가 범위의 종료일과 같으면 true를 반환한다', () => {
-        const date = new Date('2025-07-31');
-        expect(isDateInRange(date, rangeStart, rangeEnd)).toBe(true);
+      const date = new Date('2025-07-31');
+      expect(isDateInRange(date, rangeStart, rangeEnd)).toBe(true);
     });
   });
 });
