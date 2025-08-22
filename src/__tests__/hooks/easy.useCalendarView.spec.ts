@@ -14,7 +14,7 @@ describe('초기 상태', () => {
   // 검색해보니 시간을 고정하면 일관된 환경에서 테스트 가능하게 하려면
   // vi.setSystemTime(new Date('2025-10-01'));가 있어야 한다고 한다.
   // TO BE
-  it('currentDate는 설정한 날짜인 2025-10-01 이어야 한다', () => {
+  it('currentDate는 설정된 날짜인 2025-10-01 이어야 한다', () => {
     const { result } = renderHook(() => useCalendarView());
     assertDate(result.current.currentDate, new Date());
   });
