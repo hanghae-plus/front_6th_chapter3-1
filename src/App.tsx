@@ -1,11 +1,11 @@
-import { Close } from '@mui/icons-material';
-import { Alert, AlertTitle, Box, IconButton, Stack } from '@mui/material';
+import { Box, Stack } from '@mui/material';
 import { useSnackbar } from 'notistack';
 import { useState } from 'react';
 
 import CalendarView from './components/CalendarView';
 import EventForm from './components/EventForm';
 import EventList from './components/EventList';
+import NotificationStack from './components/NotificationStack';
 import OverlapDialog from './components/OverlapDialog';
 import { useCalendarView } from './hooks/useCalendarView.ts';
 import { useEventForm } from './hooks/useEventForm.ts';
@@ -198,27 +198,12 @@ function App() {
         }}
       />
 
-      {notifications.length > 0 && (
-        <Stack position="fixed" top={16} right={16} spacing={2} alignItems="flex-end">
-          {notifications.map((notification, index) => (
-            <Alert
-              key={index}
-              severity="info"
-              sx={{ width: 'auto' }}
-              action={
-                <IconButton
-                  size="small"
-                  onClick={() => setNotifications((prev) => prev.filter((_, i) => i !== index))}
-                >
-                  <Close />
-                </IconButton>
-              }
-            >
-              <AlertTitle>{notification.message}</AlertTitle>
-            </Alert>
-          ))}
-        </Stack>
-      )}
+      <NotificationStack
+        notifications={notifications}
+        onRemoveNotification={(index) =>
+          setNotifications((prev) => prev.filter((_, i) => i !== index))
+        }
+      />
     </Box>
   );
 }
