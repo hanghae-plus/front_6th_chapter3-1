@@ -1,6 +1,7 @@
-import { Notifications } from '@mui/icons-material';
+import { ChevronLeft, ChevronRight, Notifications } from '@mui/icons-material';
 import {
   Box,
+  IconButton,
   MenuItem,
   Select,
   Stack,
@@ -11,12 +12,17 @@ import {
   TableHead,
   TableRow,
   Typography,
-  IconButton,
 } from '@mui/material';
-import { ChevronLeft, ChevronRight } from '@mui/icons-material';
+
 import { Event } from '../types';
-import { useCalendarView } from '../hooks/useCalendarView';
-import { getWeekDates, formatWeek, getWeeksAtMonth, formatMonth, formatDate, getEventsForDay } from '../utils/dateUtils';
+import {
+  getWeekDates,
+  getWeeksAtMonth,
+  formatWeek,
+  formatMonth,
+  formatDate,
+  getEventsForDay,
+} from '../utils/dateUtils';
 
 const weekDays = ['일', '월', '화', '수', '목', '금', '토'];
 
@@ -73,7 +79,9 @@ export const CalendarView = ({
                       {date.getDate()}
                     </Typography>
                     {filteredEvents
-                      .filter((event) => new Date(event.date).toDateString() === date.toDateString())
+                      .filter(
+                        (event) => new Date(event.date).toDateString() === date.toDateString()
+                      )
                       .map((event) => {
                         const isNotified = notifiedEvents.includes(event.id);
                         return (
@@ -93,7 +101,11 @@ export const CalendarView = ({
                           >
                             <Stack direction="row" spacing={1} alignItems="center">
                               {isNotified && <Notifications fontSize="small" />}
-                              <Typography variant="caption" noWrap sx={{ fontSize: '0.75rem', lineHeight: 1.2 }}>
+                              <Typography
+                                variant="caption"
+                                noWrap
+                                sx={{ fontSize: '0.75rem', lineHeight: 1.2 }}
+                              >
                                 {event.title}
                               </Typography>
                             </Stack>

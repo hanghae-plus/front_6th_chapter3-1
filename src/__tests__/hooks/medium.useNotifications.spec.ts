@@ -3,7 +3,12 @@ import { act, renderHook } from '@testing-library/react';
 import { useNotifications } from '../../hooks/useNotifications.ts';
 import { Event } from '../../types.ts';
 
-const createMockEvent = (id: string, date: string, startTime: string, notificationTime: number): Event => ({
+const createMockEvent = (
+  id: string,
+  date: string,
+  startTime: string,
+  notificationTime: number
+): Event => ({
   id,
   title: `Event ${id}`,
   date,
@@ -39,7 +44,7 @@ describe('useNotifications', () => {
     const eventStartTime = eventTime.toTimeString().slice(0, 5);
 
     const events = [createMockEvent('1', eventDate, eventStartTime, 10)];
-    
+
     const { result } = renderHook(() => useNotifications(events));
 
     act(() => {
@@ -57,8 +62,18 @@ describe('useNotifications', () => {
     const eventTime1 = new Date(now.getTime() + 10 * 60 * 1000);
     const eventTime2 = new Date(now.getTime() + 5 * 60 * 1000);
     const events = [
-      createMockEvent('1', eventTime1.toISOString().split('T')[0], eventTime1.toTimeString().slice(0, 5), 10),
-      createMockEvent('2', eventTime2.toISOString().split('T')[0], eventTime2.toTimeString().slice(0, 5), 5),
+      createMockEvent(
+        '1',
+        eventTime1.toISOString().split('T')[0],
+        eventTime1.toTimeString().slice(0, 5),
+        10
+      ),
+      createMockEvent(
+        '2',
+        eventTime2.toISOString().split('T')[0],
+        eventTime2.toTimeString().slice(0, 5),
+        5
+      ),
     ];
 
     const { result } = renderHook(() => useNotifications(events));
@@ -85,7 +100,7 @@ describe('useNotifications', () => {
     const eventStartTime = eventTime.toTimeString().slice(0, 5);
 
     const events = [createMockEvent('1', eventDate, eventStartTime, 10)];
-    
+
     const { result } = renderHook(() => useNotifications(events));
 
     act(() => {

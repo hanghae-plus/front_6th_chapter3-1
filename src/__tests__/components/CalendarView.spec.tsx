@@ -1,6 +1,7 @@
 import { render, screen } from '@testing-library/react';
-import { CalendarView } from '../../components/CalendarView';
 import { vi } from 'vitest';
+
+import { CalendarView } from '../../components/CalendarView';
 
 describe('CalendarView', () => {
   it('컴포넌트가 "일정 보기" 제목과 함께 올바르게 렌더링된다', () => {

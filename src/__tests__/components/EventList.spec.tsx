@@ -1,6 +1,7 @@
 import { render, screen } from '@testing-library/react';
-import { EventList } from '../../components/EventList';
 import { vi } from 'vitest';
+
+import { EventList } from '../../components/EventList';
 
 describe('EventList', () => {
   it('컴포넌트가 "일정 검색" 필드와 함께 올바르게 렌더링된다', () => {

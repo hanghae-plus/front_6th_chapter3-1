@@ -8,6 +8,7 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
+
 import { Event } from '../types';
 
 const notificationOptions = [
@@ -87,7 +88,10 @@ export const EventList = ({
                 )}
                 <Typography>
                   알림:{' '}
-                  {notificationOptions.find((option) => option.value === event.notificationTime)?.label}
+                  {
+                    notificationOptions.find((option) => option.value === event.notificationTime)
+                      ?.label
+                  }
                 </Typography>
               </Stack>
               <Stack>

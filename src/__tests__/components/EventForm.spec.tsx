@@ -1,7 +1,8 @@
 import { render, screen } from '@testing-library/react';
+import { vi } from 'vitest';
+
 import { EventForm } from '../../components/EventForm';
 import { useEventForm } from '../../hooks/useEventForm';
-import { vi } from 'vitest';
 
 // useEventForm 훅의 반환값을 모킹합니다.
 vi.mock('../../hooks/useEventForm', () => ({
@@ -11,7 +12,7 @@ vi.mock('../../hooks/useEventForm', () => ({
 describe('EventForm', () => {
   it('컴포넌트가 "일정 추가" 모드로 올바르게 렌더링된다', () => {
     // 모킹된 훅이 반환할 기본 상태를 설정합니다.
-    (useEventForm as jest.Mock).mockReturnValue({
+    (useEventForm as ReturnType<typeof vi.fn>).mockReturnValue({
       title: '',
       setTitle: vi.fn(),
       date: '',

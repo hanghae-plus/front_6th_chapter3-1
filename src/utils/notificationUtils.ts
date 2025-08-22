@@ -7,11 +7,15 @@ export function getUpcomingEvents(events: Event[], now: Date, notifiedEvents: st
   return events.filter((event) => {
     const eventStart = new Date(`${event.date}T${event.startTime}`);
     const timeDiff = (eventStart.getTime() - now.getTime()) / minute;
-    
+
     // Round to 2 decimal places to avoid floating point inaccuracies
     const roundedTimeDiff = Math.round(timeDiff * 100) / 100;
 
-    return roundedTimeDiff > 0 && roundedTimeDiff <= event.notificationTime && !notifiedEvents.includes(event.id);
+    return (
+      roundedTimeDiff > 0 &&
+      roundedTimeDiff <= event.notificationTime &&
+      !notifiedEvents.includes(event.id)
+    );
   });
 }
 

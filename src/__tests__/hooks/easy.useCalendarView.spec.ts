@@ -88,7 +88,7 @@ describe('useCalendarView', () => {
     act(() => {
       result.current.setCurrentDate(new Date('2025-03-01'));
     });
-    
+
     expect(result.current.holidays).toEqual({
       '2025-03-01': '삼일절',
     });

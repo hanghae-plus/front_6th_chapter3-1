@@ -24,5 +24,9 @@ export default mergeConfig(
         reporter: ['lcov', 'json', 'json-summary'],
       },
     },
+    define: {
+      global: 'globalThis',
+      'process.env': {},
+    },
   })
 );

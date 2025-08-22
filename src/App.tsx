@@ -27,10 +27,27 @@ function App() {
     eventList,
     dialogs,
     notifications,
+    setNotifications,
     saveEvent,
   } = useEventManager();
 
-  const { formState: { editingEvent, title, date, startTime, endTime, description, location, category, isRepeating, repeatType, repeatInterval, repeatEndDate, notificationTime } } = { formState };
+  const {
+    formState: {
+      editingEvent,
+      title,
+      date,
+      startTime,
+      endTime,
+      description,
+      location,
+      category,
+      isRepeating,
+      repeatType,
+      repeatInterval,
+      repeatEndDate,
+      notificationTime,
+    },
+  } = { formState };
 
   return (
     <Box sx={{ width: '100%', height: '100vh', margin: 'auto', p: 5 }}>
@@ -100,9 +117,9 @@ function App() {
         </DialogActions>
       </Dialog>
 
-      {notifications.notifications.length > 0 && (
+      {notifications.length > 0 && (
         <Stack position="fixed" top={16} right={16} spacing={2} alignItems="flex-end">
-          {notifications.notifications.map((notification, index) => (
+          {notifications.map((notification, index) => (
             <Alert
               key={index}
               severity="info"
@@ -110,9 +127,7 @@ function App() {
               action={
                 <IconButton
                   size="small"
-                  onClick={() =>
-                    notifications.setNotifications((prev) => prev.filter((_, i) => i !== index))
-                  }
+                  onClick={() => setNotifications((prev) => prev.filter((_, i) => i !== index))}
                 >
                   <Close />
                 </IconButton>

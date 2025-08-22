@@ -1,13 +1,14 @@
 import { renderHook, act } from '@testing-library/react';
-import { useEventManager } from '../../hooks/useEventManager';
+import { useSnackbar } from 'notistack';
+import { vi } from 'vitest';
+
+import { useCalendarView } from '../../hooks/useCalendarView';
 import { useEventForm } from '../../hooks/useEventForm';
+import { useEventManager } from '../../hooks/useEventManager';
 import { useEventOperations } from '../../hooks/useEventOperations';
 import { useNotifications } from '../../hooks/useNotifications';
-import { useCalendarView } from '../../hooks/useCalendarView';
 import { useSearch } from '../../hooks/useSearch';
-import { useSnackbar } from 'notistack';
 import * as eventOverlap from '../../utils/eventOverlap';
-import { vi } from 'vitest';
 
 // 모든 의존성 훅들을 모킹합니다.
 vi.mock('../../hooks/useEventForm');
@@ -24,31 +25,31 @@ describe('useEventManager', () => {
     const mockEnqueueSnackbar = vi.fn();
 
     // 각 훅들이 반환할 모의 데이터를 설정합니다.
-    (useEventForm as jest.Mock).mockReturnValue({
+    (useEventForm as ReturnType<typeof vi.fn>).mockReturnValue({
       title: 'Test Event',
       date: '2025-01-01',
       startTime: '10:00',
       endTime: '11:00',
       resetForm: vi.fn(),
     });
-    (useEventOperations as jest.Mock).mockReturnValue({
+    (useEventOperations as ReturnType<typeof vi.fn>).mockReturnValue({
       events: [],
       saveEvent: mockSaveEvent,
       deleteEvent: vi.fn(),
     });
-    (useNotifications as jest.Mock).mockReturnValue({
+    (useNotifications as ReturnType<typeof vi.fn>).mockReturnValue({
       notifications: [],
       notifiedEvents: [],
       setNotifications: vi.fn(),
     });
-    (useCalendarView as jest.Mock).mockReturnValue({
+    (useCalendarView as ReturnType<typeof vi.fn>).mockReturnValue({
       view: 'month',
       currentDate: new Date(),
     });
-    (useSearch as jest.Mock).mockReturnValue({
+    (useSearch as ReturnType<typeof vi.fn>).mockReturnValue({
       filteredEvents: [],
     });
-    (useSnackbar as jest.Mock).mockReturnValue({
+    (useSnackbar as ReturnType<typeof vi.fn>).mockReturnValue({
       enqueueSnackbar: mockEnqueueSnackbar,
     });
     // 겹치는 이벤트가 없다고 가정합니다.

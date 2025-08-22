@@ -5,12 +5,12 @@ import userEvent from '@testing-library/user-event';
 import { http, HttpResponse } from 'msw';
 import { SnackbarProvider } from 'notistack';
 import { ReactElement, useState, useEffect } from 'react';
-import * as useCalendarViewHook from '../hooks/useCalendarView';
-import * as useNotificationsHook from '../hooks/useNotifications';
+
 import { events as mockEventsData } from '../__mocks__/response/events.json';
 import * as holidayApi from '../apis/fetchHolidays';
-
 import App from '../App';
+import * as useCalendarViewHook from '../hooks/useCalendarView';
+import * as useNotificationsHook from '../hooks/useNotifications';
 import { server } from '../setupTests';
 
 const theme = createTheme();

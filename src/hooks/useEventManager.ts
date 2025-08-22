@@ -1,11 +1,12 @@
-import { useState } from 'react';
 import { useSnackbar } from 'notistack';
+import { useState } from 'react';
+
+import { Event, EventForm as EventFormType } from '../types';
 import { useCalendarView } from './useCalendarView';
 import { useEventForm } from './useEventForm';
 import { useEventOperations } from './useEventOperations';
 import { useNotifications } from './useNotifications';
 import { useSearch } from './useSearch';
-import { Event, EventForm as EventFormType } from '../types';
 import { findOverlappingEvents } from '../utils/eventOverlap';
 
 export const useEventManager = () => {
@@ -77,6 +78,7 @@ export const useEventManager = () => {
   return {
     formState,
     addOrUpdateEvent,
+    saveEvent,
     calendarView: {
       view,
       setView,
@@ -97,10 +99,7 @@ export const useEventManager = () => {
       setIsOverlapDialogOpen,
       overlappingEvents,
     },
-    notifications: {
-      notifications,
-      setNotifications,
-    },
-    saveEvent,
+    notifications,
+    setNotifications,
   };
 };
