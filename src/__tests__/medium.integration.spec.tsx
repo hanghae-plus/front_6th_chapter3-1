@@ -11,7 +11,7 @@ import {
   setupMockHandlerUpdating,
   setupMockHandlerDeletion,
 } from '../__mocks__/handlersUtils';
-import App from '../App';
+import { App } from '../App';
 import type { Event } from '../types';
 
 // ! HINT. 이 유틸을 사용해 리액트 컴포넌트를 렌더링해보세요.

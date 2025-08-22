@@ -15,7 +15,7 @@ import { useSearch } from './hooks/useSearch';
 import { Event, EventForm as EventFormData } from './types';
 import { findOverlappingEvents } from './utils/eventOverlap';
 
-function App() {
+export function App() {
   const {
     title,
     setTitle,
@@ -185,5 +185,3 @@ function App() {
     </Box>
   );
 }
-
-export default App;
