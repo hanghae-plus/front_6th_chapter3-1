@@ -43,6 +43,7 @@ export const WeekView = ({
             <TableRow>
               {weekDates.map((date) => (
                 <TableCell
+                  data-testid={`${date.getDate()}-day-cell`}
                   key={date.toISOString()}
                   sx={{
                     height: '120px',
