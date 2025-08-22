@@ -1,5 +1,6 @@
 import { Event } from '../types';
-import { getWeekDates, isDateInRange } from './dateUtils';
+import { getWeekDates } from './date/calculations';
+import { isDateInRange } from './date/events';
 
 function filterEventsByDateRange(events: Event[], start: Date, end: Date): Event[] {
   return events.filter((event) => {
@@ -13,7 +14,7 @@ function containsTerm(target: string, term: string) {
 }
 
 function searchEvents(events: Event[], term: string) {
-  return events.filter(
+  return (events ?? []).filter(
     ({ title, description, location }) =>
       containsTerm(title, term) || containsTerm(description, term) || containsTerm(location, term)
   );
