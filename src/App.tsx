@@ -120,41 +120,39 @@ function App() {
   return (
     <Box sx={{ width: '100%', height: '100vh', margin: 'auto', p: 5 }}>
       <Stack direction="row" spacing={6} sx={{ height: '100%' }}>
-        <Stack spacing={2} sx={{ width: '20%' }}>
-          <EventFormItem editingEvent={editingEvent} addOrUpdateEvent={addOrUpdateEvent}>
-            <BasicInfoForm
-              title={title}
-              date={date}
-              startTime={startTime}
-              endTime={endTime}
-              setDate={setDate}
-              setTitle={setTitle}
-            />
-            <DetailForm
-              description={description}
-              location={location}
-              category={category}
-              setDescription={setDescription}
-              setLocation={setLocation}
-              setCategory={setCategory}
-            />
-            <SettingForm
-              isRepeating={isRepeating}
-              repeatEndDate={repeatEndDate}
-              notificationTime={notificationTime}
-              setIsRepeating={setIsRepeating}
-              setNotificationTime={setNotificationTime}
-            />
-            <TimeForm
-              startTime={startTime}
-              endTime={endTime}
-              startTimeError={startTimeError}
-              endTimeError={endTimeError}
-              handleStartTimeChange={handleStartTimeChange}
-              handleEndTimeChange={handleEndTimeChange}
-            />
-          </EventFormItem>
-        </Stack>
+        <EventFormItem editingEvent={editingEvent} addOrUpdateEvent={addOrUpdateEvent}>
+          <BasicInfoForm
+            title={title}
+            date={date}
+            startTime={startTime}
+            endTime={endTime}
+            setDate={setDate}
+            setTitle={setTitle}
+          />
+          <DetailForm
+            description={description}
+            location={location}
+            category={category}
+            setDescription={setDescription}
+            setLocation={setLocation}
+            setCategory={setCategory}
+          />
+          <SettingForm
+            isRepeating={isRepeating}
+            repeatEndDate={repeatEndDate}
+            notificationTime={notificationTime}
+            setIsRepeating={setIsRepeating}
+            setNotificationTime={setNotificationTime}
+          />
+          <TimeForm
+            startTime={startTime}
+            endTime={endTime}
+            startTimeError={startTimeError}
+            endTimeError={endTimeError}
+            handleStartTimeChange={handleStartTimeChange}
+            handleEndTimeChange={handleEndTimeChange}
+          />
+        </EventFormItem>
 
         <Stack flex={1} spacing={5}>
           <Typography variant="h4">일정 보기</Typography>
