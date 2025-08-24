@@ -39,7 +39,6 @@ const saveSchedule = async (
   form: Omit<Event, 'id' | 'notificationTime' | 'repeat'>
 ) => {
   const { title, date, startTime, endTime, location, description, category } = form;
-
   await user.click(screen.getAllByText('일정 추가')[0]);
 
   await user.type(screen.getByLabelText('제목'), title);
@@ -59,6 +58,28 @@ const saveSchedule = async (
 describe('일정 CRUD 및 기본 기능', () => {
   it('입력한 새로운 일정 정보에 맞춰 모든 필드가 이벤트 리스트에 정확히 저장된다.', async () => {
     // ! HINT. event를 추가 제거하고 저장하는 로직을 잘 살펴보고, 만약 그대로 구현한다면 어떤 문제가 있을 지 고민해보세요.
+
+    setupMockHandlerCreation();
+
+    const { user } = setup(<App />);
+
+    await saveSchedule(user, {
+      title: '저장 테스트',
+      date: '2025-10-05',
+      startTime: '09:00',
+      endTime: '16:00',
+      description: '저장 테스트 중',
+      location: '장소',
+      category: '업무',
+    });
+
+    const eventList = within(screen.getByTestId('event-list'));
+    expect(eventList.getByText('저장 테스트')).toBeInTheDocument();
+    expect(eventList.getByText('2025-10-05')).toBeInTheDocument();
+    expect(eventList.getByText('09:00 - 16:00')).toBeInTheDocument();
+    expect(eventList.getByText('저장 테스트 중')).toBeInTheDocument();
+    expect(eventList.getByText('장소')).toBeInTheDocument();
+    expect(eventList.getByText('카테고리: 업무')).toBeInTheDocument();
   });
 
   it('기존 일정의 세부 정보를 수정하고 변경사항이 정확히 반영된다', async () => {});
