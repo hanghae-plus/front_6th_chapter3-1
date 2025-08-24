@@ -1,3 +1,5 @@
+import { ThemeProvider } from '@emotion/react';
+import { createTheme, CssBaseline } from '@mui/material';
 import { render, screen, within, act } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { SnackbarProvider } from 'notistack';
@@ -14,12 +16,16 @@ import { server } from '../setupTests';
 
 const setup = (element: ReactElement) => {
   const user = userEvent.setup();
+  const theme = createTheme();
 
   return {
     ...render(
-      <OverlayProvider>
-        <SnackbarProvider>{element}</SnackbarProvider>
-      </OverlayProvider>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <OverlayProvider>
+          <SnackbarProvider>{element}</SnackbarProvider>
+        </OverlayProvider>
+      </ThemeProvider>
     ),
     user,
   };
