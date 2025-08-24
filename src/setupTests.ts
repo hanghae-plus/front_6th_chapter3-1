@@ -8,18 +8,22 @@ export const server = setupServer(...handlers);
 
 beforeAll(() => {
   server.listen();
+  vi.useFakeTimers({ shouldAdvanceTime: true });
 });
 
 beforeEach(() => {
   expect.hasAssertions();
+  vi.setSystemTime(new Date('2025-10-15'));
 });
 
 afterEach(() => {
   server.resetHandlers();
   vi.clearAllMocks();
+  vi.clearAllTimers();
 });
 
 afterAll(() => {
   vi.resetAllMocks();
   server.close();
+  vi.useRealTimers();
 });
